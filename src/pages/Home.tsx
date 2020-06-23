@@ -1,8 +1,73 @@
 import React from 'react';
 
+import Layout from '../components/Layout';
+
 function Home() {
   return (
-  <p> Home </p>
+    <Layout>
+      <section className="maincontent">
+        <div className="container">
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+          <p>Home</p>
+        </div>
+      </section>
+    </Layout>
   )
 }
 

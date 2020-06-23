@@ -12,11 +12,15 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
     "bootstrap": "^5.0.0-alpha1",
+    "node-sass": "^4.14.1",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
+    "react-bootstrap-icons": "^1.0.3-alpha4",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-three-fiber": "^4.2.10",
+    "three": "^0.117.1",
     "typescript": "~3.7.2"
   },
   "scripts": {
