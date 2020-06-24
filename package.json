@@ -21,6 +21,7 @@
     "react-scripts": "3.4.1",
     "react-three-fiber": "^4.2.10",
     "three": "^0.117.1",
+    "typeface-literata": "^1.1.4",
     "typescript": "~3.7.2"
   },
   "scripts": {

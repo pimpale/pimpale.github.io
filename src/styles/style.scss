@@ -1,0 +1,28 @@
+$white:    #fbf1c7; // fg0
+$gray-100: #ebdbb2; // fg1
+$gray-200: #d5c4a1; // fg2
+$gray-300: #bdae93; // fg3
+$gray-400: #a89984; // gray
+$gray-500: #7c6f64; // bg4
+$gray-600: #504945; // bg2
+$gray-700: #3c3836; // bg1
+$gray-800: #282828; // bg0
+$gray-900: #1d2021; // bg0_h
+$black:    #000;    // black
+
+$blue:    #458588;
+$indigo:  #6610f2;
+$purple:  #b16286;
+$pink:    #fb4934;
+$red:     #dc3545;
+$orange:  #d65d0e;
+$yellow:  #d79921;
+$green:   #98971a;
+$teal:    #689d6a;
+$cyan:    #8ec07c;
+
+@import "~typeface-literata/index";
+
+$font-family-base: "Literata";
+
+@import "~bootstrap/scss/bootstrap";
