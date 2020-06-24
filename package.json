@@ -19,7 +19,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "react-three-fiber": "^4.2.10",
+    "react-three-fiber": "^4.2.11",
     "three": "^0.117.1",
     "typeface-literata": "^1.1.4",
     "typescript": "~3.7.2"

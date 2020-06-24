@@ -1,4 +1,5 @@
 import React from 'react';
+import Centerpiece from '../components/Centerpiece';
 
 import Layout from '../components/Layout';
 
@@ -8,25 +9,27 @@ type IntroCardProps = {
 }
 
 const IntroCard: React.FunctionComponent<IntroCardProps> = props => {
-  const isLeft = Math.cos(props.rotation *(Math.PI / 180)) < 0;
-  const circleEdge = isLeft? {
+  const isLeft = Math.cos(props.rotation * (Math.PI / 180)) < 0;
+  const circleEdge = isLeft ? {
     display: "block",
     position: "absolute" as const,
     top: "50%",
     left: "50%",
+    width: "25vw",
     transformOrigin: "right",
     transform: `rotate(${props.rotation}deg) translate(20vw) rotate(${-props.rotation}deg) translate(-100%, -50%)`,
     borderRight: "6px solid black",
   } : {
-    display: "block",
-    position: "absolute" as const,
-    top: "50%",
-    left: "50%",
-    transformOrigin: "left",
-    transform: `rotate(${props.rotation}deg) translate(20vw) rotate(${-props.rotation}deg) translate(0%, -50%)`,
-    borderLeft: "6px solid black",
-  }
-  ;
+      display: "block",
+      position: "absolute" as const,
+      top: "50%",
+      left: "50%",
+      width: "25vw",
+      transformOrigin: "left",
+      transform: `rotate(${props.rotation}deg) translate(20vw) rotate(${-props.rotation}deg) translate(0%, -50%)`,
+      borderLeft: "6px solid black",
+    }
+    ;
   return (
     <div className="card text-light bg-dark" style={circleEdge}>
       <div className="card-body">
@@ -67,9 +70,7 @@ function Home() {
       <section id="intro">
         <div style={introStyle}>
           <div>
-            <h1 style={circleCenter}>
-              OOF
-            </h1>
+            <Centerpiece style={circleCenter} />
             <IntroCard rotation={-45} title="About">
               <a href="#about">About me, my projects, and this site</a>
             </IntroCard>
@@ -91,66 +92,10 @@ function Home() {
           </div>
         </div>
       </section>
-      <section id="content" className="container">
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-        <p>Home</p>
-      </section>
+      <div id="content" className="container">
+        <section id="about">
+        </section>
+      </div>
     </Layout>
   )
 }

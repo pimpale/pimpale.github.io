@@ -8,8 +8,8 @@ import 'popper.js/dist/popper';
 
 function Header() {
   return (
-    <header className="header">
-      <nav className="navbar navbar-expand-lg py-3 fixed-top">
+    <header>
+      <nav className="navbar navbar-expand-lg py-3">
         <div className="container">
           <a className="navbar-brand font-weight-bold" href="index.html">Govind Pimpale</a>
           <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
