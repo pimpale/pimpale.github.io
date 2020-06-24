@@ -11,15 +11,14 @@ function Header() {
     <header className="header">
       <nav className="navbar navbar-expand-lg py-3 fixed-top">
         <div className="container">
-          <a className="navbar-brand font-weight-bold" href="index.html"></a>
+          <a className="navbar-brand font-weight-bold" href="index.html">Govind Pimpale</a>
           <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
             <ThreeDotsVertical className="text-light"/>
           </button>
           <div className="collapse navbar-collapse"
             id="navbarSupportedContent">
             <div className="navbar-nav ml-auto">
-              <a className="nav-item nav-link font-weight-bold" href="about.html">About</a>
-              <a className="nav-item nav-link font-weight-bold" href="faq.html">FAQ</a>
+              <a className="nav-item nav-link font-weight-bold" href="/#about">About</a>
               <a className="nav-item nav-link font-weight-bold" href="https://github.com/pimpale/pimpale.github.io">Source</a>
             </div>
           </div>
@@ -32,7 +31,7 @@ function Header() {
 function Footer() {
   return (
     <footer className="container-fluid py-1"><br />
-      <p className="text-light">By Govind Pimpale</p>
+      <p className="text-light">&copy; Govind Pimpale, MIT Licensed</p>
     </footer>
   )
 }

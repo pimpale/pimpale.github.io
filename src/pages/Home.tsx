@@ -5,24 +5,33 @@ import Layout from '../components/Layout';
 type IntroCardProps = {
   title: string,
   rotation: number,
-  link: string,
 }
 
 const IntroCard: React.FunctionComponent<IntroCardProps> = props => {
-  const circleEdge = {
-    transform: `rotate(${props.rotation}deg) translate(20vw) rotate(${-props.rotation}deg) translate(-50%, -50%)`,
-    transformOrigin: "top left",
+  const isLeft = Math.cos(props.rotation *(Math.PI / 180)) < 0;
+  const circleEdge = isLeft? {
     display: "block",
     position: "absolute" as const,
     top: "50%",
     left: "50%",
-  };
+    transformOrigin: "right",
+    transform: `rotate(${props.rotation}deg) translate(20vw) rotate(${-props.rotation}deg) translate(-100%, -50%)`,
+    borderRight: "6px solid black",
+  } : {
+    display: "block",
+    position: "absolute" as const,
+    top: "50%",
+    left: "50%",
+    transformOrigin: "left",
+    transform: `rotate(${props.rotation}deg) translate(20vw) rotate(${-props.rotation}deg) translate(0%, -50%)`,
+    borderLeft: "6px solid black",
+  }
+  ;
   return (
     <div className="card text-light bg-dark" style={circleEdge}>
       <div className="card-body">
         <h5 className="card-title">{props.title}</h5>
         <div className="card-text">{props.children}</div>
-        <a href={props.link} className="stretched-link d-inline" />
       </div>
     </div>
   );
@@ -49,6 +58,7 @@ const circleCenter = {
   position: "absolute" as const,
   top: "50%",
   left: "50%",
+  transform: "translate(-50%, -50%)",
 }
 
 function Home() {
@@ -57,23 +67,26 @@ function Home() {
       <section id="intro">
         <div style={introStyle}>
           <div>
-            <IntroCard rotation={-30} title="About" link="#about">
-              About this site
+            <h1 style={circleCenter}>
+              OOF
+            </h1>
+            <IntroCard rotation={-45} title="About">
+              <a href="#about">About me, my projects, and this site</a>
             </IntroCard>
-            <IntroCard rotation={0} title="About" link="#about">
-              About this site
+            <IntroCard rotation={0} title="Innexgo">
+              <a href="#innexgo">Open source student management system</a>
             </IntroCard>
-            <IntroCard rotation={30} title="About" link="#about">
-              About this site
+            <IntroCard rotation={45} title="Source">
+              <a href="https://github.com/pimpale/pimpale.github.io">View source code for this site</a>
             </IntroCard>
-            <IntroCard rotation={-30 + 180} title="About" link="#about">
-              About this site
+            <IntroCard rotation={-45 + 180} title="Achernar">
+              <a href="achernar">A minimalistic, secure, and low level language</a>
             </IntroCard>
-            <IntroCard rotation={0 + 180} title="About" link="#about">
-              About this site
+            <IntroCard rotation={0 + 180} title="Terrain Generation">
+              <a href="#terraingeneration">Generate Alien Landforms with Perlin Noise</a>
             </IntroCard>
-            <IntroCard rotation={30 + 180} title="Source" link="https://github.com/pimpale/pimpale.github.io">
-              View source code for this website (Public Domain)
+            <IntroCard rotation={45 + 180} title="Compugenesis" >
+              <a href="#compugenesis">Plant growth simulation</a>
             </IntroCard>
           </div>
         </div>
