@@ -1,27 +1,20 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { Canvas, useFrame } from 'react-three-fiber'
 
-function Box(props) {
+function Thing(props) {
   // This reference will give us direct access to the mesh
   const mesh = useRef()
 
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false)
-  const [active, setActive] = useState(false)
-
   // Rotate mesh every frame, this is outside of React without overhead
-  useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01))
+  useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.005))
 
   return (
     <mesh
       {...props}
       ref={mesh}
-      scale={active ? [2.2, 2.2, 2.2] : [1, 1, 1]}
-      onClick={(e) => setActive(!active)}
-      onPointerOver={(e) => setHover(true)}
-      onPointerOut={(e) => setHover(false)}>
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshStandardMaterial attach="material" color={hovered ? 'hotpink' : 'orange'} />
+      scale={[1,1,1]}>
+      <icosahedronGeometry attach="geometry" />
+      <meshStandardMaterial attach="material" wireframe={true} color='#fbf1c7' />
     </mesh>
   )
 }
@@ -30,8 +23,7 @@ function Centerpiece(props) {
   return(
   <Canvas {...props}>
     <ambientLight />
-    <pointLight position={[10, 10, 10]} />
-    <Box position={[0, 0, 0]} />
+    <Thing position={[0, 0, 0]} />
   </Canvas>
   );
 }

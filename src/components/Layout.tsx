@@ -1,32 +1,12 @@
 import React from 'react';
-import { ThreeDotsVertical } from 'react-bootstrap-icons'
+
+import Header from './Header';
 
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
 import 'popper.js/dist/popper';
 
-function Header() {
-  return (
-    <header>
-      <nav className="navbar navbar-expand-lg py-3">
-        <div className="container">
-          <a className="navbar-brand font-weight-bold" href="index.html">Govind Pimpale</a>
-          <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-            <ThreeDotsVertical className="text-light"/>
-          </button>
-          <div className="collapse navbar-collapse"
-            id="navbarSupportedContent">
-            <div className="navbar-nav ml-auto">
-              <a className="nav-item nav-link font-weight-bold" href="/#about">About</a>
-              <a className="nav-item nav-link font-weight-bold" href="https://github.com/pimpale/pimpale.github.io">Source</a>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </header>
-  );
-}
 
 function Footer() {
   return (
