@@ -55,7 +55,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               id="navbarSupportedContent">
               <div className="navbar-nav ml-auto">
                 <a className="nav-item nav-link font-weight-bold" href="/#about">About</a>
-                <a className="nav-item nav-link font-weight-bold" href="https://github.com/pimpale/pimpale.github.io">Source</a>
+                <a className="nav-item nav-link font-weight-bold" href="/achernar">Achernar</a>
+                <a className="nav-item nav-link font-weight-bold" href="/compugenesis">Compugenesis</a>
               </div>
             </div>
           </div>

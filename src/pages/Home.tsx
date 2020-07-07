@@ -61,22 +61,22 @@ const circleCenter = {
   position: "absolute" as const,
   top: "50%",
   left: "50%",
-  width:"50em",
-  height:"50em",
+  width: "50em",
+  height: "50em",
   transform: "translate(-50%, -50%)",
 }
 
 function Home() {
   return (
     <Layout>
-      <section id="intro"> 
+      <section id="intro">
         <div style={introStyle}>
           <Centerpiece style={circleCenter} />
           <IntroCard rotation={-45} title="About">
             <a href="#about">About me, my projects, and this site</a>
           </IntroCard>
           <IntroCard rotation={0} title="Innexgo">
-            <a href="#innexgo">Open source student management system</a>
+            <a href="#innexgo">Open source education systems</a>
           </IntroCard>
           <IntroCard rotation={45} title="Source">
             <a href="https://github.com/pimpale/pimpale.github.io">View source code for this site</a>
@@ -95,43 +95,75 @@ function Home() {
       <div id="content" className="container">
         <section id="achernar">
           <h2>Achernar</h2>
-          <br />
+          <h5>Goals</h5>
+          Achernar is a <b><i>Work In Progress</i></b> programming language focusing on:
+          <ul>
+            <li>
+              <b>Minimalism</b>: Achernar strives to be <i>orthogonal</i>.
+              Language features are simple to understand, independent, and highly composable.
+              As such, minimalism is both possible and ergonomic.
+            </li>
+            <li><b>Versatility</b>: Achernar does not lock the user into any particular framework and is highly unopinionated.
+              Use Achernar compiled or interpreted. It can be easily dropped into any existing project without dragging in any dependencies.
+            </li>
+            <li><b>Safe</b>: Achernar is designed with type safety in mind. It is strongly typed and offers additional Ada
+              style contract programming.
+            </li>
+          </ul>
+          <h5>Current Status</h5>
           <p>
-            Achernar is a programming language focusing on:
-            <ul>
-              <li>
-                <b>Minimalism</b>: Achernar strives to be <i>orthogonal</i>.
-                 Language features are simple to understand, independent, and highly composable.
-              </li>
-              <li></li>
-              <li>Foo</li>
-            </ul>
+            I am currently about 50% through writing the first compiler in C that will compiler Achernar code.
+            The compiler uses its own custom standard library called  <code>comlib</code> that will evolve into Achernar's standard library.
+          </p>
+          <h5>Additional Information</h5>
+          <p>
+            <a href="https://github.com/pimpale/achernar">Achernar Source Code</a>
+            <br />
+            <a href="/achernar">Live Demo</a>
           </p>
         </section>
+        <br />
+        <section id="innexgo">
+          <h2>Innexgo</h2>
+          <p>
+            In 2018 I helped create Innexgo, an open source student attendance system. Innexgo uses RFID stickers to automatically take
+            attendance without wasting student or teacher time and provides data analysis tools for converting raw attendance data to useful
+            graphs and statistics.
+          </p>
+          <p>
+           <a href="https://innexgo.com">Company Website</a>
+           <br />
+           <a href="https://github.com/innexgo">Source Code</a>
+          </p>
+        </section>
+        <br />
         <section id="about">
           <h2>About</h2>
-          <br />
-          <h5> Me </h5>
+          <h5>Me</h5>
           <p>
             I enjoy recreational coding, especially in C.
-            I am a I currently work at <a href="https://innexgo.com">Innexgo</a>, making educational software.
+            I currently work at <a href="https://innexgo.com">Innexgo</a>, making educational software.
             I believe in <a
               href="https://globalprioritiesinstitute.org/wp-content/uploads/2019/Greaves_MacAskill_The_Case_for_Strong_Longtermism.pdf">
               Strong Longtermism
-            </a> and <a
+            </a> and <a href="https://suckless.org/philosophy/">the Suckless philosophy</a>.
           </p>
-          <br />
-          <h5> Site </h5>
+          <h5>Projects</h5>
+          <p>
+            Most of my personal "for fun" projects are licensed permissively, usually under MIT or the Unlicense. If they're not on the site,
+            you can find them <a href="https://github.com/pimpale/">here</a>. You can also follow me on github to keep up to date on their development.
+          </p>
+          <h5>Site</h5>
           <p>
             This site was made using <a href="https://reactjs.org/">ReactJS</a> and <a href="https://www.typescriptlang.org/">Typescript</a>,
             with the animations in <a href="https://threejs.org/">three.js</a>.
             All content on this site is licensed under the MIT license unless otherwise specified.
-            Source can be found <a href="https://github.com/pimpale/pimpale.github.io">here</a>.
+            The source of this website can be found <a href="https://github.com/pimpale/pimpale.github.io">here</a>.
           </p>
         </section>
       </div>
     </Layout>
-  )
-}
-
-export default Home;
+      )
+    }
+    
+    export default Home;
