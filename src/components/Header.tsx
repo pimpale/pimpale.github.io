@@ -43,9 +43,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     const navStyle = {
       transitionDuration: "0.4s"
     };
-    const textColor = {
-      bac
-    };
     return (
       <header>
         <nav style={navStyle} className={ "navbar navbar-expand-lg py-3 fixed-top" + (this.state.scroll === 0 ? "" : " bg-secondary")}>

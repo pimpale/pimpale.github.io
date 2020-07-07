@@ -82,7 +82,7 @@ function Home() {
             <a href="https://github.com/pimpale/pimpale.github.io">View source code for this site</a>
           </IntroCard>
           <IntroCard rotation={-45 + 180} title="Achernar">
-            <a href="achernar">A minimalistic, secure, and low level language</a>
+            <a href="#achernar">A minimalistic, secure, and low level language</a>
           </IntroCard>
           <IntroCard rotation={0 + 180} title="Terrain Generation">
             <a href="#terraingeneration">Generate Alien Landforms with Perlin Noise</a>
@@ -94,6 +94,40 @@ function Home() {
       </section>
       <div id="content" className="container">
         <section id="achernar">
+          <h2>Achernar</h2>
+          <br />
+          <p>
+            Achernar is a programming language focusing on:
+            <ul>
+              <li>
+                <b>Minimalism</b>: Achernar strives to be <i>orthogonal</i>.
+                 Language features are simple to understand, independent, and highly composable.
+              </li>
+              <li></li>
+              <li>Foo</li>
+            </ul>
+          </p>
+        </section>
+        <section id="about">
+          <h2>About</h2>
+          <br />
+          <h5> Me </h5>
+          <p>
+            I enjoy recreational coding, especially in C.
+            I am a I currently work at <a href="https://innexgo.com">Innexgo</a>, making educational software.
+            I believe in <a
+              href="https://globalprioritiesinstitute.org/wp-content/uploads/2019/Greaves_MacAskill_The_Case_for_Strong_Longtermism.pdf">
+              Strong Longtermism
+            </a> and <a
+          </p>
+          <br />
+          <h5> Site </h5>
+          <p>
+            This site was made using <a href="https://reactjs.org/">ReactJS</a> and <a href="https://www.typescriptlang.org/">Typescript</a>,
+            with the animations in <a href="https://threejs.org/">three.js</a>.
+            All content on this site is licensed under the MIT license unless otherwise specified.
+            Source can be found <a href="https://github.com/pimpale/pimpale.github.io">here</a>.
+          </p>
         </section>
       </div>
     </Layout>
