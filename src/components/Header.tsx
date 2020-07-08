@@ -47,7 +47,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       <header>
         <nav style={navStyle} className={ "navbar navbar-expand-lg py-3 fixed-top" + (this.state.scroll === 0 ? "" : " bg-secondary")}>
           <div className="container">
-            <a className="navbar-brand font-weight-bold" href="/#intro">Govind Pimpale</a>
+            <a className="navbar-brand font-weight-bold" href="/">Govind Pimpale</a>
             <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
               <ThreeDotsVertical className="text-light" />
             </button>

@@ -1,6 +1,8 @@
 import React from 'react';
 import Centerpiece from '../components/Centerpiece';
 
+import TerrainGenIntro from '../components/TerrainGenIntro';
+
 import Layout from '../components/Layout';
 
 type IntroCardProps = {
@@ -40,6 +42,26 @@ const IntroCard: React.FunctionComponent<IntroCardProps> = props => {
   );
 }
 
+type SectionProps = {
+  id: string
+}
+
+const Section: React.FunctionComponent<SectionProps> = props => {
+  return <section style={{
+    overflow: "hidden",
+    position: "relative",
+  }}>
+    <span
+      id={props.id}
+      style={{
+        position: "absolute",
+        top: "-100px",
+        visibility: "hidden",
+      }}></span>
+    {props.children}
+  </section>
+}
+
 
 const introStyle = {
   position: "relative" as const,
@@ -69,7 +91,7 @@ const circleCenter = {
 function Home() {
   return (
     <Layout>
-      <section id="intro">
+      <section>
         <div style={introStyle}>
           <Centerpiece style={circleCenter} />
           <IntroCard rotation={-45} title="About">
@@ -93,7 +115,7 @@ function Home() {
         </div>
       </section>
       <div id="content" className="container">
-        <section id="achernar">
+        <Section id="achernar">
           <h2>Achernar</h2>
           <h5>Goals</h5>
           Achernar is a <b><i>Work In Progress</i></b> programming language focusing on:
@@ -121,9 +143,18 @@ function Home() {
             <br />
             <a href="/achernar">Live Demo</a>
           </p>
-        </section>
+        </Section>
         <br />
-        <section id="innexgo">
+        <Section id="terraingeneration">
+          <h2>Terrain Generation</h2>
+          <p>
+            <TerrainGenIntro width={500} height={500} />
+            <br />
+            <a href="/terraingeneration">More Terrain Generation</a>
+          </p>
+        </Section>
+        <br />
+        <Section id="innexgo">
           <h2>Innexgo</h2>
           <p>
             In 2018 I helped create Innexgo, an open source student attendance system. Innexgo uses RFID stickers to automatically take
@@ -131,13 +162,13 @@ function Home() {
             graphs and statistics.
           </p>
           <p>
-           <a href="https://innexgo.com">Company Website</a>
-           <br />
-           <a href="https://github.com/innexgo">Source Code</a>
+            <a href="https://innexgo.com">Company Website</a>
+            <br />
+            <a href="https://github.com/innexgo">Source Code</a>
           </p>
-        </section>
+        </Section>
         <br />
-        <section id="about">
+        <Section id="about">
           <h2>About</h2>
           <h5>Me</h5>
           <p>
@@ -160,10 +191,10 @@ function Home() {
             All content on this site is licensed under the MIT license unless otherwise specified.
             The source of this website can be found <a href="https://github.com/pimpale/pimpale.github.io">here</a>.
           </p>
-        </section>
+        </Section>
       </div>
     </Layout>
-      )
-    }
-    
-    export default Home;
+  )
+}
+
+export default Home;
