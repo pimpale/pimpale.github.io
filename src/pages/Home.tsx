@@ -147,11 +147,11 @@ function Home() {
         <br />
         <Section id="terraingeneration">
           <h2>Terrain Generation</h2>
-          <p>
+          <div>
             <TerrainGenIntro width={800} height={800} />
             <br />
             <a href="/terraingeneration">More Terrain Generation</a>
-          </p>
+          </div>
         </Section>
         <br />
         <Section id="innexgo">

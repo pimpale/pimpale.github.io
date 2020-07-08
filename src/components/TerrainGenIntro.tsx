@@ -1,4 +1,5 @@
 import React from 'react';
+import assert from 'assert';
 
 import { makeNoise2D } from 'open-simplex-noise';
 import ScalarMap from '../ScalarMap';
@@ -74,7 +75,7 @@ function createMap(xsize: number, ysize: number, seed: number) {
         (totalweight: number, [, weight]: number[]) => totalweight + weight, 0
       ) + 0.5;
 
-      const result = Math.pow(0.35 * mv + 0.4 * cv + 0.3 * rv, 4);
+      const result = Math.pow(0.35 * mv + 0.35 * cv + 0.3 * rv, 4);
       dest.setv(x, y, Math.max(Math.min(result, 1), 0));
     }
   }
@@ -82,22 +83,136 @@ function createMap(xsize: number, ysize: number, seed: number) {
   return dest;
 }
 
-enum TerrainGenState {
+
+// Object displaying Scalar HeightMap
+
+interface ScalarMapThresholdProps {
+  heightmap: ScalarMap,
+  thresh: number,
+  threshcol: {
+    r: number,
+    g: number,
+    b: number,
+    a: number,
+  }
+}
+
+class ScalarMapThreshold extends React.Component<ScalarMapThresholdProps> {
+
+  private displayCanvas = React.createRef<HTMLCanvasElement>();
+
+  constructor(props: ScalarMapThresholdProps) {
+    super(props);
+    this.paint = this.paint.bind(this);
+  }
+
+  componentDidMount() {
+    this.paint();
+  }
+
+  componentDidUpdate() {
+    this.paint();
+  }
+
+  paintHeightMap(ctx: CanvasRenderingContext2D) {
+    const hmap = this.props.heightmap;
+    const { width, height } = hmap.dims();
+    const imageData = ctx.createImageData(width, height);
+
+
+    for (let x = 0; x < width; x++) {
+      for (let y = 0; y < height; y++) {
+        const i = (x + y * width) * 4;
+        const value = hmap.getv(x, y);
+        if (value > this.props.thresh) {
+          imageData.data[i + 0] = value * 255;
+          imageData.data[i + 1] = value * 255;
+          imageData.data[i + 2] = value * 255;
+          imageData.data[i + 3] = 255;
+        } else {
+          imageData.data[i + 0] = this.props.threshcol.r;
+          imageData.data[i + 1] = this.props.threshcol.g;
+          imageData.data[i + 2] = this.props.threshcol.b;
+          imageData.data[i + 3] = this.props.threshcol.a;
+        }
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }
+
+  paint() {
+    console.log('FOOOO');
+    const maybeCanvas = this.displayCanvas.current;
+    if (maybeCanvas != null) {
+      const maybeContext = maybeCanvas.getContext("2d");
+      if (maybeContext != null) {
+        this.paintHeightMap(maybeContext);
+      }
+    }
+  }
+
+  render() {
+    const { width, height } = this.props.heightmap.dims();
+    return (
+      <canvas className="border border-light"
+        ref={this.displayCanvas}
+        width={width}
+        height={height}
+      />
+    );
+  }
+}
+
+
+// when it has an ocean
+interface OceanHeightMapProps {
+  sealevel: number
+  heightmap: ScalarMap
+}
+
+function OceanHeightMap(props: OceanHeightMapProps) {
+  return <ScalarMapThreshold
+    heightmap={props.heightmap}
+    thresh={props.sealevel}
+    threshcol={{
+      // gruvbox dark blue
+      r: 0x07,
+      g: 0x66,
+      b: 0x78,
+      a: 0xFF,
+    }}
+  />
+}
+
+
+// When it is free of an ocean
+interface HeightMapProps {
+  heightmap: ScalarMap
+}
+
+function HeightMap(props: HeightMapProps) {
+  return <OceanHeightMap
+    heightmap={props.heightmap}
+    sealevel={0.0}
+  />
+}
+
+
+enum TerrainGenIntroPhase {
+  Initial,
   HeightMapGen,
   OceanGen,
   WindMapGen,
-
 }
 
 interface TerrainGenIntroProps {
   width: number,
   height: number,
-  sealevel: number,
 }
 
 interface TerrainGenIntroState {
-
-  hmap: ScalarMap,
+  state: TerrainGenIntroPhase,
+  hmap: ScalarMap | null,
   wmap: VectorMap | null,
   rmap: ScalarMap | null,
 }
@@ -107,104 +222,82 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
 
   constructor(props: TerrainGenIntroProps) {
     super(props);
-    const { width, height } = props;
-    this.paint = this.paint.bind(this);
-    this.tick = this.tick.bind(this);
     this.state = {
-      hmap: createMap(width, height, 0),
+      state: TerrainGenIntroPhase.Initial,
+      hmap: null,
       wmap: null,
       rmap: null,
-      renderFunc: this.paintHeightMap,
     };
   }
 
-  private displayCanvas = React.createRef<HTMLCanvasElement>();
 
-  componentDidUpdate() {
-    this.paint();
-  }
+  nextPhaseClick = (event: React.MouseEvent) => {
 
-  paintHeightMap(ctx: CanvasRenderingContext2D) {
-    const hmap = this.state.hmap;
-    const { width, height } = hmap.dims();
-    const imageData = ctx.createImageData(width, height);
-
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
-        const i = (x + y * width) * 4;
-        const value = hmap.getv(x, y) * 255;
-        imageData.data[i + 0] = value;
-        imageData.data[i + 1] = value;
-        imageData.data[i + 2] = value;
-        imageData.data[i + 3] = 255;
-      }
-    }
-    ctx.putImageData(imageData, 0, 0);
-  }
-
-  paintOceanHeightMap(ctx: CanvasRenderingContext2D, hmap: ScalarMap) {
-    const { width, height } = hmap.dims();
-    const imageData = ctx.createImageData(width, height);
-
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
-        const i = (x + y * width) * 4;
-        const value = hmap.getv(x, y);
-        if (value > 0.3) {
-          imageData.data[i + 0] = value * 255;
-          imageData.data[i + 1] = value * 255;
-          imageData.data[i + 2] = value * 255;
-          imageData.data[i + 3] = 255;
-        } else {
-          imageData.data[i + 0] = value * 50;
-          imageData.data[i + 1] = value * 50;
-          imageData.data[i + 2] = value * 50 + 205;
-          imageData.data[i + 3] = 255;
-        }
-      }
-    }
-    ctx.putImageData(imageData, 0, 0);
-  }
-
-  tick() {
-    const tickCount = this.state.tickCount;
-    this.setState({ tickCount });
-    //requestAnimationFrame(this.tick);
-  }
-
-  paint() {
-    const maybeCanvas = this.displayCanvas.current;
-    if (maybeCanvas != null) {
-      const maybeContext = maybeCanvas.getContext("2d");
-      if (maybeContext != null) {
-        const { smap } = this.state;
-        this.paintHeightMap(maybeContext, smap);
-      }
-    }
-  }
-
-
-  componentDidMount() {
-    requestAnimationFrame(this.tick);
-  }
-
-  reloadClickHandler = (event: React.MouseEvent) => {
-    this.setState({
-      smap: createMap(this.props.width, this.props.height, Date.now()),
-    });
     event.preventDefault();
+    let nextphase;
+    switch (this.state.state) {
+      case TerrainGenIntroPhase.Initial: {
+        this.setState({
+          hmap: createMap(this.props.width, this.props.height, Date.now())
+        });
+        nextphase = TerrainGenIntroPhase.HeightMapGen;
+        break;
+      }
+      case TerrainGenIntroPhase.HeightMapGen: {
+        nextphase = TerrainGenIntroPhase.OceanGen;
+        break;
+      }
+      case TerrainGenIntroPhase.OceanGen: {
+        nextphase = TerrainGenIntroPhase.WindMapGen;
+        break;
+      }
+      case TerrainGenIntroPhase.WindMapGen: {
+        nextphase = TerrainGenIntroPhase.WindMapGen;
+        break;
+      }
+    }
+    this.setState({
+      state: nextphase,
+    });
   }
 
   render() {
+    let { width, height } = this.props;
+    let display;
+    switch (this.state.state) {
+      case TerrainGenIntroPhase.Initial: {
+        display = <div className="border border-light"
+          style={{
+            width: width,
+            height: height
+          }} />;
+        break;
+      }
+      case TerrainGenIntroPhase.HeightMapGen: {
+        if (this.state.hmap != null) {
+          display = <HeightMap heightmap={this.state.hmap} />;
+        } else {
+          assert(this.state.hmap != null);
+        }
+        break;
+      }
+      case TerrainGenIntroPhase.OceanGen: {
+        if (this.state.hmap != null) {
+          display = <OceanHeightMap heightmap={this.state.hmap} sealevel={0.3} />;
+        } else {
+          assert(this.state.hmap != null);
+        }
+        break;
+      }
+      case TerrainGenIntroPhase.WindMapGen: { display = <div />; break; }
+    }
+
+
     return <>
-      <canvas className="border border-light"
-        ref={this.displayCanvas}
-        height={this.props.height}
-        width={this.props.width}
-      />
+      {display}
       <br />
-      <button type="button" className="btn btn-light" onClick={this.reloadClickHandler}>
-        Reload Animation
+      <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
+        Next Phase
       </button>
     </>
   }
