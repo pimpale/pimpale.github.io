@@ -23,7 +23,7 @@ class VectorMap {
     assert(y < this.ysize);
     let [vx, vy] = v;
     this.arr[(this.xsize * y + x) * 2 + 0] = vx;
-    this.arr[(this.xsize * y + x) * 2 + 0] = vy;
+    this.arr[(this.xsize * y + x) * 2 + 1] = vy;
   }
 
   dims() {
