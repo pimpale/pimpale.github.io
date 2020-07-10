@@ -1,7 +1,7 @@
 import React from 'react';
 import assert from 'assert';
 
-import { makeNoise2D } from 'open-simplex-noise';
+import { makeNoise2D, Noise2D } from 'open-simplex-noise';
 import ScalarMap from '../ScalarMap';
 import VectorMap from '../VectorMap';
 
@@ -36,47 +36,52 @@ function createCurlNoise(xsize: number, ysize: number, seed: number) {
   return ret;
 }
 
-function createMap(xsize: number, ysize: number, seed: number) {
+function elevationFunction(x: number, y: number, noise: Noise2D) {
   // mountain noise used for mountain ranges, etc
-  const mscale = 2 << 8;
-  const mnoise = makeNoise2D(seed + 0);
+  const mscale = 2 << 7;
   // base noise used for the general shape of the continent
-  const cscale = 2 << 8;
-  const cnoise = makeNoise2D(seed + 1);
+  const cscale = 2 << 7;
   // more random noise
-  const rnoise = makeNoise2D(seed + 2);
   const rws = [
-    [2 << 7, 17],
-    [2 << 6, 15],
-    [2 << 5, 13],
-    [2 << 4, 10],
-    [2 << 3, 7],
-    [2 << 2, 5],
-    [2 << 1, 3],
+    [2 << 6, 17],
+    [2 << 4, 15],
+    [2 << 3, 13],
+    [2 << 2, 10],
+    [2 << 1, 7],
+    [2 << 0, 5],
   ];
+
+  const coff = 0xAAAA;
+  const roff = 0xBBBB;
+  const moff = 0xFFFF;
+
+  const mv = Math.pow(1 - Math.abs(noise(x / mscale + moff, y / mscale + moff)), 3);
+
+  // makes the general continent shaped noise
+  const cv = noise(x / cscale + coff, y / cscale + coff) + 0.5;
+
+  // now we construct the random noise
+  const rv = rws.reduce(
+    // sum up the weighted scores
+    (wsum: number, [scale, weight]: number[]) => wsum + noise(x / scale + roff, y / scale + roff) * weight, 0
+  ) / rws.reduce(
+    // divide by the total weight to produce the average
+    (totalweight: number, [, weight]: number[]) => totalweight + weight, 0
+  ) + 0.5;
+
+  return Math.pow(0.35 * mv + 0.35 * cv + 0.3 * rv, 4);
+}
+
+function createElevationMap(xsize: number, ysize: number, seed: number) {
+
+  const noise = makeNoise2D(seed);
 
   // where results will be written to, (0.0 -> 1.0)
   let dest = new ScalarMap(xsize, ysize);
 
   for (let x = 0; x < xsize; x++) {
     for (let y = 0; y < ysize; y++) {
-      // makes mountain-ish noise
-      const mv = Math.pow(1 - Math.abs(mnoise(x / mscale, y / mscale)), 3);
-
-      // makes the general continent shaped noise
-      const cv = cnoise(x / cscale, y / cscale) + 0.5;
-
-      // now we construct the random noise
-      const rv = rws.reduce(
-        // sum up the weighted scores
-        (wsum: number, [scale, weight]: number[]) => wsum + rnoise(x / scale, y / scale) * weight, 0
-      ) / rws.reduce(
-        // divide by the total weight to produce the average
-        (totalweight: number, [, weight]: number[]) => totalweight + weight, 0
-      ) + 0.5;
-
-      const result = Math.pow(0.35 * mv + 0.35 * cv + 0.3 * rv, 4);
-      dest.setv(x, y, Math.max(Math.min(result, 1), 0));
+      dest.setv(x, y, Math.max(Math.min(elevationFunction(x, y, noise), 1)));
     }
   }
 
@@ -179,16 +184,19 @@ function OceanHeightMap(props: OceanHeightMapProps) {
   />
 }
 
-
 // When it is free of an ocean
 interface HeightMapProps {
   heightmap: ScalarMap
 }
 
 function HeightMap(props: HeightMapProps) {
-  return <OceanHeightMap
-    heightmap={props.heightmap}
-    sealevel={0.0}
+  return <ImageDataRenderer
+    data={thresholdHeightMap(props.heightmap, 0, {
+      r: 0,
+      g: 0,
+      b: 0,
+      a: 0,
+    })}
   />
 }
 
@@ -248,11 +256,11 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
         }
       })
       // decay particles that are outside boundaries or too old
-      .filter((p) => p.x > 0 && p.x < width && p.y > 0 && p.y < height && p.age < 300)
+      .filter((p) => p.x > 0 && p.x < width && p.y > 0 && p.y < height && p.age < 100)
       .concat(
         // Add more particles
-        [...Array<VectorMapDisplayParticle>(3)]
-          .map(function():VectorMapDisplayParticle {
+        [...Array<VectorMapDisplayParticle>(5)]
+          .map(function(): VectorMapDisplayParticle {
             return {
               x: Math.random() * width,
               y: Math.random() * height,
@@ -264,9 +272,9 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
 
     // regen imagedata
     let ndata = new ScalarMap(width, height);
-    for (let x = 0; x < width ; x++) {
+    for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
-        ndata.setv(x, y, this.state.alphaData.getv(x,y) / 1.1);
+        ndata.setv(x, y, this.state.alphaData.getv(x, y) / 1.1);
       }
     }
 
@@ -285,16 +293,16 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
   }
 
   paintHeightMap(ctx: CanvasRenderingContext2D) {
-    const {width, height} = this.props.base;
+    const { width, height } = this.props.base;
     ctx.putImageData(this.props.base, 0, 0);
     let final = new ImageData(width, height);
-    for (let x = 0; x < width ; x++) {
+    for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
-          const bindex=(width*y + x) * 4 ;
-          final.data[bindex + 0] = this.props.base.data[bindex + 0];
-          final.data[bindex + 1] = this.props.base.data[bindex + 1] + this.state.alphaData.getv(x,y)*255;
-          final.data[bindex + 2] = this.props.base.data[bindex + 2];
-          final.data[bindex + 3] = this.props.base.data[bindex + 3];
+        const bindex = (width * y + x) * 4;
+        final.data[bindex + 0] = this.props.base.data[bindex + 0];
+        final.data[bindex + 1] = this.props.base.data[bindex + 1] + this.state.alphaData.getv(x, y) * 255;
+        final.data[bindex + 2] = this.props.base.data[bindex + 2];
+        final.data[bindex + 3] = this.props.base.data[bindex + 3];
       }
     }
     ctx.putImageData(final, 0, 0);
@@ -340,6 +348,21 @@ function WindOceanMap(props: WindOceanMapProps) {
   />
 }
 
+// temperature calculated in celsius
+// Affected by elevation and latitude
+function createTemperatureMap(elevation:ScalarMap, seed:number) {
+  const random = makeNoise2D(seed);
+  const { width, height } = elevation.dims();
+  const tmap = new ScalarMap(width, height);
+
+  for(let x = 0; x < width; x++) {
+      for(let y = 0; y < height; y++) {
+        
+      }
+  }
+
+}
+
 enum TerrainGenIntroPhase {
   Initial,
   HeightMapGen,
@@ -354,9 +377,12 @@ interface TerrainGenIntroProps {
 
 interface TerrainGenIntroState {
   state: TerrainGenIntroPhase,
-  hmap: ScalarMap | null,
-  wmap: VectorMap | null,
+  // the initial heightmap that will be modified
+  initialElevation: ScalarMap | null,
+  airCurrents: VectorMap | null,
   rmap: ScalarMap | null,
+  histtemp: ScalarMap | null,
+  currtemp: ScalarMap | null,
 }
 
 class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIntroState>{
@@ -365,9 +391,11 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
     super(props);
     this.state = {
       state: TerrainGenIntroPhase.Initial,
-      hmap: null,
-      wmap: null,
+      initialElevation: null,
+      airCurrents: null,
       rmap: null,
+      histtemp: null,
+      currtemp: null,
     };
   }
 
@@ -379,7 +407,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
     switch (this.state.state) {
       case TerrainGenIntroPhase.Initial: {
         this.setState({
-          hmap: createMap(this.props.width, this.props.height, Date.now())
+          initialElevation: createElevationMap(this.props.width, this.props.height, Date.now())
         });
         nextphase = TerrainGenIntroPhase.HeightMapGen;
         break;
@@ -390,7 +418,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
       }
       case TerrainGenIntroPhase.OceanGen: {
         this.setState({
-          wmap: createCurlNoise(this.props.width, this.props.height, Date.now())
+          airCurrents: createCurlNoise(this.props.width, this.props.height, Date.now())
         });
         nextphase = TerrainGenIntroPhase.WindMapGen;
         break;
@@ -449,8 +477,9 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
 
 
     return <>
-      {display}
-      <br />
+      <div>
+        {display}
+      </div>
       <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
         Next Phase
       </button>
