@@ -446,31 +446,31 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
         break;
       }
       case TerrainGenIntroPhase.HeightMapGen: {
-        if (this.state.hmap != null) {
-          display = <HeightMap heightmap={this.state.hmap} />;
+        if (this.state.initialElevation != null) {
+          display = <HeightMap heightmap={this.state.initialElevation} />;
         } else {
-          assert(this.state.hmap != null);
+          assert(this.state.initialElevation != null);
         }
         break;
       }
       case TerrainGenIntroPhase.OceanGen: {
-        if (this.state.hmap != null) {
-          display = <OceanHeightMap heightmap={this.state.hmap} sealevel={0.2} />;
+        if (this.state.initialElevation != null) {
+          display = <OceanHeightMap heightmap={this.state.initialElevation} sealevel={0.2} />;
         } else {
-          assert(this.state.hmap != null);
+          assert(this.state.initialElevation != null);
         }
         break;
       }
       case TerrainGenIntroPhase.WindMapGen: {
-        if (this.state.wmap != null && this.state.hmap != null) {
+        if (this.state.airCurrents != null && this.state.initialElevation != null) {
           display = <WindOceanMap
-            windmap={this.state.wmap}
-            heightmap={this.state.hmap}
+            windmap={this.state.airCurrents}
+            heightmap={this.state.initialElevation}
           />
           break;
         } else {
-          assert(this.state.hmap != null);
-          assert(this.state.wmap != null);
+          assert(this.state.initialElevation != null);
+          assert(this.state.airCurrents != null);
         }
       }
     }
