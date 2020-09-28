@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.7f6fb514.chunk.css",
+    "main.js": "/static/js/main.67c11c3a.chunk.js",
+    "main.js.map": "/static/js/main.67c11c3a.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.ea3107a4.js",
+    "runtime-main.js.map": "/static/js/runtime-main.ea3107a4.js.map",
+    "static/js/2.7cdbaf7d.chunk.js": "/static/js/2.7cdbaf7d.chunk.js",
+    "static/js/2.7cdbaf7d.chunk.js.map": "/static/js/2.7cdbaf7d.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.cf1e01ebd851a1981c7cd7e939f328cf.js": "/precache-manifest.cf1e01ebd851a1981c7cd7e939f328cf.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.7f6fb514.chunk.css.map": "/static/css/main.7f6fb514.chunk.css.map",
+    "static/js/2.7cdbaf7d.chunk.js.LICENSE.txt": "/static/js/2.7cdbaf7d.chunk.js.LICENSE.txt",
+    "static/media/style.scss": "/static/media/literata-latin-700italic.b414d574.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ea3107a4.js",
+    "static/js/2.7cdbaf7d.chunk.js",
+    "static/css/main.7f6fb514.chunk.css",
+    "static/js/main.67c11c3a.chunk.js"
+  ]
+}
