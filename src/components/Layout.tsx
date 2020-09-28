@@ -19,7 +19,7 @@ function Footer() {
 class Layout extends React.Component {
   render() {
     return (
-      <div className="bg-dark text-light">
+      <div className="text-light">
         <Header />
         <div className="content"> {this.props.children} </div>
         <Footer />

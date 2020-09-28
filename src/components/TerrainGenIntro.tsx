@@ -350,15 +350,15 @@ function WindOceanMap(props: WindOceanMapProps) {
 
 // temperature calculated in celsius
 // Affected by elevation and latitude
-function createTemperatureMap(elevation:ScalarMap, seed:number) {
+function createTemperatureMap(elevation: ScalarMap, seed: number) {
   const random = makeNoise2D(seed);
   const { width, height } = elevation.dims();
   const tmap = new ScalarMap(width, height);
 
-  for(let x = 0; x < width; x++) {
-      for(let y = 0; y < height; y++) {
-        
-      }
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+
+    }
   }
 
 }
@@ -424,7 +424,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
         break;
       }
       case TerrainGenIntroPhase.WindMapGen: {
-        nextphase = TerrainGenIntroPhase.WindMapGen;
+        nextphase = TerrainGenIntroPhase.Initial;
         break;
       }
     }
@@ -435,55 +435,61 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
 
   render() {
     let { width, height } = this.props;
-    let display;
     switch (this.state.state) {
       case TerrainGenIntroPhase.Initial: {
-        display = <canvas className="border border-light"
+        return <div className="border border-light"
           style={{
             width: width,
-            height: height
-          }} />;
-        break;
+            height: height,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+          <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
+            Generate Terrain
+           </button>
+        </div>
       }
       case TerrainGenIntroPhase.HeightMapGen: {
-        if (this.state.initialElevation != null) {
-          display = <HeightMap heightmap={this.state.initialElevation} />;
-        } else {
-          assert(this.state.initialElevation != null);
-        }
-        break;
+        assert(this.state.initialElevation != null);
+        return <>
+          <HeightMap heightmap={this.state.initialElevation} />
+          <div>
+            <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
+              Next Phase
+            </button>
+          </div>
+        </>
       }
       case TerrainGenIntroPhase.OceanGen: {
-        if (this.state.initialElevation != null) {
-          display = <OceanHeightMap heightmap={this.state.initialElevation} sealevel={0.2} />;
-        } else {
-          assert(this.state.initialElevation != null);
-        }
-        break;
+        assert(this.state.initialElevation != null);
+        return <>
+          <OceanHeightMap heightmap={this.state.initialElevation} sealevel={0.2} />
+          <div>
+            <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
+              Next Phase
+            </button>
+          </div>
+        </>
       }
       case TerrainGenIntroPhase.WindMapGen: {
-        if (this.state.airCurrents != null && this.state.initialElevation != null) {
-          display = <WindOceanMap
+        assert(this.state.initialElevation != null);
+        assert(this.state.airCurrents != null);
+        return <>
+          <WindOceanMap
             windmap={this.state.airCurrents}
             heightmap={this.state.initialElevation}
           />
-          break;
-        } else {
-          assert(this.state.initialElevation != null);
-          assert(this.state.airCurrents != null);
-        }
+          <div>
+            <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
+              Reset
+            </button>
+          </div>
+        </>
       }
     }
 
 
-    return <>
-      <div>
-        {display}
-      </div>
-      <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
-        Next Phase
-      </button>
-    </>
   }
 }
 

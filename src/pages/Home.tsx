@@ -72,8 +72,9 @@ const introStyle = {
   backgroundSize: "cover",
   display: "flex",
   height: "100vh",
+  minHeight: "50rem",
   width: "100%",
-  minWidth: "50em"
+  minWidth: "50rem"
 }
 
 
@@ -83,8 +84,8 @@ const circleCenter = {
   position: "absolute" as const,
   top: "50%",
   left: "50%",
-  width: "50em",
-  height: "50em",
+  width: "50rem",
+  height: "50rem",
   transform: "translate(-50%, -50%)",
 }
 

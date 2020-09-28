@@ -23,8 +23,11 @@ $cyan:    #8ec07c;
 
 $link-hover-color: #8ec07c;
 
+$body-bg: $gray-800;
+
 @import "~typeface-literata/index";
 
 $font-family-base: "Literata";
 
 @import "~bootstrap/scss/bootstrap";
+
