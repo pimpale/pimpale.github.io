@@ -278,8 +278,6 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
       }
     }
 
-    console.log(nparticles);
-
     for (const p of nparticles) {
       ndata.setv(Math.floor(p.x), Math.floor(p.y), 1);
     }

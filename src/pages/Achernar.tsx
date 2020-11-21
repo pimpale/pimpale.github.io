@@ -4,7 +4,7 @@ import Section from '../components/Section';
 
 function Achernar() {
   return <Layout>
-  <Section id="operators">
+  <Section id="operators" name="Operators">
 
   </Section>
   </Layout>

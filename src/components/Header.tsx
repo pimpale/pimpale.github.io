@@ -55,9 +55,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <div className="collapse navbar-collapse"
               id="navbarSupportedContent">
               <div className="navbar-nav ml-auto">
-                <Link className="nav-item nav-link" to="/#about"><strong>About</strong></Link>
-                <Link className="nav-item nav-link" to="/achernar"><strong>Achernar</strong></Link>
-                <Link className="nav-item nav-link" to="/compugenesis"><strong>Compugenesis</strong></Link>
+                <Link to="/achernar" className="nav-item nav-link"  ><strong>Achernar</strong></Link>
+                <Link to="/compugenesis" className="nav-item nav-link"  ><strong>Compugenesis</strong></Link>
               </div>
             </div>
           </div>

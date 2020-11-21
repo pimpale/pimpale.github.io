@@ -1,4 +1,4 @@
-    import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import Centerpiece from '../components/Centerpiece';
@@ -74,32 +74,29 @@ const circleCenter = {
 function Home() {
   return (
     <Layout>
-      <Section id="intro">
-        <div style={introStyle}>
-          <Centerpiece style={circleCenter} />
-          <IntroCard rotation={-45} title="About">
-            <Link to="#about">About me, my projects, and this site</Link>
-          </IntroCard>
-          <IntroCard rotation={0} title="Innexgo">
-            <Link to="#innexgo">Open source education systems</Link>
-          </IntroCard>
-          <IntroCard rotation={45} title="Source">
-            <Link to="https://github.com/pimpale/pimpale.github.io">View source code for this site</Link>
-          </IntroCard>
-          <IntroCard rotation={-45 + 180} title="Achernar">
-            <Link to="#achernar">A minimalistic, secure, and low level language</Link>
-          </IntroCard>
-          <IntroCard rotation={0 + 180} title="Terrain Generation">
-            <Link to="#terraingeneration">Generate Alien Landforms with Perlin Noise</Link>
-          </IntroCard>
-          <IntroCard rotation={45 + 180} title="Compugenesis" >
-            <Link to="#compugenesis">Plant growth simulation</Link>
-          </IntroCard>
-        </div>
-      </Section>
+      <div style={introStyle}>
+        <Centerpiece style={circleCenter} />
+        <IntroCard rotation={-45} title="About">
+          <a href="#about">About me, my projects, and this site</a>
+        </IntroCard>
+        <IntroCard rotation={0} title="Innexgo">
+          <a href="#innexgo">Open source education systems</a>
+        </IntroCard>
+        <IntroCard rotation={45} title="Source">
+          <a href="https://github.com/pimpale/pimpale.github.io">View source code for this site</a>
+        </IntroCard>
+        <IntroCard rotation={-45 + 180} title="Achernar">
+          <a href="#achernar">A minimalistic, secure, and low level language</a>
+        </IntroCard>
+        <IntroCard rotation={0 + 180} title="Terrain Generation">
+          <a href="#terraingeneration">Generate Alien Landforms with Perlin Noise</a>
+        </IntroCard>
+        <IntroCard rotation={45 + 180} title="Compugenesis" >
+          <a href="#compugenesis">Plant growth simulation</a>
+        </IntroCard>
+      </div>
       <div id="content" className="container">
-        <Section id="about">
-          <h2>About</h2>
+        <Section id="about" name="About">
           <h5>Me</h5>
           <p>
             I'm a student at UCLA, studying Computer Science and Engineering.
@@ -109,12 +106,12 @@ function Home() {
             </a> and the <a href="https://suckless.org/philosophy/">Suckless philosophy</a>.
             In my free time, I enjoy recreational programming (especially in C).
             I currently work at <a href="https://innexgo.com">Innexgo</a>, making educational software.
-            <ul>
-              <li><a href="https://github.com/pimpale/">Github</a></li>
-              <li><a href="https://www.linkedin.com/in/govind-pimpale/">LinkedIn</a></li>
-              <li><a href={Resume}>Resume</a></li>
-            </ul>
           </p>
+          <ul>
+            <li><a href="https://github.com/pimpale/">Github</a></li>
+            <li><a href="https://www.linkedin.com/in/govind-pimpale/">LinkedIn</a></li>
+            <li><a href={Resume}>Resume</a></li>
+          </ul>
           <h5>Projects</h5>
           <p>
             Most of my projects are licensed permissively, usually under MIT or the Unlicense. If they're not on the site,
@@ -129,8 +126,7 @@ function Home() {
             The source of this website can be found <a href="https://github.com/pimpale/pimpale.github.io">here</a>.
           </p>
         </Section>
-        <Section id="innexgo">
-          <h2>Innexgo</h2>
+        <Section id="innexgo" name="Innexgo">
           <p>
             In 2018 I helped create Innexgo, an open source student attendance system. Innexgo uses RFID stickers to automatically take
             attendance without wasting student or teacher time and provides data analysis tools for converting raw attendance data to useful
@@ -142,8 +138,7 @@ function Home() {
             <a href="https://github.com/innexgo">Source Code</a>
           </p>
         </Section>
-        <Section id="achernar">
-          <h2>Achernar</h2>
+        <Section id="achernar" name="Achernar">
           <h5>Goals</h5>
           Achernar is a <b><i>Work In Progress</i></b> programming language focusing on:
           <ul>
@@ -172,8 +167,7 @@ function Home() {
           </p>
         </Section>
         <br />
-        <Section id="terraingeneration">
-          <h2>Terrain Generation</h2>
+        <Section id="terraingeneration" name="TerrainGeneration">
           <div>
             <TerrainGenIntro width={800} height={800} />
             <br />
