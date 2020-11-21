@@ -250,8 +250,8 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
         // move particles
         const dir = this.props.vmap.getv(Math.floor(p.x), Math.floor(p.y));
         return {
-          x: p.x + dir[0] * 2,
-          y: p.y + dir[1] * 2,
+          x: p.x + dir[0],
+          y: p.y + dir[1],
           age: p.age + 1
         }
       })

@@ -1,4 +1,5 @@
-import React  from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { ThreeDotsVertical } from 'react-bootstrap-icons'
 
 interface HeaderProps {
@@ -10,9 +11,9 @@ interface HeaderState {
 
 class Header extends React.Component<HeaderProps, HeaderState> {
 
-  constructor(props:HeaderProps) {
+  constructor(props: HeaderProps) {
     super(props);
-    this.state ={
+    this.state = {
       scroll: 0,
     };
   }
@@ -45,18 +46,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
     return (
       <header>
-        <nav style={navStyle} className={ "navbar navbar-expand-lg py-3 fixed-top" + (this.state.scroll === 0 ? "" : " bg-secondary")}>
+        <nav style={navStyle} className={"navbar navbar-expand-lg py-3 fixed-top" + (this.state.scroll === 0 ? "" : " bg-secondary")}>
           <div className="container">
-            <a className="navbar-brand font-weight-bold" href="/">Govind Pimpale</a>
+            <Link className="navbar-brand" to="/"><strong>Govind Pimpale</strong></Link>
             <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
               <ThreeDotsVertical className="text-light" />
             </button>
             <div className="collapse navbar-collapse"
               id="navbarSupportedContent">
               <div className="navbar-nav ml-auto">
-                <a className="nav-item nav-link font-weight-bold" href="/#about">About</a>
-                <a className="nav-item nav-link font-weight-bold" href="/achernar">Achernar</a>
-                <a className="nav-item nav-link font-weight-bold" href="/compugenesis">Compugenesis</a>
+                <Link className="nav-item nav-link" to="/#about"><strong>About</strong></Link>
+                <Link className="nav-item nav-link" to="/achernar"><strong>Achernar</strong></Link>
+                <Link className="nav-item nav-link" to="/compugenesis"><strong>Compugenesis</strong></Link>
               </div>
             </div>
           </div>

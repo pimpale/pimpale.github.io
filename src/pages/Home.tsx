@@ -1,9 +1,12 @@
-import React from 'react';
+    import React from 'react';
+import { Link } from 'react-router-dom';
+
 import Centerpiece from '../components/Centerpiece';
-
 import TerrainGenIntro from '../components/TerrainGenIntro';
-
 import Layout from '../components/Layout';
+import Section from '../components/Section';
+
+import Resume from '../assets/Resume.pdf';
 
 type IntroCardProps = {
   title: string,
@@ -42,27 +45,6 @@ const IntroCard: React.FunctionComponent<IntroCardProps> = props => {
   );
 }
 
-type SectionProps = {
-  id: string
-}
-
-const Section: React.FunctionComponent<SectionProps> = props => {
-  return <section style={{
-    overflow: "hidden",
-    position: "relative",
-  }}>
-    <span
-      id={props.id}
-      style={{
-        position: "absolute",
-        top: "-100px",
-        visibility: "hidden",
-      }}></span>
-    {props.children}
-  </section>
-}
-
-
 const introStyle = {
   position: "relative" as const,
   alignItems: "center",
@@ -92,30 +74,74 @@ const circleCenter = {
 function Home() {
   return (
     <Layout>
-      <section>
+      <Section id="intro">
         <div style={introStyle}>
           <Centerpiece style={circleCenter} />
           <IntroCard rotation={-45} title="About">
-            <a href="#about">About me, my projects, and this site</a>
+            <Link to="#about">About me, my projects, and this site</Link>
           </IntroCard>
           <IntroCard rotation={0} title="Innexgo">
-            <a href="#innexgo">Open source education systems</a>
+            <Link to="#innexgo">Open source education systems</Link>
           </IntroCard>
           <IntroCard rotation={45} title="Source">
-            <a href="https://github.com/pimpale/pimpale.github.io">View source code for this site</a>
+            <Link to="https://github.com/pimpale/pimpale.github.io">View source code for this site</Link>
           </IntroCard>
           <IntroCard rotation={-45 + 180} title="Achernar">
-            <a href="#achernar">A minimalistic, secure, and low level language</a>
+            <Link to="#achernar">A minimalistic, secure, and low level language</Link>
           </IntroCard>
           <IntroCard rotation={0 + 180} title="Terrain Generation">
-            <a href="#terraingeneration">Generate Alien Landforms with Perlin Noise</a>
+            <Link to="#terraingeneration">Generate Alien Landforms with Perlin Noise</Link>
           </IntroCard>
           <IntroCard rotation={45 + 180} title="Compugenesis" >
-            <a href="#compugenesis">Plant growth simulation</a>
+            <Link to="#compugenesis">Plant growth simulation</Link>
           </IntroCard>
         </div>
-      </section>
+      </Section>
       <div id="content" className="container">
+        <Section id="about">
+          <h2>About</h2>
+          <h5>Me</h5>
+          <p>
+            I'm a student at UCLA, studying Computer Science and Engineering.
+            I believe in <a
+              href="https://globalprioritiesinstitute.org/wp-content/uploads/2019/Greaves_MacAskill_The_Case_for_Strong_Longtermism.pdf">
+              Strong Longtermism
+            </a> and the <a href="https://suckless.org/philosophy/">Suckless philosophy</a>.
+            In my free time, I enjoy recreational programming (especially in C).
+            I currently work at <a href="https://innexgo.com">Innexgo</a>, making educational software.
+            <ul>
+              <li><a href="https://github.com/pimpale/">Github</a></li>
+              <li><a href="https://www.linkedin.com/in/govind-pimpale/">LinkedIn</a></li>
+              <li><a href={Resume}>Resume</a></li>
+            </ul>
+          </p>
+          <h5>Projects</h5>
+          <p>
+            Most of my projects are licensed permissively, usually under MIT or the Unlicense. If they're not on the site,
+            you can find them <a href="https://github.com/pimpale/">here</a>. You can also follow me on github to keep up to date on their development.
+          </p>
+          <h5>Site</h5>
+          <p>
+            This site was made
+            using <a href="https://reactjs.org/">ReactJS</a> and <a href="https://www.typescriptlang.org/">Typescript</a>,
+            with the animations in <a href="https://threejs.org/">three.js</a>.
+            All content on this site is licensed under the MIT license unless otherwise specified.
+            The source of this website can be found <a href="https://github.com/pimpale/pimpale.github.io">here</a>.
+          </p>
+        </Section>
+        <Section id="innexgo">
+          <h2>Innexgo</h2>
+          <p>
+            In 2018 I helped create Innexgo, an open source student attendance system. Innexgo uses RFID stickers to automatically take
+            attendance without wasting student or teacher time and provides data analysis tools for converting raw attendance data to useful
+            graphs and statistics.
+          </p>
+          <p>
+            <a href="https://innexgo.com">Company Website</a>
+            <br />
+            <a href="https://github.com/innexgo">Source Code</a>
+          </p>
+        </Section>
         <Section id="achernar">
           <h2>Achernar</h2>
           <h5>Goals</h5>
@@ -140,9 +166,9 @@ function Home() {
           </p>
           <h5>Additional Information</h5>
           <p>
-            <a href="https://github.com/pimpale/achernar">Achernar Source Code</a>
+            <Link to="https://github.com/pimpale/achernar">Achernar Source Code</Link>
             <br />
-            <a href="/achernar">Live Demo</a>
+            <Link to="/achernar">More Info</Link>
           </p>
         </Section>
         <br />
@@ -151,48 +177,10 @@ function Home() {
           <div>
             <TerrainGenIntro width={800} height={800} />
             <br />
-            <a href="/terraingeneration">More Terrain Generation</a>
+            <Link to="/terraingeneration">More Terrain Generation</Link>
           </div>
         </Section>
         <br />
-        <Section id="innexgo">
-          <h2>Innexgo</h2>
-          <p>
-            In 2018 I helped create Innexgo, an open source student attendance system. Innexgo uses RFID stickers to automatically take
-            attendance without wasting student or teacher time and provides data analysis tools for converting raw attendance data to useful
-            graphs and statistics.
-          </p>
-          <p>
-            <a href="https://innexgo.com">Company Website</a>
-            <br />
-            <a href="https://github.com/innexgo">Source Code</a>
-          </p>
-        </Section>
-        <br />
-        <Section id="about">
-          <h2>About</h2>
-          <h5>Me</h5>
-          <p>
-            I enjoy recreational coding, especially in C.
-            I currently work at <a href="https://innexgo.com">Innexgo</a>, making educational software.
-            I believe in <a
-              href="https://globalprioritiesinstitute.org/wp-content/uploads/2019/Greaves_MacAskill_The_Case_for_Strong_Longtermism.pdf">
-              Strong Longtermism
-            </a> and <a href="https://suckless.org/philosophy/">the Suckless philosophy</a>.
-          </p>
-          <h5>Projects</h5>
-          <p>
-            Most of my personal "for fun" projects are licensed permissively, usually under MIT or the Unlicense. If they're not on the site,
-            you can find them <a href="https://github.com/pimpale/">here</a>. You can also follow me on github to keep up to date on their development.
-          </p>
-          <h5>Site</h5>
-          <p>
-            This site was made using <a href="https://reactjs.org/">ReactJS</a> and <a href="https://www.typescriptlang.org/">Typescript</a>,
-            with the animations in <a href="https://threejs.org/">three.js</a>.
-            All content on this site is licensed under the MIT license unless otherwise specified.
-            The source of this website can be found <a href="https://github.com/pimpale/pimpale.github.io">here</a>.
-          </p>
-        </Section>
       </div>
     </Layout>
   )

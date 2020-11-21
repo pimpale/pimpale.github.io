@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Home from './pages/Home';
+import Achernar from './pages/Achernar';
 import Error from './pages/Error';
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Home} />
+        <Route path="/achernar" exact component={Achernar} />
         <Route path="/" component={Error} />
       </Switch>
     </BrowserRouter>
