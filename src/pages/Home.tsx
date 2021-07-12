@@ -15,16 +15,16 @@ type IntroCardProps = {
 
 const IntroCard: React.FunctionComponent<IntroCardProps> = props => {
   const isLeft = Math.cos(props.rotation * (Math.PI / 180)) < 0;
-  const circleEdge = isLeft ? {
-    display: "block",
-    position: "absolute" as const,
-    top: "50%",
-    left: "50%",
-    width: "15em",
-    transformOrigin: "right",
-    transform: `rotate(${props.rotation}deg) translate(15em) rotate(${-props.rotation}deg) translate(-100%, -50%)`,
-    borderRight: "6px solid black",
-  } : {
+  const circleEdge = isLeft
+    ? {
+      display: "block",
+      position: "absolute" as const,
+      top: "50%",
+      left: "50%",
+      width: "15em",
+      transformOrigin: "right",
+      transform: `rotate(${props.rotation}deg) translate(15em) rotate(${-props.rotation}deg) translate(-100%, -50%)`,
+    } : {
       display: "block",
       position: "absolute" as const,
       top: "50%",
@@ -32,11 +32,10 @@ const IntroCard: React.FunctionComponent<IntroCardProps> = props => {
       width: "15em",
       transformOrigin: "left",
       transform: `rotate(${props.rotation}deg) translate(15em) rotate(${-props.rotation}deg) translate(0%, -50%)`,
-      borderLeft: "6px solid black",
     };
 
   return (
-    <div className="card text-light bg-dark" style={circleEdge}>
+    <div className="card" style={circleEdge}>
       <div className="card-body">
         <h5 className="card-title">{props.title}</h5>
         <div className="card-text">{props.children}</div>

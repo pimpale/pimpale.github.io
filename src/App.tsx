@@ -5,6 +5,11 @@ import Home from './pages/Home';
 import Achernar from './pages/Achernar';
 import Error from './pages/Error';
 
+// Bootstrap CSS & JS
+import './styles/style.scss';
+import 'bootstrap/dist/js/bootstrap';
+
+
 function App() {
   return (
     <BrowserRouter>

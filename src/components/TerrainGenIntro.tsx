@@ -1,24 +1,29 @@
 import React from 'react';
 import assert from 'assert';
 
-import { makeNoise2D, Noise2D } from 'open-simplex-noise';
+import { makeNoise2D, makeNoise4D } from 'open-simplex-noise';
 import ScalarMap from '../ScalarMap';
 import VectorMap from '../VectorMap';
 
-const EPSILON = 0.0001;
-function createCurlNoise(xsize: number, ysize: number, seed: number) {
-  const noise = makeNoise2D(seed);
-  const scale = 2 << 8;
+function makeTorusNoise2D(scale: number, seed: number) {
+  const noise4 = makeNoise4D(seed);
+  return (theta: number, phi: number) => noise4(
+    Math.cos(theta) / scale, Math.sin(theta) / scale,
+    Math.cos(phi) / scale, Math.sin(phi) / scale
+  );
+}
 
-  function sampleCurlNoise(x: number, y: number) {
+function createCurlNoise(xsize: number, ysize: number, seed: number) {
+  function sampleCurlNoise(noise: (x: number, y: number) => number, x: number, y: number) {
+    const EPSILON = 0.0001;
     //Find rate of change in X direction
-    const dxs1 = noise(x / scale + EPSILON, y / scale);
-    const dxs2 = noise(x / scale - EPSILON, y / scale);
+    const dxs1 = noise(x + EPSILON, y);
+    const dxs2 = noise(x - EPSILON, y);
     //Average to find approximate derivative
     const dx = (dxs1 - dxs2) / (2 * EPSILON);
     //Find rate of change in Y direction
-    const dys1 = noise(x / scale, y / scale + EPSILON);
-    const dys2 = noise(x / scale, y / scale - EPSILON);
+    const dys1 = noise(x, y + EPSILON);
+    const dys2 = noise(x, y - EPSILON);
     //Average to find approximate derivative
     const dy = (dys1 - dys2) / (2 * EPSILON);
     //Curl
@@ -27,61 +32,85 @@ function createCurlNoise(xsize: number, ysize: number, seed: number) {
 
   let ret = new VectorMap(xsize, ysize);
 
+  const noise = makeTorusNoise2D(3, seed);
+
   // find rate of change in X direction by averaging together 2 samples
   for (let x = 0; x < xsize; x++) {
     for (let y = 0; y < ysize; y++) {
-      ret.setv(x, y, sampleCurlNoise(x, y));
+      ret.setv(x, y, sampleCurlNoise(noise,
+        (x / xsize) * 2 * Math.PI, (y / ysize) * 2 * Math.PI
+      ));
     }
   }
   return ret;
 }
 
-function elevationFunction(x: number, y: number, noise: Noise2D) {
-  // mountain noise used for mountain ranges, etc
-  const mscale = 2 << 7;
-  // base noise used for the general shape of the continent
-  const cscale = 2 << 7;
-  // more random noise
-  const rws = [
-    [2 << 6, 17],
-    [2 << 4, 15],
-    [2 << 3, 13],
-    [2 << 2, 10],
-    [2 << 1, 7],
-    [2 << 0, 5],
-  ];
-
-  const coff = 0xAAAA;
-  const roff = 0xBBBB;
-  const moff = 0xFFFF;
-
-  const mv = Math.pow(1 - Math.abs(noise(x / mscale + moff, y / mscale + moff)), 3);
-
-  // makes the general continent shaped noise
-  const cv = noise(x / cscale + coff, y / cscale + coff) + 0.5;
-
-  // now we construct the random noise
-  const rv = rws.reduce(
-    // sum up the weighted scores
-    (wsum: number, [scale, weight]: number[]) => wsum + noise(x / scale + roff, y / scale + roff) * weight, 0
-  ) / rws.reduce(
-    // divide by the total weight to produce the average
-    (totalweight: number, [, weight]: number[]) => totalweight + weight, 0
-  ) + 0.5;
-
-  return Math.pow(0.35 * mv + 0.35 * cv + 0.3 * rv, 4);
-}
 
 function createElevationMap(xsize: number, ysize: number, seed: number) {
+  function createFractalNoise(
+    x: number,
+    y: number,
+    noises: {
+      noise: (x: number, y: number) => number,
+      weight: number
+    }[]
+  ) {
+    let sum = 0;
+    for (const { noise, weight } of noises) {
+      sum += noise(x, y) * weight;
+    }
+    return sum;
+  }
 
-  const noise = makeNoise2D(seed);
+  const octaves = [
+    { scale: 1.20, weight: 70 },
+    { scale: 0.64, weight: 19 },
+    { scale: 0.32, weight: 15 },
+    { scale: 0.16, weight: 13 },
+    { scale: 0.08, weight: 8 },
+    { scale: 0.04, weight: 5 },
+    { scale: 0.03, weight: 3 },
+  ];
+
+  const weightsum = octaves.map(o => o.weight).reduce((a, b) => a + b);
+
+  const rnoises = octaves.map(({ scale, weight }, i) => ({
+    noise: makeTorusNoise2D(scale, seed + i),
+    weight: weight / weightsum
+  }));
+
+
+  function createMountainNoise(
+    x: number,
+    y: number,
+    noise: (x: number, y: number) => number,
+  ) {
+    return Math.pow(1 - Math.abs(noise(x, y)), 3);
+  }
+
+  const mnoise = makeTorusNoise2D(3, seed - 1);
+
+  const clamp = (x: number) => Math.max(Math.min(x, 1), 0)
 
   // where results will be written to, (0.0 -> 1.0)
   let dest = new ScalarMap(xsize, ysize);
 
   for (let x = 0; x < xsize; x++) {
     for (let y = 0; y < ysize; y++) {
-      dest.setv(x, y, Math.max(Math.min(elevationFunction(x, y, noise), 1)));
+      const rval = createFractalNoise(
+        (x / xsize) * Math.PI * 2,
+        (y / ysize) * Math.PI * 2,
+        rnoises
+      ) + 0.5;
+
+      const mval = createMountainNoise(
+        (x / xsize) * Math.PI * 2,
+        (y / ysize) * Math.PI * 2,
+        mnoise
+      ) + 0.5;
+
+      const val = Math.pow(mval * 0.3 + rval *0.7, 4);
+      dest.setv(x, y, clamp(val));
     }
   }
 
@@ -156,7 +185,7 @@ class ImageDataRenderer extends React.Component<ImageDataRendererProps> {
   render() {
     const { width, height } = this.props.data;
     return (
-      <canvas className="border border-light"
+      <canvas className="border border-dark"
         ref={this.displayCanvas}
         width={width}
         height={height}
@@ -242,6 +271,8 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
     this.paint();
   }
 
+  
+
   tick() {
     const { width, height } = this.state.alphaData.dims();
     // update particles
@@ -250,8 +281,8 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
         // move particles
         const dir = this.props.vmap.getv(Math.floor(p.x), Math.floor(p.y));
         return {
-          x: p.x + dir[0],
-          y: p.y + dir[1],
+          x: p.x + 2*dir[0],
+          y: p.y + 2*dir[1],
           age: p.age + 1
         }
       })
@@ -259,7 +290,7 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
       .filter((p) => p.x > 0 && p.x < width && p.y > 0 && p.y < height && p.age < 100)
       .concat(
         // Add more particles
-        [...Array<VectorMapDisplayParticle>(5)]
+        [...Array<VectorMapDisplayParticle>(8)]
           .map(function(): VectorMapDisplayParticle {
             return {
               x: Math.random() * width,
@@ -287,7 +318,7 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
       alphaData: ndata,
       particles: nparticles
     });
-    setTimeout(this.tick, 200);
+    setTimeout(this.tick, 100);
   }
 
   paintHeightMap(ctx: CanvasRenderingContext2D) {
@@ -319,7 +350,7 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
   render() {
     const { width, height } = this.props.base;
     return (
-      <canvas className="border border-light"
+      <canvas className="border border-dark"
         ref={this.displayCanvas}
         width={width}
         height={height}
@@ -435,7 +466,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
     let { width, height } = this.props;
     switch (this.state.state) {
       case TerrainGenIntroPhase.Initial: {
-        return <div className="border border-light"
+        return <div className="border border-dark"
           style={{
             width: width,
             height: height,
@@ -443,9 +474,9 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
+          <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
             Generate Terrain
-           </button>
+          </button>
         </div>
       }
       case TerrainGenIntroPhase.HeightMapGen: {
@@ -453,7 +484,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
         return <>
           <HeightMap heightmap={this.state.initialElevation} />
           <div>
-            <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
+            <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
               Next Phase
             </button>
           </div>
@@ -464,7 +495,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
         return <>
           <OceanHeightMap heightmap={this.state.initialElevation} sealevel={0.2} />
           <div>
-            <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
+            <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
               Next Phase
             </button>
           </div>
@@ -479,15 +510,13 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
             heightmap={this.state.initialElevation}
           />
           <div>
-            <button type="button" className="btn btn-light" onClick={this.nextPhaseClick}>
+            <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
               Reset
             </button>
           </div>
         </>
       }
     }
-
-
   }
 }
 
