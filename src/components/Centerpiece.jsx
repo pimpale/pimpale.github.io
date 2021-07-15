@@ -41,8 +41,6 @@ function Thing(props) {
   )
 }
 
-
-
 function Centerpiece(props) {
   return (
     <Canvas {...props} >

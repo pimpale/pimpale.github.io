@@ -44,7 +44,7 @@ const TerrainGeneration = () =>
           The classic example is that one can technically get a coffee mug from a donut since the mug, like the donut, has one through hole.
         </p>
         <div className="mx-auto text-center my-3">
-          <img src={MugAndTorus} className="border border-dark mx-auto d-block" />
+          <img src={MugAndTorus} className="border border-dark mx-auto d-block" alt="A mug morphing into a torus and back" />
           <small>Image in the public domain. <a href="https://commons.wikimedia.org/wiki/File:Mug_and_Torus_morph.gif">Source</a></small>
         </div>
         <p>
@@ -55,7 +55,8 @@ const TerrainGeneration = () =>
           <ul>
             <li>Is it 2D or or 3D?</li>
             <li>Infinite or finite?</li>
-            <li>If it's finite, what's at the edges?</li>
+            <li>Flat or Sphere?</li>
+            <li>Boundary Conditions?</li>
           </ul>
         </p>
         <p>
@@ -64,47 +65,53 @@ const TerrainGeneration = () =>
         <h4>3D or 2D?</h4>
         <p>
           The dimensionality of the game is a core gameplay aspect that usually is decided early on.
-        </p>
-        <p>
-          The main 3 options are 2D sidescroller, 2D top down, and 3D:
-        </p>
-        <p>
-          <ul>
-            <li>
-              <p>
-                <strong>Sidescrollers: </strong>
-                These games use terrain generation primarily in cave systems, dungeons, or other subterranean structures.
-                The terrain generation algorithms will be very different than the other two options, and incompatible.
-                As such, we'll disregard this game class in this post, but we will revisit it sometime in the future.
-              </p>
-            </li>
-            <li>
-              <p>
-                <strong>2D top down (Roguelikes): </strong>
-                Roguelike games have a long history of using procedural generation.
-                These games can make use of terrain generation in order to choose which biomes should go where, and where rivers, mountains, and cities should be located.
-                However, unlike 3D games, we will lose a lot of information as we convert the world.
-              </p>
-            </li>
-            <li>
-              <p>
-                <strong>3D game: </strong>
-                In this article, we'll choose a 3D game since it tends to be easier to adapt a 3d algorithm to a 2d world than the other way around.
-              </p>
-            </li>
-          </ul>
+          In this article, we'll choose a 3D game since it tends to be easier to adapt a 3d algorithm to a 2d world than the other way around.
         </p>
         <p>
           However, it's important to note: just because our game world is 3D doesn't mean we always need to use a 3D data structure when generating the world.
-          We can save massive amounts of memory if we can guarantee our world is roughly 2D during the world gen process.
-          This does have certain limitations (no floating islands), but it is generally applicable for most usecases.
+          If we guarantee that for each point on our world's surface, the elevation is a well defined number, then we can use a 2d graph or grid to represent the heightmap.
+          This approach does have certain limitations, but it signficantly simplifies world generation and improves performance.
+        </p>
+        <p>
+          There are situations where a heightmap is not desirable though.
+          For example, if we want our world to be primarily cave based, with no real "surface" to speak of, then this approach is obviously untenable.
+          It also doesn't work well if you want to have a world made of only floating islands, since there isn't really a standard way to define "elevation" for a given coordinate.
+          In these situations, a possible workaround could be to generate each cavern or floating island independently.
+          Then, for each unit, we can use a seperate heightmap.
+          This approach is less efficient compared to a single heightmap, but since each per unit heightmap is smaller, it may still be feasible.
+        </p>
+        <p>
+          If we don't want to use a heightmap, then the alternative is to use a fully 3D approach.
+          This is what we'll end up doing during our runtime chunk generation, but we reccomend against using a 3D approach during the intial worldgen stage due to the massive memory requirements.
+        </p>
+        <h4>Infinite or Finite?</h4>
+        <p>
+          If we don't have any complex build time systems, then we can make our world size effectively infinite, and just generate everything at runtime.
+          This is the approach Minecraft takes.
+          In some ways, this is optimal:
+          The user doesn't have to wait at all for world generation, and we have a lot of flexibility with how large the map should be.
+        </p>
+        <p>
+          However, an infinite world bars us from doing deeper simulations that require knowledge of the game map ahead of time.
+          We can't generate realistic rivers, glaciers, or historical simulations in such a world.
+          For this reason, we'll choose a finite, but reasonably large, size.
+        </p>
+        <h4>Flat or Sphere?</h4>
+        <p>
+          Spherical worlds are more realistic, and if creating an accurate simulation is important, is the way to go.
+          Spherical geometry is also required if space travel is an aspect of gameplay.
+        </p>
+        <p>
+          However, spherical geometry is incompatible with voxel tiling over the surface.
+          There is no way to tile squares over the entire surface of a sphere without some points having
+
+          This is because there is no way to project a
         </p>
 
-        <h6 className="mt-3"></h6>
-
-        <h4 className="mt-3">Infinite or Finite?</h4>
-        <h4 className="mt-3">Boundary Conditions?</h4>
-
+        <p>
+          Ideally, we would like our world to be flat, so we can use Euclidean geometry.
+          The farther we depart from flat, the more complex math we need to do.
+        </p>
 
       </Section>
       <Section id="terrainGeneration" name="Terrain Generation">
