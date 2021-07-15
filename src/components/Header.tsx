@@ -45,22 +45,30 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       transitionDuration: "0.4s"
     };
     return (
-      <header>
+      <header className="pb-5">
         <nav style={navStyle} className={"navbar navbar-expand-lg py-3 fixed-top" + (this.state.scroll === 0 ? "" : " bg-secondary")}>
-          <div className="container">
+          <div className="container d-flex">
             <Link className="navbar-brand" to="/"><strong>Govind Pimpale</strong></Link>
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              {/*Left Aligned*/}
+              <div className="navbar-nav">
+                <Link to="/resume" className="nav-item nav-link"><strong>Resume</strong></Link>
+                <Link to="/projects" className="nav-item nav-link"><strong>Projects</strong></Link>
+              </div>
+              {/*Right Aligned*/}
+              <div className="navbar-nav ms-auto">
+                <Link to="/terraingeneration" className="nav-item nav-link"><strong>Terrain Generation</strong></Link>
+                <Link to="/gravity" className="nav-item nav-link"><strong>Gravity</strong></Link>
+                <Link to="/achernar" className="nav-item nav-link"><strong>Achernar</strong></Link>
+              </div>
+            </div>
+            {/*Collapsible Button*/}
             <button type="button" className="navbar-toggler navbar-toggler-right"
               data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
             >
               <ThreeDotsVertical className="text-body" />
             </button>
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-              <div className="navbar-nav ml-auto">
-                <Link to="/achernar" className="nav-item nav-link"  ><strong>Achernar</strong></Link>
-                <Link to="/compugenesis" className="nav-item nav-link"  ><strong>Compugenesis</strong></Link>
-              </div>
-            </div>
           </div>
         </nav>
       </header>

@@ -3,7 +3,7 @@ import Header from './Header';
 
 function Footer() {
   return (
-    <footer className="container-fluid py-1"><br />
+    <footer className="container-fluid my-3"><br />
       <p>&copy; Govind Pimpale, MIT Licensed</p>
     </footer>
   )
@@ -11,10 +11,10 @@ function Footer() {
 
 
 const Layout: React.FunctionComponent<{}> = props =>
-  <div className="content">
+  <>
     <Header />
     {props.children}
     <Footer />
-  </div>
+  </>
 
 export default Layout;

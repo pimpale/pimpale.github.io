@@ -5,11 +5,15 @@ import { makeNoise2D, makeNoise4D } from 'open-simplex-noise';
 import ScalarMap from '../ScalarMap';
 import VectorMap from '../VectorMap';
 
+
+import ImageDataDisplay from '../components/ImageDataDisplay';
+import VectorMapDisplay from '../components/VectorMapDisplay';
+
 function makeTorusNoise2D(scale: number, seed: number) {
   const noise4 = makeNoise4D(seed);
   return (theta: number, phi: number) => noise4(
-    Math.cos(theta) / scale, Math.sin(theta) / scale,
-    Math.cos(phi) / scale, Math.sin(phi) / scale
+    Math.cos(theta * Math.PI * 2) / scale, Math.sin(theta * Math.PI * 2) / scale,
+    Math.cos(phi * Math.PI * 2) / scale, Math.sin(phi * Math.PI * 2) / scale
   );
 }
 
@@ -37,9 +41,7 @@ function createCurlNoise(xsize: number, ysize: number, seed: number) {
   // find rate of change in X direction by averaging together 2 samples
   for (let x = 0; x < xsize; x++) {
     for (let y = 0; y < ysize; y++) {
-      ret.setv(x, y, sampleCurlNoise(noise,
-        (x / xsize) * 2 * Math.PI, (y / ysize) * 2 * Math.PI
-      ));
+      ret.setv(x, y, sampleCurlNoise(noise, x / xsize, y / ysize));
     }
   }
   return ret;
@@ -97,19 +99,11 @@ function createElevationMap(xsize: number, ysize: number, seed: number) {
 
   for (let x = 0; x < xsize; x++) {
     for (let y = 0; y < ysize; y++) {
-      const rval = createFractalNoise(
-        (x / xsize) * Math.PI * 2,
-        (y / ysize) * Math.PI * 2,
-        rnoises
-      ) + 0.5;
+      const rval = createFractalNoise(x / xsize, y / ysize, rnoises) + 0.5;
 
-      const mval = createMountainNoise(
-        (x / xsize) * Math.PI * 2,
-        (y / ysize) * Math.PI * 2,
-        mnoise
-      ) + 0.5;
+      const mval = createMountainNoise(x / xsize, y / ysize, mnoise) + 0.5;
 
-      const val = Math.pow(mval * 0.3 + rval *0.7, 4);
+      const val = Math.pow(mval * 0.3 + rval * 0.7, 4);
       dest.setv(x, y, clamp(val));
     }
   }
@@ -149,51 +143,6 @@ function thresholdHeightMap(hmap: ScalarMap, thresh: number, threshcol: Color) {
 }
 
 
-// Object displaying some image data
-
-interface ImageDataRendererProps {
-  data: ImageData,
-}
-
-class ImageDataRenderer extends React.Component<ImageDataRendererProps> {
-
-  private displayCanvas = React.createRef<HTMLCanvasElement>();
-
-  constructor(props: ImageDataRendererProps) {
-    super(props);
-    this.paint = this.paint.bind(this);
-  }
-
-  componentDidMount() {
-    this.paint();
-  }
-
-  componentDidUpdate() {
-    this.paint();
-  }
-
-  paint() {
-    const canvas = this.displayCanvas.current;
-    if (canvas != null) {
-      const context = canvas.getContext("2d");
-      if (context != null) {
-        context.putImageData(this.props.data, 0, 0);
-      }
-    }
-  }
-
-  render() {
-    const { width, height } = this.props.data;
-    return (
-      <canvas className="border border-dark"
-        ref={this.displayCanvas}
-        width={width}
-        height={height}
-      />
-    );
-  }
-}
-
 
 // when it has an ocean
 interface OceanHeightMapProps {
@@ -202,7 +151,7 @@ interface OceanHeightMapProps {
 }
 
 function OceanHeightMap(props: OceanHeightMapProps) {
-  return <ImageDataRenderer
+  return <ImageDataDisplay
     data={thresholdHeightMap(props.heightmap, props.sealevel, {
       // gruvbox dark blue
       r: 0x07,
@@ -219,7 +168,7 @@ interface HeightMapProps {
 }
 
 function HeightMap(props: HeightMapProps) {
-  return <ImageDataRenderer
+  return <ImageDataDisplay
     data={thresholdHeightMap(props.heightmap, 0, {
       r: 0,
       g: 0,
@@ -227,136 +176,6 @@ function HeightMap(props: HeightMapProps) {
       a: 0,
     })}
   />
-}
-
-interface VectorMapDisplayProps {
-  vmap: VectorMap;
-}
-
-type VectorMapDisplayParticle = {
-  x: number;
-  y: number;
-  age: number;
-}
-
-interface VectorMapDisplayState {
-  alphaData: ScalarMap;
-  particles: VectorMapDisplayParticle[];
-}
-
-interface VectorMapDisplayProps {
-  vmap: VectorMap;
-  base: ImageData;
-}
-
-class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapDisplayState> {
-  private displayCanvas = React.createRef<HTMLCanvasElement>();
-
-  constructor(props: VectorMapDisplayProps) {
-    super(props);
-    this.paint = this.paint.bind(this);
-    this.tick = this.tick.bind(this);
-    const { width, height } = props.base;
-    this.state = {
-      alphaData: new ScalarMap(width, height),
-      particles: new Array<VectorMapDisplayParticle>(),
-    }
-  }
-
-  componentDidMount() {
-    this.tick();
-  }
-
-  componentDidUpdate() {
-    this.paint();
-  }
-
-  
-
-  tick() {
-    const { width, height } = this.state.alphaData.dims();
-    // update particles
-    const nparticles = this.state.particles.map(
-      (p) => {
-        // move particles
-        const dir = this.props.vmap.getv(Math.floor(p.x), Math.floor(p.y));
-        return {
-          x: p.x + 2*dir[0],
-          y: p.y + 2*dir[1],
-          age: p.age + 1
-        }
-      })
-      // decay particles that are outside boundaries or too old
-      .filter((p) => p.x > 0 && p.x < width && p.y > 0 && p.y < height && p.age < 100)
-      .concat(
-        // Add more particles
-        [...Array<VectorMapDisplayParticle>(8)]
-          .map(function(): VectorMapDisplayParticle {
-            return {
-              x: Math.random() * width,
-              y: Math.random() * height,
-              age: 0,
-            }
-          }
-          )
-      );
-
-    // regen imagedata
-    let ndata = new ScalarMap(width, height);
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
-        ndata.setv(x, y, this.state.alphaData.getv(x, y) / 1.1);
-      }
-    }
-
-    for (const p of nparticles) {
-      ndata.setv(Math.floor(p.x), Math.floor(p.y), 1);
-    }
-
-
-    this.setState({
-      alphaData: ndata,
-      particles: nparticles
-    });
-    setTimeout(this.tick, 100);
-  }
-
-  paintHeightMap(ctx: CanvasRenderingContext2D) {
-    const { width, height } = this.props.base;
-    ctx.putImageData(this.props.base, 0, 0);
-    let final = new ImageData(width, height);
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
-        const bindex = (width * y + x) * 4;
-        final.data[bindex + 0] = this.props.base.data[bindex + 0];
-        final.data[bindex + 1] = this.props.base.data[bindex + 1] + this.state.alphaData.getv(x, y) * 255;
-        final.data[bindex + 2] = this.props.base.data[bindex + 2];
-        final.data[bindex + 3] = this.props.base.data[bindex + 3];
-      }
-    }
-    ctx.putImageData(final, 0, 0);
-  }
-
-  paint() {
-    const maybeCanvas = this.displayCanvas.current;
-    if (maybeCanvas != null) {
-      const maybeContext = maybeCanvas.getContext("2d");
-      if (maybeContext != null) {
-        this.paintHeightMap(maybeContext);
-      }
-    }
-  }
-
-  render() {
-    const { width, height } = this.props.base;
-    return (
-      <canvas className="border border-dark"
-        ref={this.displayCanvas}
-        width={width}
-        height={height}
-      />
-    );
-  }
 }
 
 interface WindOceanMapProps {
