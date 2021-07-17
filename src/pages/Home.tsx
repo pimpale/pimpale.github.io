@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Centerpiece from '../components/Centerpiece';
+import * as THREE from 'three';
 import TerrainGenIntro from '../components/TerrainGenIntro';
+import WireframeRenderer from '../components/WireframeRenderer';
 import Layout from '../components/Layout';
 import Section from '../components/Section';
 
@@ -83,8 +84,8 @@ const circleCenter = {
   position: "absolute" as const,
   top: "50%",
   left: "50%",
-  width: "50rem",
-  height: "50rem",
+  width: "20em",
+  height: "20em",
   transform: "translate(-50%, -50%)",
 }
 
@@ -92,8 +93,13 @@ const circleCenter = {
 function Home() {
   return <Layout>
     <div style={introStyle}>
-      <Centerpiece style={circleCenter} />
-
+      <WireframeRenderer
+        style={circleCenter}
+        geometries={[{
+          geometry: new THREE.IcosahedronGeometry(5),
+          color: 0xEBDBB2
+        }]}
+      />
       {/* Down button */}
       <Rotated distance={20} rotation={90} >
         <a href="#about" className="btn btn-secondary border-dark"><CaretDownFill /></a>

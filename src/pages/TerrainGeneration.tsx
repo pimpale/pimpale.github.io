@@ -3,6 +3,18 @@ import Section from '../components/Section';
 
 import MugAndTorus from "../assets/Mug_and_Torus_morph.gif";
 
+type AsideCardProps = {
+  title: string,
+}
+
+const AsideCard: React.FunctionComponent<AsideCardProps> = props =>
+  <div className="card mx-5">
+    <div className="card-body">
+      <h6 className="card-title text-decoration-underline">{props.title}</h6>
+      <div className="card-text">{props.children}</div>
+    </div>
+  </div>
+
 const TerrainGeneration = () =>
   <Layout>
     <div className="container mt-5">
@@ -39,50 +51,42 @@ const TerrainGeneration = () =>
       <Section id="topology" name="World Topology">
         <h4>Topology</h4>
         <p>
-          Our first (and perhaps biggest) major choice is deciding on the world's topology.
+          Our first (and perhaps biggest) major choice is deciding on the world's <strong>topology</strong>.
+        </p>
+        <AsideCard title="Topology">
           Topology describes the fundamental geometric properties of an object, especially those properties that don't change as the object is stretched, squished, or otherwise distorted.
-          The classic example is that one can technically get a coffee mug from a donut since the mug, like the donut, has one through hole.
-        </p>
-        <div className="mx-auto text-center my-3">
-          <img src={MugAndTorus} className="border border-dark mx-auto d-block" alt="A mug morphing into a torus and back" />
-          <small>Image in the public domain. <a href="https://commons.wikimedia.org/wiki/File:Mug_and_Torus_morph.gif">Source</a></small>
-        </div>
-        <p>
+          For example, a coffee mug is topologically equivalent to a donut since the mug, like the donut, has one through hole.
+          <div className="mx-auto text-center my-3">
+            <img src={MugAndTorus} className="border border-dark mx-auto d-block" alt="A mug morphing into a torus and back" />
+            <small>Image in the public domain. <a href="https://commons.wikimedia.org/wiki/File:Mug_and_Torus_morph.gif">Source</a></small>
+          </div>
           If you're interested, <a href="https://en.wikipedia.org/wiki/Topology">you can read more about topology on Wikipedia</a>.
-        </p>
+        </AsideCard>
         <p>
           For our purposes, however, we want to know how the world should be shaped:
-          <ul>
-            <li>Is it 2D or or 3D?</li>
-            <li>Infinite or finite?</li>
-            <li>Flat or Sphere?</li>
-            <li>Boundary Conditions?</li>
-          </ul>
         </p>
+        <ul>
+          <li>Is it 2D or or 3D?</li>
+          <li>Infinite or finite?</li>
+          <li>Flat or Sphere?</li>
+          <li>Boundary Conditions?</li>
+        </ul>
         <p>
           We will answer each of these questions in turn.
         </p>
         <h4>3D or 2D?</h4>
         <p>
-          The dimensionality of the game is a core gameplay aspect that usually is decided early on.
           In this article, we'll choose a 3D game since it tends to be easier to adapt a 3d algorithm to a 2d world than the other way around.
-        </p>
-        <p>
           However, it's important to note: just because our game world is 3D doesn't mean we always need to use a 3D data structure when generating the world.
           If we guarantee that for each point on our world's surface, the elevation is a well defined number, then we can use a 2d graph or grid to represent the heightmap.
-          This approach does have certain limitations, but it signficantly simplifies world generation and improves performance.
         </p>
         <p>
-          There are situations where a heightmap is not desirable though.
-          For example, if we want our world to be primarily cave based, with no real "surface" to speak of, then this approach is obviously untenable.
-          It also doesn't work well if you want to have a world made of only floating islands, since there isn't really a standard way to define "elevation" for a given coordinate.
-          In these situations, a possible workaround could be to generate each cavern or floating island independently.
-          Then, for each unit, we can use a seperate heightmap.
+          Heightmaps won't work if our world isn't vertically simple.
+          {/* TODO Provide example of vertically vs nonvertically simple */}
+          For example, if we want our world to be primarily cave based, with no real "surface" to speak of, then a given (x, y) coordinate pair may have multiple surfaces at different z levels.
+          The same problem would apply for a floating island map.
+          A possible workaround would be to use a small number of discrete z levels, each of which uses its own seperate heightmap.
           This approach is less efficient compared to a single heightmap, but since each per unit heightmap is smaller, it may still be feasible.
-        </p>
-        <p>
-          If we don't want to use a heightmap, then the alternative is to use a fully 3D approach.
-          This is what we'll end up doing during our runtime chunk generation, but we reccomend against using a 3D approach during the intial worldgen stage due to the massive memory requirements.
         </p>
         <h4>Infinite or Finite?</h4>
         <p>
@@ -99,12 +103,16 @@ const TerrainGeneration = () =>
         <h4>Flat or Sphere?</h4>
         <p>
           Spherical worlds are more realistic, and if creating an accurate simulation is important, is the way to go.
-          Spherical geometry is also required if space travel is an aspect of gameplay.
+          Spherical geometry is also required if you want to be able to render the planet's surface from space.
         </p>
         <p>
           However, spherical geometry is incompatible with voxel tiling over the surface.
-          There is no way to tile squares over the entire surface of a sphere without some points having
-
+          If we tile over the surface of a sphere with squares, we will end up with at least a few <strong>singularities</strong>.
+        </p>
+        <AsideCard title="Singularities">
+          <strong>Singularity</strong>: A point in space where
+        </AsideCard>
+        <p>
           This is because there is no way to project a
         </p>
 
