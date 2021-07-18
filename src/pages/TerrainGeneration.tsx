@@ -3,17 +3,33 @@ import Section from '../components/Section';
 
 import MugAndTorus from "../assets/Mug_and_Torus_morph.gif";
 
+// demos
+import SingularityDemo from '../components/SingularityDemo';
+
+type FootnoteProps = {
+  index: number,
+  source: string,
+  children: React.ReactNode
+}
+const Footnote: React.FunctionComponent<FootnoteProps> = props =>
+    <a
+      href={props.source}
+    >
+      {props.children}
+    </a>
+
 type AsideCardProps = {
   title: string,
 }
 
 const AsideCard: React.FunctionComponent<AsideCardProps> = props =>
-  <div className="card mx-5">
+  <div className="card mx-5 mb-2">
     <div className="card-body">
       <h6 className="card-title text-decoration-underline">{props.title}</h6>
       <div className="card-text">{props.children}</div>
     </div>
   </div>
+
 
 const TerrainGeneration = () =>
   <Layout>
@@ -24,7 +40,7 @@ const TerrainGeneration = () =>
           Our goal in this article will be to procedurally generate and simulate a small game world.
           There are hundreds of ways to do this, and as we go along, we'll explore some of the different strategies we could have chosen and their tradeoffs.
         </p>
-        <h4 >Rationale</h4>
+        <h4>Rationale</h4>
         <p>
           Procedural generation is a versatile tactic in game programming.
           Games that utilize procedural generation can have much larger maps than those with handcrafted levels, since they can generate content on the fly.
@@ -102,30 +118,53 @@ const TerrainGeneration = () =>
         </p>
         <h4>Flat or Sphere?</h4>
         <p>
-          Spherical worlds are more realistic, and if creating an accurate simulation is important, is the way to go.
+          Spherical worlds are more realistic, so if creating an accurate simulation is important, spheres are the way to go.
           Spherical geometry is also required if you want to be able to render the planet's surface from space.
         </p>
         <p>
           However, spherical geometry is incompatible with voxel tiling over the surface.
-          If we tile over the surface of a sphere with squares, we will end up with at least a few <strong>singularities</strong>.
+          If we tile over the surface of a sphere with a square grid, we will end up with at least a few <strong>singularities</strong>.
         </p>
         <AsideCard title="Singularities">
-          <strong>Singularity</strong>: A point in space where
+          <p>
+            The most common use of the word <strong>singularity</strong> is in reference to the center of a black hole, where gravity is infinitely strong.
+            However, a singularity can refer to any point where a mathematical function is undefined or has a undefined derivative.
+          </p>
+          <SingularityDemo className="mx-auto" style={{ width: "20em" }} />
+          <p>
+            The demo above shows a simple way to tile a sphere using squares.
+            In the context of using a square grid to title over a sphere, singularties are points where our regular grid breaks down.
+            Notice how each corner square tile will be missing one diagonal neighbor, resulting in angles near it being highly distorted.
+            So in this case singularities appear at the corners of the cube.
+          </p>
+          <p>
+            In general though, there is no way to tile a sphere using a regular square grid.
+            There will always be tiles with less than the average number of neighboring tiles.
+          </p>
         </AsideCard>
         <p>
-          This is because there is no way to project a
+          Since dealing with spheres is a needless hassle unless we have a specific use case, we're going to try to use a flat surface without curvature.
+          This will enable us to use a grid when processing the data.
         </p>
-
+        <h4>Boundary Conditions?</h4>
         <p>
-          Ideally, we would like our world to be flat, so we can use Euclidean geometry.
-          The farther we depart from flat, the more complex math we need to do.
+          Now that we've settled on a flat finite surface, we have to decide what should go at the edges.
+          These are called
         </p>
 
+        Any of a set of constraints that limit the solutions of a differential equation
+
+
+        focus on the torus, aka <strong>Periodic Boundary Conditions</strong>.
       </Section>
+
+
+
       <Section id="terrainGeneration" name="Terrain Generation">
 
       </Section>
     </div>
+
   </Layout >
 
 
