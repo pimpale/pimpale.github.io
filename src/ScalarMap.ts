@@ -2,13 +2,20 @@ import assert from 'assert';
 
 class ScalarMap {
   private arr: Float32Array;
-  private xsize: number;
-  private ysize: number;
+  private readonly xsize: number;
+  private readonly ysize: number;
 
-  constructor(xsize: number, ysize: number) {
+  constructor(xsize: number, ysize: number, fn?: (x: number, y: number) => number) {
     this.arr = new Float32Array(xsize * ysize);
     this.xsize = xsize;
     this.ysize = ysize;
+    if (!!fn) {
+      for (let y = 0; y < ysize; y++) {
+        for (let x = 0; x < xsize; x++) {
+          this.arr[x + y * ysize] = fn(x, y);
+        }
+      }
+    }
   }
 
   getv(x: number, y: number) {
@@ -27,6 +34,7 @@ class ScalarMap {
   dims() {
     return { width: this.xsize, height: this.ysize };
   }
+
 }
 
 export default ScalarMap;

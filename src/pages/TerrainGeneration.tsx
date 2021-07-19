@@ -3,6 +3,10 @@ import Layout from '../components/Layout';
 import Section from '../components/Section';
 import { Async } from 'react-async';
 import LazyLoad from 'react-lazyload';
+import { makeNoise2D, makeNoise4D } from 'open-simplex-noise';
+
+import ScalarMap from '../ScalarMap';
+import { grayscaleMap } from '../map';
 
 import ImageDataDisplay from '../components/ImageDataDisplay';
 import { loadImage, extend, boxBlur } from '../math';
@@ -26,8 +30,7 @@ const Footnote: React.FunctionComponent<FootnoteProps> = props =>
 
 
 
-
-
+const noise2D = makeNoise2D(Date.now());
 
 type AsideCardProps = {
   title: string,
@@ -203,7 +206,7 @@ const TerrainGeneration = () =>
                       <small>Image in the public domain.<a href="https://commons.wikimedia.org/wiki/File:Eight-colour-wheel-2D.png">Source</a></small>
                       <div className="mx-auto d-block mt-3">
                         <label className="form-label">Blur Radius</label>
-                        <input type="range" className="form-range" min="1" max="100" defaultValue="100"
+                        <input type="range" className="form-range" min="1" max="120" defaultValue="100"
                           onChange={e => setData({ radius: e.target.valueAsNumber, img })}
                         />
                       </div>
@@ -270,13 +273,53 @@ const TerrainGeneration = () =>
         </ul>
         <p>Note how the choice of the boundary condition makes a huge impact on the final blurred image.</p>
         <p>
-          All of these boundary conditions are workable.
+          All of these boundary conditions are workable for our purposes.
           We're going to choose a periodic boundary condition though, since it means we don't have to deal with invisible world barriers.
           This is the same approach taken by a lot of old RPGs.
         </p>
       </Section>
       <Section id="terrainGeneration" name="Terrain Generation">
-
+        <h4>Noise</h4>
+        <p>
+          Now, we'll move on to actually generating the terrain.
+          In order to do so, we need a source of <strong>coherent noise</strong>.
+        </p>
+        <AsideCard title="Coherent Noise" >
+          <p>If we try to fill a grid with normal noise, using something like <code>Math.random()</code>, this is what we would get:</p>
+          <LazyLoad height={240}>
+            <ImageDataDisplay
+              className="border border-dark d-block mx-auto"
+              data={grayscaleMap(new ScalarMap(240, 240, Math.random))}
+            />
+          </LazyLoad>
+          <p>
+            Since the value at each individual point is not correlated to neighboring points, there's no large scale structure.
+            So, this kind of noise isn't suitable for terrain generation.
+          </p>
+          <p>
+            We need to use an algorithm that's capable of generating noise such that points that are close together spatially have similar values.
+            To do this, we'll need our noise to accept x and y coordinates.
+            {/* TODO explain more */}
+          </p>
+          <p>This is an example of coherent noise:</p>
+          <LazyLoad height={240}>
+            <ImageDataDisplay
+              className="border border-dark d-block mx-auto"
+              data={grayscaleMap(new ScalarMap(240, 240, (x, y) => noise2D(x / 10, y / 10) / 2 + 0.5))}
+            />
+          </LazyLoad>
+          <p>
+            You can see that every pixel has a neighboring pixel that is similarly colored.
+          </p>
+          <p>There are several algorithms capable of generating coherent noise:</p>
+          <ul>
+            <li><a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm">Diamond Square Algorithm</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Perlin_noise">Perlin Noise</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Simplex_noise">Simplex Noise</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/OpenSimplex_noise">OpenSimplex Noise</a></li>
+          </ul>
+          <p>We'll be using OpenSimplex since it's open source and provides good performance.</p>
+        </AsideCard>
       </Section>
     </div>
 

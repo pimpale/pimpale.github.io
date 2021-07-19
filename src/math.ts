@@ -9,7 +9,7 @@ export async function loadImage(imageUrl: string) {
   const fileBlob = await response.blob();
   const bitmap = await createImageBitmap(fileBlob);
   const canvas = document.createElement('canvas');
-  canvas.width  = bitmap.width;
+  canvas.width = bitmap.width;
   canvas.height = bitmap.height;
   const context = canvas.getContext('2d')!;
   context.drawImage(bitmap, 0, 0);
@@ -23,7 +23,7 @@ export type BoundaryConditions = "FIXED" | "MIRROR" | "PERIODIC";
 // extends an image so that it can be processed by the given matrix
 export function extend(img: ImageData, b: BoundaryConditions, radius: number): ImageData {
   // radius is the amount we have to pad the image with
-  assert(radius> 0, "radius must be positive");
+  assert(radius > 0, "radius must be positive");
 
   let newImg = new ImageData(img.height + radius * 2, img.width + radius * 2);
 
@@ -115,7 +115,6 @@ export function boxBlur(img: ImageData, radius: number) {
   const srcxsize = img.width;
   const srcysize = img.height;
 
-
   // dimensions of new image
   const newxsize = srcxsize - radius * 2;
   const newysize = srcysize - radius * 2;
@@ -136,13 +135,13 @@ export function boxBlur(img: ImageData, radius: number) {
   for (let y = 0; y < srcysize; y++) {
     // note we start at 1, not 0
     for (let x = 1; x < srcxsize; x++) {
-      const srcBaseIdx = (srcysize*y + x) * 4;
-      const destIdx = srcysize*y + x;
-      // add the left column value to the current position
-      rSums[destIdx] = img.data[srcBaseIdx+0] + rSums[destIdx-1];
-      gSums[destIdx] = img.data[srcBaseIdx+1] + gSums[destIdx-1];
-      bSums[destIdx] = img.data[srcBaseIdx+2] + bSums[destIdx-1];
-      aSums[destIdx] = img.data[srcBaseIdx+3] + aSums[destIdx-1];
+      const srcBaseIdx = (srcysize * y + x) * 4;
+      const destIdx = srcysize * y + x;
+      // add the previous column value to the current column
+      rSums[destIdx] = img.data[srcBaseIdx + 0] + rSums[destIdx-1];
+      gSums[destIdx] = img.data[srcBaseIdx + 1] + gSums[destIdx-1];
+      bSums[destIdx] = img.data[srcBaseIdx + 2] + bSums[destIdx-1];
+      aSums[destIdx] = img.data[srcBaseIdx + 3] + aSums[destIdx-1];
     }
   }
 
@@ -150,8 +149,8 @@ export function boxBlur(img: ImageData, radius: number) {
   for (let x = 0; x < srcxsize; x++) {
     // note we start at 1, not 0
     for (let y = 1; y < srcysize; y++) {
-      const destIdx = srcysize*y + x;
-      const srcIdx = srcysize*(y-1) + x;
+      const destIdx = srcysize * y + x;
+      const srcIdx = srcysize * (y - 1) + x;
       // add the above row value to the current position
       rSums[destIdx] += rSums[srcIdx];
       gSums[destIdx] += gSums[srcIdx];
@@ -161,11 +160,11 @@ export function boxBlur(img: ImageData, radius: number) {
   }
 
   // number of pixels in box
-  const pixels = Math.pow(radius*2, 2);
+  const pixels = Math.pow(radius * 2, 2);
 
   // now, we calculate the blur
-  for(let y = 0; y < newysize; y++) {
-    for(let x = 0; x < newxsize; x++) {
+  for (let y = 0; y < newysize; y++) {
+    for (let x = 0; x < newxsize; x++) {
       // see explanation here
       // https://github.com/francium/fast-blur/blob/master/fast_blur.c
 
@@ -174,10 +173,10 @@ export function boxBlur(img: ImageData, radius: number) {
       const srcy = y + radius;
 
       // calculate indexes
-      const aIdx = (srcx - radius) + srcysize*(srcy - radius) ;
-      const bIdx = (srcx - radius) + srcysize*(srcy + radius) ;
-      const cIdx = (srcx + radius) + srcysize*(srcy - radius) ;
-      const dIdx = (srcx + radius) + srcysize*(srcy + radius) ;
+      const aIdx = (srcx - radius) + srcysize * (srcy - radius);
+      const bIdx = (srcx - radius) + srcysize * (srcy + radius);
+      const cIdx = (srcx + radius) + srcysize * (srcy - radius);
+      const dIdx = (srcx + radius) + srcysize * (srcy + radius);
 
       // get sums
       const rSum = rSums[dIdx] - (rSums[bIdx] + rSums[cIdx] - rSums[aIdx]);
@@ -186,13 +185,26 @@ export function boxBlur(img: ImageData, radius: number) {
       const aSum = aSums[dIdx] - (aSums[bIdx] + aSums[cIdx] - aSums[aIdx]);
 
       // destIdx
-      const destBaseIdx = (x + y*newysize)*4;
-      newImg.data[destBaseIdx+0] = rSum / pixels;
-      newImg.data[destBaseIdx+1] = gSum / pixels;
-      newImg.data[destBaseIdx+2] = bSum / pixels;
-      newImg.data[destBaseIdx+3] = aSum / pixels;
+      const destBaseIdx = (x + y * newysize) * 4;
+      newImg.data[destBaseIdx + 0] = rSum / pixels;
+      newImg.data[destBaseIdx + 1] = gSum / pixels;
+      newImg.data[destBaseIdx + 2] = bSum / pixels;
+      newImg.data[destBaseIdx + 3] = aSum / pixels;
     }
   }
 
   return newImg;
+}
+
+export function ImageDataFromFn(xsize: number, ysize: number, fn: (x: number, y: number) => number) {
+  let img = new ImageData(xsize, ysize);
+  for (let y = 0; y < img.height; y++) {
+    for (let x = 0; x < img.width; x++) {
+      const color = fn(x, y);
+      const baseIdx = (x + y * ysize) * 4;
+      img.data[baseIdx + 0] = color >> 16;
+      img.data[baseIdx + 1] = (color >> 8) & 0xFF;
+      img.data[baseIdx + 2] = color & 0xFF;
+    }
+  }
 }

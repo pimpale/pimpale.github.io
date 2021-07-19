@@ -1,6 +1,8 @@
 import React from 'react';
 import assert from 'assert';
 
+import { thresholdHeightMap } from '../map';
+
 import { makeNoise2D, makeNoise4D } from 'open-simplex-noise';
 import ScalarMap from '../ScalarMap';
 import VectorMap from '../VectorMap';
@@ -111,36 +113,7 @@ function createElevationMap(xsize: number, ysize: number, seed: number) {
   return dest;
 }
 
-type Color = {
-  r: number,
-  g: number,
-  b: number,
-  a: number
-}
 
-
-function thresholdHeightMap(hmap: ScalarMap, thresh: number, threshcol: Color) {
-  const { width, height } = hmap.dims();
-  const imageData = new ImageData(width, height);
-  for (let x = 0; x < width; x++) {
-    for (let y = 0; y < height; y++) {
-      const i = (x + y * width) * 4;
-      const value = hmap.getv(x, y);
-      if (value > thresh) {
-        imageData.data[i + 0] = value * 255;
-        imageData.data[i + 1] = value * 255;
-        imageData.data[i + 2] = value * 255;
-        imageData.data[i + 3] = 255;
-      } else {
-        imageData.data[i + 0] = threshcol.r;
-        imageData.data[i + 1] = threshcol.g;
-        imageData.data[i + 2] = threshcol.b;
-        imageData.data[i + 3] = threshcol.a;
-      }
-    }
-  }
-  return imageData;
-}
 
 // temperature calculated in celsius
 // Affected by elevation and latitude
@@ -229,12 +202,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
           <ImageDataDisplay
             className={this.props.className}
             style={this.props.style}
-            data={thresholdHeightMap(this.state.initialElevation, 0, {
-              r: 0,
-              g: 0,
-              b: 0,
-              a: 0,
-            })}
+            data={thresholdHeightMap(this.state.initialElevation, 0, [0, 0, 0])}
           />
           <div>
             <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
@@ -249,13 +217,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
           <ImageDataDisplay
             className={this.props.className}
             style={this.props.style}
-            data={thresholdHeightMap(this.state.initialElevation, 0.2, {
-              // gruvbox dark blue
-              r: 0x07,
-              g: 0x66,
-              b: 0x78,
-              a: 0xFF,
-            })}
+            data={thresholdHeightMap(this.state.initialElevation, 0.2, [0x07, 0x66, 0x78])}
           />
           <div>
             <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
@@ -272,13 +234,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
             className={this.props.className}
             style={this.props.style}
             vmap={this.state.airCurrents}
-            base={thresholdHeightMap(this.state.initialElevation, 0.2, {
-              // gruvbox dark blue
-              r: 0x07,
-              g: 0x66,
-              b: 0x78,
-              a: 0xFF,
-            })}
+            base={thresholdHeightMap(this.state.initialElevation, 0.2, [0x07, 0x66, 0x78])}
           />
           <div>
             <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
