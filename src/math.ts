@@ -1,3 +1,5 @@
+import { assert } from '@innexgo/frontend-common';
+
 export function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
@@ -12,4 +14,185 @@ export async function loadImage(imageUrl: string) {
   const context = canvas.getContext('2d')!;
   context.drawImage(bitmap, 0, 0);
   return context.getImageData(0, 0, bitmap.width, bitmap.height);
+}
+
+
+export type BoundaryConditions = "FIXED" | "MIRROR" | "PERIODIC";
+
+
+// extends an image so that it can be processed by the given matrix
+export function extend(img: ImageData, b: BoundaryConditions, radius: number): ImageData {
+  // radius is the amount we have to pad the image with
+  assert(radius> 0, "radius must be positive");
+
+  let newImg = new ImageData(img.height + radius * 2, img.width + radius * 2);
+
+  switch (b) {
+    case "FIXED": {
+      for (let y = 0; y < newImg.width; y++) {
+        for (let x = 0; x < newImg.height; x++) {
+          // clamp x and y between the correct values
+          const srcx = Math.max(Math.min(x - radius, img.width - 1), 0);
+          const srcy = Math.max(Math.min(y - radius, img.height - 1), 0);
+
+          // calculate base indexes
+          const srcbasei = (srcy * img.width + srcx) * 4;
+          const destbasei = (y * newImg.width + x) * 4;
+
+          // copy r, g, b, a
+          newImg.data[destbasei + 0] = img.data[srcbasei + 0];
+          newImg.data[destbasei + 1] = img.data[srcbasei + 1];
+          newImg.data[destbasei + 2] = img.data[srcbasei + 2];
+          newImg.data[destbasei + 3] = img.data[srcbasei + 3];
+        }
+      }
+      break;
+    }
+    case "PERIODIC": {
+      for (let y = 0; y < newImg.width; y++) {
+        for (let x = 0; x < newImg.height; x++) {
+          // wrap x and y between the correct values
+          const srcx = mod(x - radius, img.width);
+          const srcy = mod(y - radius, img.height);
+
+          // calculate base indexes
+          const srcbasei = (srcy * img.width + srcx) * 4;
+          const destbasei = (y * newImg.width + x) * 4;
+
+          // copy r, g, b, a
+          newImg.data[destbasei + 0] = img.data[srcbasei + 0];
+          newImg.data[destbasei + 1] = img.data[srcbasei + 1];
+          newImg.data[destbasei + 2] = img.data[srcbasei + 2];
+          newImg.data[destbasei + 3] = img.data[srcbasei + 3];
+        }
+      }
+      break;
+    }
+    case "MIRROR": {
+      function mirror(x: number, w: number) {
+        if (x < 0) {
+          // extend
+          return Math.min(Math.max(-x, 0), w);
+        } else if (x >= w) {
+          // extend
+          return Math.min(Math.max(2 * w - x, 0), w);
+        } else {
+          return x;
+        }
+      }
+
+      for (let y = 0; y < newImg.width; y++) {
+        for (let x = 0; x < newImg.height; x++) {
+          // wrap x and y between the correct values
+          const srcx = mirror(x - radius, img.width - 1);
+          const srcy = mirror(y - radius, img.height - 1);
+
+          // calculate base indexes
+          const srcbasei = (srcy * img.width + srcx) * 4;
+          const destbasei = (y * newImg.width + x) * 4;
+
+          // copy r, g, b, a
+          newImg.data[destbasei + 0] = img.data[srcbasei + 0];
+          newImg.data[destbasei + 1] = img.data[srcbasei + 1];
+          newImg.data[destbasei + 2] = img.data[srcbasei + 2];
+          newImg.data[destbasei + 3] = img.data[srcbasei + 3];
+        }
+      }
+      break;
+    }
+  }
+
+  return newImg;
+}
+
+// crops the data
+export function boxBlur(img: ImageData, radius: number) {
+  assert(radius > 0, "radius must be positive");
+
+  // radius is the amount we will crop from the image
+
+  // dimensions of the src image
+  const srcxsize = img.width;
+  const srcysize = img.height;
+
+
+  // dimensions of new image
+  const newxsize = srcxsize - radius * 2;
+  const newysize = srcysize - radius * 2;
+
+  assert(newxsize > 0 && newysize > 0, "radius is too large");
+
+  // create new image
+  let newImg = new ImageData(newxsize, newysize);
+
+  // create specific channel sums
+  // each array is the sum of specified channel in the rectangle [0, x] by [0, y]
+  let rSums = new Uint32Array(srcxsize * srcysize);
+  let gSums = new Uint32Array(srcxsize * srcysize);
+  let bSums = new Uint32Array(srcxsize * srcysize);
+  let aSums = new Uint32Array(srcxsize * srcysize);
+
+  // here, we calculate the sum in each of the channels in the horizontal direction
+  for (let y = 0; y < srcysize; y++) {
+    // note we start at 1, not 0
+    for (let x = 1; x < srcxsize; x++) {
+      const srcBaseIdx = (srcysize*y + x) * 4;
+      const destIdx = srcysize*y + x;
+      // add the left column value to the current position
+      rSums[destIdx] = img.data[srcBaseIdx+0] + rSums[destIdx-1];
+      gSums[destIdx] = img.data[srcBaseIdx+1] + gSums[destIdx-1];
+      bSums[destIdx] = img.data[srcBaseIdx+2] + bSums[destIdx-1];
+      aSums[destIdx] = img.data[srcBaseIdx+3] + aSums[destIdx-1];
+    }
+  }
+
+  // now, we calculate the sum in each of the channels in the vertical direction
+  for (let x = 0; x < srcxsize; x++) {
+    // note we start at 1, not 0
+    for (let y = 1; y < srcysize; y++) {
+      const destIdx = srcysize*y + x;
+      const srcIdx = srcysize*(y-1) + x;
+      // add the above row value to the current position
+      rSums[destIdx] += rSums[srcIdx];
+      gSums[destIdx] += gSums[srcIdx];
+      bSums[destIdx] += bSums[srcIdx];
+      aSums[destIdx] += aSums[srcIdx];
+    }
+  }
+
+  // number of pixels in box
+  const pixels = Math.pow(radius*2, 2);
+
+  // now, we calculate the blur
+  for(let y = 0; y < newysize; y++) {
+    for(let x = 0; x < newxsize; x++) {
+      // see explanation here
+      // https://github.com/francium/fast-blur/blob/master/fast_blur.c
+
+      // get src coords
+      const srcx = x + radius;
+      const srcy = y + radius;
+
+      // calculate indexes
+      const aIdx = (srcx - radius) + srcysize*(srcy - radius) ;
+      const bIdx = (srcx - radius) + srcysize*(srcy + radius) ;
+      const cIdx = (srcx + radius) + srcysize*(srcy - radius) ;
+      const dIdx = (srcx + radius) + srcysize*(srcy + radius) ;
+
+      // get sums
+      const rSum = rSums[dIdx] - (rSums[bIdx] + rSums[cIdx] - rSums[aIdx]);
+      const gSum = gSums[dIdx] - (gSums[bIdx] + gSums[cIdx] - gSums[aIdx]);
+      const bSum = bSums[dIdx] - (bSums[bIdx] + bSums[cIdx] - bSums[aIdx]);
+      const aSum = aSums[dIdx] - (aSums[bIdx] + aSums[cIdx] - aSums[aIdx]);
+
+      // destIdx
+      const destBaseIdx = (x + y*newysize)*4;
+      newImg.data[destBaseIdx+0] = rSum / pixels;
+      newImg.data[destBaseIdx+1] = gSum / pixels;
+      newImg.data[destBaseIdx+2] = bSum / pixels;
+      newImg.data[destBaseIdx+3] = aSum / pixels;
+    }
+  }
+
+  return newImg;
 }

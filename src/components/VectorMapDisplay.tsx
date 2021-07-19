@@ -61,8 +61,8 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
         // move particles
         const dir = this.props.vmap.getv(Math.floor(p.x), Math.floor(p.y));
         return {
-          x: p.x + dir[0],
-          y: p.y + dir[1],
+          x: p.x + dir[0] / 2,
+          y: p.y + dir[1] / 2,
           age: p.age + 1
         }
       })
@@ -70,7 +70,7 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
       .filter((p) => p.x > 0 && p.x < width && p.y > 0 && p.y < height && p.age < 100)
       .concat(
         // Add more particles
-        [...Array<VectorMapDisplayParticle>(8)]
+        [...Array<VectorMapDisplayParticle>(4)]
           .map(_ => ({
             x: Math.random() * width,
             y: Math.random() * height,

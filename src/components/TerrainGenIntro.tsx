@@ -142,65 +142,6 @@ function thresholdHeightMap(hmap: ScalarMap, thresh: number, threshcol: Color) {
   return imageData;
 }
 
-
-
-// when it has an ocean
-interface OceanHeightMapProps {
-  sealevel: number
-  heightmap: ScalarMap
-}
-
-function OceanHeightMap(props: OceanHeightMapProps) {
-  return <ImageDataDisplay
-    className="border border-dark"
-    data={thresholdHeightMap(props.heightmap, props.sealevel, {
-      // gruvbox dark blue
-      r: 0x07,
-      g: 0x66,
-      b: 0x78,
-      a: 0xFF,
-    })}
-  />
-}
-
-// When it is free of an ocean
-interface HeightMapProps {
-  heightmap: ScalarMap
-}
-
-function HeightMap(props: HeightMapProps) {
-  return <ImageDataDisplay
-
-    className="border border-dark"
-
-    data={thresholdHeightMap(props.heightmap, 0, {
-      r: 0,
-      g: 0,
-      b: 0,
-      a: 0,
-    })}
-  />
-}
-
-interface WindOceanMapProps {
-  heightmap: ScalarMap,
-  windmap: VectorMap
-}
-
-function WindOceanMap(props: WindOceanMapProps) {
-  return <VectorMapDisplay
-    className="border border-dark"
-    vmap={props.windmap}
-    base={thresholdHeightMap(props.heightmap, 0.2, {
-      // gruvbox dark blue
-      r: 0x07,
-      g: 0x66,
-      b: 0x78,
-      a: 0xFF,
-    })}
-  />
-}
-
 // temperature calculated in celsius
 // Affected by elevation and latitude
 function createTemperatureMap(elevation: ScalarMap, seed: number) {
@@ -217,7 +158,6 @@ function createTemperatureMap(elevation: ScalarMap, seed: number) {
 }
 
 enum TerrainGenIntroPhase {
-  Initial,
   HeightMapGen,
   OceanGen,
   WindMapGen,
@@ -226,6 +166,8 @@ enum TerrainGenIntroPhase {
 interface TerrainGenIntroProps {
   width: number,
   height: number,
+  style?: React.CSSProperties,
+  className: string,
 }
 
 interface TerrainGenIntroState {
@@ -243,8 +185,8 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
   constructor(props: TerrainGenIntroProps) {
     super(props);
     this.state = {
-      state: TerrainGenIntroPhase.Initial,
-      initialElevation: null,
+      state: TerrainGenIntroPhase.HeightMapGen,
+      initialElevation: createElevationMap(this.props.width, this.props.height, Date.now()),
       airCurrents: null,
       rmap: null,
       histtemp: null,
@@ -258,13 +200,6 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
     event.preventDefault();
     let nextphase;
     switch (this.state.state) {
-      case TerrainGenIntroPhase.Initial: {
-        this.setState({
-          initialElevation: createElevationMap(this.props.width, this.props.height, Date.now())
-        });
-        nextphase = TerrainGenIntroPhase.HeightMapGen;
-        break;
-      }
       case TerrainGenIntroPhase.HeightMapGen: {
         nextphase = TerrainGenIntroPhase.OceanGen;
         break;
@@ -277,7 +212,7 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
         break;
       }
       case TerrainGenIntroPhase.WindMapGen: {
-        nextphase = TerrainGenIntroPhase.Initial;
+        nextphase = TerrainGenIntroPhase.HeightMapGen;
         break;
       }
     }
@@ -287,26 +222,20 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
   }
 
   render() {
-    let { width, height } = this.props;
     switch (this.state.state) {
-      case TerrainGenIntroPhase.Initial: {
-        return <div className="border border-dark"
-          style={{
-            width: width,
-            height: height,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}>
-          <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
-            Generate Terrain
-          </button>
-        </div>
-      }
       case TerrainGenIntroPhase.HeightMapGen: {
         assert(this.state.initialElevation != null);
         return <>
-          <HeightMap heightmap={this.state.initialElevation} />
+          <ImageDataDisplay
+            className={this.props.className}
+            style={this.props.style}
+            data={thresholdHeightMap(this.state.initialElevation, 0, {
+              r: 0,
+              g: 0,
+              b: 0,
+              a: 0,
+            })}
+          />
           <div>
             <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
               Next Phase
@@ -317,7 +246,17 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
       case TerrainGenIntroPhase.OceanGen: {
         assert(this.state.initialElevation != null);
         return <>
-          <OceanHeightMap heightmap={this.state.initialElevation} sealevel={0.2} />
+          <ImageDataDisplay
+            className={this.props.className}
+            style={this.props.style}
+            data={thresholdHeightMap(this.state.initialElevation, 0.2, {
+              // gruvbox dark blue
+              r: 0x07,
+              g: 0x66,
+              b: 0x78,
+              a: 0xFF,
+            })}
+          />
           <div>
             <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>
               Next Phase
@@ -329,9 +268,17 @@ class TerrainGenIntro extends React.Component<TerrainGenIntroProps, TerrainGenIn
         assert(this.state.initialElevation != null);
         assert(this.state.airCurrents != null);
         return <>
-          <WindOceanMap
-            windmap={this.state.airCurrents}
-            heightmap={this.state.initialElevation}
+          <VectorMapDisplay
+            className={this.props.className}
+            style={this.props.style}
+            vmap={this.state.airCurrents}
+            base={thresholdHeightMap(this.state.initialElevation, 0.2, {
+              // gruvbox dark blue
+              r: 0x07,
+              g: 0x66,
+              b: 0x78,
+              a: 0xFF,
+            })}
           />
           <div>
             <button type="button" className="btn btn-dark" onClick={this.nextPhaseClick}>

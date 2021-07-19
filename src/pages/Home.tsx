@@ -6,6 +6,7 @@ import TerrainGenIntro from '../components/TerrainGenIntro';
 import WireframeRenderer from '../components/WireframeRenderer';
 import Layout from '../components/Layout';
 import Section from '../components/Section';
+import LazyLoad from 'react-lazyload';
 
 import Resume from '../assets/govind_pimpale_resume.pdf';
 
@@ -212,7 +213,15 @@ function Home() {
       <br />
       <Section id="terraingeneration" name="TerrainGeneration">
         <div>
-          <TerrainGenIntro width={800} height={800} />
+          {/* This is pretty expensive to load so we'll only do it when necessary */}
+          <LazyLoad height={800} offset={100}>
+            <TerrainGenIntro
+              width={400}
+              height={400}
+              style={{ width: "800px", height: "800px" }}
+              className="border border-dark"
+            />
+          </LazyLoad>
           <br />
           <Link to="/terraingeneration">More Terrain Generation</Link>
         </div>

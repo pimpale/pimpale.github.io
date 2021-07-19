@@ -1,22 +1,24 @@
 {
   "files": {
-    "main.css": "/static/css/main.4f7d7228.chunk.css",
-    "main.js": "/static/js/main.aaaa1999.chunk.js",
-    "main.js.map": "/static/js/main.aaaa1999.chunk.js.map",
+    "main.css": "/static/css/main.fff5734d.chunk.css",
+    "main.js": "/static/js/main.dbdd4b03.chunk.js",
+    "main.js.map": "/static/js/main.dbdd4b03.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.fb0e1a9e.js",
     "runtime-main.js.map": "/static/js/runtime-main.fb0e1a9e.js.map",
-    "static/js/2.470942be.chunk.js": "/static/js/2.470942be.chunk.js",
-    "static/js/2.470942be.chunk.js.map": "/static/js/2.470942be.chunk.js.map",
+    "static/js/2.54282a71.chunk.js": "/static/js/2.54282a71.chunk.js",
+    "static/js/2.54282a71.chunk.js.map": "/static/js/2.54282a71.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.4f7d7228.chunk.css.map": "/static/css/main.4f7d7228.chunk.css.map",
-    "static/js/2.470942be.chunk.js.LICENSE.txt": "/static/js/2.470942be.chunk.js.LICENSE.txt",
-    "static/media/Resume.1587fc69.pdf": "/static/media/Resume.1587fc69.pdf",
+    "static/css/main.fff5734d.chunk.css.map": "/static/css/main.fff5734d.chunk.css.map",
+    "static/js/2.54282a71.chunk.js.LICENSE.txt": "/static/js/2.54282a71.chunk.js.LICENSE.txt",
+    "static/media/ColorWheel.d590a16e.png": "/static/media/ColorWheel.d590a16e.png",
+    "static/media/Mug_and_Torus_morph.c51dd507.gif": "/static/media/Mug_and_Torus_morph.c51dd507.gif",
+    "static/media/govind_pimpale_resume.1587fc69.pdf": "/static/media/govind_pimpale_resume.1587fc69.pdf",
     "static/media/style.scss": "/static/media/literata-latin-900italic.f41ec2c2.woff"
   },
   "entrypoints": [
     "static/js/runtime-main.fb0e1a9e.js",
-    "static/js/2.470942be.chunk.js",
-    "static/css/main.4f7d7228.chunk.css",
-    "static/js/main.aaaa1999.chunk.js"
+    "static/js/2.54282a71.chunk.js",
+    "static/css/main.fff5734d.chunk.css",
+    "static/js/main.dbdd4b03.chunk.js"
   ]
 }

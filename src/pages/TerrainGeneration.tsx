@@ -1,17 +1,17 @@
+import React from 'react';
 import Layout from '../components/Layout';
 import Section from '../components/Section';
 import { Async } from 'react-async';
+import LazyLoad from 'react-lazyload';
 
 import ImageDataDisplay from '../components/ImageDataDisplay';
-import { loadImage } from '../math';
-import { extend, boxBlur } from '../components/Convolve';
+import { loadImage, extend, boxBlur } from '../math';
 
 import MugAndTorusMorphUrl from "../assets/Mug_and_Torus_morph.gif";
-import MugAndTorusFrameUrl from "../assets/Mug_and_Torus_frame.png";
+import ColorWheelUrl from "../assets/ColorWheel.png";
 
 // demos
 import SingularityDemo from '../components/SingularityDemo';
-
 
 
 
@@ -23,8 +23,6 @@ const Footnote: React.FunctionComponent<FootnoteProps> = props =>
   <a href={props.source} style={{ textDecoration: "none" }}>
     <sup>[{props.index}]</sup>
   </a>
-
-
 
 
 
@@ -172,90 +170,111 @@ const TerrainGeneration = () =>
         <p>
           We'll use a box blur in order to demonstrate the impacts of boundary conditions.
         </p>
-        <AsideCard title="Blurring And Boundary Conditions">
-          <Async promise={loadImage(MugAndTorusFrameUrl)}>
-            <Async.Pending>
-              <div className="spinner-border" role="status" />
-            </Async.Pending>
-            <Async.Fulfilled<ImageData>>{img => {
-              const radius = 201;
-              const fixedData = extend(img, "FIXED", radius)
-              const mirrorData = extend(img, "MIRROR", radius)
-              const periodicData = extend(img, "PERIODIC", radius)
 
-              const fixedBlur = boxBlur(fixedData, radius);
-              const mirrorBlur = boxBlur(mirrorData, radius);
-              const periodicBlur = boxBlur(periodicData, radius);
+        <LazyLoad offset={200}>
+          <AsideCard title="Blurring And Boundary Conditions">
+            <Async promise={
+              loadImage(ColorWheelUrl)
+                // we want to be able to change radius
+                .then(x => ({ img: x, radius: 100 }))
+            }>
+              {({ setData }) => <>
+                <Async.Pending>
+                  <div className="spinner-border" role="status" />
+                </Async.Pending>
+                <Async.Fulfilled<{ img: ImageData, radius: number }>>{({ img, radius }) => {
 
-              return <div className="container">
-                <ImageDataDisplay
-                  style={{ width: "20em", height: "20em" }}
-                  className="border border-dark mx-auto d-block"
-                  data={img}
-                />
-                <div className="row">
-                  <div className="col">
-                    <strong>Fixed Boundary Condition</strong>
-                    <p>After extension:</p>
-                    <ImageDataDisplay
-                      className="border border-dark"
-                      style={{ width: "15em", height: "15em" }}
-                      data={fixedData}
-                    />
-                    <p>Final Result:</p>
-                    <ImageDataDisplay
-                      className="border border-dark"
-                      style={{ width: "15em", height: "15em" }}
-                      data={fixedBlur}
-                    />
-                  </div>
-                  <div className="col">
-                    <strong>Mirrored Boundary Condition</strong>
-                    <p>After extension:</p>
-                    <ImageDataDisplay
-                      className="border border-dark"
-                      style={{ width: "15em", height: "15em" }}
-                      data={mirrorData}
-                    />
-                    <p>Final Result:</p>
-                    <ImageDataDisplay
-                      className="border border-dark"
-                      style={{ width: "15em", height: "15em" }}
-                      data={mirrorBlur}
-                    />
-                  </div>
-                  <div className="col">
-                    <strong>Periodic Boundary Condition</strong>
-                    <p>After extension:</p>
-                    <ImageDataDisplay
-                      className="border border-dark"
-                      style={{ width: "15em", height: "15em" }}
-                      data={periodicData}
-                    />
-                    <p>Final Result:</p>
-                    <ImageDataDisplay
-                      className="border border-dark"
-                      style={{ width: "15em", height: "15em" }}
-                      data={periodicBlur}
-                    />
-                  </div>
-                </div>
-              </div>
-            }}
-            </Async.Fulfilled>
-          </Async>
-        </AsideCard>
+                  const fixedData = extend(img, "FIXED", radius)
+                  const mirrorData = extend(img, "MIRROR", radius)
+                  const periodicData = extend(img, "PERIODIC", radius)
 
+                  const fixedBlur = boxBlur(fixedData, radius);
+                  const mirrorBlur = boxBlur(mirrorData, radius);
+                  const periodicBlur = boxBlur(periodicData, radius);
+
+                  return <div className="container">
+                    <div className="mx-auto text-center my-3" style={{ width: "20em" }}>
+                      <p><strong>Source Image</strong></p>
+                      <ImageDataDisplay
+                        style={{ width: "15em", height: "15em" }}
+                        className="border border-dark mx-auto d-block"
+                        data={img}
+                      />
+                      <small>Image in the public domain.<a href="https://commons.wikimedia.org/wiki/File:Eight-colour-wheel-2D.png">Source</a></small>
+                      <div className="mx-auto d-block mt-3">
+                        <label className="form-label">Blur Radius</label>
+                        <input type="range" className="form-range" min="1" max="100" defaultValue="100"
+                          onChange={e => setData({ radius: e.target.valueAsNumber, img })}
+                        />
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col">
+                        <strong>Fixed Boundary Condition</strong>
+                        <p>After extension:</p>
+                        <ImageDataDisplay
+                          className="border border-dark"
+                          style={{ width: "15em", height: "15em" }}
+                          data={fixedData}
+                        />
+                        <p>Final Result:</p>
+                        <ImageDataDisplay
+                          className="border border-dark"
+                          style={{ width: "15em", height: "15em" }}
+                          data={fixedBlur}
+                        />
+                      </div>
+                      <div className="col">
+                        <strong>Mirrored Boundary Condition</strong>
+                        <p>After extension:</p>
+                        <ImageDataDisplay
+                          className="border border-dark"
+                          style={{ width: "15em", height: "15em" }}
+                          data={mirrorData}
+                        />
+                        <p>Final Result:</p>
+                        <ImageDataDisplay
+                          className="border border-dark"
+                          style={{ width: "15em", height: "15em" }}
+                          data={mirrorBlur}
+                        />
+                      </div>
+                      <div className="col">
+                        <strong>Periodic Boundary Condition</strong>
+                        <p>After extension:</p>
+                        <ImageDataDisplay
+                          className="border border-dark"
+                          style={{ width: "15em", height: "15em" }}
+                          data={periodicData}
+                        />
+                        <p>Final Result:</p>
+                        <ImageDataDisplay
+                          className="border border-dark"
+                          style={{ width: "15em", height: "15em" }}
+                          data={periodicBlur}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                }}
+                </Async.Fulfilled>
+              </>}
+            </Async>
+          </AsideCard>
+        </LazyLoad>
+        <p>Essentially:</p>
         <ul>
-          <li>Fixed boundary condition</li>
-          <li>Mirrored boundary condition</li>
+          <li>Fixed boundary conditions extend the value that was closest to the edge.</li>
+          <li>Mirrored boundary conditions make a mirror the data on the side closest.</li>
+          <li>Periodic boundary conditions take data from the opposite edge of the image.</li>
         </ul>
-
-
+        <p>Note how the choice of the boundary condition makes a huge impact on the final blurred image.</p>
+        <p>
+          All of these boundary conditions are workable.
+          We're going to choose a periodic boundary condition though, since it means we don't have to deal with invisible world barriers.
+          This is the same approach taken by a lot of old RPGs.
+        </p>
       </Section>
-
-
-
       <Section id="terrainGeneration" name="Terrain Generation">
 
       </Section>
