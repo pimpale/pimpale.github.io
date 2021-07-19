@@ -1,22 +1,35 @@
 import Layout from '../components/Layout';
 import Section from '../components/Section';
+import { Async } from 'react-async';
 
-import MugAndTorus from "../assets/Mug_and_Torus_morph.gif";
+import ImageDataDisplay from '../components/ImageDataDisplay';
+import { loadImage } from '../math';
+import { extend, boxBlur } from '../components/Convolve';
+
+import MugAndTorusMorphUrl from "../assets/Mug_and_Torus_morph.gif";
+import MugAndTorusFrameUrl from "../assets/Mug_and_Torus_frame.png";
 
 // demos
 import SingularityDemo from '../components/SingularityDemo';
 
+
+
+
 type FootnoteProps = {
   index: number,
   source: string,
-  children: React.ReactNode
 }
 const Footnote: React.FunctionComponent<FootnoteProps> = props =>
-    <a
-      href={props.source}
-    >
-      {props.children}
-    </a>
+  <a href={props.source} style={{ textDecoration: "none" }}>
+    <sup>[{props.index}]</sup>
+  </a>
+
+
+
+
+
+
+
 
 type AsideCardProps = {
   title: string,
@@ -73,7 +86,7 @@ const TerrainGeneration = () =>
           Topology describes the fundamental geometric properties of an object, especially those properties that don't change as the object is stretched, squished, or otherwise distorted.
           For example, a coffee mug is topologically equivalent to a donut since the mug, like the donut, has one through hole.
           <div className="mx-auto text-center my-3">
-            <img src={MugAndTorus} className="border border-dark mx-auto d-block" alt="A mug morphing into a torus and back" />
+            <img src={MugAndTorusMorphUrl} className="border border-dark mx-auto d-block" alt="A mug morphing into a torus and back" />
             <small>Image in the public domain. <a href="https://commons.wikimedia.org/wiki/File:Mug_and_Torus_morph.gif">Source</a></small>
           </div>
           If you're interested, <a href="https://en.wikipedia.org/wiki/Topology">you can read more about topology on Wikipedia</a>.
@@ -149,13 +162,96 @@ const TerrainGeneration = () =>
         <h4>Boundary Conditions?</h4>
         <p>
           Now that we've settled on a flat finite surface, we have to decide what should go at the edges.
-          These are called
+          However, we need to do more than just decide the content of the edge grid tiles.
+          Many map operations need to access data from neighboring tiles.
+          So, in order to process the edge tiles, we need to gather data from "beyond the edge".
         </p>
+        <p>
+          A <strong>boundary condition</strong> is a constraint on how we treat operations that go over the edges.
+        </p>
+        <p>
+          We'll use a box blur in order to demonstrate the impacts of boundary conditions.
+        </p>
+        <AsideCard title="Blurring And Boundary Conditions">
+          <Async promise={loadImage(MugAndTorusFrameUrl)}>
+            <Async.Pending>
+              <div className="spinner-border" role="status" />
+            </Async.Pending>
+            <Async.Fulfilled<ImageData>>{img => {
+              const radius = 201;
+              const fixedData = extend(img, "FIXED", radius)
+              const mirrorData = extend(img, "MIRROR", radius)
+              const periodicData = extend(img, "PERIODIC", radius)
 
-        Any of a set of constraints that limit the solutions of a differential equation
+              const fixedBlur = boxBlur(fixedData, radius);
+              const mirrorBlur = boxBlur(mirrorData, radius);
+              const periodicBlur = boxBlur(periodicData, radius);
+
+              return <div className="container">
+                <ImageDataDisplay
+                  style={{ width: "20em", height: "20em" }}
+                  className="border border-dark mx-auto d-block"
+                  data={img}
+                />
+                <div className="row">
+                  <div className="col">
+                    <strong>Fixed Boundary Condition</strong>
+                    <p>After extension:</p>
+                    <ImageDataDisplay
+                      className="border border-dark"
+                      style={{ width: "15em", height: "15em" }}
+                      data={fixedData}
+                    />
+                    <p>Final Result:</p>
+                    <ImageDataDisplay
+                      className="border border-dark"
+                      style={{ width: "15em", height: "15em" }}
+                      data={fixedBlur}
+                    />
+                  </div>
+                  <div className="col">
+                    <strong>Mirrored Boundary Condition</strong>
+                    <p>After extension:</p>
+                    <ImageDataDisplay
+                      className="border border-dark"
+                      style={{ width: "15em", height: "15em" }}
+                      data={mirrorData}
+                    />
+                    <p>Final Result:</p>
+                    <ImageDataDisplay
+                      className="border border-dark"
+                      style={{ width: "15em", height: "15em" }}
+                      data={mirrorBlur}
+                    />
+                  </div>
+                  <div className="col">
+                    <strong>Periodic Boundary Condition</strong>
+                    <p>After extension:</p>
+                    <ImageDataDisplay
+                      className="border border-dark"
+                      style={{ width: "15em", height: "15em" }}
+                      data={periodicData}
+                    />
+                    <p>Final Result:</p>
+                    <ImageDataDisplay
+                      className="border border-dark"
+                      style={{ width: "15em", height: "15em" }}
+                      data={periodicBlur}
+                    />
+                  </div>
+                </div>
+              </div>
+            }}
+            </Async.Fulfilled>
+          </Async>
+        </AsideCard>
+
+        <ul>
+          <li>Fixed boundary condition</li>
+          <li>Mirrored boundary condition</li>
+        </ul>
 
 
-        focus on the torus, aka <strong>Periodic Boundary Conditions</strong>.
       </Section>
 
 

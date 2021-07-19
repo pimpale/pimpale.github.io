@@ -18,6 +18,8 @@ interface VectorMapDisplayState {
 interface VectorMapDisplayProps {
   vmap: VectorMap;
   base: ImageData;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapDisplayState> {
@@ -40,7 +42,7 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
   }
 
   componentWillUnmount() {
-    if(!!this.state.intervalCode) {
+    if (!!this.state.intervalCode) {
       window.clearInterval(this.state.intervalCode)
     }
     this.setState({ intervalCode: null })
@@ -124,7 +126,9 @@ class VectorMapDisplay extends React.Component<VectorMapDisplayProps, VectorMapD
   render() {
     const { width, height } = this.props.base;
     return (
-      <canvas className="border border-dark"
+      <canvas
+        style={this.props.style}
+        className={this.props.className}
         ref={this.displayCanvas}
         width={width}
         height={height}

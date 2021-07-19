@@ -4,6 +4,8 @@ import React from 'react';
 
 interface ImageDataDisplayProps {
   data: ImageData,
+  className?: string,
+  style?: React.CSSProperties
 }
 
 class ImageDataDisplay extends React.Component<ImageDataDisplayProps> {
@@ -35,13 +37,13 @@ class ImageDataDisplay extends React.Component<ImageDataDisplayProps> {
 
   render() {
     const { width, height } = this.props.data;
-    return (
-      <canvas className="border border-dark"
-        ref={this.displayCanvas}
-        width={width}
-        height={height}
-      />
-    );
+    return <canvas
+      className={this.props.className}
+      style={this.props.style}
+      ref={this.displayCanvas}
+      width={width}
+      height={height}
+    />
   }
 }
 

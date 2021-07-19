@@ -152,6 +152,7 @@ interface OceanHeightMapProps {
 
 function OceanHeightMap(props: OceanHeightMapProps) {
   return <ImageDataDisplay
+    className="border border-dark"
     data={thresholdHeightMap(props.heightmap, props.sealevel, {
       // gruvbox dark blue
       r: 0x07,
@@ -169,6 +170,9 @@ interface HeightMapProps {
 
 function HeightMap(props: HeightMapProps) {
   return <ImageDataDisplay
+
+    className="border border-dark"
+
     data={thresholdHeightMap(props.heightmap, 0, {
       r: 0,
       g: 0,
@@ -185,6 +189,7 @@ interface WindOceanMapProps {
 
 function WindOceanMap(props: WindOceanMapProps) {
   return <VectorMapDisplay
+    className="border border-dark"
     vmap={props.windmap}
     base={thresholdHeightMap(props.heightmap, 0.2, {
       // gruvbox dark blue
