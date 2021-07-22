@@ -7,6 +7,7 @@ import WireframeRenderer from '../components/WireframeRenderer';
 import Layout from '../components/Layout';
 import Section from '../components/Section';
 import LazyLoad from 'react-lazyload';
+import { useMediaQuery } from 'react-responsive'
 
 import Resume from '../assets/govind_pimpale_resume.pdf';
 
@@ -15,48 +16,52 @@ import { CaretDownFill } from 'react-bootstrap-icons';
 type RotatedProps = {
   rotation: number,
   distance: number,
+  // when collapsed should this be its own row
+  ownRow?: boolean
 }
 
 const Rotated: React.FunctionComponent<RotatedProps> = props => {
-  const xDisplacement = Math.cos(props.rotation * (Math.PI / 180));
-  let circleEdge;
-  if (xDisplacement < -0.1) {
-    // Left
-    circleEdge = {
-      display: "block",
-      position: "absolute" as const,
-      top: "50%",
-      left: "50%",
-      transformOrigin: "right",
-      transform: `rotate(${props.rotation}deg) translate(${props.distance}em) rotate(${-props.rotation}deg) translate(-100%, -50%)`,
-    }
-  } else if (xDisplacement > 0.1) {
-    // Right
-    circleEdge = {
-      display: "block",
-      position: "absolute" as const,
-      top: "50%",
-      left: "50%",
-      transformOrigin: "left",
-      transform: `rotate(${props.rotation}deg) translate(${props.distance}em) rotate(${-props.rotation}deg) translate(0%, -50%)`,
-    };
-  } else {
-    // Center
-    circleEdge = {
-      display: "block",
-      position: "absolute" as const,
-      top: "50%",
-      left: "50%",
-      transformOrigin: "center",
-      transform: `rotate(${props.rotation}deg) translate(${props.distance}em) rotate(${-props.rotation}deg) translate(-50%, -50%)`,
-    };
-  }
 
-  return (
-    <div style={circleEdge}>
+  if (!useMediaQuery({ minWidth: 992 })) {
+    const px = `${props.ownRow ? 20 : 5}em`;
+    return <div style={{ paddingLeft: px, paddingRight: px }} className="my-3" >
       {props.children}
     </div>
-  );
+  } else {
+    const xDisplacement = Math.cos(props.rotation * (Math.PI / 180));
+    let transformCss;
+
+    if (xDisplacement < -0.1) {
+      // Left
+      transformCss = {
+        transformOrigin: "right",
+        transform: `rotate(${props.rotation}deg) translate(${props.distance}em) rotate(${-props.rotation}deg) translate(-100%, -50%)`,
+      }
+    } else if (xDisplacement > 0.1) {
+      // Right
+      transformCss = {
+        transformOrigin: "left",
+        transform: `rotate(${props.rotation}deg) translate(${props.distance}em) rotate(${-props.rotation}deg) translate(0%, -50%)`,
+      };
+    } else {
+      // Center
+      transformCss = {
+        transformOrigin: "center",
+        transform: `rotate(${props.rotation}deg) translate(${props.distance}em) rotate(${-props.rotation}deg) translate(-50%, -50%)`,
+      };
+    }
+
+    const blockCss = {
+      display: "block",
+      position: "absolute" as const,
+      top: "50%",
+      left: "50%",
+    };
+
+    return <div style={{ ...transformCss, ...blockCss }}>
+      {props.children}
+    </div>
+  }
 }
 
 type IntroCardProps = {
@@ -71,73 +76,54 @@ const IntroCard: React.FunctionComponent<IntroCardProps> = props =>
     </div>
   </div>
 
-const introStyle = {
-  height: "100vh",
-  minHeight: "50em",
-  width: "100%",
-  minWidth: "100em"
-}
-
-
-const circleCenter = {
-  transformOrigin: "center",
-  display: "block",
-  position: "absolute" as const,
-  top: "50%",
-  left: "50%",
-  width: "20em",
-  height: "20em",
-  transform: "translate(-50%, -50%)",
-}
-
 
 function Home() {
   return <Layout>
-    <div style={introStyle}>
-      <WireframeRenderer
-        style={circleCenter}
-        geometries={[{
-          geometry: new THREE.IcosahedronGeometry(5),
-          color: 0xEBDBB2
-        }]}
-      />
-      {/* Down button */}
-      <Rotated distance={20} rotation={90} >
-        <a href="#about" className="btn btn-secondary border-dark"><CaretDownFill /></a>
+    <div className="min-vh-100 d-flex justify-content-center flex-wrap">
+      <Rotated distance={0} rotation={90} ownRow>
+        <WireframeRenderer
+          style={{ width: "20em", height: "20em" }}
+          geometries={[{
+            geometry: new THREE.IcosahedronGeometry(5),
+            color: 0xEBDBB2
+          }]}
+        />
       </Rotated>
       {/* Data */}
-      <div className="navbarSupportedContent">
-        <Rotated distance={15} rotation={-45} >
-          <IntroCard title="About">
-            <a href="#about">About me, my projects, and this site</a>
-          </IntroCard>
-        </Rotated>
-        <Rotated distance={15} rotation={0} >
-          <IntroCard title="Innexgo">
-            <a href="#innexgo">Open source education systems</a>
-          </IntroCard>
-        </Rotated>
-        <Rotated distance={15} rotation={45} >
-          <IntroCard title="Source">
-            <a href="https://github.com/pimpale/pimpale.github.io">View source code for this site</a>
-          </IntroCard>
-        </Rotated>
-        <Rotated distance={15} rotation={-45 + 180} >
-          <IntroCard title="Achernar">
-            <a href="#achernar">A minimalistic, secure, and low level language</a>
-          </IntroCard>
-        </Rotated>
-        <Rotated distance={15} rotation={0 + 180} >
-          <IntroCard title="Terrain Generation">
-            <a href="#terraingeneration">Demo Procedural Generation System</a>
-          </IntroCard>
-        </Rotated>
-        <Rotated distance={15} rotation={45 + 180} >
-          <IntroCard title="Resume" >
-            <Link to="/resume">View Resume</Link>
-          </IntroCard>
-        </Rotated>
-      </div>
+      <Rotated distance={15} rotation={-45} >
+        <IntroCard title="About">
+          <a href="#about">About me, my projects, and this site</a>
+        </IntroCard>
+      </Rotated>
+      <Rotated distance={15} rotation={0} >
+        <IntroCard title="Innexgo">
+          <a href="#innexgo">Open source education systems</a>
+        </IntroCard>
+      </Rotated>
+      <Rotated distance={15} rotation={45} >
+        <IntroCard title="Source">
+          <a href="https://github.com/pimpale/pimpale.github.io">View source code for this site</a>
+        </IntroCard>
+      </Rotated>
+      <Rotated distance={15} rotation={-45 + 180} >
+        <IntroCard title="Achernar">
+          <a href="#achernar">A minimalistic, secure, and low level language</a>
+        </IntroCard>
+      </Rotated>
+      <Rotated distance={15} rotation={0 + 180} >
+        <IntroCard title="Terrain Generation">
+          <a href="#terraingeneration">Demo Procedural Generation System</a>
+        </IntroCard>
+      </Rotated>
+      <Rotated distance={15} rotation={45 + 180} >
+        <IntroCard title="Resume" >
+          <Link to="/resume">View Resume</Link>
+        </IntroCard>
+      </Rotated>
+      {/* Down button */}
+      <Rotated distance={20} rotation={90} ownRow>
+        <a href="#about" className="btn btn-secondary border-dark"><CaretDownFill /></a>
+      </Rotated>
     </div>
     <div id="content" className="container">
       <Section id="about" name="About">
@@ -218,7 +204,7 @@ function Home() {
             <TerrainGenIntro
               width={400}
               height={400}
-              style={{ width: "800px", height: "800px" }}
+              style={{ width: 800, height: 800 }}
               className="border border-dark"
             />
           </LazyLoad>

@@ -1,4 +1,4 @@
-import { assert } from '@innexgo/frontend-common';
+import assert from 'assert';
 
 export function mod(n: number, m: number) {
   return ((n % m) + m) % m;
