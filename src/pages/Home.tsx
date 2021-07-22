@@ -23,8 +23,8 @@ type RotatedProps = {
 const Rotated: React.FunctionComponent<RotatedProps> = props => {
 
   if (!useMediaQuery({ minWidth: 992 })) {
-    const px = `${props.ownRow ? 20 : 5}em`;
-    return <div style={{ paddingLeft: px, paddingRight: px }} className="my-3" >
+    const mx = `${props.ownRow ? 20 : 1}em`;
+    return <div style={{ marginLeft: mx, marginRight: mx}} className="my-3" >
       {props.children}
     </div>
   } else {
@@ -77,8 +77,8 @@ const IntroCard: React.FunctionComponent<IntroCardProps> = props =>
   </div>
 
 
-function Home() {
-  return <Layout>
+const Home = () =>
+  <Layout>
     <div className="min-vh-100 d-flex justify-content-center flex-wrap">
       <Rotated distance={0} rotation={90} ownRow>
         <WireframeRenderer
@@ -186,8 +186,8 @@ function Home() {
         </ul>
         <h5>Current Status</h5>
         <p>
-          I am currently about 50% through writing the first compiler in C that will compiler Achernar code.
-          The compiler uses its own custom standard library called  <code>comlib</code> that will evolve into Achernar's standard library.
+          I am currently about 50% through writing the first compiler in C that will compile Achernar code.
+          The compiler uses its own custom standard library called <code>comlib</code> that will evolve into Achernar's standard library.
         </p>
         <h5>Additional Information</h5>
         <p>
@@ -204,8 +204,8 @@ function Home() {
             <TerrainGenIntro
               width={400}
               height={400}
-              style={{ width: 800, height: 800 }}
-              className="border border-dark"
+              style={{ width: 800, maxWidth: "100%"}}
+              className="border border-dark ratio ratio-1x1"
             />
           </LazyLoad>
           <br />
@@ -215,6 +215,6 @@ function Home() {
       <br />
     </div>
   </Layout>
-}
+
 
 export default Home;
