@@ -1,6 +1,7 @@
 {
   "name": "pimpale.github.io",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@innexgo/frontend-common": "^0.0.7",

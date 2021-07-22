@@ -151,7 +151,7 @@ class SingularityDemo extends React.Component<SingularityDemoProps, SingularityD
 
     // set our new geometry
     let newGeometry = cubeGeometry.clone();
-    newGeometry .setAttribute('position', new THREE.BufferAttribute(newPosition, 3));
+    newGeometry.setAttribute('position', new THREE.BufferAttribute(newPosition, 3));
 
     // remove old mesh
     this.scene.remove(this.mesh);
@@ -162,10 +162,10 @@ class SingularityDemo extends React.Component<SingularityDemoProps, SingularityD
     this.mesh = mesh;
 
     // wireframe
-    let geo = new THREE.WireframeGeometry( this.mesh.geometry );
-    let mat = new THREE.LineBasicMaterial( { color: 0x1d2021} );
-    let wireframe = new THREE.LineSegments( geo, mat );
-    mesh.add( wireframe );
+    let geo = new THREE.WireframeGeometry(this.mesh.geometry);
+    let mat = new THREE.LineBasicMaterial({ color: 0x1d2021 });
+    let wireframe = new THREE.LineSegments(geo, mat);
+    mesh.add(wireframe);
   }
 
   startAnimationLoop = () => {

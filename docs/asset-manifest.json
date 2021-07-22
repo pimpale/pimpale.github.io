@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/static/css/main.fff5734d.chunk.css",
-    "main.js": "/static/js/main.dbdd4b03.chunk.js",
-    "main.js.map": "/static/js/main.dbdd4b03.chunk.js.map",
+    "main.js": "/static/js/main.588ef2e5.chunk.js",
+    "main.js.map": "/static/js/main.588ef2e5.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.fb0e1a9e.js",
     "runtime-main.js.map": "/static/js/runtime-main.fb0e1a9e.js.map",
-    "static/js/2.54282a71.chunk.js": "/static/js/2.54282a71.chunk.js",
-    "static/js/2.54282a71.chunk.js.map": "/static/js/2.54282a71.chunk.js.map",
+    "static/js/2.44ce17f2.chunk.js": "/static/js/2.44ce17f2.chunk.js",
+    "static/js/2.44ce17f2.chunk.js.map": "/static/js/2.44ce17f2.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.fff5734d.chunk.css.map": "/static/css/main.fff5734d.chunk.css.map",
-    "static/js/2.54282a71.chunk.js.LICENSE.txt": "/static/js/2.54282a71.chunk.js.LICENSE.txt",
+    "static/js/2.44ce17f2.chunk.js.LICENSE.txt": "/static/js/2.44ce17f2.chunk.js.LICENSE.txt",
     "static/media/ColorWheel.d590a16e.png": "/static/media/ColorWheel.d590a16e.png",
     "static/media/Mug_and_Torus_morph.c51dd507.gif": "/static/media/Mug_and_Torus_morph.c51dd507.gif",
     "static/media/govind_pimpale_resume.1587fc69.pdf": "/static/media/govind_pimpale_resume.1587fc69.pdf",
@@ -17,8 +17,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.fb0e1a9e.js",
-    "static/js/2.54282a71.chunk.js",
+    "static/js/2.44ce17f2.chunk.js",
     "static/css/main.fff5734d.chunk.css",
-    "static/js/main.dbdd4b03.chunk.js"
+    "static/js/main.588ef2e5.chunk.js"
   ]
 }

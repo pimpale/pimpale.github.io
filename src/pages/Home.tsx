@@ -122,7 +122,7 @@ const Home = () =>
       </Rotated>
       {/* Down button */}
       <Rotated distance={20} rotation={90} ownRow>
-        <a href="#about" className="btn btn-secondary border-dark"><CaretDownFill /></a>
+        <a href="#about" className="btn btn-secondary border-dark" aria-label="About"><CaretDownFill /></a>
       </Rotated>
     </div>
     <div id="content" className="container">
