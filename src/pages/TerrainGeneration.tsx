@@ -1,6 +1,7 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import Section from '../components/Section';
+import CitationManager from '../components/CitationManager';
 import { Async } from 'react-async';
 import LazyLoad from 'react-lazyload';
 import { makeNoise2D, makeNoise4D } from 'open-simplex-noise';
@@ -18,18 +19,6 @@ import ColorWheelUrl from "../assets/ColorWheel.png";
 import SingularityDemo from '../components/SingularityDemo';
 
 
-
-type FootnoteProps = {
-  index: number,
-  source: string,
-}
-const Footnote: React.FunctionComponent<FootnoteProps> = props =>
-  <a href={props.source} style={{ textDecoration: "none" }}>
-    <sup>[{props.index}]</sup>
-  </a>
-
-
-
 const noise2D = makeNoise2D(Date.now());
 
 type AsideCardProps = {
@@ -45,9 +34,9 @@ const AsideCard: React.FunctionComponent<AsideCardProps> = props =>
   </div>
 
 
-const TerrainGeneration = () =>
-  <Layout>
-    <div className="container mt-5">
+const TerrainGeneration = () => <Layout>
+  <div className="container mt-5">
+    <CitationManager prefix="source-">{(Citation, CitationBank) => <>
       <Section id="overview" name="Overview">
         <h4>Goals</h4>
         <p>
@@ -84,9 +73,9 @@ const TerrainGeneration = () =>
           Our first (and perhaps biggest) major choice is deciding on the world's <strong>topology</strong>.
         </p>
         <AsideCard title="Topology">
-          Topology describes the fundamental geometric properties of an object, especially those properties that don't change as the object is stretched, squished, or otherwise distorted.
+          <strong>Topology</strong> describes the fundamental geometric properties of an object, especially those properties that don't change as the object is stretched, squished, or otherwise distorted.
           For example, a coffee mug is topologically equivalent to a donut since the mug, like the donut, has one through hole.
-          <div className="mx-auto text-center my-3">
+          <div className="text-center my-3">
             <img src={MugAndTorusMorphUrl} className="border border-dark mx-auto d-block" alt="A mug morphing into a torus and back" />
             <small>Image in the public domain. <a href="https://commons.wikimedia.org/wiki/File:Mug_and_Torus_morph.gif">Source</a></small>
           </div>
@@ -111,8 +100,21 @@ const TerrainGeneration = () =>
           If we guarantee that for each point on our world's surface, the elevation is a well defined number, then we can use a 2d graph or grid to represent the heightmap.
         </p>
         <p>
-          Heightmaps won't work if our world isn't vertically simple.
-          {/* TODO Provide example of vertically vs nonvertically simple */}
+          However, heightmaps won't work if our terrain isn't <strong>vertically simple</strong>.
+        </p>
+        <AsideCard title="Vertical and Horizontally Simple Regions">
+          <p>
+            In math, a <strong>region</strong> is a <a href="https://en.wikipedia.org/wiki/Connected_space">simply connected</a> area of space.
+          </p>
+
+          A vertically simple region is
+          <div className="mx-auto text-center my-3">
+            <img src={MugAndTorusMorphUrl} className="border border-dark mx-auto d-block" alt="A mug morphing into a torus and back" />
+            <small>Image in the public domain. <a href="https://commons.wikimedia.org/wiki/File:Mug_and_Torus_morph.gif">Source</a></small>
+          </div>
+          If you're interested, <a href="https://en.wikipedia.org/wiki/Topology">you can read more about topology on Wikipedia</a>.
+        </AsideCard>
+        <p>
           For example, if we want our world to be primarily cave based, with no real "surface" to speak of, then a given (x, y) coordinate pair may have multiple surfaces at different z levels.
           The same problem would apply for a floating island map.
           A possible workaround would be to use a small number of discrete z levels, each of which uses its own seperate heightmap.
@@ -321,9 +323,13 @@ const TerrainGeneration = () =>
           <p>We'll be using OpenSimplex since it's open source and provides good performance.</p>
         </AsideCard>
       </Section>
-    </div>
-
-  </Layout >
+      <Section id="sources" name="Sources">
+        <CitationBank />
+      </Section>
+    </>}
+    </CitationManager>
+  </div>
+</Layout >
 
 
 export default TerrainGeneration;
