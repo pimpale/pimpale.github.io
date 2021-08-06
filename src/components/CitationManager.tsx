@@ -9,12 +9,14 @@ export interface CitationBankProps {
 
 }
 
-interface CitationManagerProps {
+export interface CitationComponents {
+  Citation: React.FunctionComponent<CitationProps>,
+  CitationBank: React.FunctionComponent<CitationBankProps>,
+}
+
+export interface CitationManagerProps {
   prefix: string,
-  children: (
-    citation: React.FunctionComponent<CitationProps>,
-    citationBank: React.FunctionComponent<CitationBankProps>
-  ) => React.ReactChild
+  children: (c: CitationComponents) => React.ReactChild
 }
 
 
@@ -36,7 +38,7 @@ class CitationManager extends React.Component<CitationManagerProps> {
       this.map.set(props.source, index);
     }
 
-    return <a href={'#' + this.props.prefix + index } style={{ textDecoration: "none" }}>
+    return <a href={'#' + this.props.prefix + index} style={{ textDecoration: "none" }}>
       <sup>[{index}]</sup>
     </a>
   }
@@ -54,7 +56,10 @@ class CitationManager extends React.Component<CitationManagerProps> {
 
 
   render() {
-    return this.props.children(this.citation, this.citationBank)
+    return this.props.children({
+      Citation: this.citation,
+      CitationBank: this.citationBank
+    })
   }
 
 }
