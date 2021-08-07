@@ -22,6 +22,7 @@ import VerticallySimpleRegionExample2 from "../assets/terrain_generation/Vertica
 
 // demos
 import SingularityDemo from '../components/SingularityDemo';
+import TorusDemo from '../components/TorusDemo';
 
 
 const noise2D = makeNoise2D(Date.now());
@@ -51,7 +52,10 @@ const TerrainGeneration = () => <ArticleLayout>{
       <p>
         Procedural generation is a versatile tactic in game programming.
         Games that utilize procedural generation can have much larger maps than those with handcrafted levels, since they can generate content on the fly.
-        (Ex. <a href="https://en.wikipedia.org/wiki/Minecraft">Minecraft</a> and <a href="https://en.wikipedia.org/wiki/No_Man%27s_Sky">No Man's Sky</a>)
+        (
+        Ex. Minecraft<Citation source="https://en.wikipedia.org/wiki/Minecraft" /> and
+        No Man's Sky <Citation source="https://en.wikipedia.org/wiki/No_Man%27s_Sky" />
+        )
         However, a potential downside is that excessive use of procedural generation makes games feel predictable and repetitive.
         In order to mitigate this, some games increase the depth of the world by using more elaborate generation systems.
         Dwarf Fortress, for example, even <a href="https://dwarffortresswiki.org/index.php/DF2014:World_generation">simulates an entire virtual history</a>.
@@ -163,7 +167,7 @@ const TerrainGeneration = () => <ArticleLayout>{
       <h4>Infinite or Finite?</h4>
       <p>
         If we don't have any complex build time systems, then we can make our world size effectively infinite, and just generate everything at runtime.
-        This is the approach Minecraft takes.
+        This is the approach Minecraft takes.<Citation source="https://en.wikipedia.org/wiki/Minecraft" />
         In some ways, this is optimal:
         The user doesn't have to wait at all for world generation, and we have a lot of flexibility with how large the map should be.
       </p>
@@ -206,8 +210,6 @@ const TerrainGeneration = () => <ArticleLayout>{
         Since dealing with spheres is a needless hassle unless we have a specific use case, we're going to try to use a flat surface without curvature.
         This will enable us to use a grid when processing the data.
       </p>
-
-
 
 
 
@@ -257,7 +259,7 @@ const TerrainGeneration = () => <ArticleLayout>{
                   <small>Source: <a href="https://commons.wikimedia.org/wiki/File:Eight-colour-wheel-2D.png">Wikipedia</a></small>
                   <div className="mx-auto d-block mt-3">
                     <label className="form-label">Blur Radius</label>
-                    <input type="range" className="form-range" min="1" max="120" defaultValue="100"
+                    <input type="range" className="form-range" min="1" max="120" defaultValue="60"
                       onChange={e => setData({ radius: e.target.valueAsNumber, img })}
                     />
                   </div>
@@ -325,13 +327,30 @@ const TerrainGeneration = () => <ArticleLayout>{
       <p>
         All of these boundary conditions are workable for our purposes.
         We're going to choose a periodic boundary condition though, since it means we don't have to deal with invisible world barriers.
-        This is the same approach taken by a lot of old RPGs.
+        This is the same approach taken by a lot of old RPGs, like Final Fantasy.
+        <Citation source="https://tvtropes.org/pmwiki/pmwiki.php/Main/VideoGameGeography" />
       </p>
     </Section>
     <Section id="torusWorld" name="A Torus World" >
+      <h4>Real World Implications</h4>
+      <p>
+        Periodic boundary conditions imply that the world forms a torus.
+      </p>
+      <p>
+        If we were to glue together the top and bottom edges of the map, we would get a cylinder.
+        Then, as we glue the east and west ends of the cylinder together, we would get a torus.
+      </p>
+      <AsideCard title="Torus Widget" >
+        <p>
+          Play with this interactive widget to explore how we can join the edges of a square to form a torus.
+        </p>
+        <TorusDemo className="mx-auto" style={{ width: "20em" }} />
+      </AsideCard>
+
       <h4>Map Projections and Coordinate Systems</h4>
       <p>
-
+        Unlike a spherical world, creating a coordinate system is straightforward on a toroidal world.
+        We can simply index into our rectangular array using a x coordinate and a y coordinate.
       </p>
     </Section>
     <Section id="terrainGeneration" name="Terrain Generation">
@@ -339,7 +358,6 @@ const TerrainGeneration = () => <ArticleLayout>{
       <p>
         We'll be using a rectangular grid to represent map data, since it works well with our choice of a torus world.
       </p>
-
       <p>
         In order to do so, we need a source of <strong>coherent noise</strong>.
       </p>

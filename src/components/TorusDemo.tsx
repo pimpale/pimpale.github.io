@@ -2,69 +2,41 @@ import React from "react";
 import * as THREE from 'three';
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 
-
-type SingularityDemoProps = {
+type TorusDemoProps = {
   style?: React.CSSProperties,
   className?: string
 }
 
-type SingularityDemoState = {}
+type TorusDemoState = {}
 
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1, 5, 5, 5)
+const planeGeometry = new THREE.PlaneGeometry(1, 1, 10, 10)
 
-const cubeMaterials = [
+const planeMaterial =
   new THREE.MeshBasicMaterial({
     polygonOffset: true,
     polygonOffsetFactor: 1, // positive value pushes polygon further away
     polygonOffsetUnits: 1,
     color: 0x458588,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0xdc3545,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0x98971a,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0xb16286,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0xd79921,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0xEBDBB2,
-  }),
-];
+    side: THREE.DoubleSide
+  })
+;
 
 
-class SingularityDemo extends React.Component<SingularityDemoProps, SingularityDemoState> {
+class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
 
   // this is the ref that three js uses
   private mount = React.createRef<HTMLDivElement>();
 
   // this is the ref we use to monitor circularization
-  private range = React.createRef<HTMLInputElement>();
+  private majorRange = React.createRef<HTMLInputElement>();
+  private minorRange = React.createRef<HTMLInputElement>();
+  private lerpRange = React.createRef<HTMLInputElement>();
 
   // we assume these variables are properly initialized
   private requestID!: number;
   private controls!: TrackballControls;
   private scene!: THREE.Scene;
-  private camera!: THREE.OrthographicCamera;
+  private camera!: THREE.PerspectiveCamera;
   private renderer!: THREE.WebGLRenderer;
   private mesh!: THREE.Mesh;
 
@@ -75,12 +47,16 @@ class SingularityDemo extends React.Component<SingularityDemoProps, SingularityD
     this.handleCircularityChange();
     this.startAnimationLoop();
     window.addEventListener('resize', this.handleWindowResize);
-    this.range.current!.addEventListener('input', this.handleCircularityChange);
+    this.majorRange.current!.addEventListener('input', this.handleCircularityChange);
+    this.minorRange.current!.addEventListener('input', this.handleCircularityChange);
+    this.lerpRange.current!.addEventListener('input', this.handleCircularityChange);
   }
 
 
   componentWillUnmount() {
-    this.range.current!.removeEventListener('input', this.handleCircularityChange);
+    this.majorRange.current!.removeEventListener('input', this.handleCircularityChange);
+    this.minorRange.current!.removeEventListener('input', this.handleCircularityChange);
+    this.lerpRange.current!.removeEventListener('input', this.handleCircularityChange);
     window.removeEventListener('resize', this.handleWindowResize);
     window.cancelAnimationFrame(this.requestID!);
     this.controls!.dispose();
@@ -94,14 +70,14 @@ class SingularityDemo extends React.Component<SingularityDemoProps, SingularityD
     const height = this.mount.current!.clientHeight;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.OrthographicCamera(
-      -1.5,
-      1.5,
-      1.5,
-      -1.5,
+    this.camera = new THREE.PerspectiveCamera(
+      45,
+      1,
+      0.1,
+      100,
     );
 
-    this.camera.position.z = 10; // is used here to set some distance from a cube that is located at z = 0
+    this.camera.position.z = 2; // is used here to set some distance from a plane that is located at z = 0
     // TrackballControls allow a camera to trackball around the object
     // https://threejs.org/docs/#examples/controls/TrackballControls
     this.controls = new TrackballControls(this.camera, this.mount.current!);
@@ -125,39 +101,45 @@ class SingularityDemo extends React.Component<SingularityDemoProps, SingularityD
 
   handleCircularityChange = () => {
     // how much to lerp towards circle
-    const alpha = this.range.current!.valueAsNumber;
+    const majorAlpha = this.majorRange.current!.valueAsNumber;
+    const minorAlpha = this.minorRange.current!.valueAsNumber;
+    const lerpAlpha = this.lerpRange.current!.valueAsNumber;
 
     // we're going to calculate a new position that's an interpolation
-    const newPosition = new Float32Array(cubeGeometry.attributes.position.count * 3);
+    const newPosition = new Float32Array(planeGeometry.attributes.position.count * 3);
 
-    for (let i = 0; i < cubeGeometry.attributes.position.count; i++) {
+    const majorRadius = 0.5;
+    const minorRadius = 0.3;
+
+    for (let i = 0; i < planeGeometry.attributes.position.count; i++) {
       // original x positions
-      const x = cubeGeometry.attributes.position.getX(i);
-      const y = cubeGeometry.attributes.position.getY(i);
-      const z = cubeGeometry.attributes.position.getZ(i);
+      const x = planeGeometry.attributes.position.getX(i);
+      const y = planeGeometry.attributes.position.getY(i);
+      const z = planeGeometry.attributes.position.getZ(i);
 
-      const dist = Math.hypot(x, y, z);
+      const theta = (x * minorAlpha + 0.75) * 2 * Math.PI;
+      const phi = y * majorAlpha * 2 * Math.PI;
 
       // circular x positions
-      const nx = x / dist;
-      const ny = y / dist;
-      const nz = z / dist;
+      const nx = (majorRadius + minorRadius * Math.cos(theta)) * Math.cos(phi);
+      const ny = (majorRadius + minorRadius * Math.cos(theta)) * Math.sin(phi);
+      const nz = minorRadius * Math.sin(theta);
 
       // lerp the new values between the circle calculated
-      newPosition[i * 3 + 0] = x + (nx - x) * alpha;
-      newPosition[i * 3 + 1] = y + (ny - y) * alpha;
-      newPosition[i * 3 + 2] = z + (nz - z) * alpha;
+      newPosition[i * 3 + 0] = x + (nx - x) * lerpAlpha;
+      newPosition[i * 3 + 1] = y + (ny - y) * lerpAlpha;
+      newPosition[i * 3 + 2] = z + (nz - z) * lerpAlpha;
     }
 
     // set our new geometry
-    let newGeometry = cubeGeometry.clone();
+    let newGeometry = planeGeometry.clone();
     newGeometry.setAttribute('position', new THREE.BufferAttribute(newPosition, 3));
 
     // remove old mesh
     this.scene.remove(this.mesh);
 
     // add mesh
-    const mesh = new THREE.Mesh(newGeometry, cubeMaterials);
+    const mesh = new THREE.Mesh(newGeometry, planeMaterial);
     this.scene.add(mesh);
     this.mesh = mesh;
 
@@ -190,11 +172,19 @@ class SingularityDemo extends React.Component<SingularityDemoProps, SingularityD
     return <div style={this.props.style} className={this.props.className}>
       <div ref={this.mount} className="ratio ratio-1x1 border border-dark" />
       <div className="mx-auto d-block flex-grow-1 ">
-        <label className="form-label">Circularness</label>
-        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.range} />
+        <label className="form-label">Join Major</label>
+        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.majorRange} />
+      </div>
+      <div className="mx-auto d-block flex-grow-1 ">
+        <label className="form-label">Join Minor</label>
+        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.minorRange} />
+      </div>
+      <div className="mx-auto d-block flex-grow-1 ">
+        <label className="form-label">Alpha</label>
+        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.lerpRange} />
       </div>
     </div>;
   }
 }
 
-export default SingularityDemo;
+export default TorusDemo;
