@@ -5,11 +5,11 @@
     "main.js.map": "/static/js/main.9ce07de8.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.fb0e1a9e.js",
     "runtime-main.js.map": "/static/js/runtime-main.fb0e1a9e.js.map",
-    "static/js/2.182af9b0.chunk.js": "/static/js/2.182af9b0.chunk.js",
-    "static/js/2.182af9b0.chunk.js.map": "/static/js/2.182af9b0.chunk.js.map",
+    "static/js/2.401e303b.chunk.js": "/static/js/2.401e303b.chunk.js",
+    "static/js/2.401e303b.chunk.js.map": "/static/js/2.401e303b.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.425d290a.chunk.css.map": "/static/css/main.425d290a.chunk.css.map",
-    "static/js/2.182af9b0.chunk.js.LICENSE.txt": "/static/js/2.182af9b0.chunk.js.LICENSE.txt",
+    "static/js/2.401e303b.chunk.js.LICENSE.txt": "/static/js/2.401e303b.chunk.js.LICENSE.txt",
     "static/media/ColorWheel.d590a16e.png": "/static/media/ColorWheel.d590a16e.png",
     "static/media/Mug_and_Torus_morph.c51dd507.gif": "/static/media/Mug_and_Torus_morph.c51dd507.gif",
     "static/media/SimplyConnectedRegionExample1.3dba45ac.png": "/static/media/SimplyConnectedRegionExample1.3dba45ac.png",
@@ -22,7 +22,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.fb0e1a9e.js",
-    "static/js/2.182af9b0.chunk.js",
+    "static/js/2.401e303b.chunk.js",
     "static/css/main.425d290a.chunk.css",
     "static/js/main.9ce07de8.chunk.js"
   ]
