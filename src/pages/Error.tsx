@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import IndexUrl from "../index.html?url"
 
 function Error() {
   return (
@@ -10,10 +10,22 @@ function Error() {
       <div className="my-auto mx-auto text-center">
         <h1>404 Error.</h1>
         <h5>Page Not Found</h5>
-        <Link to="/">Return Home</Link>
+        <a href={IndexUrl}>Return Home</a>
       </div>
     </div>
   )
 }
 
-export default Error
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+// Bootstrap CSS & JS
+import '../styles/style.scss';
+import 'bootstrap/dist/js/bootstrap';
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Error />
+  </React.StrictMode>,
+  document.getElementById('root')
+);

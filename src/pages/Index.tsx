@@ -1,6 +1,3 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-
 import * as THREE from 'three';
 import TerrainGenIntro from '../components/TerrainGenIntro';
 import WireframeRenderer from '../components/WireframeRenderer';
@@ -9,7 +6,10 @@ import Section from '../components/Section';
 import LazyLoad from 'react-lazyload';
 import { useMediaQuery } from 'react-responsive'
 
-import Resume from '../assets/govind_pimpale_resume.pdf';
+import ResumePdfUrl from '../assets/govind_pimpale_resume.pdf?url';
+import ResumeUrl from '../resume.html?url';
+import AchernarUrl from '../achernar.html?url';
+import TerrainGenerationUrl from '../terraingeneration.html?url';
 
 import { CaretDownFill } from 'react-bootstrap-icons';
 
@@ -24,7 +24,7 @@ const Rotated: React.FunctionComponent<RotatedProps> = props => {
 
   if (!useMediaQuery({ minWidth: 992 })) {
     const mx = `${props.ownRow ? 20 : 1}em`;
-    return <div style={{ marginLeft: mx, marginRight: mx}} className="my-3" >
+    return <div style={{ marginLeft: mx, marginRight: mx }} className="my-3" >
       {props.children}
     </div>
   } else {
@@ -117,7 +117,7 @@ const Home = () =>
       </Rotated>
       <Rotated distance={15} rotation={45 + 180} >
         <IntroCard title="Resume" >
-          <Link to="/resume">View Resume</Link>
+          <a href={ResumeUrl}>View Resume</a>
         </IntroCard>
       </Rotated>
       {/* Down button */}
@@ -131,7 +131,7 @@ const Home = () =>
         <p>
           I'm a student at UCLA, studying Computer Science and Engineering.
           I believe in <a
-            href="https://globalprioritiesinstitute.org/wp-content/uploads/2019/Greaves_MacAskill_The_Case_for_Strong_Longtermism.pdf">
+            href="https://globalprioritiesinstitute.org/wp-content/uploads/2019/Greaves_MacAskill_The_Case_for_Strong_Longtermism.pdf?url">
             Strong Longtermism
           </a> and the <a href="https://suckless.org/philosophy/">Suckless philosophy</a>.
           In my free time, I enjoy recreational programming (especially in C).
@@ -140,7 +140,7 @@ const Home = () =>
         <ul>
           <li><a href="https://github.com/pimpale/">Github</a></li>
           <li><a href="https://www.linkedin.com/in/govind-pimpale/">LinkedIn</a></li>
-          <li><a href={Resume}>Resume</a></li>
+          <li><a href={ResumePdfUrl}>Resume</a></li>
         </ul>
         <h5>Projects</h5>
         <p>
@@ -191,9 +191,9 @@ const Home = () =>
         </p>
         <h5>Additional Information</h5>
         <p>
-          <Link to="https://github.com/pimpale/achernar">Achernar Source Code</Link>
+          <a href="https://github.com/pimpale/achernar">Achernar Source Code</a>
           <br />
-          <Link to="/achernar">More Info</Link>
+          <a href={AchernarUrl}>More Info</a>
         </p>
       </Section>
       <br />
@@ -204,12 +204,12 @@ const Home = () =>
             <TerrainGenIntro
               width={400}
               height={400}
-              style={{ width: 800, maxWidth: "100%"}}
+              style={{ width: 800, maxWidth: "100%" }}
               className="border border-dark ratio ratio-1x1"
             />
           </LazyLoad>
           <br />
-          <Link to="/terraingeneration">More Terrain Generation</Link>
+          <a href={TerrainGenerationUrl}>More Terrain Generation</a>
         </div>
       </Section>
       <br />
@@ -217,4 +217,16 @@ const Home = () =>
   </Layout>
 
 
-export default Home;
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+// Bootstrap CSS & JS
+import '../styles/style.scss';
+import 'bootstrap/dist/js/bootstrap';
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Home />
+  </React.StrictMode>,
+  document.getElementById('root')
+);

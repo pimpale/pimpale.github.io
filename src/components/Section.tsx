@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 type SectionProps = {
   id: string
@@ -16,7 +15,7 @@ const Section: React.FunctionComponent<SectionProps> = props => {
         visibility: "hidden",
       }}></span>
     <div>
-      <Link to={`#${props.id}`} className="float-end text-muted"><h3>#</h3></Link>
+      <a href={`#${props.id}`} className="float-end text-muted"><h3>#</h3></a>
       <h2>{props.name}</h2>
     </div>
     {props.children}

@@ -30,9 +30,9 @@ $cyan:    #8ec07c;
 
 $link-hover-color: lighten($blue, 10);
 
-@import "~typeface-literata/index";
+@import "typeface-literata/index";
 $font-family-base: "Literata";
 
 
-@import "~bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
 

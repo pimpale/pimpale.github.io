@@ -1,11 +1,11 @@
 import React from 'react';
-import assert from 'assert';
+import assert from '../utils/assert';
 
-import { thresholdHeightMap } from '../map';
+import { thresholdHeightMap } from '../utils/map';
 
 import { makeNoise2D, makeNoise4D } from 'open-simplex-noise';
-import ScalarMap from '../ScalarMap';
-import VectorMap from '../VectorMap';
+import ScalarMap from '../utils/ScalarMap';
+import VectorMap from '../utils/VectorMap';
 
 
 import ImageDataDisplay from '../components/ImageDataDisplay';

@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert from '../utils/assert';
 
 export function mod(n: number, m: number) {
   return ((n % m) + m) % m;

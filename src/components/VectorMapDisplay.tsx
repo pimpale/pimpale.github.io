@@ -1,6 +1,6 @@
 import React from 'react';
-import ScalarMap from '../ScalarMap';
-import VectorMap from '../VectorMap';
+import ScalarMap from '../utils/ScalarMap';
+import VectorMap from '../utils/VectorMap';
 
 
 type VectorMapDisplayParticle = {

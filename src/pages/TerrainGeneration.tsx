@@ -5,11 +5,11 @@ import CitationManager from '../components/CitationManager';
 import { Async } from 'react-async';
 import { makeNoise2D, makeNoise4D } from 'open-simplex-noise';
 
-import ScalarMap from '../ScalarMap';
-import { grayscaleMap } from '../map';
+import ScalarMap from '../utils/ScalarMap';
+import { grayscaleMap } from '../utils/map';
 
 import ImageDataDisplay from '../components/ImageDataDisplay';
-import { loadImage, extend, boxBlur } from '../math';
+import { loadImage, extend, boxBlur } from '../utils/math';
 
 import MugAndTorusMorphUrl from "../assets/terrain_generation/Mug_and_Torus_morph.gif";
 import ColorWheelUrl from "../assets/terrain_generation/ColorWheel.png";
@@ -398,7 +398,17 @@ const TerrainGeneration = () => <ArticleLayout>{
       <CitationBank />
     </Section>
   </>
-}</ArticleLayout >
+}</ArticleLayout>
 
+import ReactDOM from 'react-dom';
 
-export default TerrainGeneration;
+// Bootstrap CSS & JS
+import '../styles/style.scss';
+import 'bootstrap/dist/js/bootstrap';
+
+ReactDOM.render(
+  <React.StrictMode>
+    <TerrainGeneration />
+  </React.StrictMode>,
+  document.getElementById('root')
+);

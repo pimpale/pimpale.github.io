@@ -1,4 +1,6 @@
 /// <reference types="react-scripts" />
 
-declare module '*.pdf'
+declare module '*.pdf?url'
+declare module '*.html?url'
 declare module '*.gif'
+declare module '*.png'
