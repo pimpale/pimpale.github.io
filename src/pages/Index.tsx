@@ -7,9 +7,10 @@ import LazyLoad from 'react-lazyload';
 import { useMediaQuery } from 'react-responsive'
 
 import ResumePdfUrl from '../assets/govind_pimpale_resume.pdf?url';
-import ResumeUrl from '../resume.html?url';
-import AchernarUrl from '../achernar.html?url';
-import TerrainGenerationUrl from '../terraingeneration.html?url';
+
+const ResumeUrl = '/resume.html';
+const AchernarUrl = '/achernar.html';
+const TerrainGenerationUrl = '/terraingeneration.html';
 
 import { CaretDownFill } from 'react-bootstrap-icons';
 

@@ -1,4 +1,4 @@
-import IndexUrl from "../index.html?url"
+const IndexUrl = '../index.html';
 
 function Error() {
   return (

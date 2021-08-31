@@ -7,13 +7,13 @@ import reactJsx from 'vite-react-jsx'
 
 module.exports = defineConfig({
   root: path.resolve(__dirname, "src"),
-  assetsInclude: [/pdf/],
   plugins: [
     reactRefresh(),
     reactJsx(),
   ],
   build: {
     outDir: "../docs",
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: 'src/index.html',

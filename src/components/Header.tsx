@@ -1,10 +1,10 @@
 import { ThreeDotsVertical } from 'react-bootstrap-icons'
 
-import TerrainGenerationUrl from '../terraingeneration.html?url';
-import GravityUrl from '../gravity.html?url';
-import AchernarUrl from '../achernar.html?url';
-import ResumeUrl from '../resume.html?url';
-import ProjectsUrl from '../projects.html?url';
+const TerrainGenerationUrl = '/terraingeneration.html';
+const GravityUrl = '/gravity.html';
+const AchernarUrl = '/achernar.html';
+const ResumeUrl = '/resume.html';
+const ProjectsUrl = '/projects.html';
 
 const Header = () =>
   <header className="pb-5">
