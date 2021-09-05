@@ -1,1 +1,0 @@
-import"./style.2ca779a8.js";import{L as r,S as e}from"./Section.986ef0d0.js";import{c as o,j as t,R as a}from"./vendor.bf87da9c.js";function n(){return t(r,{children:t(e,{id:"operators",name:"Operators"})})}o.render(t(a.StrictMode,{children:t(n,{})}),document.getElementById("root"));

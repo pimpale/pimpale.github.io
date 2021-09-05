@@ -2,6 +2,7 @@ import path from 'path'
 import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import reactJsx from 'vite-react-jsx'
+import multiInput from 'rollup-plugin-multi-input';
 
 // https://vitejs.dev/config/
 
@@ -10,19 +11,13 @@ module.exports = defineConfig({
   plugins: [
     reactRefresh(),
     reactJsx(),
+    multiInput(),
   ],
   build: {
     outDir: "../docs",
     emptyOutDir: true,
     rollupOptions: {
-      input: {
-        main: 'src/index.html',
-        achernar: 'src/achernar.html',
-        resume: 'src/resume.html',
-        gravity: 'src/gravity.html',
-        projects: 'src/projects.html',
-        terraingeneration: 'src/terraingeneration.html',
-      }
+      input: ["src/**/*.html"]
     }
   }
 })

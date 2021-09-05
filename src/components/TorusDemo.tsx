@@ -9,17 +9,52 @@ type TorusDemoProps = {
 
 type TorusDemoState = {}
 
-const planeGeometry = new THREE.PlaneGeometry(1, 1, 10, 10)
+const xn = 10;
+const yn = 10;
+
+const planeGeometry = new THREE.PlaneGeometry(1, 1, xn, yn)
 
 const planeMaterial =
   new THREE.MeshBasicMaterial({
     polygonOffset: true,
     polygonOffsetFactor: 1, // positive value pushes polygon further away
     polygonOffsetUnits: 1,
-    color: 0x458588,
+    color: 0x8ec07c,
     side: THREE.DoubleSide
-  })
-;
+  });
+
+const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x1d2021 });
+
+const xEdgeMaterial = new THREE.LineBasicMaterial({ color: 0xdc3545 });
+const yEdgeMaterial = new THREE.LineBasicMaterial({ color: 0x6610f2});
+
+const leftEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
+  new Array(xn).fill(null).flatMap((_, i) => [
+      new THREE.Vector3(-0.5, i / xn - 0.5, 0),
+      new THREE.Vector3(-0.5, (i+1) / xn - 0.5, 0),
+  ])
+);
+
+const rightEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
+  new Array(xn).fill(null).flatMap((_, i) => [
+      new THREE.Vector3(0.5, i / xn - 0.5, 0),
+      new THREE.Vector3(0.5, (i+1) / xn - 0.5, 0),
+  ])
+);
+
+const topEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
+  new Array(yn).fill(null).flatMap((_, i) => [
+      new THREE.Vector3(i / yn - 0.5, 0.5, 0),
+      new THREE.Vector3((i+1) / yn - 0.5, 0.5, 0),
+  ])
+);
+
+const bottomEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
+  new Array(yn).fill(null).flatMap((_, i) => [
+      new THREE.Vector3(i / yn - 0.5, -0.5, 0),
+      new THREE.Vector3((i+1) / yn - 0.5, -0.5, 0),
+  ])
+);
 
 
 class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
@@ -99,23 +134,18 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     this.scene.add(ambientLight);
   };
 
-  handleCircularityChange = () => {
-    // how much to lerp towards circle
-    const majorAlpha = this.majorRange.current!.valueAsNumber;
-    const minorAlpha = this.minorRange.current!.valueAsNumber;
-    const lerpAlpha = this.lerpRange.current!.valueAsNumber;
-
+  interpolate = (geoBuf: ArrayLike<number>, majorAlpha: number, minorAlpha: number, lerpAlpha: number) => {
     // we're going to calculate a new position that's an interpolation
-    const newPosition = new Float32Array(planeGeometry.attributes.position.count * 3);
+    const newPosition = new Float32Array(geoBuf.length);
 
     const majorRadius = 0.5;
     const minorRadius = 0.3;
 
-    for (let i = 0; i < planeGeometry.attributes.position.count; i++) {
+    for (let i = 0; i < geoBuf.length / 3; i++) {
       // original x positions
-      const x = planeGeometry.attributes.position.getX(i);
-      const y = planeGeometry.attributes.position.getY(i);
-      const z = planeGeometry.attributes.position.getZ(i);
+      const x = geoBuf[i * 3 + 0];
+      const y = geoBuf[i * 3 + 1];
+      const z = geoBuf[i * 3 + 2];
 
       const theta = (x * minorAlpha + 0.75) * 2 * Math.PI;
       const phi = y * majorAlpha * 2 * Math.PI;
@@ -131,23 +161,121 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
       newPosition[i * 3 + 2] = z + (nz - z) * lerpAlpha;
     }
 
-    // set our new geometry
-    let newGeometry = planeGeometry.clone();
-    newGeometry.setAttribute('position', new THREE.BufferAttribute(newPosition, 3));
+    return newPosition;
+  }
+
+
+  handleCircularityChange = () => {
+    // how much to lerp towards circle
+    const majorAlpha = this.majorRange.current!.valueAsNumber;
+    const minorAlpha = this.minorRange.current!.valueAsNumber;
+    const lerpAlpha = this.lerpRange.current!.valueAsNumber;
 
     // remove old mesh
     this.scene.remove(this.mesh);
 
-    // add mesh
+    const newPosition = this.interpolate(
+      planeGeometry.attributes.position.array,
+      majorAlpha, minorAlpha, lerpAlpha
+    );
+
+    // set our new geometry
+    let newGeometry = planeGeometry.clone();
+    newGeometry.setAttribute('position', new THREE.BufferAttribute(newPosition, 3));
+
+
+    // create mesh
     const mesh = new THREE.Mesh(newGeometry, planeMaterial);
-    this.scene.add(mesh);
-    this.mesh = mesh;
 
     // wireframe
-    let geo = new THREE.WireframeGeometry(this.mesh.geometry);
-    let mat = new THREE.LineBasicMaterial({ color: 0x1d2021 });
-    let wireframe = new THREE.LineSegments(geo, mat);
-    mesh.add(wireframe);
+    mesh.add(
+      new THREE.LineSegments(
+        new THREE.WireframeGeometry(mesh.geometry),
+        wireframeMaterial
+      )
+    );
+
+    // left edge
+    let newLeftEdgeGeometry = leftEdgeGeometry.clone();
+    newLeftEdgeGeometry.setAttribute(
+      'position',
+      new THREE.BufferAttribute(
+        this.interpolate(
+          leftEdgeGeometry.attributes.position.array,
+          majorAlpha, minorAlpha, lerpAlpha
+        ),
+        3
+      )
+    );
+    mesh.add(
+      new THREE.LineSegments(
+        newLeftEdgeGeometry,
+        xEdgeMaterial
+      )
+    );
+
+    // right edge
+    let newRightEdgeGeometry = rightEdgeGeometry.clone();
+    newRightEdgeGeometry.setAttribute(
+      'position',
+      new THREE.BufferAttribute(
+        this.interpolate(
+          rightEdgeGeometry.attributes.position.array,
+          majorAlpha, minorAlpha, lerpAlpha
+        ),
+        3
+      )
+    );
+    mesh.add(
+      new THREE.LineSegments(
+        newRightEdgeGeometry,
+        xEdgeMaterial
+      )
+    );
+
+    // top edge
+    let newTopEdgeGeometry = topEdgeGeometry.clone();
+    newTopEdgeGeometry.setAttribute(
+      'position',
+      new THREE.BufferAttribute(
+        this.interpolate(
+          topEdgeGeometry.attributes.position.array,
+          majorAlpha, minorAlpha, lerpAlpha
+        ),
+        3
+      )
+    );
+    mesh.add(
+      new THREE.LineSegments(
+        newTopEdgeGeometry,
+        yEdgeMaterial
+      )
+    );
+
+    // bottom edge
+    let newBottomEdgeGeometry = bottomEdgeGeometry.clone();
+    newBottomEdgeGeometry.setAttribute(
+      'position',
+      new THREE.BufferAttribute(
+        this.interpolate(
+          bottomEdgeGeometry.attributes.position.array,
+          majorAlpha, minorAlpha, lerpAlpha
+        ),
+        3
+      )
+    );
+    mesh.add(
+      new THREE.LineSegments(
+        newBottomEdgeGeometry,
+        yEdgeMaterial
+      )
+    );
+
+
+
+    // add mesh
+    this.scene.add(mesh);
+    this.mesh = mesh;
   }
 
   startAnimationLoop = () => {
