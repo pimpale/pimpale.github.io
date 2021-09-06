@@ -298,7 +298,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
 
   render() {
     return <div style={this.props.style} className={this.props.className}>
-      <div ref={this.mount} className="ratio ratio-1x1 border border-dark" />
+      <div ref={this.mount} className="ratio ratio-1x1 border border-dark mb-3" />
       <div className="mx-auto d-block flex-grow-1 ">
         <label className="form-label">Join Major</label>
         <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.majorRange} />

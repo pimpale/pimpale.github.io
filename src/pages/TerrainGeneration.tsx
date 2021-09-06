@@ -1,7 +1,6 @@
 import React from 'react';
 import ArticleLayout from '../components/ArticleLayout';
 import Section from '../components/Section';
-import CitationManager from '../components/CitationManager';
 import { Async } from 'react-async';
 import { makeNoise2D, makeNoise4D } from 'open-simplex-noise';
 
@@ -9,7 +8,8 @@ import ScalarMap from '../utils/ScalarMap';
 import { grayscaleMap } from '../utils/map';
 
 import ImageDataDisplay from '../components/ImageDataDisplay';
-import { loadImage, extend, boxBlur } from '../utils/math';
+import ZoomableImageDataDisplay from '../components/ZoomableImageDataDisplay';
+import { loadImage, extend, boxBlur } from '../utils/image';
 
 import MugAndTorusMorphUrl from "../assets/terrain_generation/Mug_and_Torus_morph.gif";
 import ColorWheelUrl from "../assets/terrain_generation/ColorWheel.png";
@@ -211,10 +211,6 @@ const TerrainGeneration = () => <ArticleLayout>{
         This will enable us to use a grid when processing the data.
       </p>
 
-
-
-
-
       <h4>Boundary Conditions?</h4>
       <p>
         Now that we've settled on a flat finite surface, we have to decide what should go at the edges.
@@ -363,8 +359,10 @@ const TerrainGeneration = () => <ArticleLayout>{
       </p>
       <AsideCard title="Coherent Noise" >
         <p>If we try to fill a grid with normal noise, using something like <code>Math.random()</code>, this is what we would get:</p>
-        <ImageDataDisplay
-          className="border border-dark d-block mx-auto"
+        <ZoomableImageDataDisplay
+          className="mx-auto mb-3"
+          zoomRadius={5}
+          displayHeight={240}
           data={grayscaleMap(new ScalarMap(240, 240, Math.random))}
         />
         <p>
@@ -374,11 +372,13 @@ const TerrainGeneration = () => <ArticleLayout>{
         <p>
           We need to use an algorithm that's capable of generating noise such that points that are close together spatially have similar values.
           To do this, we'll need our noise to accept x and y coordinates.
-          {/* TODO explain more */}
         </p>
+          {/* TODO explain more */}
         <p>This is an example of coherent noise:</p>
-        <ImageDataDisplay
-          className="border border-dark d-block mx-auto"
+        <ZoomableImageDataDisplay
+          className="mx-auto mb-3"
+          zoomRadius={5}
+          displayHeight={240}
           data={grayscaleMap(new ScalarMap(240, 240, (x, y) => noise2D(x / 10, y / 10) / 2 + 0.5))}
         />
         <p>
@@ -393,11 +393,14 @@ const TerrainGeneration = () => <ArticleLayout>{
         </ul>
         <p>We'll be using OpenSimplex since it's open source and provides good performance.</p>
       </AsideCard>
+
+
     </Section>
     <Section id="sources" name="Sources">
       <CitationBank />
     </Section>
-  </>
+  </ //
+  >
 }</ArticleLayout>
 
 import ReactDOM from 'react-dom';

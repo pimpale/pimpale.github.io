@@ -1,6 +1,8 @@
 import Layout from '../components/Layout';
 import CitationManager, { CitationComponents } from '../components/CitationManager';
-import MathJax from 'react-mathjax';
+
+// Tex
+import 'katex/dist/katex.min.css';
 
 export interface ArticleLayoutProps {
   children: (c: CitationComponents) => React.ReactChild
@@ -9,7 +11,7 @@ export interface ArticleLayoutProps {
 const ArticleLayout = (props:ArticleLayoutProps) => <Layout>
   <div className="container mt-5">
     <CitationManager prefix="source-">{
-      c => <MathJax.Provider>{props.children(c)}</MathJax.Provider>
+      c => props.children(c)
     }</CitationManager>
   </div>
 </Layout>
