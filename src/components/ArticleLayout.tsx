@@ -8,7 +8,7 @@ export interface ArticleLayoutProps {
   children: (c: CitationComponents) => React.ReactChild
 }
 
-const ArticleLayout = (props:ArticleLayoutProps) => <Layout>
+const ArticleLayout = (props: ArticleLayoutProps) => <Layout>
   <div className="container mt-5">
     <CitationManager prefix="source-">{
       c => props.children(c)

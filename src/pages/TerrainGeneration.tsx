@@ -328,7 +328,7 @@ const TerrainGeneration = () => <ArticleLayout>{
       </p>
     </Section>
     <Section id="torusWorld" name="A Torus World" >
-      <h4>Real World Implications</h4>
+      <h4>Topology of Periodic Boundary Conditions</h4>
       <p>
         Periodic boundary conditions imply that the world forms a torus.
       </p>
@@ -338,11 +338,26 @@ const TerrainGeneration = () => <ArticleLayout>{
       </p>
       <AsideCard title="Torus Widget" >
         <p>
-          Play with this interactive widget to explore how we can join the edges of a square to form a torus.
+          Play with this interactive widget to explore how we can join the edges of a rectangle to form a torus.
         </p>
         <TorusDemo className="mx-auto" style={{ width: "20em" }} />
       </AsideCard>
-
+      <h4>Real World Implications</h4>
+      <p>
+        It's actually technically possible (although very unlikely) for torus shaped planets to exist in the universe.
+        However, there are a lot of unexpected implications of such a strange layout.
+        For one, the gravity on the planet will vary depending where you are: high near the poles and low near the inner and outer edges.
+        In addition, the torus can cast a shadow on itself, leading to strange day/night patterns and seasons.
+      </p>
+      <p>
+        If you'd like to learn more, here are a few articles on the topic:
+        <ul>
+          <li><a href="http://www.aleph.se/andart/archives/2014/02/torusearth.html">http://www.aleph.se/andart/archives/2014/02/torusearth.html</a></li>
+        </ul>
+      </p>
+      <p>
+        In this project, we'll take into account some of the effects of a torus world, like the day/night cycle, but other aspects, like the difference between the inner and outer radiuses will be ignored.
+      </p>
       <h4>Map Projections and Coordinate Systems</h4>
       <p>
         Unlike a spherical world, creating a coordinate system is straightforward on a toroidal world.
@@ -350,7 +365,6 @@ const TerrainGeneration = () => <ArticleLayout>{
       </p>
     </Section>
     <Section id="terrainGeneration" name="Terrain Generation">
-
       <p>
         We'll be using a rectangular grid to represent map data, since it works well with our choice of a torus world.
       </p>
@@ -373,7 +387,7 @@ const TerrainGeneration = () => <ArticleLayout>{
           We need to use an algorithm that's capable of generating noise such that points that are close together spatially have similar values.
           To do this, we'll need our noise to accept x and y coordinates.
         </p>
-          {/* TODO explain more */}
+        {/* TODO explain more */}
         <p>This is an example of coherent noise:</p>
         <ZoomableImageDataDisplay
           className="mx-auto mb-3"
@@ -386,15 +400,13 @@ const TerrainGeneration = () => <ArticleLayout>{
         </p>
         <p>There are several algorithms capable of generating coherent noise:</p>
         <ul>
-          <li><a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm">Diamond Square Algorithm</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm">Diamond Square Algorithm</a> (this one produces fractal noise)</li>
           <li><a href="https://en.wikipedia.org/wiki/Perlin_noise">Perlin Noise</a></li>
           <li><a href="https://en.wikipedia.org/wiki/Simplex_noise">Simplex Noise</a></li>
           <li><a href="https://en.wikipedia.org/wiki/OpenSimplex_noise">OpenSimplex Noise</a></li>
         </ul>
         <p>We'll be using OpenSimplex since it's open source and provides good performance.</p>
       </AsideCard>
-
-
     </Section>
     <Section id="sources" name="Sources">
       <CitationBank />

@@ -38,7 +38,7 @@ class CitationManager extends React.Component<CitationManagerProps> {
       this.map.set(props.source, index);
     }
 
-    return <a href={'#' + this.props.prefix + index} style={{ textDecoration: "none" }}>
+    return <a href={'#' + this.props.prefix + index} style={{ textDecoration: "none" }} className="me-1">
       <sup>[{index}]</sup>
     </a>
   }
