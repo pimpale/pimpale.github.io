@@ -63,6 +63,8 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
   private mount = React.createRef<HTMLDivElement>();
 
   // this is the ref we use to monitor circularization
+  private torusnessRange = React.createRef<HTMLInputElement>();
+
   private majorRange = React.createRef<HTMLInputElement>();
   private minorRange = React.createRef<HTMLInputElement>();
   private lerpRange = React.createRef<HTMLInputElement>();
@@ -82,6 +84,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     this.handleCircularityChange();
     this.startAnimationLoop();
     window.addEventListener('resize', this.handleWindowResize);
+    this.torusnessRange.current!.addEventListener('input', this.handleTorusChange);
     this.majorRange.current!.addEventListener('input', this.handleCircularityChange);
     this.minorRange.current!.addEventListener('input', this.handleCircularityChange);
     this.lerpRange.current!.addEventListener('input', this.handleCircularityChange);
@@ -89,6 +92,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
 
 
   componentWillUnmount() {
+    this.torusnessRange.current!.removeEventListener('input', this.handleTorusChange);
     this.majorRange.current!.removeEventListener('input', this.handleCircularityChange);
     this.minorRange.current!.removeEventListener('input', this.handleCircularityChange);
     this.lerpRange.current!.removeEventListener('input', this.handleCircularityChange);
@@ -162,6 +166,16 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     }
 
     return newPosition;
+  }
+
+  handleTorusChange = () => {
+      const torusnessAlpha = this.torusnessRange.current!.valueAsNumber;
+
+      this.majorRange.current!.valueAsNumber = torusnessAlpha;
+      this.minorRange.current!.valueAsNumber = torusnessAlpha;
+      this.lerpRange.current!.valueAsNumber = Math.min(torusnessAlpha*1.5, 1);
+      //now continue
+      this.handleCircularityChange();
   }
 
 
@@ -299,18 +313,27 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
   render() {
     return <div style={this.props.style} className={this.props.className}>
       <div ref={this.mount} className="ratio ratio-1x1 border border-dark mb-3" />
-      <div className="mx-auto d-block flex-grow-1 ">
-        <label className="form-label">Join Major</label>
-        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.majorRange} />
+
+      <div className="mx-auto d-block flex-grow-1 mb-2">
+        <label className="form-label">Torusness</label>
+        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.torusnessRange} />
       </div>
-      <div className="mx-auto d-block flex-grow-1 ">
-        <label className="form-label">Join Minor</label>
-        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.minorRange} />
-      </div>
-      <div className="mx-auto d-block flex-grow-1 ">
-        <label className="form-label">Alpha</label>
-        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.lerpRange} />
-      </div>
+
+      <details>
+        <summary>Advanced Torus Controls</summary>
+        <div className="mx-auto d-block flex-grow-1 ">
+          <label className="form-label">Join Major</label>
+          <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.majorRange} />
+        </div>
+        <div className="mx-auto d-block flex-grow-1 ">
+          <label className="form-label">Join Minor</label>
+          <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.minorRange} />
+        </div>
+        <div className="mx-auto d-block flex-grow-1 ">
+          <label className="form-label">Alpha</label>
+          <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.lerpRange} />
+        </div>
+      </details>
     </div>;
   }
 }
