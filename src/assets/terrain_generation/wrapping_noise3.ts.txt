@@ -1,0 +1,12 @@
+function torusNoise(x, y) {
+    const R = 5;
+    const r = 3;
+    const theta = (x/200)*Math.PI;
+    const phi = (y/200)*Math.PI;
+    const noise  = noise3D(
+      (R + r*Math.cos(theta))*Math.cos(phi),
+      (R + r*Math.cos(theta))*Math.sin(phi),
+      r*Math.sin(theta),
+    );
+    return noise / 2 + 0.5;
+}

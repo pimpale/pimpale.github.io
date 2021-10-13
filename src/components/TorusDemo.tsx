@@ -2,59 +2,17 @@ import React from "react";
 import * as THREE from 'three';
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 
+
 type TorusDemoProps = {
   style?: React.CSSProperties,
-  className?: string
+  className?: string,
+  texture?: ImageData,
+  wireframe: boolean,
+  detailLevel: number,
 }
 
 type TorusDemoState = {}
 
-const xn = 10;
-const yn = 10;
-
-const planeGeometry = new THREE.PlaneGeometry(1, 1, xn, yn)
-
-const planeMaterial =
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0x8ec07c,
-    side: THREE.DoubleSide
-  });
-
-const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x1d2021 });
-
-const xEdgeMaterial = new THREE.LineBasicMaterial({ color: 0xdc3545 });
-const yEdgeMaterial = new THREE.LineBasicMaterial({ color: 0x6610f2});
-
-const leftEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
-  new Array(xn).fill(null).flatMap((_, i) => [
-      new THREE.Vector3(-0.5, i / xn - 0.5, 0),
-      new THREE.Vector3(-0.5, (i+1) / xn - 0.5, 0),
-  ])
-);
-
-const rightEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
-  new Array(xn).fill(null).flatMap((_, i) => [
-      new THREE.Vector3(0.5, i / xn - 0.5, 0),
-      new THREE.Vector3(0.5, (i+1) / xn - 0.5, 0),
-  ])
-);
-
-const topEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
-  new Array(yn).fill(null).flatMap((_, i) => [
-      new THREE.Vector3(i / yn - 0.5, 0.5, 0),
-      new THREE.Vector3((i+1) / yn - 0.5, 0.5, 0),
-  ])
-);
-
-const bottomEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
-  new Array(yn).fill(null).flatMap((_, i) => [
-      new THREE.Vector3(i / yn - 0.5, -0.5, 0),
-      new THREE.Vector3((i+1) / yn - 0.5, -0.5, 0),
-  ])
-);
 
 
 class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
@@ -77,6 +35,18 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
   private renderer!: THREE.WebGLRenderer;
   private mesh!: THREE.Mesh;
 
+
+  private planeMaterial!: THREE.Material;
+  private wireframeMaterial!: THREE.Material;
+  private planeGeometry!: THREE.PlaneGeometry;
+
+  private xEdgeMaterial!: THREE.Material;
+  private yEdgeMaterial!: THREE.Material;
+
+  private leftEdgeGeometry!: THREE.BufferGeometry;
+  private rightEdgeGeometry!: THREE.BufferGeometry;
+  private topEdgeGeometry!: THREE.BufferGeometry;
+  private bottomEdgeGeometry!: THREE.BufferGeometry;
 
   componentDidMount() {
     this.sceneSetup();
@@ -107,6 +77,66 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     // get container dimensions and use them for scene sizing
     const width = this.mount.current!.clientWidth;
     const height = this.mount.current!.clientHeight;
+
+    // setup plane material
+    if(this.props.texture) {
+      const texture = new THREE.DataTexture(this.props.texture.data, this.props.texture.width, this.props.texture.height, THREE.RGBAFormat);
+      texture.needsUpdate = true;
+      this.planeMaterial =
+        new THREE.MeshBasicMaterial({
+          polygonOffset: true,
+          polygonOffsetFactor: 1, // positive value pushes polygon further away
+          polygonOffsetUnits: 1,
+          map: texture,
+          side: THREE.DoubleSide,
+        });
+    } else {
+      this.planeMaterial = new THREE.MeshBasicMaterial({
+        polygonOffset: true,
+        polygonOffsetFactor: 1, // positive value pushes polygon further away
+        polygonOffsetUnits: 1,
+        color: 0x8ec07c,
+        side: THREE.DoubleSide,
+      });
+    }
+
+    const xn = this.props.detailLevel;
+    const yn = this.props.detailLevel;
+    
+    this.planeGeometry = new THREE.PlaneGeometry(1, 1, xn, yn)
+    
+    this.wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x1d2021 });
+    
+    this.xEdgeMaterial = new THREE.LineBasicMaterial({ color: 0xdc3545 });
+    this.yEdgeMaterial = new THREE.LineBasicMaterial({ color: 0x6610f2});
+    
+    this.leftEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
+      new Array(xn).fill(null).flatMap((_, i) => [
+          new THREE.Vector3(-0.5, i / xn - 0.5, 0),
+          new THREE.Vector3(-0.5, (i+1) / xn - 0.5, 0),
+      ])
+    );
+    
+    this. rightEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
+      new Array(xn).fill(null).flatMap((_, i) => [
+          new THREE.Vector3(0.5, i / xn - 0.5, 0),
+          new THREE.Vector3(0.5, (i+1) / xn - 0.5, 0),
+      ])
+    );
+    
+     this.topEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
+      new Array(yn).fill(null).flatMap((_, i) => [
+          new THREE.Vector3(i / yn - 0.5, 0.5, 0),
+          new THREE.Vector3((i+1) / yn - 0.5, 0.5, 0),
+      ])
+    );
+    
+    this.bottomEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
+      new Array(yn).fill(null).flatMap((_, i) => [
+          new THREE.Vector3(i / yn - 0.5, -0.5, 0),
+          new THREE.Vector3((i+1) / yn - 0.5, -0.5, 0),
+      ])
+    );
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
@@ -151,7 +181,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
       const y = geoBuf[i * 3 + 1];
       const z = geoBuf[i * 3 + 2];
 
-      const theta = (x * minorAlpha + 0.75) * 2 * Math.PI;
+      const theta = (x * minorAlpha + 0.5) * 2 * Math.PI;
       const phi = y * majorAlpha * 2 * Math.PI;
 
       // circular x positions
@@ -189,33 +219,35 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     this.scene.remove(this.mesh);
 
     const newPosition = this.interpolate(
-      planeGeometry.attributes.position.array,
+      this.planeGeometry.attributes.position.array,
       majorAlpha, minorAlpha, lerpAlpha
     );
 
     // set our new geometry
-    let newGeometry = planeGeometry.clone();
+    let newGeometry = this.planeGeometry.clone();
     newGeometry.setAttribute('position', new THREE.BufferAttribute(newPosition, 3));
 
 
     // create mesh
-    const mesh = new THREE.Mesh(newGeometry, planeMaterial);
+    const mesh = new THREE.Mesh(newGeometry, this.planeMaterial);
 
     // wireframe
-    mesh.add(
-      new THREE.LineSegments(
-        new THREE.WireframeGeometry(mesh.geometry),
-        wireframeMaterial
-      )
-    );
+    if(this.props.wireframe) {
+      mesh.add(
+        new THREE.LineSegments(
+          new THREE.WireframeGeometry(mesh.geometry),
+          this.wireframeMaterial
+        )
+      );
+    }
 
     // left edge
-    let newLeftEdgeGeometry = leftEdgeGeometry.clone();
+    let newLeftEdgeGeometry = this.leftEdgeGeometry.clone();
     newLeftEdgeGeometry.setAttribute(
       'position',
       new THREE.BufferAttribute(
         this.interpolate(
-          leftEdgeGeometry.attributes.position.array,
+          this.leftEdgeGeometry.attributes.position.array,
           majorAlpha, minorAlpha, lerpAlpha
         ),
         3
@@ -224,17 +256,17 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     mesh.add(
       new THREE.LineSegments(
         newLeftEdgeGeometry,
-        xEdgeMaterial
+        this.xEdgeMaterial
       )
     );
 
     // right edge
-    let newRightEdgeGeometry = rightEdgeGeometry.clone();
+    let newRightEdgeGeometry = this.rightEdgeGeometry.clone();
     newRightEdgeGeometry.setAttribute(
       'position',
       new THREE.BufferAttribute(
         this.interpolate(
-          rightEdgeGeometry.attributes.position.array,
+          this.rightEdgeGeometry.attributes.position.array,
           majorAlpha, minorAlpha, lerpAlpha
         ),
         3
@@ -243,17 +275,17 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     mesh.add(
       new THREE.LineSegments(
         newRightEdgeGeometry,
-        xEdgeMaterial
+        this.xEdgeMaterial
       )
     );
 
     // top edge
-    let newTopEdgeGeometry = topEdgeGeometry.clone();
+    let newTopEdgeGeometry = this.topEdgeGeometry.clone();
     newTopEdgeGeometry.setAttribute(
       'position',
       new THREE.BufferAttribute(
         this.interpolate(
-          topEdgeGeometry.attributes.position.array,
+          this.topEdgeGeometry.attributes.position.array,
           majorAlpha, minorAlpha, lerpAlpha
         ),
         3
@@ -262,17 +294,17 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     mesh.add(
       new THREE.LineSegments(
         newTopEdgeGeometry,
-        yEdgeMaterial
+        this.yEdgeMaterial
       )
     );
 
     // bottom edge
-    let newBottomEdgeGeometry = bottomEdgeGeometry.clone();
+    let newBottomEdgeGeometry = this.bottomEdgeGeometry.clone();
     newBottomEdgeGeometry.setAttribute(
       'position',
       new THREE.BufferAttribute(
         this.interpolate(
-          bottomEdgeGeometry.attributes.position.array,
+          this.bottomEdgeGeometry.attributes.position.array,
           majorAlpha, minorAlpha, lerpAlpha
         ),
         3
@@ -281,7 +313,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     mesh.add(
       new THREE.LineSegments(
         newBottomEdgeGeometry,
-        yEdgeMaterial
+        this.yEdgeMaterial
       )
     );
 

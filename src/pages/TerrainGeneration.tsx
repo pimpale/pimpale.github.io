@@ -1,8 +1,11 @@
 import React from 'react';
 import ArticleLayout from '../components/ArticleLayout';
 import Section from '../components/Section';
+import HrefLink from '../components/HrefLink';
 import { Async } from 'react-async';
-import { makeNoise2D, makeNoise4D } from 'open-simplex-noise';
+import { makeNoise2D, makeNoise3D } from 'open-simplex-noise';
+
+import TeX from '@matejmazur/react-katex';
 
 import ScalarMap from '../utils/ScalarMap';
 import { grayscaleMap } from '../utils/map';
@@ -11,8 +14,10 @@ import ImageDataDisplay from '../components/ImageDataDisplay';
 import ZoomableImageDataDisplay from '../components/ZoomableImageDataDisplay';
 import { loadImage, extend, boxBlur } from '../utils/image';
 
+import WrappingNoise3TsUrl from "../assets/terrain_generation/wrapping_noise3.ts.txt";
 import MugAndTorusMorphUrl from "../assets/terrain_generation/Mug_and_Torus_morph.gif";
 import ColorWheelUrl from "../assets/terrain_generation/ColorWheel.png";
+import TorusLabeledUrl from "../assets/terrain_generation/TorusLabeled.png";
 import SimplyConnectedRegionExample1 from "../assets/terrain_generation/SimplyConnectedRegionExample1.png";
 import SimplyConnectedRegionExample2 from "../assets/terrain_generation/SimplyConnectedRegionExample2.png";
 import SimplyConnectedRegionExample3 from "../assets/terrain_generation/SimplyConnectedRegionExample3.png";
@@ -26,13 +31,15 @@ import TorusDemo from '../components/TorusDemo';
 
 
 const noise2D = makeNoise2D(Date.now());
+const noise3D = makeNoise3D(Date.now());
 
 type AsideCardProps = {
   title: string,
+  id?: string
 }
 
 const AsideCard: React.FunctionComponent<AsideCardProps> = props =>
-  <div className="card mx-5 mb-2">
+  <div className="card mx-5 mb-4" id={props.id}>
     <div className="card-body">
       <h6 className="card-title text-decoration-underline">{props.title}</h6>
       <div className="card-text">{props.children}</div>
@@ -74,6 +81,10 @@ const TerrainGeneration = () => <ArticleLayout>{
         <li>Hydraulic Erosion (Fjords and River Valleys)</li>
         <li>Simulating History</li>
       </ul>
+      <p>
+        To keep things interesting, we'll make our game world unique by putting it on a torus planet.
+        This will have a ton of effects on the terrain, climate, and overall environment.
+      </p>
     </Section>
     <Section id="topology" name="World Topology">
       <h4>Topology</h4>
@@ -83,10 +94,10 @@ const TerrainGeneration = () => <ArticleLayout>{
       <AsideCard title="Topology">
         <strong>Topology</strong> describes the fundamental geometric properties of an object, especially those properties that don't change as the object is stretched, squished, or otherwise distorted.
         For example, a coffee mug is topologically equivalent to a donut since the mug, like the donut, has one through hole.
-        <div className="text-center my-3">
+        <figure className="text-center my-3">
           <img src={MugAndTorusMorphUrl} className="border border-dark mx-auto d-block" alt="A mug morphing into a torus and back" />
-          <small>Source: <a href="https://commons.wikimedia.org/wiki/File:Mug_and_Torus_morph.gif">Wikipedia</a></small>
-        </div>
+          <figcaption>Source: <a href="https://commons.wikimedia.org/wiki/File:Mug_and_Torus_morph.gif">Wikipedia</a></figcaption>
+        </figure>
         If you're interested, <a href="https://en.wikipedia.org/wiki/Topology">you can read more about topology on Wikipedia</a>.
       </AsideCard>
       <p>
@@ -117,45 +128,45 @@ const TerrainGeneration = () => <ArticleLayout>{
           In math, a <strong>region</strong> is a <a href="https://en.wikipedia.org/wiki/Connected_space">simply connected</a> area of space.
         </p>
         <div className="row my-3">
-          <div className="col text-center">
+          <figure className="col text-center">
             <img alt="Example of region" className="d-block mx-auto" style={{ width: "15em" }} src={SimplyConnectedRegionExample1} />
-            <small>Source: Own Work</small>
+            <figcaption>Source: Own Work</figcaption>
             <p>This blob is a region.</p>
-          </div>
-          <div className="col text-center">
+          </figure>
+          <figure className="col text-center">
             <img alt="Example of region" className="d-block mx-auto" style={{ width: "15em" }} src={SimplyConnectedRegionExample2} />
-            <small>Source: Own Work</small>
+            <figcaption>Source: Own Work</figcaption>
             <p>This example is irregular, but also a region. (All parts are connected.)</p>
-          </div>
-          <div className="col text-center">
+          </figure>
+          <figure className="col text-center">
             <img alt="Example of a non region" className="d-block mx-auto" style={{ width: "15em" }} src={SimplyConnectedRegionExample3} />
-            <small>Source: Own Work</small>
+            <figcaption>Source: Own Work</figcaption>
             <p>
               This example is <strong><em>NOT</em></strong> a region since its broken in two parts.
               (Not simply connected.)
             </p>
-          </div>
+          </figure>
         </div>
 
         <p>
           A <strong>vertically simple</strong> region is a region where a line can be drawn vertically and only cross the region once.
         </p>
         <div className="row my-3">
-          <div className="col text-center">
+          <figure className="col text-center">
             <img alt="Example of region" className="d-block mx-auto" style={{ width: "15em" }} src={VerticallySimpleRegionExample1} />
-            <small>Source: Own Work</small>
+            <figcaption>Source: Own Work</figcaption>
             <p>
               We can draw a vertical line at every point on this image, and it will only cross the region's boundary once.
               Therefore, this region is vertically simple.
             </p>
-          </div>
-          <div className="col text-center">
+          </figure>
+          <figure className="col text-center">
             <img alt="Example of region" className="d-block mx-auto" style={{ width: "15em" }} src={VerticallySimpleRegionExample2} />
-            <small>Source: Own Work</small>
+            <figcaption>Source: Own Work</figcaption>
             <p>
               This example is <strong><em>NOT</em></strong> vertically simple since we can draw a line down the center that crosses the region's boundary twice.
             </p>
-          </div>
+          </figure>
         </div>
       </AsideCard>
       <p>
@@ -203,7 +214,7 @@ const TerrainGeneration = () => <ArticleLayout>{
         </p>
         <p>
           In general though, there is no way to tile a sphere using a regular square grid.
-          There will always be tiles with less than the average number of neighboring tiles.
+          There will always be tiles with less than the normal number of neighboring tiles.
         </p>
       </AsideCard>
       <p>
@@ -326,6 +337,10 @@ const TerrainGeneration = () => <ArticleLayout>{
         This is the same approach taken by a lot of old RPGs, like Final Fantasy.
         <Citation source="https://tvtropes.org/pmwiki/pmwiki.php/Main/VideoGameGeography" />
       </p>
+      <p>
+        Unlike a spherical world, creating a coordinate system is straightforward on a toroidal world.
+        We can simply index into our rectangular array using a x coordinate and a y coordinate.
+      </p>
     </Section>
     <Section id="torusWorld" name="A Torus World" >
       <h4>Topology of Periodic Boundary Conditions</h4>
@@ -340,7 +355,12 @@ const TerrainGeneration = () => <ArticleLayout>{
         <p>
           Play with this interactive widget to explore how we can join the edges of a rectangle to form a torus.
         </p>
-        <TorusDemo className="mx-auto" style={{ width: "20em" }} />
+        <TorusDemo
+          className="mx-auto"
+          style={{ width: "20em" }}
+          detailLevel={10}
+          wireframe
+        />
       </AsideCard>
       <h4>Real World Implications</h4>
       <p>
@@ -351,17 +371,13 @@ const TerrainGeneration = () => <ArticleLayout>{
       </p>
       <p>
         If you'd like to learn more, here are a few articles on the topic:
-        <ul>
-          <li><a href="http://www.aleph.se/andart/archives/2014/02/torusearth.html">http://www.aleph.se/andart/archives/2014/02/torusearth.html</a></li>
-        </ul>
       </p>
+      <ul>
+        <li><HrefLink href="http://www.aleph.se/andart/archives/2014/02/torusearth.html" /></li>
+      </ul>
       <p>
-        In this project, we'll take into account some of the effects of a torus world, like the day/night cycle, but other aspects, like the difference between the inner and outer radiuses will be ignored.
-      </p>
-      <h4>Map Projections and Coordinate Systems</h4>
-      <p>
-        Unlike a spherical world, creating a coordinate system is straightforward on a toroidal world.
-        We can simply index into our rectangular array using a x coordinate and a y coordinate.
+        In this project, we'll take into account many of the effects of a torus world, like the day/night cycle, and the difference between the inner and outer radiuses.
+        However, we'll also show how these effects work on a nontoroidal surface like a plane or sphere.
       </p>
     </Section>
     <Section id="terrainGeneration" name="Terrain Generation">
@@ -372,7 +388,7 @@ const TerrainGeneration = () => <ArticleLayout>{
         In order to do so, we need a source of <strong>coherent noise</strong>.
       </p>
       <AsideCard title="Coherent Noise" >
-        <p>If we try to fill a grid with normal noise, using something like <code>Math.random()</code>, this is what we would get:</p>
+        <p>If we try to fill a grid with normal noise, using something like <code className="ms-1 me-1">Math.random()</code>, this is what we would get:</p>
         <ZoomableImageDataDisplay
           className="mx-auto mb-3"
           zoomRadius={5}
@@ -380,39 +396,215 @@ const TerrainGeneration = () => <ArticleLayout>{
           data={grayscaleMap(new ScalarMap(240, 240, Math.random))}
         />
         <p>
-          Since the value at each individual point is not correlated to neighboring points, there's no large scale structure.
+          Let's use math to describe the signature of <code className="ms-1 me-1">Math.random</code>:
+        </p>
+        <TeX block>
+          random: () \to \reals
+        </TeX>
+        <p>
+          Essentially, the above function maps from nothing (an empty tuple) to a real number in the range [0, 1).
+          In reality, there's some hidden state seeding the algorithm internally, but it's not accessible from the API.
+        </p>
+        <p>
+          Importantly, the output value is not correlated to any coordinates.
+          Since every the noise at every point is unrelated to its coordinates, there's no large scale structure.
           So, this kind of noise isn't suitable for terrain generation.
         </p>
         <p>
           We need to use an algorithm that's capable of generating noise such that points that are close together spatially have similar values.
           To do this, we'll need our noise to accept x and y coordinates.
         </p>
-        {/* TODO explain more */}
-        <p>This is an example of coherent noise:</p>
+        <p>
+          The function signature for our noise might look something like this:
+        </p>
+        <TeX block>
+          coherentRandom: \reals^2  \to \reals
+        </TeX>
+        <p>
+          It accepts a pair of real numbers, the X and Y coordinates, and spits out a real number representing the value at that region.
+        </p>
+        <p>This is an example of what coherent noise looks like:</p>
         <ZoomableImageDataDisplay
           className="mx-auto mb-3"
           zoomRadius={5}
           displayHeight={240}
-          data={grayscaleMap(new ScalarMap(240, 240, (x, y) => noise2D(x / 10, y / 10) / 2 + 0.5))}
+          data={grayscaleMap(new ScalarMap(240, 240, (x, y) => noise2D(x / 20, y / 20) / 2 + 0.5))}
         />
         <p>
           You can see that every pixel has a neighboring pixel that is similarly colored.
         </p>
         <p>There are several algorithms capable of generating coherent noise:</p>
         <ul>
-          <li><a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm">Diamond Square Algorithm</a> (this one produces fractal noise)</li>
           <li><a href="https://en.wikipedia.org/wiki/Perlin_noise">Perlin Noise</a></li>
           <li><a href="https://en.wikipedia.org/wiki/Simplex_noise">Simplex Noise</a></li>
           <li><a href="https://en.wikipedia.org/wiki/OpenSimplex_noise">OpenSimplex Noise</a></li>
         </ul>
         <p>We'll be using OpenSimplex since it's open source and provides good performance.</p>
       </AsideCard>
+      <p>
+        Now that we've got our coherent noise, it's time to start putting things together.
+      </p>
+      We need to:
+      <ul>
+        <li>Make our noise wrap across the boundaries of the rectangle.</li>
+        <li>Make our noise more realistic.</li>
+        <li>Map our noise to the torus.</li>
+      </ul>
+      <h4>Wrapping noise</h4>
+      <p>
+        When we say that we want our noise to wrap around the boundaries of the rectangle,
+        what we mean is that there must be a seamless transition between the left and right edges
+        of the rectangle as well as the top and bottom edges.
+      </p>
+      <p>
+        Let's look at an example of what might happen if the texture doesn't wrap when we put it on the torus.
+      </p>
+      <AsideCard title="Nonwrapping Texture" id="nonwrapping-textures-demo">
+        <TorusDemo
+          className="mx-auto"
+          style={{ width: "20em" }}
+          texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => noise2D(x / 20, y / 20) / 2 + 0.5))}
+          detailLevel={20}
+          wireframe={false}
+        />
+      </AsideCard>
+      <p>
+        The solution to this problem is actually pretty intuitive.
+        Right now, what we're doing is making a 2D sheet, and sampling 2D noise.
+        We then roll the sheet up into a torus, where the seams start to appear.
+        Instead, why don't we start with a blank 2D sheet, roll it up into a torus, and then sample 3D noise?
+        This would totally eliminate the seams, since regions that are adjacent in 3D space would have similar noises, even if their 2D coordinate were on different edges.
+      </p>
+      <p>
+        Let's give it a try.
+        But first, we have to be able to mathematically describe a torus in terms of two coordinates.
+        We know this is possible, since we were able to convert a rectangle (which can be indexed with x and y coordinates) into a torus.
+      </p>
+      <p>
+        In general, the term for this kind of thing is <strong>parameterization</strong>.
+      </p>
+      <AsideCard title="Parametric Functions and Surfaces">
+        <p>
+          A <strong>parametric function</strong> is a function that maps from a set of
+          independent input variables called <strong>parameters</strong> to a point in space.
+        </p>
+        <details className="mb-3 mx-5">
+          <summary>Example</summary>
+          <p>
+            Imagine a ball thrown in the air with an upward velocity of 8 m/s and a horizontal velocity of 7 m/s.
+          </p>
+          <p>
+            We know that the ball will continue to move sideways at a rate of 7 m/s, so we can say:
+          </p>
+          <TeX block>
+            x(t) = 7t
+          </TeX>
+          <p>
+            In addition, we know that the ball will accelerate downwards at a rate of 10 m/s<sup>2</sup> due to gravity.
+            Using our basic kinematics knowledge that:
+          </p>
+          <TeX block>{String.raw`
+            x(t) = \frac {1} {2} at^2 + vt + x
+          `}</TeX>
+          We can conclude that:
+          <TeX block>
+            y(t) = -5t^2 + 8t
+          </TeX>
+          <p>
+            We can now make a parametric function mapping from time (the parameter) to a location in space.
+            This is a parametric function!
+          </p>
+          <TeX block>{String.raw`
+            r(t) =
+            \begin{bmatrix}
+              7t \\
+              -5t^2 + 8t
+            \end{bmatrix}
+          `}</TeX>
+        </details>
+        <p>
+          Parametric functions with 2 parameters are commonly used to describe 3D surfaces.
+          A <strong>parameterization</strong> of a surface is parametric function with the signature:
+          <TeX block>
+            r: \reals^2 \to \reals^3
+          </TeX>
+          It maps from a 2D parameter space to a 3D surface.
+        </p>
+        <p>
+          Khan Academy is a good resource for learning more about parametric functions:
+        </p>
+        <ul>
+          <li><HrefLink href="https://www.khanacademy.org/math/ap-calculus-bc/bc-advanced-functions-new" /></li>
+          <li><HrefLink href="https://www.khanacademy.org/math/multivariable-calculus/thinking-about-multivariable-function/ways-to-represent-multivariable-functions/a/parametric-functions-two-parameters" /></li>
+        </ul>
+      </AsideCard>
+      <p>
+        Before we can parameterize our torus, we have to define its properties:
+      </p>
+      <ul>
+        <li><strong>Major Radius</strong>: the distance from the center of the torus to the center of the tube (denoted <TeX>R</TeX>)</li>
+        <li><strong>Minor Radius</strong>: the radius of the tube (denoted <TeX>r</TeX>)</li>
+      </ul>
+      <figure className="text-center my-3">
+        <img src={TorusLabeledUrl}
+          className="border border-dark mx-auto d-block"
+          alt="Torus labeled with minor and major radiuses"
+          style={{width: "30rem"}}
+        />
+        <figcaption>Source: <a href="https://commons.wikimedia.org/wiki/File:Torus_cycles.svg">Wikipedia</a></figcaption>
+      </figure>
+      <p>
+        The parameterization of a torus with major radius <TeX>R</TeX> and minor radius <TeX>r</TeX> is given by the function:
+        <TeX block>{String.raw`
+          r(\theta, \phi) =
+          \begin{bmatrix}
+            (R + r\cos \theta) \cos \phi \\
+            (R + r\cos \theta) \sin \phi \\
+            r \sin \theta
+          \end{bmatrix}
+        `}</TeX>
+        We can gain a better intuition for how this function works if we understand what <TeX>\theta</TeX> and <TeX>\phi</TeX> really do.
+      </p>
+      <ul>
+        <li><TeX>\theta</TeX> represents rotation around the tube</li>
+        <li><TeX>\phi</TeX> represents rotation around the center axis</li>
+      </ul>
+      <p>
+        It may be helpful to scroll up and open the "Advanced Torus Controls" box on the <a href="#nonwrapping-textures-demo">nonwrapping textures demo</a>.
+        Try moving the Alpha slider to the max and then seeing what effect changing the major and minor radiuses have.
+      </p>
+      <p>
+        Let's put it all together:
+      </p>
+      <p>
+        <li>For the torus we have, <TeX>R = 0.5</TeX> and <TeX>r = 0.3</TeX></li>
+      </p>
+      <AsideCard title="Wrapping Texture" id="wrapping-textures-demo">
+        <TorusDemo
+          className="mx-auto"
+          style={{ width: "20em" }}
+          texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => {
+            const R = 5;
+            const r = 3;
+            const theta = (x/200)*Math.PI;
+            const phi = (y/200)*Math.PI;
+            const noise  = noise3D(
+              (R + r*Math.cos(theta))*Math.cos(phi),
+              (R + r*Math.cos(theta))*Math.sin(phi),
+              r*Math.sin(theta),
+            );
+            return noise / 2 + 0.5;
+          }
+          ))}
+          detailLevel={20}
+          wireframe={false}
+        />
+      </AsideCard>
     </Section>
     <Section id="sources" name="Sources">
       <CitationBank />
     </Section>
-  </ //
-  >
+  </>
 }</ArticleLayout>
 
 import ReactDOM from 'react-dom';
