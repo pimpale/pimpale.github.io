@@ -8,6 +8,7 @@ type TorusDemoProps = {
   className?: string,
   texture?: ImageData,
   wireframe: boolean,
+  aspectRatio: number,
   detailLevel: number,
 }
 
@@ -173,7 +174,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     const newPosition = new Float32Array(geoBuf.length);
 
     const majorRadius = 0.5;
-    const minorRadius = 0.3;
+    const minorRadius = majorRadius / this.props.aspectRatio;
 
     for (let i = 0; i < geoBuf.length / 3; i++) {
       // original x positions

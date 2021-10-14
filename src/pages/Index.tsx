@@ -3,6 +3,7 @@ import TerrainGenIntro from '../components/TerrainGenIntro';
 import WireframeRenderer from '../components/WireframeRenderer';
 import Layout from '../components/Layout';
 import Section from '../components/Section';
+import Articles from '../components/Articles';
 import { useMediaQuery } from 'react-responsive'
 
 import ResumePdfUrl from '../assets/govind_pimpale_resume.pdf?url';
@@ -111,8 +112,8 @@ const Home = () =>
         </IntroCard>
       </Rotated>
       <Rotated distance={15} rotation={0 + 180} >
-        <IntroCard title="Terrain Generation">
-          <a href="#terraingeneration">Demo Procedural Generation System</a>
+        <IntroCard title="Articles">
+          <a href="#articles">Articles about projects</a>
         </IntroCard>
       </Rotated>
       <Rotated distance={15} rotation={45 + 180} >
@@ -196,7 +197,7 @@ const Home = () =>
           <a href={AchernarUrl}>More Info</a>
         </p>
       </Section>
-      <br />
+      <Articles/>
       <Section id="terraingeneration" name="TerrainGeneration">
         <div>
           {/* This is pretty expensive to load so we'll only do it when necessary */}

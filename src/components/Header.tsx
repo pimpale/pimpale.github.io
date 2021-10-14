@@ -1,7 +1,6 @@
 import { ThreeDotsVertical } from 'react-bootstrap-icons'
 
-const TerrainGenerationUrl = '/terraingeneration.html';
-const GravityUrl = '/gravity.html';
+const ArticlesUrl = '/articles.html';
 const AchernarUrl = '/achernar.html';
 const ResumeUrl = '/resume.html';
 const ProjectsUrl = '/projects.html';
@@ -19,15 +18,11 @@ const Header = () =>
           <ThreeDotsVertical className="text-body" />
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          {/*Left Aligned*/}
-          <div className="navbar-nav">
-            <a href={ResumeUrl} className="nav-item nav-link"><strong>Resume</strong></a>
-            <a href={ProjectsUrl} className="nav-item nav-link"><strong>Projects</strong></a>
-          </div>
           {/*Right Aligned*/}
           <div className="navbar-nav ms-auto">
-            <a href={TerrainGenerationUrl} className="nav-item nav-link"><strong>Terrain Generation</strong></a>
-            <a href={GravityUrl} className="nav-item nav-link"><strong>Gravity</strong></a>
+            <a href={ResumeUrl} className="nav-item nav-link"><strong>Resume</strong></a>
+            <a href={ProjectsUrl} className="nav-item nav-link"><strong>Projects</strong></a>
+            <a href={ArticlesUrl} className="nav-item nav-link"><strong>Articles</strong></a>
             <a href={AchernarUrl} className="nav-item nav-link"><strong>Achernar</strong></a>
           </div>
         </div>

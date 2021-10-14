@@ -14,13 +14,13 @@ import ScalarMap from '../utils/ScalarMap';
 import { grayscaleMap } from '../utils/map';
 
 import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
-import { xonokai } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import ImageDataDisplay from '../components/ImageDataDisplay';
 import ZoomableImageDataDisplay from '../components/ZoomableImageDataDisplay';
 import { loadImage, extend, boxBlur } from '../utils/image';
 
-import WrappingNoise3TsUrl from "../assets/terrain_generation/wrapping_noise3.ts?url";
+import WrappingNoise3TsUrl from "../assets/terrain_generation/wrapping_noise3_ts.txt?url";
 import MugAndTorusMorphUrl from "../assets/terrain_generation/Mug_and_Torus_morph.gif";
 import ColorWheelUrl from "../assets/terrain_generation/ColorWheel.png";
 import TorusLabeledUrl from "../assets/terrain_generation/TorusLabeled.png";
@@ -364,6 +364,7 @@ const TerrainGeneration = () => <ArticleLayout>{
         <TorusDemo
           className="mx-auto"
           style={{ width: "20em" }}
+          aspectRatio={2}
           detailLevel={10}
           wireframe
         />
@@ -454,7 +455,6 @@ const TerrainGeneration = () => <ArticleLayout>{
       <ul>
         <li>Make our noise wrap across the boundaries of the rectangle.</li>
         <li>Make our noise more realistic.</li>
-        <li>Map our noise to the torus.</li>
       </ul>
       <h4>Wrapping noise</h4>
       <p>
@@ -470,6 +470,7 @@ const TerrainGeneration = () => <ArticleLayout>{
           className="mx-auto"
           style={{ width: "20em" }}
           texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => noise2D(x / 20, y / 20) / 2 + 0.5))}
+          aspectRatio={2}
           detailLevel={20}
           wireframe={false}
         />
@@ -550,6 +551,7 @@ const TerrainGeneration = () => <ArticleLayout>{
       <ul>
         <li><strong>Major Radius</strong>: the distance from the center of the torus to the center of the tube (denoted <TeX>R</TeX>)</li>
         <li><strong>Minor Radius</strong>: the radius of the tube (denoted <TeX>r</TeX>)</li>
+        <li><strong>Aspect Ratio</strong>: the ratio of the major radius to the minor radius, <TeX>{String.raw`\frac {R} {r}`}</TeX></li>
       </ul>
       <figure className="text-center my-3">
         <img src={TorusLabeledUrl}
@@ -560,7 +562,7 @@ const TerrainGeneration = () => <ArticleLayout>{
         <figcaption>Source: <a href="https://commons.wikimedia.org/wiki/File:Torus_cycles.svg">Wikipedia</a></figcaption>
       </figure>
       <p>
-        The torus we're dealing with has <TeX>R = 5</TeX> and <TeX>r = 3</TeX>.
+        The torus we're dealing with has <TeX>R = 2</TeX> and <TeX>r = 1</TeX>.
       </p>
       <p>
         The parameterization of a torus with major radius <TeX>R</TeX> and minor radius <TeX>r</TeX> is given by the function:
@@ -586,35 +588,54 @@ const TerrainGeneration = () => <ArticleLayout>{
         Let's put it all together:
       </p>
       <ul>
-        <li>Our inputs are a 2D grid of </li>
-        <li></li>
-        <li></li>
+        <li>Our inputs are:
+          <ul>
+            <li>Dimensions of the output array (width and height)</li>
+            <li>Major radius of torus</li>
+            <li>Minor radius of torus</li>
+            <li>Scaling factor for noise</li>
+            <li>3D Noise function</li>
+          </ul>
+        </li>
+        <li>Our outputs are:
+          <ul>
+            <li>2D array with specified dimensions containing the noise</li>
+          </ul>
+        </li>
       </ul>
+      <p>
+        Here's the code:
+      </p>
       <Async promise={fetchText(WrappingNoise3TsUrl)}>
         <Async.Pending>
           <div className="spinner-border" role="status" />
         </Async.Pending>
         <Async.Fulfilled<string>>{code =>
-          <SyntaxHighligher className="mx-5" language="javascript" style={xonokai}>{code}</SyntaxHighligher>
+          <SyntaxHighligher className="mx-5" language="typescript" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
         }</Async.Fulfilled>
         <Async.Rejected>
           {/* TOOD: put error here */}
           <div className="spinner-border" role="status" />
         </Async.Rejected>
       </Async>
+      <p>
+        And here's what the texture looks like:
+      </p>
       <AsideCard title="Wrapping Texture" id="wrapping-textures-demo">
         <TorusDemo
           className="mx-auto"
           style={{ width: "20em" }}
+          aspectRatio={2}
           texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => {
-            const R = 5;
-            const r = 3;
+            const noiseScale=3;
+            const R = 2;
+            const r = 1;
             const theta = (x / 200) * Math.PI;
             const phi = (y / 200) * Math.PI;
             const noise = noise3D(
-              (R + r * Math.cos(theta)) * Math.cos(phi),
-              (R + r * Math.cos(theta)) * Math.sin(phi),
-              r * Math.sin(theta),
+              (R + r * Math.cos(theta)) * Math.cos(phi) * noiseScale,
+              (R + r * Math.cos(theta)) * Math.sin(phi) * noiseScale,
+              r * Math.sin(theta) * noiseScale,
             );
             return noise / 2 + 0.5;
           }
@@ -623,6 +644,104 @@ const TerrainGeneration = () => <ArticleLayout>{
           wireframe={false}
         />
       </AsideCard>
+      <h4>Overcoming Distortion</h4>
+      <p>
+        If we look closely at the above demo's texture (when flat), we'll see an interesting phenomenon:
+        the center of the texture looks regular, but the left and right edges seem squished vertically.
+        This is an example of <strong>distortion</strong>, undesirable stretching or squishing that occurs when mapping a 3d surface to a plane.
+      </p>
+      <p>
+        In this case, distortion occurs due to the difference between the inner and outer radiuses of the torus.
+        The inner radius is <TeX>R - r</TeX> and the outer radius is <TeX>R + r</TeX>.
+        So, the ratio of stretching that occurs between the inner and outer radiuses is:
+      </p>
+      <TeX block>{String.raw`
+          s = \frac {R + r} {R - r}
+      `}</TeX>
+      <p>
+        Essentially, what this tells us is that the lower the aspect ratio, the higher the distortion will be.
+        For relatively low aspect ratios like our torus, the distortion ratio can be large.
+        The torus displayed in the demo has a distortion radius of 3, which is very significant.
+      </p>
+      <p>
+        Whether or not distortion is a problem depends on the type of game you're building.
+        If you don't use voxels, then its relatively simple to correct.
+        The problem with distortion for voxel video games is that it means that object sizes change depending
+        on where you are on the world. There are 2 potential solutions, and both have problems.
+      </p>
+      <p>
+        The simplest solution is to simply ignore distortion, and just display a voxel as a meter length cube anywhere on the world.
+        However, this would mean that mountains will look extremely squished on the outer radius, since they would be 3 times narrower in one direction than in the other.
+      </p>
+      <p>
+        Alternatively, we could scale voxels depending on location in the world.
+        If you stand on the inner radius, a voxel would look normal.
+        However, on the outer radius, that same voxel would appear to be a rectangular prism, 3 times longer than it was wide.
+        This solves the problem of terrain looking squished, since the voxels would be larger to compensate.
+        However, it means that dungeons or player built structures will be heavily distorted.
+      </p>
+      <p>
+        If the distortion ratio were small enough, the problems could be small enough to ignore.
+        However, with a distortion ratio of 3, these problems must be addressed somehow.
+      </p>
+      <h4>Cheating using the 4th dimension</h4>
+      <p>
+        In the following section, we'll describe a method to eliminate distortion.
+        However, it may not be necessary depending on your requirements.
+      </p>
+      <p>
+        In the last section, we used a 3D noise function to get a texture that wraps across a torus seamlessly.
+        Unfortunately, our texture suffered from distortion, preventing us from using voxels.
+      </p>
+      <p>
+        It turns out that all toruses have this problem, to varying extents.
+        The fundamental reason why is revealed when we take a look at the parametric equation once again:
+      </p>
+      <TeX block>{String.raw`
+        r(\theta, \phi) =
+        \begin{bmatrix}
+          (R + r\cos \theta) \cos \phi \\
+          (R + r\cos \theta) \sin \phi \\
+          r \sin \theta
+        \end{bmatrix}
+      `}</TeX>
+      <p>
+        Notice how changing <TeX math="\phi"/> changes both x and y, while
+        changing <TeX math="\theta"/> changes x, y and z.
+        There simply aren't enough degrees of freedom for the variables changed by <TeX math="\phi"/> be independent from the variables changed by <TeX math="\theta"/>.
+        This manifests as the difference between the inner and outer radiuses.
+        When <TeX math="\theta = 0"/>, the ring traced by varing <TeX math="\phi"/> has a greater radius than when <TeX math="\theta = \pi"/>.
+      </p>
+      <p>
+        In order to get the degree of freedom necessary, we need to add another dimension.
+        OpenSimplex supports up to 4 dimensions, so we're able to define the following function:
+      </p>
+      <TeX block>
+        coherentRandom4: \reals^4  \to \reals
+      </TeX>
+      <p>
+        Using this new noise function, we can try to think of a new parameterization of a torus that keeps the variables changed by <TeX math="\phi"/> seperate from the variables changed by <TeX math="\theta"/>.
+        This turns out to be pretty easy:
+      </p>
+      <TeX block>{String.raw`
+        r(\theta, \phi) =
+        \begin{bmatrix}
+          R \cos \phi \\
+          R \sin \phi \\
+          r \cos \theta \\
+          r \sin \theta
+        \end{bmatrix}
+      `}</TeX>
+      <p>
+        You can think of this new 4D torus as a kind of double cylinder.
+        It simultaneously manages to roll up a 2D square by connecting its top and bottom edges, as well as its left and right edges.
+        Varying the <TeX math="\phi"/> coordinate traces out a circle in the <TeX>xy</TeX> plane.
+        Varying the <TeX math="\theta"/> coordinate traces out a circle in the <TeX>zw</TeX> plane.
+      </p>
+      <p>
+        Mathematically, the shape we've described is called a <strong>flat torus</strong><Citation source="https://en.wikipedia.org/wiki/Torus#Flat_torus" />.
+      </p>
+
     </Section>
     <Section id="sources" name="Sources">
       <CitationBank />

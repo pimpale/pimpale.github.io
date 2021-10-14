@@ -14,6 +14,7 @@ module.exports = defineConfig({
     multiInput(),
   ],
   build: {
+    assetsInlineLimit: 0,
     outDir: "../docs",
     emptyOutDir: true,
     rollupOptions: {
