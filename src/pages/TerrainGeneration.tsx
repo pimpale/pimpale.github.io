@@ -2,6 +2,9 @@ import React from 'react';
 import ArticleLayout from '../components/ArticleLayout';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
+
+import { fetchText } from '../utils/load';
+
 import { Async } from 'react-async';
 import { makeNoise2D, makeNoise3D } from 'open-simplex-noise';
 
@@ -10,11 +13,14 @@ import TeX from '@matejmazur/react-katex';
 import ScalarMap from '../utils/ScalarMap';
 import { grayscaleMap } from '../utils/map';
 
+import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
+import { xonokai } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 import ImageDataDisplay from '../components/ImageDataDisplay';
 import ZoomableImageDataDisplay from '../components/ZoomableImageDataDisplay';
 import { loadImage, extend, boxBlur } from '../utils/image';
 
-import WrappingNoise3TsUrl from "../assets/terrain_generation/wrapping_noise3.ts.txt";
+import WrappingNoise3TsUrl from "../assets/terrain_generation/wrapping_noise3.ts?url";
 import MugAndTorusMorphUrl from "../assets/terrain_generation/Mug_and_Torus_morph.gif";
 import ColorWheelUrl from "../assets/terrain_generation/ColorWheel.png";
 import TorusLabeledUrl from "../assets/terrain_generation/TorusLabeled.png";
@@ -471,9 +477,9 @@ const TerrainGeneration = () => <ArticleLayout>{
       <p>
         The solution to this problem is actually pretty intuitive.
         Right now, what we're doing is making a 2D sheet, and sampling 2D noise.
-        We then roll the sheet up into a torus, where the seams start to appear.
+        The problem is that points that are close together in 3D are far away in 2D, so we get seams.
         Instead, why don't we start with a blank 2D sheet, roll it up into a torus, and then sample 3D noise?
-        This would totally eliminate the seams, since regions that are adjacent in 3D space would have similar noises, even if their 2D coordinate were on different edges.
+        This would mean that regions that are adjacent in 3D space would have similar noise values, even if their 2D coordinate were far away.
       </p>
       <p>
         Let's give it a try.
@@ -549,10 +555,13 @@ const TerrainGeneration = () => <ArticleLayout>{
         <img src={TorusLabeledUrl}
           className="border border-dark mx-auto d-block"
           alt="Torus labeled with minor and major radiuses"
-          style={{width: "30rem"}}
+          style={{ width: "30rem" }}
         />
         <figcaption>Source: <a href="https://commons.wikimedia.org/wiki/File:Torus_cycles.svg">Wikipedia</a></figcaption>
       </figure>
+      <p>
+        The torus we're dealing with has <TeX>R = 5</TeX> and <TeX>r = 3</TeX>.
+      </p>
       <p>
         The parameterization of a torus with major radius <TeX>R</TeX> and minor radius <TeX>r</TeX> is given by the function:
         <TeX block>{String.raw`
@@ -576,9 +585,23 @@ const TerrainGeneration = () => <ArticleLayout>{
       <p>
         Let's put it all together:
       </p>
-      <p>
-        <li>For the torus we have, <TeX>R = 0.5</TeX> and <TeX>r = 0.3</TeX></li>
-      </p>
+      <ul>
+        <li>Our inputs are a 2D grid of </li>
+        <li></li>
+        <li></li>
+      </ul>
+      <Async promise={fetchText(WrappingNoise3TsUrl)}>
+        <Async.Pending>
+          <div className="spinner-border" role="status" />
+        </Async.Pending>
+        <Async.Fulfilled<string>>{code =>
+          <SyntaxHighligher className="mx-5" language="javascript" style={xonokai}>{code}</SyntaxHighligher>
+        }</Async.Fulfilled>
+        <Async.Rejected>
+          {/* TOOD: put error here */}
+          <div className="spinner-border" role="status" />
+        </Async.Rejected>
+      </Async>
       <AsideCard title="Wrapping Texture" id="wrapping-textures-demo">
         <TorusDemo
           className="mx-auto"
@@ -586,12 +609,12 @@ const TerrainGeneration = () => <ArticleLayout>{
           texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => {
             const R = 5;
             const r = 3;
-            const theta = (x/200)*Math.PI;
-            const phi = (y/200)*Math.PI;
-            const noise  = noise3D(
-              (R + r*Math.cos(theta))*Math.cos(phi),
-              (R + r*Math.cos(theta))*Math.sin(phi),
-              r*Math.sin(theta),
+            const theta = (x / 200) * Math.PI;
+            const phi = (y / 200) * Math.PI;
+            const noise = noise3D(
+              (R + r * Math.cos(theta)) * Math.cos(phi),
+              (R + r * Math.cos(theta)) * Math.sin(phi),
+              r * Math.sin(theta),
             );
             return noise / 2 + 0.5;
           }
