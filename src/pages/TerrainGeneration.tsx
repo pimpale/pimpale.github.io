@@ -6,12 +6,12 @@ import HrefLink from '../components/HrefLink';
 import { fetchText } from '../utils/load';
 
 import { Async } from 'react-async';
-import { makeNoise2D, makeNoise3D } from 'open-simplex-noise';
+import { makeNoise2D, makeNoise3D, makeNoise4D } from 'open-simplex-noise';
 
 import TeX from '@matejmazur/react-katex';
 
 import ScalarMap from '../utils/ScalarMap';
-import { grayscaleMap } from '../utils/map';
+import { grayscaleMap, thresholdHeightMap } from '../utils/map';
 
 import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -21,6 +21,7 @@ import ZoomableImageDataDisplay from '../components/ZoomableImageDataDisplay';
 import { loadImage, extend, boxBlur } from '../utils/image';
 
 import WrappingNoise3TsUrl from "../assets/terrain_generation/wrapping_noise3_ts.txt?url";
+import WrappingNoise4TsUrl from "../assets/terrain_generation/wrapping_noise4_ts.txt?url";
 import MugAndTorusMorphUrl from "../assets/terrain_generation/Mug_and_Torus_morph.gif";
 import ColorWheelUrl from "../assets/terrain_generation/ColorWheel.png";
 import TorusLabeledUrl from "../assets/terrain_generation/TorusLabeled.png";
@@ -38,6 +39,7 @@ import TorusDemo from '../components/TorusDemo';
 
 const noise2D = makeNoise2D(Date.now());
 const noise3D = makeNoise3D(Date.now());
+const noise4D = makeNoise4D(Date.now());
 
 type AsideCardProps = {
   title: string,
@@ -193,10 +195,6 @@ const TerrainGeneration = () => <ArticleLayout>{
         We can't generate realistic rivers, glaciers, or historical simulations in such a world.
         For this reason, we'll choose a finite, but reasonably large, size.
       </p>
-
-
-
-
       <h4>Flat or Sphere?</h4>
       <p>
         Spherical worlds are more realistic, so if creating an accurate simulation is important, spheres are the way to go.
@@ -387,11 +385,14 @@ const TerrainGeneration = () => <ArticleLayout>{
         However, we'll also show how these effects work on a nontoroidal surface like a plane or sphere.
       </p>
     </Section>
-    <Section id="terrainGeneration" name="Terrain Generation">
+    <Section id="elevation" name="Finding Elevation">
       <p>
-        We'll be using a rectangular grid to represent map data, since it works well with our choice of a torus world.
+        The first part of our world generation process is finding the elevation.
+        This will help later determine where to place the oceans, where biomes go, and much more.
+        We'll represent our elevation using a rectangular grid, since it works well with our choice of a torus world.
       </p>
       <p>
+        We'll generate the elevation by sampling noise for each point on our grid.
         In order to do so, we need a source of <strong>coherent noise</strong>.
       </p>
       <AsideCard title="Coherent Noise" >
@@ -621,21 +622,21 @@ const TerrainGeneration = () => <ArticleLayout>{
       <p>
         And here's what the texture looks like:
       </p>
-      <AsideCard title="Wrapping Texture" id="wrapping-textures-demo">
+      <AsideCard title="Wrapping Texture" id="torus3-textures-demo">
         <TorusDemo
           className="mx-auto"
           style={{ width: "20em" }}
           aspectRatio={2}
           texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => {
-            const noiseScale=3;
+            const scale = 0.3;
             const R = 2;
             const r = 1;
             const theta = (x / 200) * Math.PI;
             const phi = (y / 200) * Math.PI;
             const noise = noise3D(
-              (R + r * Math.cos(theta)) * Math.cos(phi) * noiseScale,
-              (R + r * Math.cos(theta)) * Math.sin(phi) * noiseScale,
-              r * Math.sin(theta) * noiseScale,
+              (R + r * Math.cos(theta)) * Math.cos(phi) / scale,
+              (R + r * Math.cos(theta)) * Math.sin(phi) / scale,
+              r * Math.sin(theta) / scale,
             );
             return noise / 2 + 0.5;
           }
@@ -706,11 +707,11 @@ const TerrainGeneration = () => <ArticleLayout>{
         \end{bmatrix}
       `}</TeX>
       <p>
-        Notice how changing <TeX math="\phi"/> changes both x and y, while
-        changing <TeX math="\theta"/> changes x, y and z.
-        There simply aren't enough degrees of freedom for the variables changed by <TeX math="\phi"/> be independent from the variables changed by <TeX math="\theta"/>.
+        Notice how changing <TeX math="\phi" /> changes both x and y, while
+        changing <TeX math="\theta" /> changes x, y and z.
+        There simply aren't enough degrees of freedom for the variables changed by <TeX math="\phi" /> be independent from the variables changed by <TeX math="\theta" />.
         This manifests as the difference between the inner and outer radiuses.
-        When <TeX math="\theta = 0"/>, the ring traced by varing <TeX math="\phi"/> has a greater radius than when <TeX math="\theta = \pi"/>.
+        When <TeX math="\theta = 0" />, the ring traced by varing <TeX math="\phi" /> has a greater radius than when <TeX math="\theta = \pi" />.
       </p>
       <p>
         In order to get the degree of freedom necessary, we need to add another dimension.
@@ -720,7 +721,7 @@ const TerrainGeneration = () => <ArticleLayout>{
         coherentRandom4: \reals^4  \to \reals
       </TeX>
       <p>
-        Using this new noise function, we can try to think of a new parameterization of a torus that keeps the variables changed by <TeX math="\phi"/> seperate from the variables changed by <TeX math="\theta"/>.
+        Using this new noise function, we can try to think of a new parameterization of a torus that keeps the variables changed by <TeX math="\phi" /> seperate from the variables changed by <TeX math="\theta" />.
         This turns out to be pretty easy:
       </p>
       <TeX block>{String.raw`
@@ -735,13 +736,92 @@ const TerrainGeneration = () => <ArticleLayout>{
       <p>
         You can think of this new 4D torus as a kind of double cylinder.
         It simultaneously manages to roll up a 2D square by connecting its top and bottom edges, as well as its left and right edges.
-        Varying the <TeX math="\phi"/> coordinate traces out a circle in the <TeX>xy</TeX> plane.
-        Varying the <TeX math="\theta"/> coordinate traces out a circle in the <TeX>zw</TeX> plane.
+        Varying the <TeX math="\phi" /> coordinate traces out a circle in the <TeX>xy</TeX> plane.
+        Varying the <TeX math="\theta" /> coordinate traces out a circle in the <TeX>zw</TeX> plane.
       </p>
       <p>
         Mathematically, the shape we've described is called a <strong>flat torus</strong><Citation source="https://en.wikipedia.org/wiki/Torus#Flat_torus" />.
       </p>
-
+      <p>
+        So, let's use our new definition to generate a texture:
+      </p>
+      <Async promise={fetchText(WrappingNoise4TsUrl)}>
+        <Async.Pending>
+          <div className="spinner-border" role="status" />
+        </Async.Pending>
+        <Async.Fulfilled<string>>{code =>
+          <SyntaxHighligher className="mx-5" language="typescript" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
+        }</Async.Fulfilled>
+        <Async.Rejected>
+          {/* TOOD: put error here */}
+          <div className="spinner-border" role="status" />
+        </Async.Rejected>
+      </Async>
+      <p>
+        Here's what our texture looks like:
+      </p>
+      <AsideCard title="Wrapping Texture" id="torus4-textures-demo">
+        <TorusDemo
+          className="mx-auto"
+          style={{ width: "20em" }}
+          aspectRatio={2}
+          texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => {
+            const scale = 0.3;
+            const R = 1;
+            const r = 1;
+            const theta = (x / 200) * Math.PI;
+            const phi = (y / 200) * Math.PI;
+            const noise = noise4D(
+              R * Math.cos(phi) / scale,
+              R * Math.sin(phi) / scale,
+              r * Math.cos(theta) / scale,
+              r * Math.sin(theta) / scale
+            );
+            return noise / 2 + 0.5;
+          }
+          ))}
+          detailLevel={20}
+          wireframe={false}
+        />
+      </AsideCard>
+      <p>
+        Although looking a little bit stretched, the texture is seamless.
+        When flat, it's also distortion free.
+      </p>
+      <p>
+        However, this solution is a little bit of "cheating" on our part, since this isn't a realistic torus that could form in 3D space.
+        For the sake of gameplay reasons however, we'll allow it.
+        In addition, another downside of this method is that the texture generated from this process doesn't actually correspond to the shape of the torus in 3D space.
+        It won't be noticeable from the player's perspective, but if we want to render a the torus from space, we'll run into problems.
+      </p>
+      <h4>More realistic noise</h4>
+      <p>
+        Using our new noise, let's try placing some oceans.
+        We'll paint all regions at the halfway point or below blue:
+      </p>
+      <AsideCard title="Noise With Oceans">
+        <ImageDataDisplay
+          style={{ width: "15em", height: "15em" }}
+          className="border border-dark mx-auto d-block"
+          data={thresholdHeightMap(new ScalarMap(400, 400, (x, y) => {
+            const scale = 1.3;
+            const theta = (x / 200) * Math.PI;
+            const phi = (y / 200) * Math.PI;
+            const noise = noise4D(
+              Math.cos(phi) / scale,
+              Math.sin(phi) / scale,
+              Math.cos(theta) / scale,
+              Math.sin(theta) / scale
+            );
+            return noise / 2 + 0.5;
+          }
+          ), 0.5, [0x07, 0x66, 0x78])}
+        />
+      </AsideCard>
+      <p>
+        Unfortunately, it looks rather bland.
+        Realistic coastlines don't look like this.
+      </p>
     </Section>
     <Section id="sources" name="Sources">
       <CitationBank />

@@ -1,6 +1,6 @@
 function torusNoise(height:number, width:number) {
-  const noiseScale = 3
-  const R = 5;
+  const scale = 0.3
+  const R = 3;
   const r = 3;
   let dest = new Float64Array(height*width);
 
@@ -8,10 +8,11 @@ function torusNoise(height:number, width:number) {
     for(let x = 0; x < width; x++) {
       const theta = (x/width)*2*Math.PI;
       const phi = (y/height)*2*Math.PI;
-      dest[y*width + x] = noise3D(
-        (R + r*Math.cos(theta))*Math.cos(phi)*noiseScale,
-        (R + r*Math.cos(theta))*Math.sin(phi)*noiseScale,
-        r*Math.sin(theta)*noiseScale,
+      dest[y*width + x] = noise4D(
+        R*Math.cos(phi)/scale,
+        R*Math.sin(phi)/scale,
+        r*Math.cos(theta)/scale,
+        r*Math.sin(theta)/scale
       );
     }
   }
