@@ -355,7 +355,7 @@ const TerrainGeneration = () => <ArticleLayout>{
         If we were to glue together the top and bottom edges of the map, we would get a cylinder.
         Then, as we glue the east and west ends of the cylinder together, we would get a torus.
       </p>
-      <AsideCard title="Torus Widget" >
+      <AsideCard title="Torus Widget" id="torus-demo">
         <p>
           Play with this interactive widget to explore how we can join the edges of a rectangle to form a torus.
         </p>
