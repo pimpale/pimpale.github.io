@@ -59,8 +59,6 @@ class ImageDataDisplay extends React.Component<ImageDataDisplayProps> {
   }
 
   paint() {
-
-
     const displayCanvas = this.displayCanvas.current!;
     const displayContext = displayCanvas.getContext("2d");
 

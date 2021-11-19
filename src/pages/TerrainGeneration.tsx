@@ -35,6 +35,7 @@ import VerticallySimpleRegionExample2 from "../assets/terrain_generation/Vertica
 // demos
 import SingularityDemo from '../components/SingularityDemo';
 import TorusDemo from '../components/TorusDemo';
+import FractalNoiseTerrainDemo from '../components/FractalNoiseTerrainDemo';
 
 
 const noise2D = makeNoise2D(Date.now());
@@ -662,7 +663,7 @@ const TerrainGeneration = () => <ArticleLayout>{
       <p>
         Essentially, what this tells us is that the lower the aspect ratio, the higher the distortion will be.
         For relatively low aspect ratios like our torus, the distortion ratio can be large.
-        The torus displayed in the demo has a distortion radius of 3, which is very significant.
+        The torus displayed in the demo has a distortion ratio of 3, which is very significant.
       </p>
       <p>
         Whether or not distortion is a problem depends on the type of game you're building.
@@ -820,7 +821,37 @@ const TerrainGeneration = () => <ArticleLayout>{
       </AsideCard>
       <p>
         Unfortunately, it looks rather bland.
-        Realistic coastlines don't look like this.
+        Realistic coastlines don't look like this, they have a lot more fine detail.
+      </p>
+      <p>
+        A simple fix is to make another layer of noise, this one with a higher frequency.
+        Then, we can add together these two layers to get a more natural looking terrain.
+      </p>
+      <p>
+        We need not stop at two layers however.
+        In the example below, we have 7 layers.
+      </p>
+      <AsideCard title="Fractal Noise With Oceans">
+        <FractalNoiseTerrainDemo
+          className="mx-auto mb-3"
+          showMountainNoise={false}
+          defaultSeed={1}
+          height={400}
+          width={400}
+          defaultSeaLevel={0.2}
+          defaultPower={4}
+          defaultNoise128={70}
+          defaultNoise64={19}
+          defaultNoise32={15}
+          defaultNoise16={13}
+          defaultNoise8={8}
+          defaultNoise4={5}
+          defaultNoise2={2}
+        />
+      </AsideCard>
+      <p>
+        When we look at a small portion of the noise, it appears similar (although not necessarily identical) to the larger whole.
+        Therefore, a common name for this kind of noise is <b>fractal noise</b>.
       </p>
     </Section>
     <Section id="sources" name="Sources">

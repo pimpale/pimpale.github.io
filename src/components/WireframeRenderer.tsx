@@ -39,6 +39,7 @@ class WireframeRenderer extends React.Component<WireframeRendererProps, Wirefram
     window.removeEventListener('resize', this.handleWindowResize);
     window.cancelAnimationFrame(this.requestID!);
     this.controls!.dispose();
+    this.renderer.dispose();
   }
 
   // Standard scene setup in Three.js. Check "Creating a scene" manual for more information

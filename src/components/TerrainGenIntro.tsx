@@ -67,13 +67,13 @@ function createElevationMap(xsize: number, ysize: number, seed: number) {
   }
 
   const octaves = [
-    { scale: 1.20, weight: 70 },
+    { scale: 1.28, weight: 70 },
     { scale: 0.64, weight: 19 },
     { scale: 0.32, weight: 15 },
     { scale: 0.16, weight: 13 },
     { scale: 0.08, weight: 8 },
     { scale: 0.04, weight: 5 },
-    { scale: 0.03, weight: 3 },
+    { scale: 0.02, weight: 2 },
   ];
 
   const weightsum = octaves.map(o => o.weight).reduce((a, b) => a + b);

@@ -31,8 +31,25 @@ class ScalarMap {
     this.arr[this.xsize * y + x] = v;
   }
 
+  getData(): Float32Array {
+    return this.arr;
+  }
+
   dims() {
     return { width: this.xsize, height: this.ysize };
+  }
+
+  add(other: ScalarMap) {
+    assert(other.arr.length === this.arr.length);
+    for (let i = 0; i < this.arr.length; i++) {
+      this.arr[i] = other.arr[i];
+    }
+  }
+
+  scale(v: number) {
+    for (let i = 0; i < this.arr.length; i++) {
+      this.arr[i] *= v;
+    }
   }
 
 }
