@@ -5,10 +5,6 @@ import { TrackballControls } from "three/examples/jsm/controls/TrackballControls
 
 type WireframeRendererProps = {
   style: React.CSSProperties,
-  geometries: {
-    geometry: THREE.BufferGeometry
-    color: number
-  }[]
 }
 
 type WireframeRendererState = {}
@@ -74,19 +70,15 @@ class WireframeRenderer extends React.Component<WireframeRendererProps, Wirefram
   // Code below is taken from Three.js BoxGeometry example
   // https://threejs.org/docs/#api/en/geometries/BoxGeometry
   addCustomSceneObjects = () => {
+    const material = new THREE.MeshBasicMaterial({
+      wireframe: true,
+      color: 0xEBDBB2,
+    });
 
-    // create wireframe from provided geometry
-    for (const { geometry, color } of this.props.geometries) {
-      const material = new THREE.MeshBasicMaterial({
-        wireframe: true,
-        color: color,
-      });
-
-      // add wireframe
-      const wireframe = new THREE.Mesh(geometry, material);
-      this.scene.add(wireframe);
-      this.wireframeMesh.push(wireframe);
-    }
+    // add wireframe
+    const wireframe = new THREE.Mesh(new THREE.IcosahedronGeometry(5), material);
+    this.scene.add(wireframe);
+    this.wireframeMesh.push(wireframe);
 
     // add ambient light
     const ambientLight = new THREE.AmbientLight(0xffffff);

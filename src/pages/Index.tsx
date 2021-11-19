@@ -1,6 +1,5 @@
-import * as THREE from 'three';
 import TerrainGenIntro from '../components/TerrainGenIntro';
-import WireframeRenderer from '../components/WireframeRenderer';
+import HomepageDemo from '../components/HomepageDemo';
 import Layout from '../components/Layout';
 import Section from '../components/Section';
 import Articles from '../components/Articles';
@@ -82,13 +81,7 @@ const Home = () =>
   <Layout>
     <div className="min-vh-100 d-flex justify-content-center flex-wrap">
       <Rotated distance={0} rotation={90} ownRow>
-        <WireframeRenderer
-          style={{ width: "20em", height: "20em" }}
-          geometries={[{
-            geometry: new THREE.IcosahedronGeometry(5),
-            color: 0xEBDBB2
-          }]}
-        />
+        <HomepageDemo style={{ width: "20em", height: "20em" }} />
       </Rotated>
       {/* Data */}
       <Rotated distance={15} rotation={-45} >
