@@ -3,7 +3,8 @@ import Section from '../components/Section';
 
 const AchernarUrl = '/achernar.html';
 const GravityUrl = '/gravity.html';
-const TerrainGenerationUrl = '/terraingeneration.html';
+const TerrainGeneration1Url = '/terraingeneration1.html';
+const Fluid1Url = '/fluid1.html';
 
 
 const Articles = () =>
@@ -11,7 +12,8 @@ const Articles = () =>
     <ul>
       <li><a href={AchernarUrl}>Achernar</a></li>
       <li><a href={GravityUrl}>Gravity</a></li>
-      <li><a href={TerrainGenerationUrl}>Terrain Generation 1</a></li>
+      <li><a href={TerrainGeneration1Url}>Terrain Generation 1</a></li>
+      <li><a href={Fluid1Url}>Fluid Simulation 1</a></li>
     </ul>
   </Section>
 

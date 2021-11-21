@@ -13,9 +13,12 @@ import TeX from '@matejmazur/react-katex';
 import ScalarMap from '../utils/ScalarMap';
 import { grayscaleMap, thresholdHeightMap } from '../utils/map';
 
+
+
 import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+import AsideCard from '../components/AsideCard';
 import ImageDataDisplay from '../components/ImageDataDisplay';
 import ZoomableImageDataDisplay from '../components/ZoomableImageDataDisplay';
 import { loadImage, extend, boxBlur } from '../utils/image';
@@ -41,20 +44,6 @@ import FractalNoiseTerrainDemo from '../components/FractalNoiseTerrainDemo';
 const noise2D = makeNoise2D(Date.now());
 const noise3D = makeNoise3D(Date.now());
 const noise4D = makeNoise4D(Date.now());
-
-type AsideCardProps = {
-  title: string,
-  id?: string
-}
-
-const AsideCard: React.FunctionComponent<AsideCardProps> = props =>
-  <div className="card mx-5 mb-4" id={props.id}>
-    <div className="card-body">
-      <h6 className="card-title text-decoration-underline">{props.title}</h6>
-      <div className="card-text">{props.children}</div>
-    </div>
-  </div>
-
 
 const TerrainGeneration = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
