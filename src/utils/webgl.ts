@@ -2,27 +2,33 @@
 
 
 
-function createShader(gl: WebGL2RenderingContext, shader_type: number, source: string) {
-  const shader = gl.createShader(shader_type);
+export function createShader(gl: WebGL2RenderingContext, shader_type: number, source: string) {
+  const shader = gl.createShader(shader_type)!;
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
-  const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-  if (success) {
-    return shader;
-  }
-
-  console.log(gl.getShaderInfoLog(shader));
-  gl.deleteShader(shader);
+  return shader;
 }
 
-function createProgram(gl: WebGL2RenderingContext, shaders: WebGLShader[]) {
-  const program = gl.createProgram();
+export function createProgram(gl: WebGL2RenderingContext, shaders: WebGLShader[]) {
+  const program = gl.createProgram()!;
   for (const shader of shaders) {
     gl.attachShader(program, shader);
   }
+
   gl.linkProgram(program);
-  const success = gl.getProgramParameter(program, gl.LINK_STATUS);
-  if (success) {
+  const linkSuccess = gl.getProgramParameter(program, gl.LINK_STATUS);
+  if (!linkSuccess) {
+      let errorMessage = "";
+      for(const shader of shaders) {
+        const shaderSuccess  = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+        if(!shaderSuccess) {
+            console.log(gl.getShaderInfoLog
+        }
+      }
+  }
+
+
+
     return program;
   }
 
