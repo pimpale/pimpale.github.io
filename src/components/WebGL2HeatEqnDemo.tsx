@@ -20,16 +20,20 @@ void main() {
 const fs = `#version 300 es
 precision highp float;
 
-// height and width
-uniform float height;
-uniform float width;
+uniform sampler2D heatTex;
  
 out vec4 outColor;
  
 void main() {
-  outColor = vec4(gl_FragCoord.x/400.0, gl_FragCoord.y/400.0, 0, 0);
+
+  vec4 value = texture(heatTex, gl_FragCoord.xy);
+
+  // finally set value to the texture
+  outColor = vec4(value.x, value.y, 0, 0);
 }
 `;
+
+
 
 
 // TODO: learn how to handle error cases
@@ -59,11 +63,9 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
     )!;
 
     const positionLoc = this.gl.getAttribLocation(program, 'position');
-    const widthLoc = this.gl.getUniformLocation(program, 'width');
-    const heightLoc = this.gl.getUniformLocation(program, 'height');
+    const heatTexLoc = this.gl.getUniformLocation(program, 'heatTex');
      
-    // we create two triangles that form a rectangle.
-    // this rectangle covers the entire clip space, from -1 to 1 in both x and y
+    // setup a full canvas clip space quad
     const buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
@@ -76,13 +78,10 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
     ]), this.gl.STATIC_DRAW);
 
 
-    // setup height and width
-    this.gl.uniform1f(widthLoc, this.props.width);
-    this.gl.uniform1f(heightLoc, this.props.height);
-
     // Create a vertex array object (attribute state)
     const vao = this.gl.createVertexArray()!;
     this.gl.bindVertexArray(vao);
+
 
     // setup our attributes to tell WebGL how to pull
     // the data from the buffer above to the position attribute
@@ -96,17 +95,34 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
       0,         // offset
     );
 
+    const tex = this.gl.createTexture();
+    this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+    this.gl.pixelStorei(this.gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
+    this.gl.texImage2D(
+      this.gl.TEXTURE_2D,
+      0,                // mip level
+      this.gl.R8,            // internal format
+      this.props.width,
+      this.props.height,
+      0,                // border
+      this.gl.RED,           // format
+      this.gl.UNSIGNED_BYTE, // type
+      new Uint8Array(this.props.width * this.props.height)
+    );
+
     this.gl.useProgram(program);
+    this.gl.uniform1i(heatTexLoc, 0); 
+
 
     // start animation loop
     this.animationLoop();
   }
 
 
+
   componentWillUnmount() {
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
-    // TODO: destroy vao, buffer, programs, shaders, etc
     // destroy webgl
     this.gl.getExtension('WEBGL_lose_context')!.loseContext();
   }

@@ -6,6 +6,7 @@ import HrefLink from '../components/HrefLink';
 import AsideCard from '../components/AsideCard';
 
 import WebGL2SetupDemo from '../components/WebGL2SetupDemo';
+import WebGL2HeatEqnDemo from '../components/WebGL2HeatEqnDemo';
 
 const Fluid1 = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -26,11 +27,28 @@ const Fluid1 = () => <ArticleLayout>{
       <AsideCard title="Canvas Setup" id="canvas-setup-demo">
         <WebGL2SetupDemo
           className="mx-auto"
+          style={{display: "block"}}
           width={400}
-          height{400}
+          height={400}
         />
       </AsideCard>
     </Section>
+    <Section id="webgl2-heat" name="Heat Equation with WebGL2">
+      <p>
+        Now, we'll approach the heat equation
+      </p>
+      <AsideCard title="Heat Equation" id="">
+        <WebGL2HeatEqnDemo 
+          className="mx-auto"
+          style={{display: "block"}}
+          width={400}
+          height={400}
+        />
+      </AsideCard>
+    </Section>
+
+
+
     <Section id="sources" name="Sources">
       <CitationBank />
     </Section>

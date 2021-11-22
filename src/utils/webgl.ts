@@ -18,20 +18,18 @@ export function createProgram(gl: WebGL2RenderingContext, shaders: WebGLShader[]
   gl.linkProgram(program);
   const linkSuccess = gl.getProgramParameter(program, gl.LINK_STATUS);
   if (!linkSuccess) {
-      let errorMessage = "";
-      for(const shader of shaders) {
-        const shaderSuccess  = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-        if(!shaderSuccess) {
-            console.log(gl.getShaderInfoLog
-        }
+    let errorMessage = "";
+    for (const shader of shaders) {
+      const shaderSuccess = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+      if (!shaderSuccess) {
+        console.log(gl.getShaderInfoLog(shader));
       }
-  }
-
-
-
+      gl.deleteShader(shader);
+    }
+    console.log(gl.getProgramInfoLog(program));
+    gl.deleteProgram(program);
+    return null;
+  } else {
     return program;
   }
-
-  console.log(gl.getProgramInfoLog(program));
-  gl.deleteProgram(program);
 }

@@ -172,7 +172,6 @@ class SingularityDemo extends React.Component<SingularityDemoProps, SingularityD
   startAnimationLoop = () => {
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
-
     // The window.requestAnimationFrame() method tells the browser that you wish to perform
     // an animation and requests that the browser call a specified function
     // to update an animation before the next repaint
