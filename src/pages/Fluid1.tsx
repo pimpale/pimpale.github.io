@@ -37,17 +37,14 @@ const Fluid1 = () => <ArticleLayout>{
       <p>
         Now, we'll approach the heat equation
       </p>
-      <AsideCard title="Heat Equation" id="">
+      <AsideCard title="Heat Equation" id="heat-equation-demo">
         <WebGL2HeatEqnDemo 
           className="mx-auto"
           style={{display: "block"}}
-          width={400}
-          height={400}
+          size={400}
         />
       </AsideCard>
     </Section>
-
-
 
     <Section id="sources" name="Sources">
       <CitationBank />

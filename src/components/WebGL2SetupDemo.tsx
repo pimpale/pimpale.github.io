@@ -27,7 +27,7 @@ uniform float width;
 out vec4 outColor;
  
 void main() {
-  outColor = vec4(gl_FragCoord.x/400.0, gl_FragCoord.y/400.0, 0, 0);
+  outColor = vec4(gl_FragCoord.x/400.0, gl_FragCoord.y/400.0, 0, 1.0);
 }
 `;
 
@@ -76,10 +76,6 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
     ]), this.gl.STATIC_DRAW);
 
 
-    // setup height and width
-    this.gl.uniform1f(widthLoc, this.props.width);
-    this.gl.uniform1f(heightLoc, this.props.height);
-
     // Create a vertex array object (attribute state)
     const vao = this.gl.createVertexArray()!;
     this.gl.bindVertexArray(vao);
@@ -97,6 +93,11 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
     );
 
     this.gl.useProgram(program);
+
+    // setup height and width
+    this.gl.uniform1f(widthLoc, this.props.width);
+    this.gl.uniform1f(heightLoc, this.props.height);
+
 
     // start animation loop
     this.animationLoop();

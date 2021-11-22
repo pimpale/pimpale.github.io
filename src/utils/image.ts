@@ -193,7 +193,7 @@ export function boxBlur(img: ImageData, radius: number) {
   return newImg;
 }
 
-export function ImageDataFromFn(xsize: number, ysize: number, fn: (x: number, y: number) => number) {
+export function imageDataFromFn(xsize: number, ysize: number, fn: (x: number, y: number) => number) {
   let img = new ImageData(xsize, ysize);
   for (let y = 0; y < img.height; y++) {
     for (let x = 0; x < img.width; x++) {
@@ -202,8 +202,10 @@ export function ImageDataFromFn(xsize: number, ysize: number, fn: (x: number, y:
       img.data[baseIdx + 0] = color >> 16;
       img.data[baseIdx + 1] = (color >> 8) & 0xFF;
       img.data[baseIdx + 2] = color & 0xFF;
+      img.data[baseIdx + 3] = 0xFF;
     }
   }
+  return img;
 }
 
 export function crop(src: ImageData, srcx: number, srcy: number, xsize: number, ysize: number) {

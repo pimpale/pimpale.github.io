@@ -1,35 +1,61 @@
 import React from "react";
-import { createShader, createProgram } from '../utils/webgl';
+import { createShader, createProgram, createTexture } from '../utils/webgl';
 
-type WebGL2SetupDemoProps = {
+type WebGL2HeatEqnDemoProps = {
   style?: React.CSSProperties,
   className?: string
-  width: number,
-  height: number
+  size: number
 }
 
 
 const vs = `#version 300 es
-in vec4 position;
+in vec2 c_position;
+out vec2 v_texCoord;
+uniform vec2 u_resolution;
+
 void main() {
-  gl_Position = position;
+  v_texCoord = c_position;
+
+  // convert from 0->1 to 0->2
+  // convert from 0->2 to -1->+1 (clip space)
+  vec2 clipSpace = (c_position * 2.0) - 1.0;
+
+  gl_Position = vec4(clipSpace, 0, 1);
 }
 `;
-
 
 const fs = `#version 300 es
 precision highp float;
 
-uniform sampler2D heatTex;
- 
+// the heat texture
+uniform sampler2D u_heatTex;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
 out vec4 outColor;
  
 void main() {
+  // 0 1 2
+  // 1
+  // 2
 
-  vec4 value = texture(heatTex, gl_FragCoord.xy);
+  float v01 = texture(u_heatTex, v_texCoord + (-0.005,+0.000)).r;
+  float v10 = texture(u_heatTex, v_texCoord + (+0.000,-0.005)).r;
+  float v12 = texture(u_heatTex, v_texCoord + (+0.000,+0.005)).r;
+  float v21 = texture(u_heatTex, v_texCoord + (+0.005,+0.000)).r;
+
+  float sum =
+          v01 +
+    v10 +       v12 +
+          v21;
 
   // finally set value to the texture
-  outColor = vec4(value.x, value.y, 0, 0);
+  if(v_texCoord.x < 0.01 || v_texCoord.x > 0.99 || v_texCoord.y < 0.01 || v_texCoord.y > 0.99) {
+    outColor = vec4(1.0, 0.0, 0.0, 1.0);
+  } else {
+    outColor = vec4(sum/4.0, 0.0, 0.0, 1.0);
+  }
 }
 `;
 
@@ -38,15 +64,23 @@ void main() {
 
 // TODO: learn how to handle error cases
 
-type WebGL2SetupDemoState = {}
+type WebGL2HeatEqnDemoState = {}
 
-class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupDemoState> {
+class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2HeatEqnDemoState> {
   private canvas = React.createRef<HTMLCanvasElement>();
   private gl!: WebGL2RenderingContext;
 
+  // a list of textures that we will cycle through
+  private textures:WebGLTexture[] = [];
+  // a list of framebuffers we will cycle through
+  private framebuffers:WebGLFramebuffer[] = [];
+
+  // the frame number we're on
+  private frameCount : number = 0;
+
   private requestID!: number;
 
-  constructor(props: WebGL2SetupDemoProps) {
+  constructor(props: WebGL2HeatEqnDemoProps) {
     super(props);
   }
 
@@ -55,26 +89,27 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
     this.gl = this.canvas.current!.getContext('webgl2')!;
 
     const program = createProgram(
-        this.gl,
-        [
-            createShader(this.gl, this.gl.VERTEX_SHADER, vs),
-            createShader(this.gl, this.gl.FRAGMENT_SHADER, fs),
-        ]
+      this.gl,
+      [
+        createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+        createShader(this.gl, this.gl.FRAGMENT_SHADER, fs),
+      ]
     )!;
 
-    const positionLoc = this.gl.getAttribLocation(program, 'position');
-    const heatTexLoc = this.gl.getUniformLocation(program, 'heatTex');
-     
+    const positionLoc = this.gl.getAttribLocation(program, 'c_position');
+    const heatTexLoc = this.gl.getUniformLocation(program, 'u_heatTex');
+    const resolutionLoc  = this.gl.getUniformLocation(program, "u_resolution");
+
     // setup a full canvas clip space quad
     const buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-      -1, -1,
-       1, -1,
-      -1,  1,
-      -1,  1,
-       1, -1,
-       1,  1,
+      0, 0,
+      1, 0,
+      0, 1,
+      0, 1,
+      1, 0,
+      1, 1,
     ]), this.gl.STATIC_DRAW);
 
 
@@ -95,24 +130,33 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
       0,         // offset
     );
 
-    const tex = this.gl.createTexture();
-    this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
-    this.gl.pixelStorei(this.gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
-    this.gl.texImage2D(
-      this.gl.TEXTURE_2D,
-      0,                // mip level
-      this.gl.R8,            // internal format
-      this.props.width,
-      this.props.height,
-      0,                // border
-      this.gl.RED,           // format
-      this.gl.UNSIGNED_BYTE, // type
-      new Uint8Array(this.props.width * this.props.height)
-    );
+
+
+    for (let i = 0; i < 2; i++) {
+      const tex = createTexture(this.gl, new ImageData(this.props.size, this.props.size))!;
+      this.textures.push(tex);
+
+      const fbo = this.gl.createFramebuffer()!;
+      // this makes fbo the current active framebuffer
+      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
+      // configure the currently active framebuffer to use te
+      this.gl.framebufferTexture2D(
+        this.gl.FRAMEBUFFER, // will bind as a framebuffer
+        this.gl.COLOR_ATTACHMENT0, // Attaches the texture to the framebuffer's color buffer. 
+        this.gl.TEXTURE_2D, // we have a 2d texture
+        tex, // the texture to attach
+        0 // the mipmap level (we don't want mipmapping, so we set to 0)
+      );
+      // push framebuffer
+      this.framebuffers.push(fbo);
+    }
 
     this.gl.useProgram(program);
-    this.gl.uniform1i(heatTexLoc, 0); 
 
+    // Tell the shader to get the texture from texture unit 0
+    this.gl.uniform1i(heatTexLoc, 0);
+    // set resolution
+    this.gl.uniform2f(resolutionLoc, this.props.size, this.props.size);
 
     // start animation loop
     this.animationLoop();
@@ -129,8 +173,29 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
 
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
-    // draw triangles
+
+    const fbo = this.framebuffers[this.frameCount % 2];
+    const tex = this.textures[(this.frameCount + 1) % 2];
+
+    // make tex the teture to render to
+    this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+
+    // make fbo the current framebuffer
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
+
+    // execute draw to texture
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+    // const results = new Uint8Array(this.props.width*this.props.height*4);
+    // this.gl.readPixels(0, 0, this.props.width, this.props.height, this.gl.RGBA, this.gl.UNSIGNED_BYTE, results);
+    // console.log(results);
+
+    // set the canvas as the current framebuffer
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+    // execute draw to canvas
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+    this.frameCount++;
   }
 
   render() {
@@ -138,11 +203,11 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
       style={this.props.style}
       className={this.props.className}
       ref={this.canvas}
-      height={this.props.height}
-      width={this.props.width}
+      height={this.props.size}
+      width={this.props.size}
     />
   }
 
 }
 
-export default WebGL2SetupDemo;
+export default WebGL2HeatEqnDemo;
