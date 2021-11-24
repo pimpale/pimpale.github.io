@@ -75,11 +75,6 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
        1,  1,
     ]), this.gl.STATIC_DRAW);
 
-
-    // Create a vertex array object (attribute state)
-    const vao = this.gl.createVertexArray()!;
-    this.gl.bindVertexArray(vao);
-
     // setup our attributes to tell WebGL how to pull
     // the data from the buffer above to the position attribute
     this.gl.enableVertexAttribArray(positionLoc);
