@@ -40,7 +40,7 @@ const Fluid1 = () => <ArticleLayout>{
       <AsideCard title="Heat Equation" id="heat-equation-demo">
         <WebGL2HeatEqnDemo 
           className="mx-auto"
-          style={{display: "block"}}
+          style={{maxWidth: "40em"}}
           size={400}
         />
       </AsideCard>

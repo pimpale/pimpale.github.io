@@ -1,5 +1,5 @@
 import React from "react";
-import { createShader, createProgram, createRedTexture } from '../utils/webgl';
+import { createShader, createProgram, createRedTexture, overwriteRedTexture} from '../utils/webgl';
 
 type WebGL2HeatEqnDemoProps = {
   style?: React.CSSProperties,
@@ -60,7 +60,7 @@ void main() {
 
   // finally set value to the texture
   if(v_texCoord.x < 0.01 ) {
-    value =  uvec4(4000000u, 0u, 0u, 0u);
+    value =  uvec4(0xFFFFFF, 0u, 0u, 0u);
   } else if (v_texCoord.x > 0.99 || v_texCoord.y < 0.01 || v_texCoord.y > 0.99) {
     value =  uvec4(0u, 0u, 0u, 0u);
   } else {
@@ -97,7 +97,7 @@ vec3 inferno(float t) {
 }
 void main() {
 
-    float val = float(texture(u_tex, v_texCoord).r)/4000000.0;
+    float val = float(texture(u_tex, v_texCoord).r)/float(0xFFFFFF);
     outColor = vec4(inferno(val), 1.0);
 }
 `
@@ -109,7 +109,17 @@ void main() {
 type WebGL2HeatEqnDemoState = {}
 
 class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2HeatEqnDemoState> {
+
+  // this is the ref to the canvas
   private canvas = React.createRef<HTMLCanvasElement>();
+
+  // this is the ref we use to monitor sim speed
+  private range = React.createRef<HTMLInputElement>();
+
+  private reset = React.createRef<HTMLButtonElement>();
+
+  // this is the ref we use to check if we need to reset
+
   private gl!: WebGL2RenderingContext;
 
   // a list of textures that we will cycle through
@@ -121,7 +131,10 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   private prog_render!: WebGLProgram;
 
   // the frame number we're on
-  private frameCount: number = 0;
+  private frameCount = 0;
+
+  // whether we need to reset on the next frame
+  private needsReset = false;
 
   private requestID!: number;
 
@@ -234,13 +247,20 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       this.gl.uniform1i(texLoc, 0);
     }
 
+    // add handler
+    this.reset.current!.addEventListener("click", this.handleReset);
+
     // start animation loop
     this.animationLoop();
   }
 
-
+  handleReset = () => {
+    this.needsReset = true;
+  }
 
   componentWillUnmount() {
+    // remove listener on reset
+    this.reset.current!.removeEventListener("click", this.handleReset);
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
     // destroy webgl
@@ -248,10 +268,23 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   }
 
   animationLoop = () => {
+
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
     this.gl.useProgram(this.prog_diffuse);
-    for(let i = 0; i < 1; i++) {
+
+    if (this.needsReset) {
+      // wipe all textures
+      for (let i = 0; i < this.textures.length; i++) {
+        // make tex the teture to render to
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[i]);
+        overwriteRedTexture(this.gl, this.props.size, this.props.size);
+      }
+      this.needsReset = false;
+    }
+
+
+    for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
       const fbo = this.framebuffers[this.frameCount % 2];
       const tex = this.textures[(this.frameCount + 1) % 2];
 
@@ -278,13 +311,31 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   }
 
   render() {
-    return <canvas
-      style={this.props.style}
-      className={this.props.className}
-      ref={this.canvas}
-      height={this.props.size}
-      width={this.props.size}
-    />
+    return <div style={this.props.style} className={this.props.className}>
+      <div className="row">
+        <div className="col-md-8 d-flex">
+          <canvas
+            className="border border-dark"
+            ref={this.canvas}
+            height={this.props.size}
+            width={this.props.size}
+          />
+        </div>
+        <div className="col-md-4">
+          <div className="border border-dark p-3 m-3">
+            <h6>Controls</h6>
+            <div className="form-group mb-3">
+              <label className="form-label">Simulation Speed</label>
+              <input type="range" className="form-range" min="0" max="100" step={1} defaultValue={1} ref={this.range} />
+            </div>
+            <div className="form-group">
+              <button className="btn btn-primary btn-sm" ref={this.reset}>Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   }
 
 }
