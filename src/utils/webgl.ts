@@ -82,15 +82,12 @@ export function createRedTexture(gl: WebGL2RenderingContext, width: number, heig
   return tex;
 }
 
-export function overwriteRedTexture(gl: WebGL2RenderingContext, width: number, height: number) {
-
-  const data = new Uint32Array(width * height);
-
+export function overwriteRedTexture(gl: WebGL2RenderingContext, xoff:number, yoff: number, width: number, height: number, data: Uint32Array) {
   gl.texSubImage2D(
     gl.TEXTURE_2D,
     0,                // mip level
-    0,                // xoffset
-    0,                // yoffset
+    xoff,             // xoffset
+    yoff,             // yoffset
     width,            // width
     height,           // height
     gl.RED_INTEGER,   // format

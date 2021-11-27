@@ -1,5 +1,6 @@
 import React from "react";
-import { createShader, createProgram, createRedTexture, overwriteRedTexture} from '../utils/webgl';
+import { createShader, createProgram, createRedTexture, overwriteRedTexture } from '../utils/webgl';
+import { clamp } from '../utils/math';
 
 type WebGL2HeatEqnDemoProps = {
   style?: React.CSSProperties,
@@ -31,6 +32,9 @@ precision highp usampler2D;
 // the heat texture
 uniform usampler2D u_tex;
 
+// the control texture
+uniform usampler2D u_ctrl_tex;
+
 // resulution of texture
 uniform vec2 u_resolution;
 
@@ -41,12 +45,13 @@ in vec2 v_texCoord;
 out uvec4 value;
  
 void main() {
-  // 0 1 2
-  // 1
-  // 2
 
   float x_off = 1.0/u_resolution.x;
   float y_off = 1.0/u_resolution.y;
+
+  // 0 1 2
+  // 1
+  // 2
 
   uint v01 = texture(u_tex, v_texCoord + vec2(-x_off,+0.000)).r;
   uint v10 = texture(u_tex, v_texCoord + vec2(+0.000,-y_off)).r;
@@ -58,13 +63,21 @@ void main() {
     v10 +       v12 +
           v21;
 
-  // finally set value to the texture
-  if(v_texCoord.x < 0.01 ) {
-    value =  uvec4(0xFFFFFF, 0u, 0u, 0u);
-  } else if (v_texCoord.x > 0.99 || v_texCoord.y < 0.01 || v_texCoord.y > 0.99) {
-    value =  uvec4(0u, 0u, 0u, 0u);
-  } else {
-    value = uvec4(sum/4u, 0u, 0u, 0u);
+  uint ctrl = texture(u_ctrl_tex, v_texCoord).r;
+
+  switch(ctrl) {
+    case 0u: {
+      value = uvec4(sum/4u, 0u, 0u, 0u);
+      break;
+    }
+    case 1u: {
+      value = uvec4(0u, 0u, 0u, 0u);
+      break;
+    }
+    default: {
+      value = uvec4(0xFFFFFF, 0u, 0u, 0u);
+      break;
+    }
   }
 }
 `;
@@ -116,11 +129,17 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   // this is the ref we use to monitor sim speed
   private range = React.createRef<HTMLInputElement>();
 
+  // this is the ref we use to check if we need to reset
   private reset = React.createRef<HTMLButtonElement>();
 
-  // this is the ref we use to check if we need to reset
+  // this is the ref we use to choose color
+  private drawSelect = React.createRef<HTMLSelectElement>();
+
 
   private gl!: WebGL2RenderingContext;
+
+  // the control texture that tells which parts are hot vs cold
+  private controlTexture!: WebGLTexture;
 
   // a list of textures that we will cycle through
   private textures: WebGLTexture[] = [];
@@ -135,6 +154,10 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
   // whether we need to reset on the next frame
   private needsReset = false;
+
+  // if mouse is pressed
+  private mouseDown = false;
+  private mousePos = { x: 0, y: 0 };
 
   private requestID!: number;
 
@@ -171,6 +194,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
       const positionLoc = this.gl.getAttribLocation(this.prog_diffuse, 'c_position');
       const texLoc = this.gl.getUniformLocation(this.prog_diffuse, 'u_tex');
+      const ctrlTexLoc = this.gl.getUniformLocation(this.prog_diffuse, 'u_ctrl_tex');
       const resolutionLoc = this.gl.getUniformLocation(this.prog_diffuse, "u_resolution");
 
       // setup our attributes to tell WebGL how to pull
@@ -185,6 +209,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
         0,         // offset
       );
 
+      // create pingpongable textures and frambuffers
       for (let i = 0; i < 2; i++) {
         const tex = createRedTexture(this.gl, this.props.size, this.props.size)!;
         this.textures.push(tex);
@@ -209,6 +234,13 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
       // Tell the shader to get the texture from texture unit 0
       this.gl.uniform1i(texLoc, 0);
+
+      // create control texture
+      this.controlTexture = createRedTexture(this.gl, this.props.size, this.props.size)!;
+
+      // Tell the shader to get the control texture from texture unit 1
+      this.gl.uniform1i(ctrlTexLoc, 1);
+
       // set resolution
       this.gl.uniform2f(resolutionLoc, this.props.size, this.props.size);
     }
@@ -247,8 +279,13 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       this.gl.uniform1i(texLoc, 0);
     }
 
-    // add handler
-    this.reset.current!.addEventListener("click", this.handleReset);
+    // add reset handler
+    this.reset.current!.addEventListener('click', this.handleReset);
+
+    // add canvas handler
+    this.canvas.current!.addEventListener('mousedown', this.handleMouseDown);
+    this.canvas.current!.addEventListener('mouseup', this.handleMouseUp);
+    this.canvas.current!.addEventListener('mousemove', this.handleMouseMove);
 
     // start animation loop
     this.animationLoop();
@@ -258,7 +295,33 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     this.needsReset = true;
   }
 
+  getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
+    const rect = canvas.getBoundingClientRect(); // abs. size of element
+    const scaleX = canvas.width / rect.width;    // relationship bitmap vs. element for X
+    const scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
+
+    return {
+      x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+      y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+    }
+  }
+
+  handleMouseDown = (e: MouseEvent) => {
+    this.mouseDown = true;
+  }
+  handleMouseUp = (e: MouseEvent) => {
+    this.mouseDown = false;
+  }
+
+  handleMouseMove = (e: MouseEvent) => {
+    this.mousePos = this.getMousePos(this.canvas.current!, e);
+  }
+
   componentWillUnmount() {
+    // remove listeners on canvas
+    this.canvas.current!.removeEventListener('mousedown', this.handleMouseDown);
+    this.canvas.current!.removeEventListener('mouseup', this.handleMouseUp);
+    this.canvas.current!.removeEventListener('mousemove', this.handleMouseMove);
     // remove listener on reset
     this.reset.current!.removeEventListener("click", this.handleReset);
     // stop animation loop
@@ -273,24 +336,56 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
     this.gl.useProgram(this.prog_diffuse);
 
-    if (this.needsReset) {
-      // wipe all textures
-      for (let i = 0; i < this.textures.length; i++) {
-        // make tex the teture to render to
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[i]);
-        overwriteRedTexture(this.gl, this.props.size, this.props.size);
+    // handle draw when there's no loops
+    if (this.mouseDown) {
+      // set texture unit 1 to active so we can work on it
+      this.gl.activeTexture(this.gl.TEXTURE1);
+      // bind control texture
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.controlTexture);
+
+      const size = this.drawSelect.current!.selectedIndex === 0 ? 20 : 5;
+      // fill with control to get high number
+      const data = new Uint32Array(size * size);
+      for (let i = 0; i < data.length; i++) {
+        data[i] = this.drawSelect.current!.selectedIndex;
       }
-      this.needsReset = false;
+
+      // where to begin drawing
+      const centeredX = clamp(this.mousePos.x, 0 + size/2, this.props.size - size/2);
+      const centeredY = clamp(this.props.size - this.mousePos.y, 0 + size/2, this.props.size - size/2);
+
+      const x = clamp(centeredX - size/2, 0, this.props.size - size);
+      const y = clamp(centeredY - size/2, 0, this.props.size - size);
+
+      overwriteRedTexture(this.gl, Math.floor(x), Math.floor(y), size, size, data);
     }
 
 
+
+    if (this.needsReset) {
+      // select the  texture being used as a source
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[(this.frameCount + 1) % 2]);
+      // overwrite the whole thing with 0
+      overwriteRedTexture(this.gl, 0, 0, this.props.size, this.props.size, new Uint32Array(this.props.size * this.props.size));
+
+      // select the control texture
+      this.gl.activeTexture(this.gl.TEXTURE1);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.controlTexture);
+      // overwrite the whole thing with 0
+      overwriteRedTexture(this.gl, 0, 0, this.props.size, this.props.size, new Uint32Array(this.props.size * this.props.size));
+
+      this.needsReset = false;
+    }
+
+    // set texture unit 0 to active
+    this.gl.activeTexture(this.gl.TEXTURE0);
     for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
       const fbo = this.framebuffers[this.frameCount % 2];
       const tex = this.textures[(this.frameCount + 1) % 2];
 
       // make tex the teture to render to
       this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
-
       // make fbo the current framebuffer
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
 
@@ -327,6 +422,13 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>
               <input type="range" className="form-range" min="0" max="100" step={1} defaultValue={1} ref={this.range} />
+            </div>
+            <div className="form-group mb-3">
+              <select className="form-select" defaultValue={2} ref={this.drawSelect}>
+                <option value={0}>Erase</option>
+                <option value={1}>Draw Cold</option>
+                <option value={2}>Draw Hot</option>
+              </select>
             </div>
             <div className="form-group">
               <button className="btn btn-primary btn-sm" ref={this.reset}>Reset</button>
