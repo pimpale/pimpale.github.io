@@ -343,24 +343,21 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       // bind control texture
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.controlTexture);
 
-      const size = this.drawSelect.current!.selectedIndex === 0 ? 20 : 5;
+      const brushRadius = this.drawSelect.current!.selectedIndex === 0 ? 10 : 2
+      const brushSize= brushRadius * 2;
+
       // fill with control to get high number
-      const data = new Uint32Array(size * size);
+      const data = new Uint32Array(brushSize * brushSize);
       for (let i = 0; i < data.length; i++) {
         data[i] = this.drawSelect.current!.selectedIndex;
       }
 
       // where to begin drawing
-      const centeredX = clamp(this.mousePos.x, 0 + size/2, this.props.size - size/2);
-      const centeredY = clamp(this.props.size - this.mousePos.y, 0 + size/2, this.props.size - size/2);
+      const x = clamp(this.mousePos.x - brushRadius, 0, this.props.size - brushSize);
+      const y = clamp(this.props.size - this.mousePos.y - brushRadius, 0, this.props.size - brushSize);
 
-      const x = clamp(centeredX - size/2, 0, this.props.size - size);
-      const y = clamp(centeredY - size/2, 0, this.props.size - size);
-
-      overwriteRedTexture(this.gl, Math.floor(x), Math.floor(y), size, size, data);
+      overwriteRedTexture(this.gl, Math.floor(x), Math.floor(y), brushSize, brushSize, data);
     }
-
-
 
     if (this.needsReset) {
       // select the  texture being used as a source
@@ -372,8 +369,10 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       // select the control texture
       this.gl.activeTexture(this.gl.TEXTURE1);
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.controlTexture);
+
       // overwrite the whole thing with 0
-      overwriteRedTexture(this.gl, 0, 0, this.props.size, this.props.size, new Uint32Array(this.props.size * this.props.size));
+      const data = new Uint32Array(this.props.size * this.props.size);
+      overwriteRedTexture(this.gl, 0, 0, this.props.size, this.props.size,data);
 
       this.needsReset = false;
     }
