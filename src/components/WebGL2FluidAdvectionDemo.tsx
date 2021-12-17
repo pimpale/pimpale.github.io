@@ -1,8 +1,8 @@
 import React from "react";
-import { createShader, createProgram, createR32UITexture, overwriteR32UITexture } from '../utils/webgl';
+import { createShader, createProgram, createR32UITexture,  createRG32UITexture,  overwriteR32UITexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
 
-type WebGL2HeatEqnDemoProps = {
+type WebGL2FluidAdvectionDemoProps = {
   style?: React.CSSProperties,
   className?: string
   size: number
@@ -32,7 +32,7 @@ precision highp usampler2D;
 // the heat texture
 uniform usampler2D u_tex;
 
-// the control texture
+// the particle texture
 uniform usampler2D u_ctrl_tex;
 
 // resulution of texture
@@ -109,7 +109,6 @@ vec3 inferno(float t) {
     return c0+t*(c1+t*(c2+t*(c3+t*(c4+t*(c5+t*c6)))));
 }
 void main() {
-
     float val = float(texture(u_tex, v_texCoord).r)/float(0xFFFFFF);
     outColor = vec4(inferno(val), 1.0);
 }
@@ -119,9 +118,9 @@ void main() {
 
 // TODO: learn how to handle error cases
 
-type WebGL2HeatEqnDemoState = {}
+type WebGL2FluidAdvectionDemoState = {}
 
-class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2HeatEqnDemoState> {
+class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoProps, WebGL2FluidAdvectionDemoState> {
 
   // this is the ref to the canvas
   private canvas = React.createRef<HTMLCanvasElement>();
@@ -138,13 +137,15 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
   private gl!: WebGL2RenderingContext;
 
-  // the control texture that tells which parts are hot vs cold
-  private controlTexture!: WebGLTexture;
+  // the texture that shows scalar density (this is going to be advected)
+  private scalarTextures: WebGLTexture[] = [];
+  private scalarFramebuffers: WebGLFramebuffer[] = [];
 
-  // a list of textures that we will cycle through
-  private textures: WebGLTexture[] = [];
-  // a list of framebuffers we will cycle through
-  private framebuffers: WebGLFramebuffer[] = [];
+  // the velocity textures represent the velocity field of the fluid
+  // it loops around at the edges
+
+  private velTextures: WebGLTexture[] = [];
+  private velFramebuffers: WebGLFramebuffer[] = [];
 
   private prog_diffuse!: WebGLProgram;
   private prog_render!: WebGLProgram;
@@ -161,7 +162,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
   private requestID!: number;
 
-  constructor(props: WebGL2HeatEqnDemoProps) {
+  constructor(props: WebGL2FluidAdvectionDemoProps) {
     super(props);
   }
 
@@ -193,8 +194,8 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       )!;
 
       const positionLoc = this.gl.getAttribLocation(this.prog_diffuse, 'c_position');
-      const texLoc = this.gl.getUniformLocation(this.prog_diffuse, 'u_tex');
-      const ctrlTexLoc = this.gl.getUniformLocation(this.prog_diffuse, 'u_ctrl_tex');
+      const scalarTexLoc = this.gl.getUniformLocation(this.prog_diffuse, 'u_scalar_tex');
+      const velTexLoc = this.gl.getUniformLocation(this.prog_diffuse, 'u_vel_tex');
       const resolutionLoc = this.gl.getUniformLocation(this.prog_diffuse, "u_resolution");
 
       // setup our attributes to tell WebGL how to pull
@@ -211,8 +212,8 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
       // create pingpongable textures and frambuffers
       for (let i = 0; i < 2; i++) {
-        const tex = createR32UITexture(this.gl, this.props.size, this.props.size)!;
-        this.textures.push(tex);
+        const tex = createRedTexture(this.gl, this.props.size, this.props.size)!;
+        this.velTextures.push(tex);
 
         const fbo = this.gl.createFramebuffer()!;
         // this makes fbo the current active framebuffer
@@ -226,7 +227,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
           0 // the mipmap level (we don't want mipmapping, so we set to 0)
         );
         // push framebuffer
-        this.framebuffers.push(fbo);
+        this.velFramebuffers.push(fbo);
       }
 
       // bind uniforms
@@ -235,10 +236,10 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       // Tell the shader to get the texture from texture unit 0
       this.gl.uniform1i(texLoc, 0);
 
-      // create control texture
-      this.controlTexture = createR32UITexture(this.gl, this.props.size, this.props.size)!;
+      // create particle texture
+      this.particleTexture = createRedTexture(this.gl, this.props.size, this.props.size)!;
 
-      // Tell the shader to get the control texture from texture unit 1
+      // Tell the shader to get the particle texture from texture unit 1
       this.gl.uniform1i(ctrlTexLoc, 1);
 
       // set resolution
@@ -340,13 +341,13 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     if (this.mouseDown) {
       // set texture unit 1 to active so we can work on it
       this.gl.activeTexture(this.gl.TEXTURE1);
-      // bind control texture
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.controlTexture);
+      // bind particle texture
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleTexture);
 
       const brushRadius = this.drawSelect.current!.selectedIndex === 0 ? 10 : 2
       const brushSize= brushRadius * 2;
 
-      // fill with control to get high number
+      // fill with particle to get high number
       const data = new Uint32Array(brushSize * brushSize);
       for (let i = 0; i < data.length; i++) {
         data[i] = this.drawSelect.current!.selectedIndex;
@@ -356,23 +357,23 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       const x = clamp(this.mousePos.x - brushRadius, 0, this.props.size - brushSize);
       const y = clamp(this.props.size - this.mousePos.y - brushRadius, 0, this.props.size - brushSize);
 
-      overwriteR32UITexture(this.gl, Math.floor(x), Math.floor(y), brushSize, brushSize, data);
+      overwriteRedTexture(this.gl, Math.floor(x), Math.floor(y), brushSize, brushSize, data);
     }
 
     if (this.needsReset) {
       // select the  texture being used as a source
       this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[(this.frameCount + 1) % 2]);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTextures[(this.frameCount + 1) % 2]);
       // overwrite the whole thing with 0
-      overwriteR32UITexture(this.gl, 0, 0, this.props.size, this.props.size, new Uint32Array(this.props.size * this.props.size));
+      overwriteRedTexture(this.gl, 0, 0, this.props.size, this.props.size, new Uint32Array(this.props.size * this.props.size));
 
-      // select the control texture
+      // select the particle texture
       this.gl.activeTexture(this.gl.TEXTURE1);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.controlTexture);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleTexture);
 
       // overwrite the whole thing with 0
       const data = new Uint32Array(this.props.size * this.props.size);
-      overwriteR32UITexture(this.gl, 0, 0, this.props.size, this.props.size,data);
+      overwriteRedTexture(this.gl, 0, 0, this.props.size, this.props.size,data);
 
       this.needsReset = false;
     }
@@ -380,8 +381,8 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     // set texture unit 0 to active
     this.gl.activeTexture(this.gl.TEXTURE0);
     for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
-      const fbo = this.framebuffers[this.frameCount % 2];
-      const tex = this.textures[(this.frameCount + 1) % 2];
+      const fbo = this.velFramebuffers[this.frameCount % 2];
+      const tex = this.velTextures[(this.frameCount + 1) % 2];
 
       // make tex the teture to render to
       this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
@@ -436,9 +437,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
         </div>
       </div>
     </div>
-
   }
-
 }
 
-export default WebGL2HeatEqnDemo;
+export default WebGL2FluidAdvectionDemo;
