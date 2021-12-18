@@ -1,5 +1,5 @@
 import React from "react";
-import { createShader, createProgram, createR32UITexture,  createRG32UITexture,  overwriteR32UITexture } from '../utils/webgl';
+import { createShader, createProgram, createR32UITexture,  createRG32ITexture,  overwriteR32UITexture , overwriteRG32ITexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
 
 type WebGL2FluidAdvectionDemoProps = {
@@ -28,57 +28,46 @@ void main() {
 const diffuse_fs = `#version 300 es
 precision highp float;
 precision highp usampler2D;
+precision highp isampler2D;
 
-// the heat texture
-uniform usampler2D u_tex;
+// the scalar texture
+uniform usampler2D u_scalar_tex;
 
-// the particle texture
-uniform usampler2D u_ctrl_tex;
-
-// resulution of texture
-uniform vec2 u_resolution;
+// the velocity texture
+uniform isampler2D u_vel_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
 
 // the output
 out uvec4 value;
- 
+
+float  textureGood(usampler2D sam, vec2 uv)
+{
+    vec2 res = vec2(textureSize(sam, 0));
+    vec2 st = uv*res - 0.5;
+
+    vec2 iuv = floor( st );
+    vec2 fuv = fract( st );
+
+    float a = float(texture( sam, (iuv+vec2(0.5,0.5))/res).r);
+    float b = float(texture( sam, (iuv+vec2(1.5,0.5))/res).r);
+    float c = float(texture( sam, (iuv+vec2(0.5,1.5))/res).r);
+    float d = float(texture( sam, (iuv+vec2(1.5,1.5))/res).r);
+
+    return mix( mix( a, b, fuv.x),
+                mix( c, d, fuv.x), fuv.y );
+}
+
 void main() {
+  ivec2 ivel = texture(u_vel_tex, v_texCoord).rg;
+  vec2 vel = vec2(float(ivel.r)/float(0xFFFFFF), float(ivel.g)/float(0xFFFFFF));
 
-  float x_off = 1.0/u_resolution.x;
-  float y_off = 1.0/u_resolution.y;
+  // bilinear interpolate between these three points
 
-  // 0 1 2
-  // 1
-  // 2
+  float val = textureGood(u_scalar_tex, v_texCoord+vel);
 
-  uint v01 = texture(u_tex, v_texCoord + vec2(-x_off,+0.000)).r;
-  uint v10 = texture(u_tex, v_texCoord + vec2(+0.000,-y_off)).r;
-  uint v12 = texture(u_tex, v_texCoord + vec2(+0.000,+y_off)).r;
-  uint v21 = texture(u_tex, v_texCoord + vec2(+x_off,+0.000)).r;
-
-  uint sum =
-          v01 +
-    v10 +       v12 +
-          v21;
-
-  uint ctrl = texture(u_ctrl_tex, v_texCoord).r;
-
-  switch(ctrl) {
-    case 0u: {
-      value = uvec4(sum/4u, 0u, 0u, 0u);
-      break;
-    }
-    case 1u: {
-      value = uvec4(0u, 0u, 0u, 0u);
-      break;
-    }
-    default: {
-      value = uvec4(0xFFFFFF, 0u, 0u, 0u);
-      break;
-    }
-  }
+  value = uvec4(val, 0u, 0u, 0u);
 }
 `;
 
@@ -86,9 +75,13 @@ void main() {
 const render_fs = `#version 300 es
 precision highp float;
 precision highp usampler2D;
+precision highp isampler2D;
 
-// the heat texture
-uniform usampler2D u_tex;
+// the scalar texture
+uniform usampler2D u_scalar_tex;
+
+// the velocity texture
+uniform isampler2D u_vel_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
@@ -96,6 +89,56 @@ in vec2 v_texCoord;
 // the output
 out vec4 outColor;
 
+const float ARROW_TILE_SIZE = 32.0;
+
+// Computes the center pixel of the tile containing pixel pos
+vec2 arrowTileCenterCoord(vec2 pos) {
+	return (floor(pos / ARROW_TILE_SIZE) + 0.5) * ARROW_TILE_SIZE;
+}
+
+// Computes the signed distance from a line segment
+float line(vec2 p, vec2 p1, vec2 p2) {
+  vec2 center = (p1 + p2) * 0.5;
+  float len = length(p2 - p1);
+  vec2 dir = (p2 - p1) / len;
+  vec2 rel_p = p - center;
+  float dist1 = abs(dot(rel_p, vec2(dir.y, -dir.x)));
+  float dist2 = abs(dot(rel_p, dir)) - 0.5*len;
+  return max(dist1, dist2);
+}
+
+// v = field sampled at arrowTileCenterCoord(p), scaled by the length
+// desired in pixels for arrows
+// Returns a signed distance from the arrow
+float arrow(vec2 p, vec2 v) {
+  // Make everything relative to the center, which may be fractional
+  p -= arrowTileCenterCoord(p);
+    
+  float mag_v = length(v), mag_p = length(p);
+  
+  if (mag_v > 0.0) {
+    // Non-zero velocity case
+    vec2 dir_v = v / mag_v;
+    
+    // We can't draw arrows larger than the tile radius, so clamp magnitude.
+    // Enforce a minimum length to help see direction
+    mag_v = clamp(mag_v, 5.0, ARROW_TILE_SIZE * 0.5);
+
+    // Arrow tip location
+    v = dir_v * mag_v;
+
+    // Signed distance from shaft
+    float shaft = line(p, v, -v);
+    // Signed distance from head
+    float head = min(line(p, v, 0.4*v + 0.2*vec2(-v.y, v.x)),
+                     line(p, v, 0.4*v + 0.2*vec2(v.y, -v.x)));
+
+    return min(shaft, head);
+  } else {
+    // Signed distance from the center point
+    return mag_p;
+  }
+}
 
 vec3 inferno(float t) {
     const vec3 c0 = vec3(0.0002189403691192265, 0.001651004631001012, -0.01948089843709184);
@@ -109,8 +152,24 @@ vec3 inferno(float t) {
     return c0+t*(c1+t*(c2+t*(c3+t*(c4+t*(c5+t*c6)))));
 }
 void main() {
-    float val = float(texture(u_tex, v_texCoord).r)/float(0xFFFFFF);
-    outColor = vec4(inferno(val), 1.0);
+
+  // both textures are the same size
+  vec2 resolution = vec2(textureSize(u_scalar_tex, 0));
+
+  // coordinate in pixels
+  vec2 pxCoord = v_texCoord*resolution;
+
+  vec2 tileCenterCoord = arrowTileCenterCoord(pxCoord);
+
+  vec2 vel_vec = vec2(texture(u_vel_tex, tileCenterCoord/resolution))/float(0xFFFFFF);
+
+  float arrow_dist = arrow(pxCoord, vel_vec * ARROW_TILE_SIZE * -5.0);
+  vec4 arrow_col = vec4(0, 1.0, 0, clamp(arrow_dist, 0.0, 1.0));
+
+  float scalar_val = float(texture(u_scalar_tex, v_texCoord).r)/float(0xFFFFFF);
+  vec4 field_col = vec4(inferno(scalar_val), 1.0);
+
+  outColor = mix(arrow_col, field_col, arrow_col.a);
 }
 `
 
@@ -143,9 +202,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   // the velocity textures represent the velocity field of the fluid
   // it loops around at the edges
-
-  private velTextures: WebGLTexture[] = [];
-  private velFramebuffers: WebGLFramebuffer[] = [];
+  private velTexture!: WebGLTexture;
 
   private prog_diffuse!: WebGLProgram;
   private prog_render!: WebGLProgram;
@@ -158,6 +215,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   // if mouse is pressed
   private mouseDown = false;
+  private prevMousePos = { x: 0, y: 0 };
   private mousePos = { x: 0, y: 0 };
 
   private requestID!: number;
@@ -196,7 +254,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       const positionLoc = this.gl.getAttribLocation(this.prog_diffuse, 'c_position');
       const scalarTexLoc = this.gl.getUniformLocation(this.prog_diffuse, 'u_scalar_tex');
       const velTexLoc = this.gl.getUniformLocation(this.prog_diffuse, 'u_vel_tex');
-      const resolutionLoc = this.gl.getUniformLocation(this.prog_diffuse, "u_resolution");
 
       // setup our attributes to tell WebGL how to pull
       // the data from the buffer above to the position attribute
@@ -210,10 +267,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         0,         // offset
       );
 
-      // create pingpongable textures and frambuffers
+      // create pingpongable textures and frambuffers for the scalar field textures
       for (let i = 0; i < 2; i++) {
-        const tex = createRedTexture(this.gl, this.props.size, this.props.size)!;
-        this.velTextures.push(tex);
+        const tex = createR32UITexture(this.gl, this.props.size, this.props.size)!;
+        this.scalarTextures.push(tex);
 
         const fbo = this.gl.createFramebuffer()!;
         // this makes fbo the current active framebuffer
@@ -227,23 +284,21 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
           0 // the mipmap level (we don't want mipmapping, so we set to 0)
         );
         // push framebuffer
-        this.velFramebuffers.push(fbo);
+        this.scalarFramebuffers.push(fbo);
       }
 
       // bind uniforms
       this.gl.useProgram(this.prog_diffuse);
 
-      // Tell the shader to get the texture from texture unit 0
-      this.gl.uniform1i(texLoc, 0);
+      // Tell the shader to get the scalar texture from texture unit 0
+      this.gl.uniform1i(scalarTexLoc, 0);
 
-      // create particle texture
-      this.particleTexture = createRedTexture(this.gl, this.props.size, this.props.size)!;
+      // create velocity texture
+      const data = new Int32Array(this.props.size * this.props.size * 2);
+      this.velTexture = createRG32ITexture(this.gl, this.props.size, this.props.size, data)!;
 
-      // Tell the shader to get the particle texture from texture unit 1
-      this.gl.uniform1i(ctrlTexLoc, 1);
-
-      // set resolution
-      this.gl.uniform2f(resolutionLoc, this.props.size, this.props.size);
+      // Tell the shader to get the velocity texture from texture unit 1
+      this.gl.uniform1i(velTexLoc, 1);
     }
 
 
@@ -259,7 +314,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       )!;
 
       const positionLoc = this.gl.getAttribLocation(this.prog_render, 'c_position');
-      const texLoc = this.gl.getUniformLocation(this.prog_render, 'u_tex');
+      const scalarTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_scalar_tex');
+      const velTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_vel_tex');
 
       // setup our attributes to tell WebGL how to pull
       // the data from the buffer above to the position attribute
@@ -277,7 +333,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.gl.useProgram(this.prog_render);
 
       // Tell the shader to get the texture from texture unit 0
-      this.gl.uniform1i(texLoc, 0);
+      this.gl.uniform1i(scalarTexLoc, 0);
+
+      // Tell the shader to get the velocity texture from texture unit 1
+      this.gl.uniform1i(velTexLoc, 1);
     }
 
     // add reset handler
@@ -315,6 +374,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   }
 
   handleMouseMove = (e: MouseEvent) => {
+    this.prevMousePos = this.mousePos;
     this.mousePos = this.getMousePos(this.canvas.current!, e);
   }
 
@@ -332,7 +392,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   }
 
   animationLoop = () => {
-
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
     this.gl.useProgram(this.prog_diffuse);
@@ -341,39 +400,53 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     if (this.mouseDown) {
       // set texture unit 1 to active so we can work on it
       this.gl.activeTexture(this.gl.TEXTURE1);
-      // bind particle texture
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleTexture);
+      // bind velocity texture
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTexture);
 
-      const brushRadius = this.drawSelect.current!.selectedIndex === 0 ? 10 : 2
+      const brushRadius = 10;
       const brushSize= brushRadius * 2;
 
-      // fill with particle to get high number
-      const data = new Uint32Array(brushSize * brushSize);
-      for (let i = 0; i < data.length; i++) {
-        data[i] = this.drawSelect.current!.selectedIndex;
+      // fill with data to move to to get high number
+      const data = new Int32Array(brushSize * brushSize * 2);
+      for (let i = 0; i < data.length/2; i++) {
+        data[i*2] = 0xFFFF;
+        data[i*2+1] = 0xFFFF;
       }
 
       // where to begin drawing
       const x = clamp(this.mousePos.x - brushRadius, 0, this.props.size - brushSize);
       const y = clamp(this.props.size - this.mousePos.y - brushRadius, 0, this.props.size - brushSize);
 
-      overwriteRedTexture(this.gl, Math.floor(x), Math.floor(y), brushSize, brushSize, data);
+      overwriteRG32ITexture(this.gl, Math.floor(x), Math.floor(y), brushSize, brushSize, data);
     }
 
     if (this.needsReset) {
       // select the  texture being used as a source
       this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTextures[(this.frameCount + 1) % 2]);
-      // overwrite the whole thing with 0
-      overwriteRedTexture(this.gl, 0, 0, this.props.size, this.props.size, new Uint32Array(this.props.size * this.props.size));
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[(this.frameCount + 1) % 2]);
+      // overwrite the whole thing with a checkerboard
+      const checkerboardCount = 5;
+      const resetScalarFieldTex =  new Uint32Array(this.props.size * this.props.size)
+      for(let y = 0; y < this.props.size; y++) {
+          const b = Math.floor(y/(this.props.size/checkerboardCount)) % 2;
+          for(let x = 0; x < this.props.size; x++) {
+              const a = Math.floor(x/(this.props.size/checkerboardCount)) % 2;
+              if(a + b == 1) {
+                resetScalarFieldTex[y*this.props.size + x] = 0xFFFFFF;
+              } else {
+                resetScalarFieldTex[y*this.props.size + x] = 0;
+              }
+          }
+      }
+      overwriteR32UITexture(this.gl, 0, 0, this.props.size, this.props.size, resetScalarFieldTex);
 
       // select the particle texture
       this.gl.activeTexture(this.gl.TEXTURE1);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleTexture);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTexture);
 
-      // overwrite the whole thing with 0
-      const data = new Uint32Array(this.props.size * this.props.size);
-      overwriteRedTexture(this.gl, 0, 0, this.props.size, this.props.size,data);
+      // overwrite the velocity field with 0
+      const data = new Int32Array(this.props.size * this.props.size * 2);
+      overwriteRG32ITexture(this.gl, 0, 0, this.props.size, this.props.size, data);
 
       this.needsReset = false;
     }
@@ -381,10 +454,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     // set texture unit 0 to active
     this.gl.activeTexture(this.gl.TEXTURE0);
     for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
-      const fbo = this.velFramebuffers[this.frameCount % 2];
-      const tex = this.velTextures[(this.frameCount + 1) % 2];
+      const fbo = this.scalarFramebuffers[this.frameCount % 2];
+      const tex = this.scalarTextures[(this.frameCount + 1) % 2];
 
-      // make tex the teture to render to
+      // make tex the texture to render to
       this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
       // make fbo the current framebuffer
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
@@ -396,7 +469,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     }
 
     // now draw to canvas
-
     this.gl.useProgram(this.prog_render);
 
     // set the canvas as the current framebuffer
@@ -421,7 +493,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
             <h6>Controls</h6>
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>
-              <input type="range" className="form-range" min="0" max="100" step={1} defaultValue={1} ref={this.range} />
+              <input type="range" className="form-range" min="0" max="5" step={1} defaultValue={1} ref={this.range} />
             </div>
             <div className="form-group mb-3">
               <select className="form-select" defaultValue={2} ref={this.drawSelect}>

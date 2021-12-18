@@ -81,7 +81,7 @@ export function createR32UITexture(gl: WebGL2RenderingContext, width: number, he
   return tex;
 }
 
-export function overwriteR32UITexture(gl: WebGL2RenderingContext, xoff:number, yoff: number, width: number, height: number, data: Uint32Array) {
+export function overwriteR32UITexture(gl: WebGL2RenderingContext, xoff: number, yoff: number, width: number, height: number, data: Uint32Array) {
   gl.texSubImage2D(
     gl.TEXTURE_2D,
     0,                // mip level
@@ -97,9 +97,7 @@ export function overwriteR32UITexture(gl: WebGL2RenderingContext, xoff:number, y
 
 
 
-export function createRG32UITexture(gl: WebGL2RenderingContext, width: number, height: number) {
-  const data = new Uint32Array(width * height * 2);
-
+export function createRG32ITexture(gl: WebGL2RenderingContext, width: number, height: number, data: Int32Array) {
   const tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -110,13 +108,28 @@ export function createRG32UITexture(gl: WebGL2RenderingContext, width: number, h
   gl.texImage2D(
     gl.TEXTURE_2D,
     0,                // mip level
-    gl.RG32UI,          // internal format
+    gl.RG32I,         // internal format
     width,
     height,
     0,                // border
-    gl.RG_INTEGER,   // format
-    gl.UNSIGNED_INT,  // type
+    gl.RG_INTEGER,    // format
+    gl.INT,           // type
     data
   );
   return tex;
 }
+
+export function overwriteRG32ITexture(gl: WebGL2RenderingContext, xoff: number, yoff: number, width: number, height: number, data: Int32Array) {
+  gl.texSubImage2D(
+    gl.TEXTURE_2D,
+    0,                // mip level
+    xoff,             // xoffset
+    yoff,             // yoffset
+    width,            // width
+    height,           // height
+    gl.RG_INTEGER,    // format
+    gl.INT,           // type
+    data
+  );
+}
+
