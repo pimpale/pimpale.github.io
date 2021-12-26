@@ -1,5 +1,5 @@
 import React from "react";
-import { createShader, createProgram, createR32UITexture,  createRG32ITexture,  overwriteR32UITexture , overwriteRG32ITexture } from '../utils/webgl';
+import { createShader, createProgram, createR32UITexture, createRG32ITexture, overwriteR32UITexture, overwriteRG32ITexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
 
 type WebGL2FluidAdvectionDemoProps = {
@@ -89,7 +89,7 @@ in vec2 v_texCoord;
 // the output
 out vec4 outColor;
 
-const float ARROW_TILE_SIZE = 32.0;
+const float ARROW_TILE_SIZE = 16.0;
 
 // Computes the center pixel of the tile containing pixel pos
 vec2 arrowTileCenterCoord(vec2 pos) {
@@ -152,7 +152,6 @@ vec3 inferno(float t) {
     return c0+t*(c1+t*(c2+t*(c3+t*(c4+t*(c5+t*c6)))));
 }
 void main() {
-
   // both textures are the same size
   vec2 resolution = vec2(textureSize(u_scalar_tex, 0));
 
@@ -173,6 +172,38 @@ void main() {
 }
 `
 
+const paint_vel_fs = `#version 300 es
+precision highp float;
+precision highp isampler2D;
+
+// the velocity texture
+uniform isampler2D u_vel_tex;
+
+// old normalized mouse position
+uniform vec2 u_old_mouse;
+// new normalized mouse position
+uniform vec2 u_new_mouse;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// the output
+out ivec4 value;
+
+void main() {
+  // the direction to paint in
+  vec2 paintDir = normalize(u_old_mouse - u_new_mouse)*float(0xFFF);
+
+  float dist = length(u_new_mouse - v_texCoord);
+
+  if(dist < 0.05) {
+    ivec4 val = ivec4(int(paintDir.x), int(paintDir.y), 0, 0);
+    value = texture(u_vel_tex, v_texCoord) + val;
+  } else {
+    value = texture(u_vel_tex, v_texCoord);
+  }
+}
+`
 
 
 // TODO: learn how to handle error cases
@@ -190,9 +221,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   // this is the ref we use to check if we need to reset
   private reset = React.createRef<HTMLButtonElement>();
 
-  // this is the ref we use to choose color
-  private drawSelect = React.createRef<HTMLSelectElement>();
-
+  // this is the ref we use to choose color background
+  private backgroundSelect = React.createRef<HTMLSelectElement>();
 
   private gl!: WebGL2RenderingContext;
 
@@ -202,13 +232,22 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   // the velocity textures represent the velocity field of the fluid
   // it loops around at the edges
-  private velTexture!: WebGLTexture;
+  private velTextures: WebGLTexture[] = [];
+  private velFramebuffers: WebGLFramebuffer[] = [];
+
+  private newMouseLoc!: WebGLUniformLocation;
+  private oldMouseLoc!: WebGLUniformLocation;
 
   private prog_diffuse!: WebGLProgram;
   private prog_render!: WebGLProgram;
+  private prog_paint_vel!: WebGLProgram;
 
-  // the frame number we're on
-  private frameCount = 0;
+  // The index of the scalar texture we're using as a source
+  private scalarIndex = 0;
+
+  // the index of the vel texture we're using as a source
+  private velIndex = 0;
+
 
   // whether we need to reset on the next frame
   private needsReset = false;
@@ -287,16 +326,34 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         this.scalarFramebuffers.push(fbo);
       }
 
+
+      // create pingpongable textures and frambuffers for the scalar field textures
+      for (let i = 0; i < 2; i++) {
+        // create velocity texture
+        const data = new Int32Array(this.props.size * this.props.size * 2);
+        const tex = createRG32ITexture(this.gl, this.props.size, this.props.size, data)!;
+
+        this.velTextures.push(tex);
+
+        const fbo = this.gl.createFramebuffer()!;
+        // this makes fbo the current active framebuffer
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
+        // configure the currently active framebuffer to use te
+        this.gl.framebufferTexture2D(
+          this.gl.FRAMEBUFFER, // will bind as a framebuffer
+          this.gl.COLOR_ATTACHMENT0, // Attaches the texture to the framebuffer's color buffer. 
+          this.gl.TEXTURE_2D, // we have a 2d texture
+          tex, // the texture to attach
+          0 // the mipmap level (we don't want mipmapping, so we set to 0)
+        );
+        // push framebuffer
+        this.velFramebuffers.push(fbo);
+      }
+
       // bind uniforms
       this.gl.useProgram(this.prog_diffuse);
-
       // Tell the shader to get the scalar texture from texture unit 0
       this.gl.uniform1i(scalarTexLoc, 0);
-
-      // create velocity texture
-      const data = new Int32Array(this.props.size * this.props.size * 2);
-      this.velTexture = createRG32ITexture(this.gl, this.props.size, this.props.size, data)!;
-
       // Tell the shader to get the velocity texture from texture unit 1
       this.gl.uniform1i(velTexLoc, 1);
     }
@@ -332,12 +389,49 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       // bind uniforms
       this.gl.useProgram(this.prog_render);
 
-      // Tell the shader to get the texture from texture unit 0
+      // Tell the shader to get the scalar texture from texture unit 0
       this.gl.uniform1i(scalarTexLoc, 0);
 
       // Tell the shader to get the velocity texture from texture unit 1
       this.gl.uniform1i(velTexLoc, 1);
     }
+
+    // build the paint on vel texture program
+    {
+      // create program
+      this.prog_paint_vel = createProgram(
+        this.gl,
+        [
+          createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+          createShader(this.gl, this.gl.FRAGMENT_SHADER, paint_vel_fs),
+        ]
+      )!;
+
+      const positionLoc = this.gl.getAttribLocation(this.prog_paint_vel, 'c_position');
+      const velTexLoc = this.gl.getUniformLocation(this.prog_paint_vel, 'u_vel_tex');
+      this.newMouseLoc = this.gl.getUniformLocation(this.prog_paint_vel, 'u_new_mouse')!;
+      this.oldMouseLoc = this.gl.getUniformLocation(this.prog_paint_vel, 'u_old_mouse')!;
+
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.gl.enableVertexAttribArray(positionLoc);
+      this.gl.vertexAttribPointer(
+        positionLoc,
+        2,         // size (num components)
+        this.gl.FLOAT,  // type of data in buffer
+        false,     // normalize
+        0,         // stride (0 = auto)
+        0,         // offset
+      );
+
+      // bind uniforms
+      this.gl.useProgram(this.prog_paint_vel);
+
+      // Tell the shader to get the velocity texture from texture unit 1
+      this.gl.uniform1i(velTexLoc, 1);
+    }
+
+
 
     // add reset handler
     this.reset.current!.addEventListener('click', this.handleReset);
@@ -394,55 +488,57 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
-    this.gl.useProgram(this.prog_diffuse);
 
     // handle draw when there's no loops
     if (this.mouseDown) {
-      // set texture unit 1 to active so we can work on it
+      // in order to draw the velocity texture we will execute a program
+      this.gl.useProgram(this.prog_paint_vel);
+
+      // bind the source velocity texture to texture unit 1
       this.gl.activeTexture(this.gl.TEXTURE1);
-      // bind velocity texture
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTexture);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTextures[this.velIndex]);
+      // set the framebuffer to draw at the other velocity texture
+      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.velFramebuffers[(this.velIndex + 1) % 2]);
 
-      const brushRadius = 10;
-      const brushSize= brushRadius * 2;
+      // set old and new mouse positions
+      this.gl.uniform2f(this.oldMouseLoc,
+        clamp(this.prevMousePos.x, 0, this.props.size) / this.props.size,
+        clamp(this.props.size - this.prevMousePos.y, 0, this.props.size) / this.props.size,
+      );
+      this.gl.uniform2f(this.newMouseLoc,
+        clamp(this.mousePos.x, 0, this.props.size) / this.props.size,
+        clamp(this.props.size - this.mousePos.y, 0, this.props.size) / this.props.size,
+      );
 
-      // fill with data to move to to get high number
-      const data = new Int32Array(brushSize * brushSize * 2);
-      for (let i = 0; i < data.length/2; i++) {
-        data[i*2] = 0xFFFF;
-        data[i*2+1] = 0xFFFF;
-      }
+      // execute program, doing paint
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
 
-      // where to begin drawing
-      const x = clamp(this.mousePos.x - brushRadius, 0, this.props.size - brushSize);
-      const y = clamp(this.props.size - this.mousePos.y - brushRadius, 0, this.props.size - brushSize);
-
-      overwriteRG32ITexture(this.gl, Math.floor(x), Math.floor(y), brushSize, brushSize, data);
+      this.velIndex = (this.velIndex + 1) % 2;
     }
 
     if (this.needsReset) {
-      // select the  texture being used as a source
+      // select the scalar texture being used as a source
       this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[(this.frameCount + 1) % 2]);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
       // overwrite the whole thing with a checkerboard
-      const checkerboardCount = 5;
-      const resetScalarFieldTex =  new Uint32Array(this.props.size * this.props.size)
-      for(let y = 0; y < this.props.size; y++) {
-          const b = Math.floor(y/(this.props.size/checkerboardCount)) % 2;
-          for(let x = 0; x < this.props.size; x++) {
-              const a = Math.floor(x/(this.props.size/checkerboardCount)) % 2;
-              if(a + b == 1) {
-                resetScalarFieldTex[y*this.props.size + x] = 0xFFFFFF;
-              } else {
-                resetScalarFieldTex[y*this.props.size + x] = 0;
-              }
+      const checkerboardCount = parseInt(this.backgroundSelect.current?.value!);
+      const resetScalarFieldTex = new Uint32Array(this.props.size * this.props.size)
+      for (let y = 0; y < this.props.size; y++) {
+        const b = Math.floor(y / (this.props.size / checkerboardCount)) % 2;
+        for (let x = 0; x < this.props.size; x++) {
+          const a = Math.floor(x / (this.props.size / checkerboardCount)) % 2;
+          if (a + b == 1) {
+            resetScalarFieldTex[y * this.props.size + x] = 0xFFFFFF;
+          } else {
+            resetScalarFieldTex[y * this.props.size + x] = 0;
           }
+        }
       }
       overwriteR32UITexture(this.gl, 0, 0, this.props.size, this.props.size, resetScalarFieldTex);
 
-      // select the particle texture
+      // select the vel texture being used as a source
       this.gl.activeTexture(this.gl.TEXTURE1);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTexture);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTextures[this.velIndex]);
 
       // overwrite the velocity field with 0
       const data = new Int32Array(this.props.size * this.props.size * 2);
@@ -451,21 +547,24 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.needsReset = false;
     }
 
-    // set texture unit 0 to active
-    this.gl.activeTexture(this.gl.TEXTURE0);
-    for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
-      const fbo = this.scalarFramebuffers[this.frameCount % 2];
-      const tex = this.scalarTextures[(this.frameCount + 1) % 2];
+    // we will diffuse now
+    this.gl.useProgram(this.prog_diffuse);
 
-      // make tex the texture to render to
+    for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
+      const tex = this.scalarTextures[this.scalarIndex];
+      const fbo = this.scalarFramebuffers[(this.scalarIndex + 1) % 2];
+
+      // make tex the texture to read from at texture0
+      this.gl.activeTexture(this.gl.TEXTURE0);
       this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
-      // make fbo the current framebuffer
+
+      // make fbo corresponding to the next texture the current framebuffer
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
 
-      // execute draw to texture
+      // execute draw to the next framebuffer
       this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
 
-      this.frameCount++;
+      this.scalarIndex = (this.scalarIndex + 1) % 2;
     }
 
     // now draw to canvas
@@ -496,10 +595,11 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
               <input type="range" className="form-range" min="0" max="5" step={1} defaultValue={1} ref={this.range} />
             </div>
             <div className="form-group mb-3">
-              <select className="form-select" defaultValue={2} ref={this.drawSelect}>
-                <option value={0}>Erase</option>
-                <option value={1}>Draw Cold</option>
-                <option value={2}>Draw Hot</option>
+              <select className="form-select" defaultValue={1} ref={this.backgroundSelect}>
+                <option value={1}>Empty</option>
+                <option value={2}>Checkerboard 2</option>
+                <option value={8}>Checkerboard 8</option>
+                <option value={64}>Checkerboard 64</option>
               </select>
             </div>
             <div className="form-group">
