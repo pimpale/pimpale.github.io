@@ -605,7 +605,7 @@ const TerrainGeneration = () => <ArticleLayout>{
           <SyntaxHighligher className="mx-5" language="typescript" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
         }</Async.Fulfilled>
         <Async.Rejected>
-          {/* TOOD: put error here */}
+          {/* TODO: put error here */}
           <div className="spinner-border" role="status" />
         </Async.Rejected>
       </Async>

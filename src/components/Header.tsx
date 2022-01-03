@@ -1,7 +1,6 @@
 import { ThreeDotsVertical } from 'react-bootstrap-icons'
 
 const ArticlesUrl = '/articles.html';
-const AchernarUrl = '/achernar.html';
 const ResumeUrl = '/resume.html';
 const ProjectsUrl = '/projects.html';
 
@@ -23,7 +22,6 @@ const Header = () =>
             <a href={ResumeUrl} className="nav-item nav-link"><strong>Resume</strong></a>
             <a href={ProjectsUrl} className="nav-item nav-link"><strong>Projects</strong></a>
             <a href={ArticlesUrl} className="nav-item nav-link"><strong>Articles</strong></a>
-            <a href={AchernarUrl} className="nav-item nav-link"><strong>Achernar</strong></a>
           </div>
         </div>
       </div>

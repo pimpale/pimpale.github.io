@@ -3,8 +3,8 @@ import Section from '../components/Section';
 
 function Achernar() {
   return <Layout>
-  <Section id="operators" name="Operators">
-
+  <Section id="motivation" name="Motivation">
+    Todo...
   </Section>
   </Layout>
 }

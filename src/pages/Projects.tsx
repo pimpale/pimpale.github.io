@@ -10,12 +10,19 @@ import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
 import AsideCard from '../components/AsideCard';
 
+import { Async } from 'react-async';
+import { fetchText } from '../utils/load';
+import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
+import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 import CompugenesisScreenshot from "../assets/projects/compugenesis_screenshot.png";
 import CompugenesisFlowchart from "../assets/projects/compugenesis_flowchart.png";
 import VulkanTriangleV2Screenshot from "../assets/projects/vulkan-triangle-v2_screenshot.png";
 
 import COpenCLRaymarcherSierpinskiScreenshot from "../assets/projects/c-opencl-raymarcher_sierpinski.png";
 import COpenCLRaymarcherWarp from "../assets/projects/c-opencl-raymarcher_warp.gif";
+import LasagnaLogo from "../assets/projects/lasagna.png";
+import LasagnaFizzbuzzTxtUrl from "../assets/projects/lasagna_fizzbuzz.txt?url";
 
 const ProjectsPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -77,16 +84,54 @@ const ProjectsPage = () => <ArticleLayout>{
       </p>
     </Section>
     <Section name="C OpenCL Raymarcher" id="c-opencl-raymarcher">
+      <p>
+        A simple raymarcher written in C with OpenCL acceleration.
+      </p>
+      <p>
+        Below are some screenshots:
+      </p>
       <figure className="text-center my-3">
-        <img src={COpenCLRaymarcherSierpinskiScreenshot} className="border border-dark mx-auto d-block" alt="3D Sierpinski triangle produced by raymarcher" />
+        <img src={COpenCLRaymarcherSierpinskiScreenshot} className="border border-dark mx-auto d-block w-50" alt="3D Sierpinski triangle produced by raymarcher" />
+        <figcaption>3D Sierpinski Triangle</figcaption>
       </figure>
       <figure className="text-center my-3">
-        <img src={COpenCLRaymarcherWarp} className="border border-dark mx-auto d-block" alt="Black hole rendered by raymarcher" />
+        <img src={COpenCLRaymarcherWarp} className="border border-dark mx-auto d-block w-50" alt="Black hole rendered by raymarcher" />
+        <figcaption>Black hole rendered by raymarcher</figcaption>
       </figure>
-
+      <p className="mt-4">
+        Link: <HrefLink href="https://github.com/pimpale/c-opencl-raymarcher" />
+      </p>
+    </Section>
+    <Section name="Lasagna" id="lasagna">
+      <figure className="text-center my-3">
+        <img src={LasagnaLogo} className="border border-dark mx-auto d-block w-25" alt="Lasagna Logo" />
+      </figure>
+      <p>
+        Very small stack based language. Influenced by Lisp and Forth.
+      </p>
+      <h4 className="mb-3">Hello World</h4>
+      <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>
+        (hello world) print
+      </SyntaxHighligher>
+      <h4 className="mb-3">Fizzbuzz</h4>
+      <Async promise={fetchText(LasagnaFizzbuzzTxtUrl)}>
+        <Async.Pending>
+          <div className="spinner-border" role="status" />
+        </Async.Pending>
+        <Async.Fulfilled<string>>{code =>
+          <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
+        }</Async.Fulfilled>
+        <Async.Rejected>
+          {/* TODO: put error here */}
+          <div className="spinner-border" role="status" />
+        </Async.Rejected>
+      </Async>
+      <p className="mt-4">
+        Link: <HrefLink href="https://github.com/pimpale/lasagna" />
+      </p>
     </Section>
   </>
-}</ArticleLayout>
+}</ArticleLayout >
 
 ReactDOM.render(
   <React.StrictMode>
