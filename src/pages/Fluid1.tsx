@@ -8,6 +8,7 @@ import AsideCard from '../components/AsideCard';
 import WebGL2SetupDemo from '../components/WebGL2SetupDemo';
 import WebGL2HeatEqnDemo from '../components/WebGL2HeatEqnDemo';
 import WebGL2FluidAdvectionDemo from '../components/WebGL2FluidAdvectionDemo';
+import WebGL2IncompressibleFluidDemo from '../components/WebGL2IncompressibleFluidDemo';
 
 const Fluid1 = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -59,6 +60,21 @@ const Fluid1 = () => <ArticleLayout>{
         />
       </AsideCard>
     </Section>
+
+    <Section id="webgl2-incompressible" name="Incompressible Fluid with WebGL2">
+      <p>
+        Now, we'll approach the heat equation
+      </p>
+      <AsideCard title="Fluid Advection" id="fluid-advection-demo">
+        <WebGL2IncompressibleFluidDemo 
+          className="mx-auto"
+          style={{maxWidth: "40em"}}
+          size={400}
+        />
+      </AsideCard>
+    </Section>
+
+
     <Section id="sources" name="Sources">
       <CitationBank />
     </Section>
