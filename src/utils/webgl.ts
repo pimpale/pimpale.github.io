@@ -1,7 +1,6 @@
 // code from https://webgl2fundamentals.org/webgl/lessons/webgl-fundamentals.html
 
 
-
 export function createShader(gl: WebGL2RenderingContext, shader_type: number, source: string) {
   const shader = gl.createShader(shader_type)!;
   gl.shaderSource(shader, source);
@@ -38,8 +37,6 @@ export function createProgram(gl: WebGL2RenderingContext, shaders: WebGLShader[]
 export function createTexture(gl: WebGL2RenderingContext, width: number, height: number) {
   const tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
@@ -62,10 +59,6 @@ export function createR32UITexture(gl: WebGL2RenderingContext, width: number, he
 
   const tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-  //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
@@ -98,12 +91,47 @@ export function overwriteR32UITexture(gl: WebGL2RenderingContext, xoff: number, 
 }
 
 
+export function createR32ITexture(gl: WebGL2RenderingContext, width: number, height: number) {
+  const data = new Int32Array(width * height);
+
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,                // mip level
+    gl.R32I,          // internal format
+    width,
+    height,
+    0,                // border
+    gl.RED_INTEGER,   // format
+    gl.INT,           // type
+    data
+  );
+  return tex;
+}
+
+export function overwriteR32ITexture(gl: WebGL2RenderingContext, xoff: number, yoff: number, width: number, height: number, data: Int32Array) {
+  gl.texSubImage2D(
+    gl.TEXTURE_2D,
+    0,                // mip level
+    xoff,             // xoffset
+    yoff,             // yoffset
+    width,            // width
+    height,           // height
+    gl.RED_INTEGER,   // format
+    gl.INT,           // type
+    data
+  );
+}
+
+
 
 export function createRG32ITexture(gl: WebGL2RenderingContext, width: number, height: number, data: Int32Array) {
   const tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html

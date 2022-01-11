@@ -1,5 +1,5 @@
 import React from "react";
-import { createShader, createProgram, createR32UITexture, createRG32ITexture, overwriteR32UITexture, overwriteRG32ITexture } from '../utils/webgl';
+import { createShader, createProgram, createR32ITexture, createRG32ITexture, overwriteR32ITexture, overwriteRG32ITexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
 import { makeNoise4D } from 'open-simplex-noise';
 
@@ -28,11 +28,10 @@ void main() {
 // this fragment shader does the actual work of advect_scalarion
 const advect_scalar_fs = `#version 300 es
 precision highp float;
-precision highp usampler2D;
 precision highp isampler2D;
 
 // the scalar texture
-uniform usampler2D u_scalar_tex;
+uniform isampler2D u_scalar_tex;
 
 // the velocity texture
 uniform isampler2D u_vel_tex;
@@ -41,9 +40,9 @@ uniform isampler2D u_vel_tex;
 in vec2 v_texCoord;
 
 // the output
-out uvec4 value;
+out ivec4 value;
 
-float textureGood(usampler2D sam, vec2 uv)
+float textureGood(isampler2D sam, vec2 uv)
 {
     vec2 res = vec2(textureSize(sam, 0));
     vec2 st = uv*res - 0.5;
@@ -69,11 +68,11 @@ void main() {
   // we calculate the scalar value that will be at this location at the next timestep
   float val = textureGood(u_scalar_tex, v_texCoord-vel);
 
-  value = uvec4(val, 0u, 0u, 0u);
+  value = ivec4(val, 0, 0, 0);
 }
 `;
 
-const advec_vel_fs = `#version 300 es
+const advect_vel_fs = `#version 300 es
 precision highp float;
 precision highp isampler2D;
 
@@ -117,15 +116,127 @@ void main() {
 `;
 
 
+const divergence_fs = `#version 300 es
+precision highp float;
+precision highp isampler2D;
 
+// the velocity texture
+uniform isampler2D u_vel_tex;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// the output
+out ivec4 value;
+
+void main() {
+  // get neighboring cell distances
+  vec2 resolution = vec2(textureSize(u_vel_tex, 0));
+  float x_off = 1.0/resolution.x;
+  float y_off = 1.0/resolution.y;
+
+  // get data
+  ivec2 v01 = texture(u_vel_tex, v_texCoord + vec2(-x_off,+0.000)).xy;
+  ivec2 v10 = texture(u_vel_tex, v_texCoord + vec2(+0.000,-y_off)).xy;
+  ivec2 v12 = texture(u_vel_tex, v_texCoord + vec2(+0.000,+y_off)).xy;
+  ivec2 v21 = texture(u_vel_tex, v_texCoord + vec2(+x_off,+0.000)).xy;
+
+  // calculate divergence using finite differences
+  // remember, divergence is df/dx + df/dy
+  float divergence = float(v21.x - v01.x)/(2.0*x_off)
+                   + float(v12.y - v10.y)/(2.0*y_off);
+
+  // return divergence
+  value = ivec4(divergence, 0, 0, 0);
+}
+`;
+
+const solve_pressure_fs = `#version 300 es
+precision highp float;
+precision highp isampler2D;
+
+// the divergence texture
+uniform isampler2D u_divergence_tex;
+
+// the pressure texture of the last iteration
+uniform isampler2D u_pressure_tex;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// the output
+out ivec4 value;
+
+void main() {
+  // get neighboring cell distances
+  vec2 resolution = vec2(textureSize(u_divergence_tex, 0));
+  float x_off = 1.0/resolution.x;
+  float y_off = 1.0/resolution.y;
+
+  // get previous iteration pressure data
+  int p01 = texture(u_pressure_tex, v_texCoord + vec2(-x_off,+0.000)).x;
+  int p10 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,-y_off)).x;
+  int p12 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,+y_off)).x;
+  int p21 = texture(u_pressure_tex, v_texCoord + vec2(+x_off,+0.000)).x;
+
+  // get divergence
+  int d11 = texture(u_divergence_tex , v_texCoord).x;
+
+  // use the jacobi method to derive the next iteration of pressure at this location
+  int p_next = (d11 + p01 + p10 + p12 + p21)/4;
+
+  value = ivec4(p_next , 0, 0, 0);
+}
+`;
+
+const apply_pressure_force_fs = `#version 300 es
+precision highp float;
+precision highp isampler2D;
+
+// the velocity texture
+uniform isampler2D u_vel_tex;
+
+// the pressure texture
+uniform isampler2D u_pressure_tex;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// the output
+out ivec4 value;
+
+void main() {
+  // get neighboring cell distances
+  vec2 resolution = vec2(textureSize(u_vel_tex, 0));
+  float x_off = 1.0/resolution.x;
+  float y_off = 1.0/resolution.y;
+
+  // get pressure data
+  int p01 = texture(u_pressure_tex, v_texCoord + vec2(-x_off,+0.000)).x;
+  int p10 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,-y_off)).x;
+  int p12 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,+y_off)).x;
+  int p21 = texture(u_pressure_tex, v_texCoord + vec2(+x_off,+0.000)).x;
+
+  // calculate the gradient
+  // remember, the gradient is [df/dx, df/dy]
+  ivec2 pGradient = ivec2(float(p21 - p01)/(2.0*x_off), float(p12 - p10)/(2.0*y_off));
+
+  // rho is an experimentally determined multiplier intended not to let the simulation diverge
+  const int rho = 0xFFFF;
+
+  // adjust the velocity by the pressure gradient
+  ivec2 vel = texture(u_vel_tex, v_texCoord).xy + (pGradient/rho);
+
+  value = ivec4(vel, 0, 0);
+}
+`
 // this fragment shader is used to render to the canvas so we can see what's going on
 const render_fs = `#version 300 es
 precision highp float;
-precision highp usampler2D;
 precision highp isampler2D;
 
 // the scalar texture
-uniform usampler2D u_scalar_tex;
+uniform isampler2D u_scalar_tex;
 
 // the velocity texture
 uniform isampler2D u_vel_tex;
@@ -321,20 +432,33 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   private gl!: WebGL2RenderingContext;
 
-  // the texture that shows scalar density (this is going to be advect_scalared)
+  // the texture that shows scalar density (the value that will be advected)
   private scalarTextures: WebGLTexture[] = [];
   private scalarFramebuffers: WebGLFramebuffer[] = [];
 
   // the velocity textures represent the velocity field of the fluid
-  // it loops around at the edges
   private velTextures: WebGLTexture[] = [];
   private velFramebuffers: WebGLFramebuffer[] = [];
+
+  // the divergence texture.
+  // We don't need an array of these bc we don't have to ping pong
+  private divTexture!: WebGLTexture;
+  private divFramebuffer!: WebGLFramebuffer;
+
+  // the pressure textures represent the velocity field of the fluid
+  // we will use an iterative method to solve for pressure so we need to ping pong
+  private pressureTextures: WebGLTexture[] = [];
+  private pressureFramebuffers: WebGLFramebuffer[] = [];
+
 
   private newMouseLoc!: WebGLUniformLocation;
   private oldMouseLoc!: WebGLUniformLocation;
 
   private prog_advect_scalar!: WebGLProgram;
-  private prog_advec_vel!: WebGLProgram;
+  private prog_advect_vel!: WebGLProgram;
+  private prog_divergence!: WebGLProgram;
+  private prog_solve_pressure!: WebGLProgram;
+  private prog_apply_pressure_force!: WebGLProgram;
   private prog_render!: WebGLProgram;
   private prog_paint_vel!: WebGLProgram;
 
@@ -344,6 +468,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   // the index of the vel texture we're using as a source
   private velIndex = 0;
 
+  // the index of the pressure texture we're using as a source
+  private pressureIndex = 0;
 
   // whether we need to reset on the next frame
   private needsScalarReset = true;
@@ -378,9 +504,9 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
 
 
-    // create pingpongable textures and frambuffers for the scalar field textures
+    // create pingpongable textures and framebuffers for the scalar field
     for (let i = 0; i < 2; i++) {
-      const tex = createR32UITexture(this.gl, this.props.size, this.props.size)!;
+      const tex = createR32ITexture(this.gl, this.props.size, this.props.size)!;
       this.scalarTextures.push(tex);
 
       const fbo = this.gl.createFramebuffer()!;
@@ -399,7 +525,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     }
 
 
-    // create pingpongable textures and frambuffers for the scalar field textures
+    // create pingpongable textures and framebuffers for the velocity field
     for (let i = 0; i < 2; i++) {
       // create velocity texture
       const data = new Int32Array(this.props.size * this.props.size * 2);
@@ -421,6 +547,43 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       // push framebuffer
       this.velFramebuffers.push(fbo);
     }
+
+    // create pingpongable textures and framebuffers for the divergence field
+    // create divergence texture
+    this.divTexture = createR32ITexture(this.gl, this.props.size, this.props.size)!;
+    this.divFramebuffer = this.gl.createFramebuffer()!;
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.divFramebuffer);
+    // configure the currently active framebuffer to use te
+    this.gl.framebufferTexture2D(
+      this.gl.FRAMEBUFFER, // will bind as a framebuffer
+      this.gl.COLOR_ATTACHMENT0, // Attaches the texture to the framebuffer's color buffer. 
+      this.gl.TEXTURE_2D, // we have a 2d texture
+      this.divTexture, // the texture to attach
+      0 // the mipmap level (we don't want mipmapping, so we set to 0)
+    );
+
+    // create pingpongable textures and framebuffers for the pressure field
+    for (let i = 0; i < 2; i++) {
+      // create pressure texture
+      const tex = createR32ITexture(this.gl, this.props.size, this.props.size)!;
+
+      this.pressureTextures.push(tex);
+
+      const fbo = this.gl.createFramebuffer()!;
+      // this makes fbo the current active framebuffer
+      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
+      // configure the currently active framebuffer to use te
+      this.gl.framebufferTexture2D(
+        this.gl.FRAMEBUFFER, // will bind as a framebuffer
+        this.gl.COLOR_ATTACHMENT0, // Attaches the texture to the framebuffer's color buffer. 
+        this.gl.TEXTURE_2D, // we have a 2d texture
+        tex, // the texture to attach
+        0 // the mipmap level (we don't want mipmapping, so we set to 0)
+      );
+      // push framebuffer
+      this.pressureFramebuffers.push(fbo);
+    }
+
 
     // build the compute program
     {
@@ -459,16 +622,16 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
     {
       // create program
-      this.prog_advec_vel = createProgram(
+      this.prog_advect_vel = createProgram(
         this.gl,
         [
           createShader(this.gl, this.gl.VERTEX_SHADER, vs),
-          createShader(this.gl, this.gl.FRAGMENT_SHADER, advec_vel_fs),
+          createShader(this.gl, this.gl.FRAGMENT_SHADER, advect_vel_fs),
         ]
       )!;
 
-      const positionLoc = this.gl.getAttribLocation(this.prog_advec_vel, 'c_position');
-      const velTexLoc = this.gl.getUniformLocation(this.prog_advec_vel, 'u_vel_tex');
+      const positionLoc = this.gl.getAttribLocation(this.prog_advect_vel, 'c_position');
+      const velTexLoc = this.gl.getUniformLocation(this.prog_advect_vel, 'u_vel_tex');
 
       // setup our attributes to tell WebGL how to pull
       // the data from the buffer above to the position attribute
@@ -483,10 +646,110 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       );
 
       // bind uniforms
-      this.gl.useProgram(this.prog_advec_vel);
+      this.gl.useProgram(this.prog_advect_vel);
       // Tell the shader to get the velocity texture from texture unit 1
       this.gl.uniform1i(velTexLoc, 1);
     }
+
+    {
+      // create program
+      this.prog_divergence = createProgram(
+        this.gl,
+        [
+          createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+          createShader(this.gl, this.gl.FRAGMENT_SHADER, divergence_fs),
+        ]
+      )!;
+
+      const positionLoc = this.gl.getAttribLocation(this.prog_divergence, 'c_position');
+      const velTexLoc = this.gl.getUniformLocation(this.prog_divergence, 'u_vel_tex');
+
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.gl.enableVertexAttribArray(positionLoc);
+      this.gl.vertexAttribPointer(
+        positionLoc,
+        2,         // size (num components)
+        this.gl.FLOAT,  // type of data in buffer
+        false,     // normalize
+        0,         // stride (0 = auto)
+        0,         // offset
+      );
+
+      // bind uniforms
+      this.gl.useProgram(this.prog_divergence);
+      // Tell the shader to get the velocity texture from texture unit 1
+      this.gl.uniform1i(velTexLoc, 1);
+    }
+
+    {
+      // create program
+      this.prog_solve_pressure = createProgram(
+        this.gl,
+        [
+          createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+          createShader(this.gl, this.gl.FRAGMENT_SHADER, solve_pressure_fs),
+        ]
+      )!;
+
+      const positionLoc = this.gl.getAttribLocation(this.prog_solve_pressure, 'c_position');
+      const divergenceTexLoc = this.gl.getUniformLocation(this.prog_solve_pressure, 'u_divergence_tex');
+      const pressureTexLoc = this.gl.getUniformLocation(this.prog_solve_pressure, 'u_pressure_tex');
+
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.gl.enableVertexAttribArray(positionLoc);
+      this.gl.vertexAttribPointer(
+        positionLoc,
+        2,         // size (num components)
+        this.gl.FLOAT,  // type of data in buffer
+        false,     // normalize
+        0,         // stride (0 = auto)
+        0,         // offset
+      );
+
+      // bind uniforms
+      this.gl.useProgram(this.prog_solve_pressure);
+      // Tell the shader to get the divergence texture from texture unit 2
+      this.gl.uniform1i(divergenceTexLoc, 2);
+      // Tell the shader to get the pressure texture from texture unit 3
+      this.gl.uniform1i(pressureTexLoc, 3);
+    }
+
+    {
+      // create program
+      this.prog_apply_pressure_force = createProgram(
+        this.gl,
+        [
+          createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+          createShader(this.gl, this.gl.FRAGMENT_SHADER, apply_pressure_force_fs),
+        ]
+      )!;
+
+      const positionLoc = this.gl.getAttribLocation(this.prog_apply_pressure_force, 'c_position');
+      const velTexLoc = this.gl.getUniformLocation(this.prog_apply_pressure_force, 'u_vel_tex');
+      const pressureTexLoc = this.gl.getUniformLocation(this.prog_apply_pressure_force, 'u_pressure_tex');
+
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.gl.enableVertexAttribArray(positionLoc);
+      this.gl.vertexAttribPointer(
+        positionLoc,
+        2,         // size (num components)
+        this.gl.FLOAT,  // type of data in buffer
+        false,     // normalize
+        0,         // stride (0 = auto)
+        0,         // offset
+      );
+
+      // bind uniforms
+      this.gl.useProgram(this.prog_apply_pressure_force);
+      // Tell the shader to get the vel texture from texture unit 1
+      this.gl.uniform1i(velTexLoc, 1);
+      // Tell the shader to get the pressure texture from texture unit 3
+      this.gl.uniform1i(pressureTexLoc, 3);
+    }
+
 
     // build the render program
     {
@@ -643,7 +906,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
       // overwrite the whole thing with a checkerboard
       const checkerboardCount = parseInt(this.scalarSelect.current?.value!);
-      const resetScalarFieldTex = new Uint32Array(this.props.size * this.props.size)
+      const resetScalarFieldTex = new Int32Array(this.props.size * this.props.size)
       for (let y = 0; y < this.props.size; y++) {
         const b = Math.floor(y / (this.props.size / checkerboardCount)) % 2;
         for (let x = 0; x < this.props.size; x++) {
@@ -655,11 +918,18 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
           }
         }
       }
-      overwriteR32UITexture(this.gl, 0, 0, this.props.size, this.props.size, resetScalarFieldTex);
+      overwriteR32ITexture(this.gl, 0, 0, this.props.size, this.props.size, resetScalarFieldTex);
       this.needsScalarReset = false;
     }
 
     if (this.needsVelocityReset) {
+      // select the pressure texture being used as a source
+      this.gl.activeTexture(this.gl.TEXTURE3);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
+      // overwrite with 0
+      overwriteR32ITexture(this.gl, 0, 0, this.props.size, this.props.size, new Int32Array(this.props.size * this.props.size));
+
+
       // select the vel texture being used as a source
       this.gl.activeTexture(this.gl.TEXTURE1);
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTextures[this.velIndex]);
@@ -679,28 +949,113 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.needsVelocityReset = false;
     }
 
-    // we will advect_scalar now
-    this.gl.useProgram(this.prog_advect_scalar);
 
     for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
-      const tex = this.scalarTextures[this.scalarIndex];
-      const fbo = this.scalarFramebuffers[(this.scalarIndex + 1) % 2];
+      // we will advect scalar now
+      {
+        this.gl.useProgram(this.prog_advect_scalar);
 
-      // make tex the texture to read from at texture0
-      this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+        // make tex the texture to read from at texture0
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
 
-      // make fbo corresponding to the next texture the current framebuffer
-      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
+        // make fbo corresponding to the next texture the current framebuffer
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.scalarFramebuffers[(this.scalarIndex + 1) % 2]);
 
-      // execute draw to the next framebuffer
-      this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+        // execute draw to the next framebuffer
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+        // swap source and dest for the next frame
+        this.scalarIndex = (this.scalarIndex + 1) % 2;
+      }
 
-      this.scalarIndex = (this.scalarIndex + 1) % 2;
+      // now advect vel field
+      {
+        this.gl.useProgram(this.prog_advect_vel);
+
+        // bind the source velocity texture to texture unit 1
+        this.gl.activeTexture(this.gl.TEXTURE1);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTextures[this.velIndex]);
+
+        // set the framebuffer to draw at the other velocity texture
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.velFramebuffers[(this.velIndex + 1) % 2]);
+
+        // execute program, doing paint
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+        // swap source and dest for the next frame
+        this.velIndex = (this.velIndex + 1) % 2;
+      }
+
+      // now calculate divergence
+      {
+        this.gl.useProgram(this.prog_divergence);
+
+        // bind the velocity texture to texture unit 1
+        this.gl.activeTexture(this.gl.TEXTURE1);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTextures[this.velIndex]);
+
+        // set the framebuffer to draw at the divergence texture
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.divFramebuffer);
+
+        // execute program, doing paint
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+      }
+
+      // now iteratively calculate pressure
+      {
+        this.gl.useProgram(this.prog_solve_pressure);
+
+        // we execute multiple iterations of jacobi
+        for (let i = 0; i < 10; i++) {
+          // bind the divergence texture to texture unit 2
+          this.gl.activeTexture(this.gl.TEXTURE2);
+          this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
+
+          // bind the source pressure texture to texture unit 3
+          this.gl.activeTexture(this.gl.TEXTURE3);
+          this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
+
+          // set the framebuffer to draw at the other velocity texture
+          this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.pressureFramebuffers[(this.pressureIndex + 1) % 2]);
+
+          // execute program, doing paint
+          this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+          // swap source and dest for the next frame
+          this.pressureIndex = (this.pressureIndex + 1) % 2;
+        }
+      }
+
+      // now apply pressure gradient to the velocity field
+      {
+        this.gl.useProgram(this.prog_apply_pressure_force);
+
+        // bind the pressure texture to texture unit 3
+        this.gl.activeTexture(this.gl.TEXTURE3);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
+
+        // bind the source velocity texture to texture unit 1
+        this.gl.activeTexture(this.gl.TEXTURE1);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTextures[this.velIndex]);
+
+        // set the framebuffer to draw at the other velocity texture
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.velFramebuffers[(this.velIndex + 1) % 2]);
+
+        // execute program, doing paint
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+        // swap source and dest for the next frame
+        this.velIndex = (this.velIndex + 1) % 2;
+      }
     }
 
     // now draw to canvas
     this.gl.useProgram(this.prog_render);
+
+    //bind the pressure texture to texture unit 0
+    // this.gl.activeTexture(this.gl.TEXTURE0);
+    // this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
+    //this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
 
     // set the canvas as the current framebuffer
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);

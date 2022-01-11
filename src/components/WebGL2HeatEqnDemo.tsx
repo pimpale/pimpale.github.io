@@ -212,6 +212,9 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       // create pingpongable textures and frambuffers
       for (let i = 0; i < 2; i++) {
         const tex = createR32UITexture(this.gl, this.props.size, this.props.size)!;
+        this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
         this.textures.push(tex);
 
         const fbo = this.gl.createFramebuffer()!;
