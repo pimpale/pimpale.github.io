@@ -143,8 +143,8 @@ void main() {
 
   // calculate divergence using finite differences
   // remember, divergence is df/dx + df/dy
-  float divergence = float(v21.x - v01.x)/(2.0*x_off)
-                   + float(v12.y - v10.y)/(2.0*y_off);
+  float divergence = float(v01.x - v21.x)/(2.0*x_off)
+                   + float(v10.y - v12.y)/(2.0*y_off);
 
   // return divergence
   value = ivec4(divergence, 0, 0, 0);
@@ -185,7 +185,7 @@ void main() {
   // use the jacobi method to derive the next iteration of pressure at this location
   int p_next = (d11 + p01 + p10 + p12 + p21)/4;
 
-  value = ivec4(p_next , 0, 0, 0);
+  value = ivec4(p_next, 0, 0, 0);
 }
 `;
 
@@ -225,7 +225,7 @@ void main() {
   const int rho = 0xFFFF;
 
   // adjust the velocity by the pressure gradient
-  ivec2 vel = texture(u_vel_tex, v_texCoord).xy + (pGradient/rho);
+  ivec2 vel = texture(u_vel_tex, v_texCoord).xy - (pGradient/rho);
 
   value = ivec4(vel, 0, 0);
 }
@@ -237,6 +237,9 @@ precision highp isampler2D;
 
 // the scalar texture
 uniform isampler2D u_scalar_tex;
+
+// offset to apply
+uniform float u_offset;
 
 // the velocity texture
 uniform isampler2D u_vel_tex;
@@ -324,7 +327,7 @@ void main() {
   float arrow_dist = arrow(pxCoord, vel_vec * ARROW_TILE_SIZE);
   vec4 arrow_col = vec4(0, 1.0, 0, clamp(arrow_dist, 0.0, 1.0));
 
-  float scalar_val = float(texture(u_scalar_tex, v_texCoord).r)/float(0xFFFFFF);
+  float scalar_val = clamp(float(texture(u_scalar_tex, v_texCoord).r)/float(0xFFFFFF) + u_offset, 0.0, 1.0);
   vec4 field_col = vec4(inferno(scalar_val), 1.0);
 
   outColor = mix(arrow_col, field_col, arrow_col.a);
@@ -454,6 +457,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   private newMouseLoc!: WebGLUniformLocation;
   private oldMouseLoc!: WebGLUniformLocation;
 
+  private renderOffset!: WebGLUniformLocation;
+
   private prog_advect_scalar!: WebGLProgram;
   private prog_advect_vel!: WebGLProgram;
   private prog_divergence!: WebGLProgram;
@@ -479,6 +484,9 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   private mouseDown = false;
   private prevMousePos = { x: 0, y: 0 };
   private mousePos = { x: 0, y: 0 };
+
+  // if we're viewing pressure
+  private viewPressure = false;
 
   private requestID!: number;
 
@@ -765,6 +773,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       const positionLoc = this.gl.getAttribLocation(this.prog_render, 'c_position');
       const scalarTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_scalar_tex');
       const velTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_vel_tex');
+      this.renderOffset = this.gl.getUniformLocation(this.prog_render, 'u_offset')!;
 
       // setup our attributes to tell WebGL how to pull
       // the data from the buffer above to the position attribute
@@ -1052,10 +1061,17 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     // now draw to canvas
     this.gl.useProgram(this.prog_render);
 
-    //bind the pressure texture to texture unit 0
-    // this.gl.activeTexture(this.gl.TEXTURE0);
-    // this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
-    //this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
+    if (this.viewPressure) {
+      //bind the pressure texture to texture unit 0
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
+      // this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
+      this.gl.uniform1f(this.renderOffset, 0.5);
+    } else {
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
+      this.gl.uniform1f(this.renderOffset, 0);
+    }
 
     // set the canvas as the current framebuffer
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
@@ -1067,12 +1083,14 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     return <div style={this.props.style} className={this.props.className}>
       <div className="row">
         <div className="col-md-8 d-flex">
+        <div>
           <canvas
-            className="border border-dark"
+            className="border border-dark mx-auto my-3"
             ref={this.canvas}
             height={this.props.size}
             width={this.props.size}
           />
+          </div>
         </div>
         <div className="col-md-4">
           <div className="border border-dark p-3 m-3">
@@ -1091,13 +1109,19 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
               </select>
               <button className="btn btn-primary btn-sm" onClick={() => this.needsScalarReset = true}>Reset Scalar</button>
             </div>
-            <div className="form-group">
+            <div className="form-group mb-3">
               <label className="form-label">Velocity Field</label>
               <select className="form-select mb-3" defaultValue={8} ref={this.velocitySelect}>
                 <option value="empty">Empty</option>
                 <option value="curlnoise">Curl Noise</option>
               </select>
               <button className="btn btn-primary btn-sm" onClick={() => this.needsVelocityReset = true}>Reset Velocity</button>
+            </div>
+            <div className="form-group">
+              <div className="custom-control custom-checkbox">
+                <input type="checkbox" className="custom-control-input" onClick={() => this.viewPressure = !this.viewPressure}/>
+                <label className="custom-control-label">View Pressure</label>
+              </div>
             </div>
           </div>
         </div>
