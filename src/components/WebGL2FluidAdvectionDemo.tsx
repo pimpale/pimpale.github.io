@@ -1,5 +1,5 @@
 import React from "react";
-import { createShader, createProgram, createR32UITexture, createRG32ITexture, overwriteR32UITexture, overwriteRG32ITexture } from '../utils/webgl';
+import { createShader, createProgram, createR32FTexture, overwriteR32FTexture, createRG32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
 import { makeNoise4D } from 'open-simplex-noise';
 
@@ -28,33 +28,31 @@ void main() {
 // this fragment shader does the actual work of computation
 const advect_scalar_fs = `#version 300 es
 precision highp float;
-precision highp usampler2D;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the scalar texture
-uniform usampler2D u_scalar_tex;
+uniform sampler2D u_scalar_tex;
 
 // the velocity texture
-uniform isampler2D u_vel_tex;
+uniform sampler2D u_vel_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
 
 // the output
-out uvec4 value;
+out vec4 value;
 
-float  textureGood(usampler2D sam, vec2 uv)
-{
+float textureGood(sampler2D sam, vec2 uv) {
     vec2 res = vec2(textureSize(sam, 0));
     vec2 st = uv*res - 0.5;
 
     vec2 iuv = floor( st );
     vec2 fuv = fract( st );
 
-    float a = float(texture( sam, (iuv+vec2(0.5,0.5))/res).r);
-    float b = float(texture( sam, (iuv+vec2(1.5,0.5))/res).r);
-    float c = float(texture( sam, (iuv+vec2(0.5,1.5))/res).r);
-    float d = float(texture( sam, (iuv+vec2(1.5,1.5))/res).r);
+    float a = texture(sam, (iuv+vec2(0.5,0.5))/res).r;
+    float b = texture(sam, (iuv+vec2(1.5,0.5))/res).r;
+    float c = texture(sam, (iuv+vec2(0.5,1.5))/res).r;
+    float d = texture(sam, (iuv+vec2(1.5,1.5))/res).r;
 
     return mix( mix( a, b, fuv.x),
                 mix( c, d, fuv.x), fuv.y );
@@ -62,28 +60,26 @@ float  textureGood(usampler2D sam, vec2 uv)
 
 void main() {
   // get the floatwise velocity
-  ivec2 ivel = texture(u_vel_tex, v_texCoord).xy;
-  vec2 vel = vec2(float(ivel.x)/float(0xFFFFFF), float(ivel.y)/float(0xFFFFFF));
+  vec2 vel = texture(u_vel_tex, v_texCoord).xy;
 
   // now we advect the scalar field:
   // we calculate the scalar value that will be at this location at the next timestep
   float val = textureGood(u_scalar_tex, v_texCoord-vel);
 
-  value = uvec4(val, 0u, 0u, 0u);
+  value = vec4(val, 0.0, 0.0, 0.0);
 }
 `;
 
 // this fragment shader is used to render to the canvas so we can see what's going on
 const render_fs = `#version 300 es
 precision highp float;
-precision highp usampler2D;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the scalar texture
-uniform usampler2D u_scalar_tex;
+uniform sampler2D u_scalar_tex;
 
 // the velocity texture
-uniform isampler2D u_vel_tex;
+uniform sampler2D u_vel_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
@@ -163,12 +159,12 @@ void main() {
 
   vec2 tileCenterCoord = arrowTileCenterCoord(pxCoord);
 
-  vec2 vel_vec = vec2(texture(u_vel_tex, tileCenterCoord/resolution))/float(0xFFFFFF);
+  vec2 vel_vec = texture(u_vel_tex, tileCenterCoord/resolution).xy;
 
   float arrow_dist = arrow(pxCoord, vel_vec * ARROW_TILE_SIZE);
   vec4 arrow_col = vec4(0, 1.0, 0, clamp(arrow_dist, 0.0, 1.0));
 
-  float scalar_val = float(texture(u_scalar_tex, v_texCoord).r)/float(0xFFFFFF);
+  float scalar_val = texture(u_scalar_tex, v_texCoord).x;
   vec4 field_col = vec4(inferno(scalar_val), 1.0);
 
   outColor = mix(arrow_col, field_col, arrow_col.a);
@@ -177,10 +173,10 @@ void main() {
 
 const paint_vel_fs = `#version 300 es
 precision highp float;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the velocity texture
-uniform isampler2D u_vel_tex;
+uniform sampler2D u_vel_tex;
 
 // old normalized mouse position
 uniform vec2 u_old_mouse;
@@ -191,7 +187,7 @@ uniform vec2 u_new_mouse;
 in vec2 v_texCoord;
 
 // the output
-out ivec4 value;
+out vec4 value;
 
 float sdSegment( in vec2 p, in vec2 a, in vec2 b )
 {
@@ -202,13 +198,12 @@ float sdSegment( in vec2 p, in vec2 a, in vec2 b )
 
 void main() {
   // the direction to paint in
-  vec2 paintDir = (u_new_mouse - u_old_mouse)*float(0xFFFF);
+  vec2 paintDir = (u_new_mouse - u_old_mouse)*0.001;
 
   float dist = sdSegment(v_texCoord, u_old_mouse, u_new_mouse);
 
   if(dist < 0.03) {
-    ivec4 val = ivec4(int(paintDir.x), int(paintDir.y), 0, 0);
-    value = texture(u_vel_tex, v_texCoord) + val;
+    value = texture(u_vel_tex, v_texCoord) + vec4(paintDir, 0.0, 0.0);
   } else {
     value = texture(u_vel_tex, v_texCoord);
   }
@@ -241,7 +236,7 @@ function createCurlNoise(xsize: number, ysize: number, seed: number) {
     return [dy, -dx];
   }
 
-  const data = new Int32Array(xsize * ysize * 2);
+  const data = new Float32Array(xsize * ysize * 2);
 
   const noise = makeTorusNoise2D(3, seed);
 
@@ -249,8 +244,8 @@ function createCurlNoise(xsize: number, ysize: number, seed: number) {
     for (let x = 0; x < xsize; x++) {
       const [dx, dy] = sampleCurlNoise(noise, x / xsize, y / ysize);
       const baseIdx = xsize * y + x;
-      data[baseIdx * 2 + 0] = dx * 0xFFF;
-      data[baseIdx * 2 + 1] = dy * 0xFFF;
+      data[baseIdx * 2 + 0] = dx/0xFFF;
+      data[baseIdx * 2 + 1] = dy/0xFFF;
     }
   }
   return data;
@@ -318,6 +313,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     // get webgl
     this.gl = this.canvas.current!.getContext('webgl2')!;
 
+    this.gl.getExtension('EXT_color_buffer_float');
+
     // setup a full canvas clip space quad
     const buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
@@ -359,7 +356,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
       // create pingpongable textures and frambuffers for the scalar field textures
       for (let i = 0; i < 2; i++) {
-        const tex = createR32UITexture(this.gl, this.props.size, this.props.size)!;
+        const tex = createR32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size))!;
         this.scalarTextures.push(tex);
 
         const fbo = this.gl.createFramebuffer()!;
@@ -378,11 +375,11 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       }
 
 
-      // create pingpongable textures and frambuffers for the scalar field textures
+      // create pingpongable textures and framebuffers for the vector field textures
       for (let i = 0; i < 2; i++) {
         // create velocity texture
         const data = new Int32Array(this.props.size * this.props.size * 2);
-        const tex = createRG32ITexture(this.gl, this.props.size, this.props.size, data)!;
+        const tex = createRG32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size*2))!;
 
         this.velTextures.push(tex);
 
@@ -565,19 +562,19 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
       // overwrite the whole thing with a checkerboard
       const checkerboardCount = parseInt(this.scalarSelect.current?.value!);
-      const resetScalarFieldTex = new Uint32Array(this.props.size * this.props.size)
+      const resetScalarFieldTex = new Float32Array(this.props.size * this.props.size)
       for (let y = 0; y < this.props.size; y++) {
         const b = Math.floor(y / (this.props.size / checkerboardCount)) % 2;
         for (let x = 0; x < this.props.size; x++) {
           const a = Math.floor(x / (this.props.size / checkerboardCount)) % 2;
           if (a + b == 1) {
-            resetScalarFieldTex[y * this.props.size + x] = 0xFFFFFF;
+            resetScalarFieldTex[y * this.props.size + x] = 1;
           } else {
             resetScalarFieldTex[y * this.props.size + x] = 0;
           }
         }
       }
-      overwriteR32UITexture(this.gl, 0, 0, this.props.size, this.props.size, resetScalarFieldTex);
+      overwriteR32FTexture(this.gl, 0, 0, this.props.size, this.props.size, resetScalarFieldTex);
       this.needsScalarReset = false;
     }
 
@@ -590,13 +587,13 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       let data;
       switch (this.velocitySelect.current?.value) {
         case 'curlnoise':
-          data = createCurlNoise(this.props.size, this.props.size, Math.random()*500);
+          data = createCurlNoise(this.props.size, this.props.size, Math.random() * 500);
           break;
         default:
-          data = new Int32Array(this.props.size * this.props.size * 2);
+          data = new Float32Array(this.props.size * this.props.size * 2);
           break;
       }
-      overwriteRG32ITexture(this.gl, 0, 0, this.props.size, this.props.size, data);
+      overwriteRG32FTexture(this.gl, 0, 0, this.props.size, this.props.size, data);
 
       this.needsVelocityReset = false;
     }

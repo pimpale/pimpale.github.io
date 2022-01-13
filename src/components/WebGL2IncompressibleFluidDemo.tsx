@@ -1,5 +1,5 @@
 import React from "react";
-import { createShader, createProgram, createR32ITexture, createRG32ITexture, overwriteR32ITexture, overwriteRG32ITexture } from '../utils/webgl';
+import { createShader, createProgram, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
 import { makeNoise4D } from 'open-simplex-noise';
 
@@ -28,32 +28,31 @@ void main() {
 // this fragment shader does the actual work of advect_scalarion
 const advect_scalar_fs = `#version 300 es
 precision highp float;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the scalar texture
-uniform isampler2D u_scalar_tex;
+uniform sampler2D u_scalar_tex;
 
 // the velocity texture
-uniform isampler2D u_vel_tex;
+uniform sampler2D u_vel_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
 
 // the output
-out ivec4 value;
+out vec4 value;
 
-float textureGood(isampler2D sam, vec2 uv)
-{
+float textureGood(sampler2D sam, vec2 uv) {
     vec2 res = vec2(textureSize(sam, 0));
     vec2 st = uv*res - 0.5;
 
     vec2 iuv = floor( st );
     vec2 fuv = fract( st );
 
-    float a = float(texture( sam, (iuv+vec2(0.5,0.5))/res).r);
-    float b = float(texture( sam, (iuv+vec2(1.5,0.5))/res).r);
-    float c = float(texture( sam, (iuv+vec2(0.5,1.5))/res).r);
-    float d = float(texture( sam, (iuv+vec2(1.5,1.5))/res).r);
+    float a = texture( sam, (iuv+vec2(0.5,0.5))/res).r;
+    float b = texture( sam, (iuv+vec2(1.5,0.5))/res).r;
+    float c = texture( sam, (iuv+vec2(0.5,1.5))/res).r;
+    float d = texture( sam, (iuv+vec2(1.5,1.5))/res).r;
 
     return mix( mix( a, b, fuv.x),
                 mix( c, d, fuv.x), fuv.y );
@@ -61,31 +60,30 @@ float textureGood(isampler2D sam, vec2 uv)
 
 void main() {
   // get the floatwise velocity
-  ivec2 ivel = texture(u_vel_tex, v_texCoord).xy;
-  vec2 vel = vec2(float(ivel.x)/float(0xFFFFFF), float(ivel.y)/float(0xFFFFFF));
+  vec2 vel = texture(u_vel_tex, v_texCoord).xy;
 
   // now we advect the scalar field:
   // we calculate the scalar value that will be at this location at the next timestep
   float val = textureGood(u_scalar_tex, v_texCoord-vel);
 
-  value = ivec4(val, 0, 0, 0);
+  value = vec4(val, 0.0, 0.0, 0.0);
 }
 `;
 
 const advect_vel_fs = `#version 300 es
 precision highp float;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the velocity texture
-uniform isampler2D u_vel_tex;
+uniform sampler2D u_vel_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
 
 // the output
-out ivec4 value;
+out vec4 value;
 
-vec2 textureGood(isampler2D sam, vec2 uv)
+vec2 textureGood(sampler2D sam, vec2 uv)
 {
     vec2 res = vec2(textureSize(sam, 0));
     vec2 st = uv*res - 0.5;
@@ -93,10 +91,10 @@ vec2 textureGood(isampler2D sam, vec2 uv)
     vec2 iuv = floor( st );
     vec2 fuv = fract( st );
 
-    vec2 a = vec2(texture( sam, (iuv+vec2(0.5,0.5))/res).xy);
-    vec2 b = vec2(texture( sam, (iuv+vec2(1.5,0.5))/res).xy);
-    vec2 c = vec2(texture( sam, (iuv+vec2(0.5,1.5))/res).xy);
-    vec2 d = vec2(texture( sam, (iuv+vec2(1.5,1.5))/res).xy);
+    vec2 a = texture(sam, (iuv+vec2(0.5,0.5))/res).xy;
+    vec2 b = texture(sam, (iuv+vec2(1.5,0.5))/res).xy;
+    vec2 c = texture(sam, (iuv+vec2(0.5,1.5))/res).xy;
+    vec2 d = texture(sam, (iuv+vec2(1.5,1.5))/res).xy;
 
     return mix( mix( a, b, fuv.x),
                 mix( c, d, fuv.x), fuv.y );
@@ -104,30 +102,29 @@ vec2 textureGood(isampler2D sam, vec2 uv)
 
 void main() {
   // get the floatwise velocity
-  ivec2 ivel = texture(u_vel_tex, v_texCoord).xy;
-  vec2 vel = vec2(float(ivel.x)/float(0xFFFFFF), float(ivel.y)/float(0xFFFFFF));
+  vec2 vel = texture(u_vel_tex, v_texCoord).xy;
 
   // now we advect the scalar field:
   // we calculate the scalar value that will be at this location at the next timestep
   vec2 val = textureGood(u_vel_tex, v_texCoord-vel);
 
-  value = ivec4(val, 0, 0);
+  value = vec4(val, 0, 0);
 }
 `;
 
 
 const divergence_fs = `#version 300 es
 precision highp float;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the velocity texture
-uniform isampler2D u_vel_tex;
+uniform sampler2D u_vel_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
 
 // the output
-out ivec4 value;
+out vec4 value;
 
 void main() {
   // get neighboring cell distances
@@ -136,36 +133,36 @@ void main() {
   float y_off = 1.0/resolution.y;
 
   // get data
-  ivec2 v01 = texture(u_vel_tex, v_texCoord + vec2(-x_off,+0.000)).xy;
-  ivec2 v10 = texture(u_vel_tex, v_texCoord + vec2(+0.000,-y_off)).xy;
-  ivec2 v12 = texture(u_vel_tex, v_texCoord + vec2(+0.000,+y_off)).xy;
-  ivec2 v21 = texture(u_vel_tex, v_texCoord + vec2(+x_off,+0.000)).xy;
+  vec2 v01 = texture(u_vel_tex, v_texCoord + vec2(-x_off,+0.000)).xy;
+  vec2 v10 = texture(u_vel_tex, v_texCoord + vec2(+0.000,-y_off)).xy;
+  vec2 v12 = texture(u_vel_tex, v_texCoord + vec2(+0.000,+y_off)).xy;
+  vec2 v21 = texture(u_vel_tex, v_texCoord + vec2(+x_off,+0.000)).xy;
 
   // calculate divergence using finite differences
   // remember, divergence is df/dx + df/dy
-  float divergence = float(v01.x - v21.x)/(2.0*x_off)
-                   + float(v10.y - v12.y)/(2.0*y_off);
+  float divergence = (v01.x - v21.x)/(2.0*x_off)
+                   + (v10.y - v12.y)/(2.0*y_off);
 
   // return divergence
-  value = ivec4(divergence, 0, 0, 0);
+  value = vec4(divergence, 0.0, 0.0, 0.0);
 }
 `;
 
 const solve_pressure_fs = `#version 300 es
 precision highp float;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the divergence texture
-uniform isampler2D u_divergence_tex;
+uniform sampler2D u_divergence_tex;
 
 // the pressure texture of the last iteration
-uniform isampler2D u_pressure_tex;
+uniform sampler2D u_pressure_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
 
 // the output
-out ivec4 value;
+out vec4 value;
 
 void main() {
   // get neighboring cell distances
@@ -174,36 +171,36 @@ void main() {
   float y_off = 1.0/resolution.y;
 
   // get previous iteration pressure data
-  int p01 = texture(u_pressure_tex, v_texCoord + vec2(-x_off,+0.000)).x;
-  int p10 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,-y_off)).x;
-  int p12 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,+y_off)).x;
-  int p21 = texture(u_pressure_tex, v_texCoord + vec2(+x_off,+0.000)).x;
+  float p01 = texture(u_pressure_tex, v_texCoord + vec2(-x_off,+0.000)).x;
+  float p10 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,-y_off)).x;
+  float p12 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,+y_off)).x;
+  float p21 = texture(u_pressure_tex, v_texCoord + vec2(+x_off,+0.000)).x;
 
   // get divergence
-  int d11 = texture(u_divergence_tex , v_texCoord).x;
+  float d11 = texture(u_divergence_tex , v_texCoord).x;
 
   // use the jacobi method to derive the next iteration of pressure at this location
-  int p_next = (d11 + p01 + p10 + p12 + p21)/4;
+  float p_next = (d11 + p01 + p10 + p12 + p21)/4.0;
 
-  value = ivec4(p_next, 0, 0, 0);
+  value = vec4(p_next, 0.0, 0.0, 0.0);
 }
 `;
 
 const apply_pressure_force_fs = `#version 300 es
 precision highp float;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the velocity texture
-uniform isampler2D u_vel_tex;
+uniform sampler2D u_vel_tex;
 
 // the pressure texture
-uniform isampler2D u_pressure_tex;
+uniform sampler2D u_pressure_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
 
 // the output
-out ivec4 value;
+out vec4 value;
 
 void main() {
   // get neighboring cell distances
@@ -212,37 +209,37 @@ void main() {
   float y_off = 1.0/resolution.y;
 
   // get pressure data
-  int p01 = texture(u_pressure_tex, v_texCoord + vec2(-x_off,+0.000)).x;
-  int p10 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,-y_off)).x;
-  int p12 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,+y_off)).x;
-  int p21 = texture(u_pressure_tex, v_texCoord + vec2(+x_off,+0.000)).x;
+  float p01 = texture(u_pressure_tex, v_texCoord + vec2(-x_off,+0.000)).x;
+  float p10 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,-y_off)).x;
+  float p12 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,+y_off)).x;
+  float p21 = texture(u_pressure_tex, v_texCoord + vec2(+x_off,+0.000)).x;
 
   // calculate the gradient
   // remember, the gradient is [df/dx, df/dy]
-  ivec2 pGradient = ivec2(float(p21 - p01)/(2.0*x_off), float(p12 - p10)/(2.0*y_off));
+  vec2 pGradient = vec2((p21 - p01)/(2.0*x_off), (p12 - p10)/(2.0*y_off));
 
   // rho is an experimentally determined multiplier intended not to let the simulation diverge
-  const int rho = 0xFFFF;
+  const float rho = 65000.0;
 
   // adjust the velocity by the pressure gradient
-  ivec2 vel = texture(u_vel_tex, v_texCoord).xy - (pGradient/rho);
+  vec2 vel = texture(u_vel_tex, v_texCoord).xy - (pGradient/rho);
 
-  value = ivec4(vel, 0, 0);
+  value = vec4(vel, 0, 0);
 }
 `
 // this fragment shader is used to render to the canvas so we can see what's going on
 const render_fs = `#version 300 es
 precision highp float;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the scalar texture
-uniform isampler2D u_scalar_tex;
+uniform sampler2D u_scalar_tex;
 
 // offset to apply
 uniform float u_offset;
 
 // the velocity texture
-uniform isampler2D u_vel_tex;
+uniform sampler2D u_vel_tex;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
@@ -322,12 +319,12 @@ void main() {
 
   vec2 tileCenterCoord = arrowTileCenterCoord(pxCoord);
 
-  vec2 vel_vec = vec2(texture(u_vel_tex, tileCenterCoord/resolution))/float(0xFFFFFF);
+  vec2 vel_vec = texture(u_vel_tex, tileCenterCoord/resolution).xy;
 
   float arrow_dist = arrow(pxCoord, vel_vec * ARROW_TILE_SIZE);
   vec4 arrow_col = vec4(0, 1.0, 0, clamp(arrow_dist, 0.0, 1.0));
 
-  float scalar_val = clamp(float(texture(u_scalar_tex, v_texCoord).r)/float(0xFFFFFF) + u_offset, 0.0, 1.0);
+  float scalar_val = clamp(texture(u_scalar_tex, v_texCoord).x + u_offset, 0.0, 1.0);
   vec4 field_col = vec4(inferno(scalar_val), 1.0);
 
   outColor = mix(arrow_col, field_col, arrow_col.a);
@@ -336,10 +333,10 @@ void main() {
 
 const paint_vel_fs = `#version 300 es
 precision highp float;
-precision highp isampler2D;
+precision highp sampler2D;
 
 // the velocity texture
-uniform isampler2D u_vel_tex;
+uniform sampler2D u_vel_tex;
 
 // old normalized mouse position
 uniform vec2 u_old_mouse;
@@ -350,7 +347,7 @@ uniform vec2 u_new_mouse;
 in vec2 v_texCoord;
 
 // the output
-out ivec4 value;
+out vec4 value;
 
 float sdSegment( in vec2 p, in vec2 a, in vec2 b )
 {
@@ -361,13 +358,12 @@ float sdSegment( in vec2 p, in vec2 a, in vec2 b )
 
 void main() {
   // the direction to paint in
-  vec2 paintDir = (u_new_mouse - u_old_mouse)*float(0xFFFF);
+  vec2 paintDir = (u_new_mouse - u_old_mouse)*0.01;
 
   float dist = sdSegment(v_texCoord, u_old_mouse, u_new_mouse);
 
   if(dist < 0.03) {
-    ivec4 val = ivec4(int(paintDir.x), int(paintDir.y), 0, 0);
-    value = texture(u_vel_tex, v_texCoord) + val;
+    value = texture(u_vel_tex, v_texCoord) + vec4(paintDir, 0, 0);
   } else {
     value = texture(u_vel_tex, v_texCoord);
   }
@@ -400,7 +396,7 @@ function createCurlNoise(xsize: number, ysize: number, seed: number) {
     return [dy, -dx];
   }
 
-  const data = new Int32Array(xsize * ysize * 2);
+  const data = new Float32Array(xsize * ysize * 2);
 
   const noise = makeTorusNoise2D(3, seed);
 
@@ -408,8 +404,8 @@ function createCurlNoise(xsize: number, ysize: number, seed: number) {
     for (let x = 0; x < xsize; x++) {
       const [dx, dy] = sampleCurlNoise(noise, x / xsize, y / ysize);
       const baseIdx = xsize * y + x;
-      data[baseIdx * 2 + 0] = dx * 0xFFF;
-      data[baseIdx * 2 + 1] = dy * 0xFFF;
+      data[baseIdx * 2 + 0] = dx/0xFFF;
+      data[baseIdx * 2 + 1] = dy/0xFFF;
     }
   }
   return data;
@@ -498,6 +494,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     // get webgl
     this.gl = this.canvas.current!.getContext('webgl2')!;
 
+    const ext = this.gl.getExtension('EXT_color_buffer_float');
+
     // setup a full canvas clip space quad
     const buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
@@ -514,7 +512,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
     // create pingpongable textures and framebuffers for the scalar field
     for (let i = 0; i < 2; i++) {
-      const tex = createR32ITexture(this.gl, this.props.size, this.props.size)!;
+      const tex = createR32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size*this.props.size))!;
       this.scalarTextures.push(tex);
 
       const fbo = this.gl.createFramebuffer()!;
@@ -532,12 +530,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.scalarFramebuffers.push(fbo);
     }
 
-
     // create pingpongable textures and framebuffers for the velocity field
     for (let i = 0; i < 2; i++) {
       // create velocity texture
-      const data = new Int32Array(this.props.size * this.props.size * 2);
-      const tex = createRG32ITexture(this.gl, this.props.size, this.props.size, data)!;
+      const tex = createRG32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size*this.props.size*2))!;
 
       this.velTextures.push(tex);
 
@@ -558,7 +554,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
     // create pingpongable textures and framebuffers for the divergence field
     // create divergence texture
-    this.divTexture = createR32ITexture(this.gl, this.props.size, this.props.size)!;
+    this.divTexture = createR32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size*this.props.size))!;
     this.divFramebuffer = this.gl.createFramebuffer()!;
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.divFramebuffer);
     // configure the currently active framebuffer to use te
@@ -573,7 +569,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     // create pingpongable textures and framebuffers for the pressure field
     for (let i = 0; i < 2; i++) {
       // create pressure texture
-      const tex = createR32ITexture(this.gl, this.props.size, this.props.size)!;
+      const tex = createR32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size*this.props.size))!;
 
       this.pressureTextures.push(tex);
 
@@ -915,19 +911,19 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
       // overwrite the whole thing with a checkerboard
       const checkerboardCount = parseInt(this.scalarSelect.current?.value!);
-      const resetScalarFieldTex = new Int32Array(this.props.size * this.props.size)
+      const resetScalarFieldTex = new Float32Array(this.props.size * this.props.size)
       for (let y = 0; y < this.props.size; y++) {
         const b = Math.floor(y / (this.props.size / checkerboardCount)) % 2;
         for (let x = 0; x < this.props.size; x++) {
           const a = Math.floor(x / (this.props.size / checkerboardCount)) % 2;
           if (a + b == 1) {
-            resetScalarFieldTex[y * this.props.size + x] = 0xFFFFFF;
+            resetScalarFieldTex[y * this.props.size + x] = 1;
           } else {
             resetScalarFieldTex[y * this.props.size + x] = 0;
           }
         }
       }
-      overwriteR32ITexture(this.gl, 0, 0, this.props.size, this.props.size, resetScalarFieldTex);
+      overwriteR32FTexture(this.gl, 0, 0, this.props.size, this.props.size, resetScalarFieldTex);
       this.needsScalarReset = false;
     }
 
@@ -935,8 +931,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       // select the pressure texture being used as a source
       this.gl.activeTexture(this.gl.TEXTURE3);
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
-      // overwrite with 0
-      overwriteR32ITexture(this.gl, 0, 0, this.props.size, this.props.size, new Int32Array(this.props.size * this.props.size));
+      // overwrite pressure with 0
+      overwriteR32FTexture(this.gl, 0, 0, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size));
 
 
       // select the vel texture being used as a source
@@ -950,10 +946,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
           data = createCurlNoise(this.props.size, this.props.size, Math.random() * 500);
           break;
         default:
-          data = new Int32Array(this.props.size * this.props.size * 2);
+          data = new Float32Array(this.props.size * this.props.size * 2);
           break;
       }
-      overwriteRG32ITexture(this.gl, 0, 0, this.props.size, this.props.size, data);
+      overwriteRG32FTexture(this.gl, 0, 0, this.props.size, this.props.size, data);
 
       this.needsVelocityReset = false;
     }
