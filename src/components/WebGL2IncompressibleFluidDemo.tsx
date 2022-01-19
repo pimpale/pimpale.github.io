@@ -219,7 +219,7 @@ void main() {
   vec2 pGradient = vec2((p21 - p01)/(2.0*x_off), (p12 - p10)/(2.0*y_off));
 
   // rho is an experimentally determined multiplier intended not to let the simulation diverge
-  const float rho = 65000.0;
+  const float rho = 70000.0;
 
   // adjust the velocity by the pressure gradient
   vec2 vel = texture(u_vel_tex, v_texCoord).xy - (pGradient/rho);
@@ -1011,7 +1011,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         this.gl.useProgram(this.prog_solve_pressure);
 
         // we execute multiple iterations of jacobi
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 15; i++) {
           // bind the divergence texture to texture unit 2
           this.gl.activeTexture(this.gl.TEXTURE2);
           this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);

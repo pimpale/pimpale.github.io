@@ -81,7 +81,7 @@ const Home = () =>
   <Layout>
     <div className="min-vh-100 d-flex justify-content-center flex-wrap">
       <Rotated distance={0} rotation={90} ownRow>
-        <HomepageDemo style={{ width: "20em", height: "20em" }} />
+        <HomepageDemo width={400} height={400} style={{ width: "20em", height: "20em" }} />
       </Rotated>
       {/* Data */}
       <Rotated distance={15} rotation={-45} >

@@ -1,120 +1,138 @@
 import React from "react";
-import * as THREE from 'three';
+import { createShader, createProgram} from '../utils/webgl';
+import { TrackballCamera, } from '../utils/camera';
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 
-
-type WireframeRendererProps = {
-  style: React.CSSProperties,
+type HomepageDemoProps = {
+  style?: React.CSSProperties,
+  className?: string
+  width: number,
+  height: number
 }
 
-type WireframeRendererState = {}
 
-class WireframeRenderer extends React.Component<WireframeRendererProps, WireframeRendererState> {
+const vs = `#version 300 es
+in vec4 a_position;
 
-  // this is the ref that three js uses
-  private mount = React.createRef<HTMLDivElement>();
+uniform mat4 u_worldViewProjection;
 
-  // we assume these variables are properly initialized
+void main() {
+   gl_Position = u_worldViewProjection * a_position;
+}
+`;
+
+
+const fs = `#version 300 es
+precision highp float;
+
+out vec4 outColor;
+ 
+void main() {
+  // color: 0xEBDBB2,
+  outColor = vec4(0.922,0.859,0.698, 1.0);
+}
+`;
+
+
+const cubeVertices = [0.0, 1.0, -0, -1.0, -1.0, -0, 1.0, -1.0, -0];
+
+
+
+// TODO: learn how to handle error cases
+
+type HomepageDemoState = {}
+
+class HomepageDemo extends React.Component<HomepageDemoProps, HomepageDemoState> {
+  private canvas = React.createRef<HTMLCanvasElement>();
+  private gl!: WebGL2RenderingContext;
+
+  private camera!: TrackballCamera ;
+
+  private worldViewProjectionLoc!: WebGLUniformLocation;
+
   private requestID!: number;
-  private controls!: TrackballControls;
-  private scene!: THREE.Scene;
-  private camera!: THREE.OrthographicCamera;
-  private renderer!: THREE.WebGLRenderer;
-  private wireframeMesh: THREE.Mesh[] = [];
 
+  constructor(props: HomepageDemoProps) {
+    super(props);
+  }
 
   componentDidMount() {
-    this.sceneSetup();
-    this.addCustomSceneObjects();
-    this.startAnimationLoop();
-    window.addEventListener('resize', this.handleWindowResize);
+
+    // init camera
+    this.camera = new TrackballCamera(5, this.canvas.current!);
+
+    // get webgl
+    this.gl = this.canvas.current!.getContext('webgl2')!;
+
+    this.gl.enable(this.gl.DEPTH_TEST);
+
+    const program = createProgram(
+      this.gl,
+      [
+        createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+        createShader(this.gl, this.gl.FRAGMENT_SHADER, fs),
+      ]
+    )!;
+
+    const positionLoc = this.gl.getAttribLocation(program, 'a_position');
+    this.worldViewProjectionLoc =
+      this.gl.getUniformLocation(program, "u_worldViewProjection")!;
+
+    // we create two triangles that form a rectangle.
+    // this rectangle covers the entire clip space, from -1 to 1 in both x and y
+    const buffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(cubeVertices), this.gl.STATIC_DRAW);
+    // setup our attributes to tell WebGL how to pull
+    // the data from the buffer above to the position attribute
+    this.gl.enableVertexAttribArray(positionLoc);
+    this.gl.vertexAttribPointer(
+      positionLoc,
+      3,              // size (num components)
+      this.gl.FLOAT,  // type of data in buffer
+      false,          // normalize
+      0,              // stride (0 = auto)
+      0,              // offset
+    );
+
+    this.gl.useProgram(program);
+
+    // start animation loop
+    this.animationLoop();
   }
 
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleWindowResize);
+    // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
-    this.controls!.dispose();
-    this.renderer.dispose();
+    // TODO: destroy vao, buffer, programs, shaders, etc
+    // destroy webgl
+    this.gl.getExtension('WEBGL_lose_context')!.loseContext();
   }
 
-  // Standard scene setup in Three.js. Check "Creating a scene" manual for more information
-  // https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
-  sceneSetup = () => {
-    // get container dimensions and use them for scene sizing
-    const width = this.mount.current!.clientWidth;
-    const height = this.mount.current!.clientHeight;
+  animationLoop = () => {
+    this.requestID = window.requestAnimationFrame(this.animationLoop);
 
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.OrthographicCamera(
-      -10,
-      10,
-      10,
-      -10,
-    );
+    this.camera.theta += 0.001;
 
-    this.camera.position.z = 10; // is used here to set some distance from a cube that is located at z = 0
-    // TrackballControls allow a camera to trackball around the object
-    // https://threejs.org/docs/#examples/controls/TrackballControls
-    this.controls = new TrackballControls(this.camera, this.mount.current!);
+    // set uniform
+    const worldViewProjectionMat = this.camera.getTrackballCameraMatrix( this.props.width, this.props.height);
+    this.gl.uniformMatrix4fv(this.worldViewProjectionLoc, false, worldViewProjectionMat);
 
-    this.controls.noPan = true;
-    this.controls.noZoom = true;
-
-    this.renderer = new THREE.WebGLRenderer({ alpha: true }); // alpha true enables transparency
-    this.renderer.setSize(width, height);
-    this.mount.current!.appendChild(this.renderer.domElement); // mount using React ref
-  };
-
-  // Here should come custom code.
-  // Code below is taken from Three.js BoxGeometry example
-  // https://threejs.org/docs/#api/en/geometries/BoxGeometry
-  addCustomSceneObjects = () => {
-    const material = new THREE.MeshBasicMaterial({
-      wireframe: true,
-      color: 0xEBDBB2,
-    });
-
-    // add wireframe
-    const wireframe = new THREE.Mesh(new THREE.IcosahedronGeometry(5), material);
-    this.scene.add(wireframe);
-    this.wireframeMesh.push(wireframe);
-
-    // add ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff);
-    this.scene.add(ambientLight);
-  };
-
-  startAnimationLoop = () => {
-    this.wireframeMesh.forEach(w => w.rotateY(0.005));
-    this.controls.update();
-    this.renderer.render(this.scene, this.camera);
-
-    // The window.requestAnimationFrame() method tells the browser that you wish to perform
-    // an animation and requests that the browser call a specified function
-    // to update an animation before the next repaint
-    this.requestID = window.requestAnimationFrame(this.startAnimationLoop);
-  };
-
-  handleWindowResize = () => {
-    const width = this.mount.current!.clientWidth;
-    const height = this.mount.current!.clientHeight;
-
-    this.controls.handleResize();
-    this.renderer.setSize(width, height);
-
-    // only for perspective cameras
-    /*
-     * this.camera.aspect = width / height;
-     * // Note that after making changes to most of camera properties you have to call
-     * // .updateProjectionMatrix for the changes to take effect.
-     * this.camera.updateProjectionMatrix();
-     */
-  };
+    // draw triangles
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
+  }
 
   render() {
-    return <div style={this.props.style} ref={this.mount} />;
+    return <canvas
+      style={this.props.style}
+      className={this.props.className}
+      ref={this.canvas}
+      height={this.props.height}
+      width={this.props.width}
+    />
   }
+
 }
 
-export default WireframeRenderer;
+export default HomepageDemo;
