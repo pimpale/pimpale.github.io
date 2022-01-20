@@ -1,5 +1,5 @@
 import React from "react";
-import { createShader, createProgram, createTextureFromCanvas, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
+import { createShader, createProgram, createTexture, updateTextureFromCanvas, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
 import { createCurlNoise } from '../utils/noise';
 import { genPlane } from '../utils/uvplane';
@@ -374,25 +374,37 @@ void main() {
 
 
 const torus_vs = `#version 300 es
+#define PI 3.1415926538
+
 in vec2 a_position;
+out vec2 v_texCoord;
+
+const float u_majorRadius = 0.5;
+const float u_minorRadius = 0.25;
 
 uniform float u_majorAlpha;
 uniform float u_minorAlpha;
 uniform float u_lerpAlpha;
+
 uniform mat4 u_worldViewProjection;
 
 
-
-out vec2 v_texCoord;
-
 void main() {
-
-   float
-
-   gl_Position = u_worldViewProjection * vec4(a_position, 0.0, 1.0);
-
+   float theta = (a_position.x * u_minorAlpha + 0.5) * 2.0 * PI;
+   float phi = a_position.y * u_majorAlpha * 2.0 * PI;
 
    v_texCoord = a_position;
+
+   vec3 oldpos = vec3(a_position - 0.5, 0.0);
+   vec3 newpos = vec3(
+       (u_majorRadius + u_minorRadius * cos(theta)) * cos(phi),
+       (u_majorRadius + u_minorRadius * cos(theta)) * sin(phi),
+       u_minorRadius * sin(theta)
+    );
+
+   vec3 lerpedPos = mix(oldpos, newpos, u_lerpAlpha);
+
+   gl_Position = u_worldViewProjection * vec4(lerpedPos, 1.0);
 }
 `;
 
@@ -493,13 +505,25 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
   private requestID!: number;
 
 
+  // this is the ref we use to monitor circularization
+  private torusnessRange = React.createRef<HTMLInputElement>();
+
+  private majorRange = React.createRef<HTMLInputElement>();
+  private minorRange = React.createRef<HTMLInputElement>();
+  private lerpRange = React.createRef<HTMLInputElement>();
+
   // this is the ref to the canvas
   private torusCanvas = React.createRef<HTMLCanvasElement>();
   private torusGl!: WebGL2RenderingContext;
 
   private camera!: TrackballCamera;
 
+  private torusTexture!: WebGLTexture;
+
   private torusWorldViewProjectionLoc!: WebGLUniformLocation;
+  private torusMajorAlpha!: WebGLUniformLocation;
+  private torusMinorAlpha!: WebGLUniformLocation;
+  private torusLerpAlpha!: WebGLUniformLocation;
 
   constructor(props: IncompressibleTorusFluidDemoProps) {
     super(props);
@@ -857,6 +881,10 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
       // get webgl
       this.torusGl = this.torusCanvas.current!.getContext('webgl2', { premultipliedAlpha: false })!;
+      this.torusGl.enable(this.torusGl.DEPTH_TEST);
+
+      // create texture
+      this.torusTexture = createTexture(this.torusGl, this.props.size, this.props.size)!;
 
       const program = createProgram(
         this.torusGl,
@@ -867,11 +895,12 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
       )!;
 
       const positionLoc = this.torusGl.getAttribLocation(program, 'a_position');
-      const renderTexLoc =
-        this.torusGl.getUniformLocation(program, "u_render_tex");
+      const renderTexLoc = this.torusGl.getUniformLocation(program, "u_render_tex");
+      this.torusMajorAlpha = this.torusGl.getUniformLocation(program, "u_majorAlpha")!;
+      this.torusMinorAlpha = this.torusGl.getUniformLocation(program, "u_minorAlpha")!;
+      this.torusLerpAlpha = this.torusGl.getUniformLocation(program, "u_lerpAlpha")!;
 
-      this.torusWorldViewProjectionLoc =
-        this.torusGl.getUniformLocation(program, "u_worldViewProjection")!;
+      this.torusWorldViewProjectionLoc = this.torusGl.getUniformLocation(program, "u_worldViewProjection")!;
 
       const buffer = this.torusGl.createBuffer();
       this.torusGl.bindBuffer(this.torusGl.ARRAY_BUFFER, buffer);
@@ -894,13 +923,48 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
       this.torusGl.useProgram(program);
 
+      // set defaults
+      this.torusGl.uniform1f(this.torusMajorAlpha, 0.0);
+      this.torusGl.uniform1f(this.torusMinorAlpha, 0.0);
+      this.torusGl.uniform1f(this.torusLerpAlpha, 0.0);
+
       // Tell the shader to get the render texture from texture unit 0
       this.torusGl.uniform1i(renderTexLoc, 0);
     }
 
+    this.torusnessRange.current!.addEventListener('input', this.handleTorusChange);
+    this.majorRange.current!.addEventListener('input', this.handleCircularityChange);
+    this.minorRange.current!.addEventListener('input', this.handleCircularityChange);
+    this.lerpRange.current!.addEventListener('input', this.handleCircularityChange);
+
     // start animation loop
     this.animationLoop();
   }
+
+
+  handleTorusChange = () => {
+    const torusnessAlpha = this.torusnessRange.current!.valueAsNumber;
+
+    this.majorRange.current!.valueAsNumber = torusnessAlpha;
+    this.minorRange.current!.valueAsNumber = torusnessAlpha;
+    this.lerpRange.current!.valueAsNumber = Math.min(torusnessAlpha * 1.5, 1);
+    //now continue
+    this.handleCircularityChange();
+  }
+
+
+  handleCircularityChange = () => {
+    // how much to lerp towards circle
+    const majorAlpha = this.majorRange.current!.valueAsNumber;
+    const minorAlpha = this.minorRange.current!.valueAsNumber;
+    const lerpAlpha = this.lerpRange.current!.valueAsNumber;
+
+    this.torusGl.uniform1f(this.torusMajorAlpha, majorAlpha);
+    this.torusGl.uniform1f(this.torusMinorAlpha, minorAlpha);
+    this.torusGl.uniform1f(this.torusLerpAlpha, lerpAlpha);
+  }
+
+
 
   getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
     const rect = canvas.getBoundingClientRect(); // abs. size of element
@@ -930,6 +994,12 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
     this.canvas.current!.removeEventListener('mousedown', this.handleMouseDown);
     this.canvas.current!.removeEventListener('mouseup', this.handleMouseUp);
     this.canvas.current!.removeEventListener('mousemove', this.handleMouseMove);
+
+    // remove listeners on thing
+    this.torusnessRange.current!.removeEventListener('input', this.handleTorusChange);
+    this.majorRange.current!.removeEventListener('input', this.handleCircularityChange);
+    this.minorRange.current!.removeEventListener('input', this.handleCircularityChange);
+    this.lerpRange.current!.removeEventListener('input', this.handleCircularityChange);
 
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
@@ -1146,11 +1216,12 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
       const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.size, this.props.size);
       this.torusGl.uniformMatrix4fv(this.torusWorldViewProjectionLoc, false, worldViewProjectionMat);
 
+      // update the texture
+      updateTextureFromCanvas(this.torusGl, this.torusTexture, this.canvas.current!);
 
-      // bind the render pressure texture to texture unit 0
+      // bind the newly updated texture to texture unit 0
       this.torusGl.activeTexture(this.torusGl.TEXTURE0);
-      this.torusGl.bindTexture(this.torusGl.TEXTURE_2D,  createTextureFromCanvas(this.torusGl, this.canvas.current!));
-
+      this.torusGl.bindTexture(this.torusGl.TEXTURE_2D, this.torusTexture);
 
       // settings
       this.torusGl.enable(this.torusGl.BLEND);
@@ -1184,7 +1255,6 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
         </div>
         <div className="col-md-4">
           <div className="border border-dark p-3 m-3">
-            <h6>Controls</h6>
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>
               <input type="range" className="form-range" min="0" max="5" step={1} defaultValue={1} ref={this.range} />
@@ -1207,11 +1277,37 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
               </select>
               <button className="btn btn-primary btn-sm" onClick={() => this.needsVelocityReset = true}>Reset Velocity</button>
             </div>
-            <div className="form-group">
-              <div className="custom-control custom-checkbox">
-                <input type="checkbox" className="custom-control-input" onClick={() => this.viewPressure = !this.viewPressure} />
-                <label className="custom-control-label">View Pressure</label>
+
+            <div className="form-group mb-3">
+              <div className="form-check">
+                <input type="checkbox" className="form-check-input" onClick={() => this.viewPressure = !this.viewPressure} />
+                <label className="form-check-label">View Pressure</label>
               </div>
+            </div>
+          </div>
+
+          <div className="border border-dark p-3 m-3">
+            <div className="form-group mb-3">
+              <label className="form-label">Torusness</label>
+              <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.torusnessRange} />
+            </div>
+
+            <div className="form-group mb-3">
+              <details>
+                <summary>Advanced Torus Controls</summary>
+                <div className="mx-auto d-block flex-grow-1 ">
+                  <label className="form-label">Join Major</label>
+                  <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.majorRange} />
+                </div>
+                <div className="mx-auto d-block flex-grow-1 ">
+                  <label className="form-label">Join Minor</label>
+                  <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.minorRange} />
+                </div>
+                <div className="mx-auto d-block flex-grow-1 ">
+                  <label className="form-label">Alpha</label>
+                  <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.lerpRange} />
+                </div>
+              </details>
             </div>
           </div>
         </div>

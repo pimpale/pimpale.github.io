@@ -10,7 +10,7 @@ export function genPlane(xseg: number, yseg: number): vec2[] {
   for (let xi = 0; xi < xseg; xi++) {
     const x = xi / xseg;
     const nx = (xi+1) / xseg;
-    for (let yi = 0; yi <= yseg; yi++) {
+    for (let yi = 0; yi < yseg; yi++) {
       const y = yi / yseg;
       const ny = (yi+1) / yseg;
 
