@@ -19,7 +19,7 @@ function projectTrackball(v: { x: number, y: number }) {
 }
 
 export type TrackballCameraOptions = {
-  radius?: number,
+  ortho?: { top: number, bottom: number, near: number, far: number, left: number, right: number },
   rotation?: quat,
 }
 
@@ -125,8 +125,13 @@ export class TrackballCamera {
     mat4.fromQuat(view, tmp);
 
     const proj = mat4.create();
-    let r = this.options.radius ? this.options.radius : 1;
-    mat4.ortho(proj, -r, r, -r, r, -r, r);
+    if (this.options.ortho) {
+      const b = this.options.ortho;
+      mat4.ortho(proj, b.left, b.right, b.bottom, b.top, b.near, b.far);
+    } else {
+      let r = 1;
+      mat4.ortho(proj, -r, r, -r, r, -r, r);
+    }
 
     const out = mat4.create();
     mat4.mul(out, proj, view);

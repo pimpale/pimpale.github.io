@@ -1,7 +1,6 @@
 import React from "react";
 import { createShader, createProgram } from '../utils/webgl';
 import { TrackballCamera, } from '../utils/camera';
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import { quat } from 'gl-matrix';
 import { genIcosahedron } from '../utils/icosphere';
 
@@ -27,7 +26,6 @@ void main() {
 }
 `;
 
-
 const fs = `#version 300 es
 precision highp float;
 
@@ -49,7 +47,7 @@ void main() {
 }
 `;
 
-const icoVertices = genIcosahedron();
+const icoVertexes = genIcosahedron();
 
 
 // TODO: learn how to handle error cases
@@ -97,13 +95,11 @@ class HomepageDemo extends React.Component<HomepageDemoProps, HomepageDemoState>
     this.worldViewProjectionLoc =
       this.gl.getUniformLocation(program, "u_worldViewProjection")!;
 
-    // we create two triangles that form a rectangle.
-    // this rectangle covers the entire clip space, from -1 to 1 in both x and y
     const buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
     this.gl.bufferData(
       this.gl.ARRAY_BUFFER,
-      new Float32Array(icoVertices.flatMap((x, i) => {
+      new Float32Array(icoVertexes.flatMap((x, i) => {
         let barycenter;
         switch (i % 3) {
           case 0:
@@ -170,7 +166,7 @@ class HomepageDemo extends React.Component<HomepageDemoProps, HomepageDemoState>
     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 
     // draw triangles
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, icoVertices.length);
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, icoVertexes.length);
 
     this.camera.update();
   }
@@ -184,7 +180,6 @@ class HomepageDemo extends React.Component<HomepageDemoProps, HomepageDemoState>
       width={this.props.width}
     />
   }
-
 }
 
 export default HomepageDemo;
