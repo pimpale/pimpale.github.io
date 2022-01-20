@@ -1,5 +1,5 @@
 import React from "react";
-import { createShader, createProgram} from '../utils/webgl';
+import { createShader, createProgram } from '../utils/webgl';
 import { TrackballCamera, } from '../utils/camera';
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 
@@ -34,7 +34,50 @@ void main() {
 `;
 
 
-const cubeVertices = [0.0, 1.0, -0, -1.0, -1.0, -0, 1.0, -1.0, -0];
+const cubeVertices = [
+  // left face
+  0, 0, 0,
+  0, 1, 0,
+  0, 0, 1,
+  0, 0, 1,
+  0, 1, 0,
+  0, 1, 1,
+  // right face
+  1, 0, 0,
+  1, 0, 1,
+  1, 1, 0,
+  1, 0, 1,
+  1, 1, 1,
+  1, 1, 0,
+  // upper face
+  0, 0, 1,
+  1, 0, 0,
+  0, 0, 0,
+  0, 0, 1,
+  1, 0, 1,
+  1, 0, 0,
+  // lower face
+  0, 1, 0,
+  1, 1, 0,
+  0, 1, 1,
+  1, 1, 0,
+  1, 1, 1,
+  0, 1, 1,
+  // back face
+  0, 0, 0,
+  1, 0, 0,
+  0, 1, 0,
+  1, 0, 0,
+  1, 1, 0,
+  0, 1, 0,
+  // front face
+  0, 1, 1,
+  1, 0, 1,
+  0, 0, 1,
+  0, 1, 1,
+  1, 1, 1,
+  1, 0, 1,
+].map(x => x - 0.5);
 
 
 
@@ -46,7 +89,7 @@ class HomepageDemo extends React.Component<HomepageDemoProps, HomepageDemoState>
   private canvas = React.createRef<HTMLCanvasElement>();
   private gl!: WebGL2RenderingContext;
 
-  private camera!: TrackballCamera ;
+  private camera!: TrackballCamera;
 
   private worldViewProjectionLoc!: WebGLUniformLocation;
 
@@ -113,14 +156,12 @@ class HomepageDemo extends React.Component<HomepageDemoProps, HomepageDemoState>
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
-    this.camera.theta += 0.001;
-
     // set uniform
-    const worldViewProjectionMat = this.camera.getTrackballCameraMatrix( this.props.width, this.props.height);
+    const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.width, this.props.height);
     this.gl.uniformMatrix4fv(this.worldViewProjectionLoc, false, worldViewProjectionMat);
 
     // draw triangles
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, 3*6);
   }
 
   render() {

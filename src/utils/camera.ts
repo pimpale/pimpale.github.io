@@ -1,44 +1,101 @@
-import { glMatrix, vec3, mat4 } from 'gl-matrix';
+import { glMatrix, quat, vec3, mat4 } from 'gl-matrix';
+import assert from '../utils/assert';
+
+// https://www.xarg.org/2021/07/trackball-rotation-using-quaternions/
+function projectTrackball(v:{x:number, y:number}) {
+    const x = v.x;
+    const y = v.y;
+
+    const radius = 1;
+
+    const r = 1;
+
+    let z;
+    if (x * x + y * y <= r * r / 2) {
+      z = Math.sqrt(r * r - (x * x) - (y * y));
+    } else {
+      z = (r * r / 2) / Math.sqrt(x * x + y * y);
+    }
+
+    return new Float32Array([x, -y, z]);
+}
+
 
 export class TrackballCamera {
   private canvas: HTMLCanvasElement;
 
   // if mouse is pressed
-  private mouseDown = false;
-  private prevMousePos = { x: 0, y: 0 };
-  private mousePos = { x: 0, y: 0 };
+  private start:null|{ x: number, y: number } = null;
 
   // distance from origin
-  public R: number;
-  // horizontal yaw
-  public theta: number;
-  // vertical pitch
-  public phi: number;
+  private r: number;
+
+  // current quaternion
+  private baseQ = quat.create();
+  private currQ = quat.create();
+
+
+  // normalizes the mouse coords such that the edge of the trackball is +-1
+  getNormalizedMouseCoords = (e: MouseEvent) => {
+    const rect = this.canvas.getBoundingClientRect();
+    // get client canvas x and y
+    const client_cx = (rect.left + rect.right)/2;
+    const client_cy = (rect.top+ rect.bottom)/2;
+
+    // get canvas width and height
+    const width = rect.right - rect.left;
+    const height= rect.bottom - rect.top;
+
+    // the radius of our trackball will be the smaller of these 2
+    const trackballRadius = Math.min(width, height);
+
+    // get normalized mouse x and y
+    const q = {
+        x: 2*(e.clientX-client_cx)/trackballRadius,
+        y: 2*(e.clientY-client_cy)/trackballRadius
+    }
+    return q;
+  }
 
   handleMouseDown = (e: MouseEvent) => {
-    this.mouseDown = true;
-  }
-  handleMouseUp = (e: MouseEvent) => {
-    this.mouseDown = false;
+    this.start = this.getNormalizedMouseCoords(e);
   }
 
   handleMouseMove = (e: MouseEvent) => {
-    this.prevMousePos = this.mousePos;
-    this.mousePos = { x: e.pageX, y: e.pageY };
-
-    // recalculate theta and phi
-    if (this.mouseDown) {
-      this.theta -= (this.mousePos.x - this.prevMousePos.x) * 0.01;
-      this.phi -= (this.mousePos.y - this.prevMousePos.y) * 0.01;
+    if(this.start === null) {
+        return;
     }
+
+    const a = projectTrackball(this.start);
+    const b = projectTrackball(this.getNormalizedMouseCoords(e));
+
+    vec3.normalize(a, a);
+    vec3.normalize(b, b);
+
+
+    // quaternion rotation between these vectors
+    quat.rotationTo(this.currQ, a, b);
   }
+
+
+  handleMouseUp = (e: globalThis.MouseEvent) => {
+    if(this.start === null) {
+        return;
+    }
+
+    // commit the quaternion change
+    quat.mul(this.baseQ, this.currQ, this.baseQ);
+    this.currQ = quat.create();
+
+    // mouse up
+    this.start = null;
+  }
+
 
   constructor(r: number, ctx: HTMLCanvasElement) {
     this.canvas = ctx;
 
-    this.R = r;
-    this.phi = Math.PI / 2;
-    this.theta = 0;
+    this.r = r;
 
     this.canvas.addEventListener('mousedown', this.handleMouseDown);
     window.addEventListener('mouseup', this.handleMouseUp);
@@ -53,22 +110,14 @@ export class TrackballCamera {
   }
 
   getTrackballCameraMatrix = (width: number, height: number) => {
-    //  always assume the camera is oriented up
-    const worldup = new Float32Array([0, 1, 0]);
-    // alwys assume the target is in the center
-    const target = new Float32Array([0, 0, 0]);
-
-    const eye = new Float32Array([
-      this.R * Math.sin(this.phi) * Math.cos(this.theta),
-      this.R * Math.cos(this.phi),
-      this.R * Math.sin(this.phi) * Math.sin(this.theta),
-    ]);
+    const tmp = quat.mul(quat.create(), this.currQ, this.baseQ);
 
     const view = mat4.create();
-    mat4.lookAt(view, eye, target, worldup);
+    mat4.fromQuat(view, tmp);
 
     const proj = mat4.create();
-    mat4.ortho(proj, -1, 1, -1, 1, 0, 100);
+    mat4.ortho(proj, -2, 2, -2, 2, -2, 2);
+    //mat4.perspective(proj, glMatrix.toRadian(90), width/height, 0.001, 100);
 
     const out = mat4.create();
     mat4.mul(out, proj, view);
