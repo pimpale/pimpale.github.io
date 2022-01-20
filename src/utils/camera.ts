@@ -1,4 +1,5 @@
 import { glMatrix, quat, vec3, mat4 } from 'gl-matrix';
+import { TouchEvent } from 'react';
 import assert from '../utils/assert';
 
 // https://www.xarg.org/2021/07/trackball-rotation-using-quaternions/
@@ -38,7 +39,7 @@ export class TrackballCamera {
 
 
   // normalizes the mouse coords such that the edge of the trackball is +-1
-  getNormalizedMouseCoords = (e: MouseEvent) => {
+  getNormalizedMouseCoords = (e: {clientX:number, clientY:number}) => {
     const rect = this.canvas.getBoundingClientRect();
     // get client canvas x and y
     const client_cx = (rect.left + rect.right) / 2;
@@ -59,11 +60,11 @@ export class TrackballCamera {
     return q;
   }
 
-  handleMouseDown = (e: MouseEvent) => {
+  handleMouseDown = (e: {clientX:number, clientY:number}) => {
     this.start = this.getNormalizedMouseCoords(e);
   }
 
-  handleMouseMove = (e: MouseEvent) => {
+  handleMouseMove = (e: {clientX:number, clientY:number}) => {
     if (this.start === null) {
       return;
     }
@@ -79,7 +80,7 @@ export class TrackballCamera {
   }
 
 
-  handleMouseUp = (e: globalThis.MouseEvent) => {
+  handleMouseUp = (e: {clientX:number, clientY:number}) => {
     if (this.start === null) {
       return;
     }
@@ -92,22 +93,22 @@ export class TrackballCamera {
     this.start = null;
   }
 
-
   constructor(ctx: HTMLCanvasElement, options: TrackballCameraOptions) {
     this.options = options;
 
     this.canvas = ctx;
 
-    this.canvas.addEventListener('mousedown', this.handleMouseDown);
-    window.addEventListener('mouseup', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
+    this.canvas.addEventListener('pointerdown', this.handleMouseDown);
+    window.addEventListener('pointermove', this.handleMouseMove);
+    window.addEventListener('pointerup', this.handleMouseUp);
+
   }
 
 
   cleanup = () => {
-    this.canvas.removeEventListener('mousedown', this.handleMouseDown);
-    window.removeEventListener('mouseup', this.handleMouseUp);
-    window.removeEventListener('mousemove', this.handleMouseMove);
+    this.canvas.removeEventListener('pointerdown', this.handleMouseDown);
+    window.removeEventListener('pointermove', this.handleMouseMove);
+    window.removeEventListener('pointerup', this.handleMouseUp);
   }
 
   update = () => {
