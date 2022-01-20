@@ -54,6 +54,27 @@ export function createTexture(gl: WebGL2RenderingContext, width: number, height:
   return tex;
 }
 
+export function createTextureFromCanvas(gl: WebGL2RenderingContext, canvas:HTMLCanvasElement) {
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,                // mip level
+    gl.RGBA,          // internal format
+    canvas.width,
+    canvas.height,
+    0,                // border
+    gl.RGBA,          // format
+    gl.UNSIGNED_BYTE, // type
+    canvas
+  );
+  return tex;
+}
+
+
 export function createR32UITexture(gl: WebGL2RenderingContext, width: number, height: number) {
   const data = new Uint32Array(width * height);
 

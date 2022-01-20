@@ -94,8 +94,6 @@ export class TrackballCamera {
 
 
   constructor(ctx: HTMLCanvasElement, options: TrackballCameraOptions) {
-    assert(options.radius === undefined || options.radius > 0);
-
     this.options = options;
 
     this.canvas = ctx;

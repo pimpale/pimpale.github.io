@@ -1,10 +1,9 @@
 import React from "react";
-import { createShader, createProgram, createTexture, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
+import { createShader, createProgram, createTextureFromCanvas, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
-import { TrackballCamera, } from '../utils/camera';
-import { genXYPlane } from '../utils/uvplane';
-import { quat } from 'gl-matrix';
 import { createCurlNoise } from '../utils/noise';
+import { genPlane } from '../utils/uvplane';
+import { TrackballCamera, } from '../utils/camera';
 
 type IncompressibleTorusFluidDemoProps = {
   style?: React.CSSProperties,
@@ -250,7 +249,7 @@ in vec2 v_texCoord;
 // the output
 out vec4 outColor;
 
-const float ARROW_TILE_SIZE = 16.0;
+const float ARROW_TILE_SIZE = 32.0;
 
 // Computes the center pixel of the tile containing pixel pos
 vec2 arrowTileCenterCoord(vec2 pos) {
@@ -373,16 +372,27 @@ void main() {
 }
 `
 
-const torus_vs = `#version 300 es
-in vec3 a_position;
 
+const torus_vs = `#version 300 es
+in vec2 a_position;
+
+uniform float u_majorAlpha;
+uniform float u_minorAlpha;
+uniform float u_lerpAlpha;
 uniform mat4 u_worldViewProjection;
 
-out vec2 v_uv;
+
+
+out vec2 v_texCoord;
 
 void main() {
-   gl_Position = u_worldViewProjection * vec4(a_position, 1.0);
-   v_uv = a_position.xy/1.0;
+
+   float
+
+   gl_Position = u_worldViewProjection * vec4(a_position, 0.0, 1.0);
+
+
+   v_texCoord = a_position;
 }
 `;
 
@@ -390,22 +400,23 @@ const torus_fs = `#version 300 es
 precision highp float;
 precision highp sampler2D;
 
-// the velocity texture
+// the rendered texture
 uniform sampler2D u_render_tex;
 
-in vec2 v_uv;
+in vec2 v_texCoord;
 
 out vec4 v_outColor;
 
 void main() {
-  // v_outColor = texture(u_render_tex, v_uv);
-  // v_outColor = vec4(v_uv, 0.0, 1.0);
+  // color: 0xEBDBB2,
+  // v_outColor = vec4(0.922,0.859,0.698, 1.0);
+  v_outColor = texture(u_render_tex, v_texCoord);
 }
 `;
 
 const xn = 20;
-const yn = 20;
-const torusVertexes = genXYPlane(xn, yn);
+const yn = 20
+const torusVertexes = genPlane(xn, yn);
 
 
 // TODO: learn how to handle error cases
@@ -450,24 +461,13 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
   private renderOffset!: WebGLUniformLocation;
 
-  // the rendered texture.
-  // We don't need an array of these bc we don't have to ping pong
-  private renderTexture!: WebGLTexture;
-  private renderFramebuffer!: WebGLFramebuffer;
-
-
-  private camera!: TrackballCamera;
-
-  private worldViewProjectionLoc!: WebGLUniformLocation;
-
   private prog_advect_scalar!: WebGLProgram;
   private prog_advect_vel!: WebGLProgram;
   private prog_divergence!: WebGLProgram;
   private prog_solve_pressure!: WebGLProgram;
   private prog_apply_pressure_force!: WebGLProgram;
-  private prog_paint_vel!: WebGLProgram;
   private prog_render!: WebGLProgram;
-  private prog_render_torus!: WebGLProgram;
+  private prog_paint_vel!: WebGLProgram;
 
   // The index of the scalar texture we're using as a source
   private scalarIndex = 0;
@@ -492,20 +492,24 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
   private requestID!: number;
 
+
+  // this is the ref to the canvas
+  private torusCanvas = React.createRef<HTMLCanvasElement>();
+  private torusGl!: WebGL2RenderingContext;
+
+  private camera!: TrackballCamera;
+
+  private torusWorldViewProjectionLoc!: WebGLUniformLocation;
+
   constructor(props: IncompressibleTorusFluidDemoProps) {
     super(props);
   }
 
   componentDidMount() {
-    // init camera
-    this.camera = new TrackballCamera(this.canvas.current!, {});
-
     // get webgl
-    this.gl = this.canvas.current!.getContext('webgl2', { premultipliedAlpha: false })!;
-    this.gl.enable(this.gl.DEPTH_TEST);
+    this.gl = this.canvas.current!.getContext('webgl2')!;
 
     const ext = this.gl.getExtension('EXT_color_buffer_float');
-    const ext2 = this.gl.getExtension('EXT_float_blend');
 
     // setup a full canvas clip space quad
     const buffer = this.gl.createBuffer();
@@ -598,18 +602,6 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
       // push framebuffer
       this.pressureFramebuffers.push(fbo);
     }
-
-    this.renderTexture = createTexture(this.gl, this.props.size, this.props.size)!;
-    this.renderFramebuffer = this.gl.createFramebuffer()!;
-    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.renderFramebuffer);
-    // configure the currently active framebuffer to use te
-    this.gl.framebufferTexture2D(
-      this.gl.FRAMEBUFFER, // will bind as a framebuffer
-      this.gl.COLOR_ATTACHMENT0, // Attaches the texture to the framebuffer's color buffer. 
-      this.gl.TEXTURE_2D, // we have a 2d texture
-      this.renderTexture, // the texture to attach
-      0 // the mipmap level (we don't want mipmapping, so we set to 0)
-    );
 
 
     // build the compute program
@@ -851,50 +843,60 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
       this.gl.uniform1i(velTexLoc, 1);
     }
 
-    {
-      this.prog_render_torus = createProgram(
-        this.gl,
-        [
-          createShader(this.gl, this.gl.VERTEX_SHADER, torus_vs),
-          createShader(this.gl, this.gl.FRAGMENT_SHADER, torus_fs),
-        ]
-      )!;
 
-      const positionLoc = this.gl.getAttribLocation(this.prog_render_torus, 'a_position');
-      const renderTexLoc = this.gl.getUniformLocation(this.prog_render_torus, 'u_render_tex');
-
-      this.worldViewProjectionLoc =
-        this.gl.getUniformLocation(this.prog_render_torus, "u_worldViewProjection")!;
-
-      const buffer = this.gl.createBuffer();
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-      this.gl.bufferData(
-        this.gl.ARRAY_BUFFER,
-        new Float32Array(torusVertexes.flatMap(x => { return [x[0], x[1], x[2]] })),
-        this.gl.STATIC_DRAW
-      );
-      // setup our attributes to tell WebGL how to pull
-      // the data from the buffer above to the position attribute
-      this.gl.enableVertexAttribArray(positionLoc);
-      this.gl.vertexAttribPointer(
-        positionLoc,
-        3,              // size (num components)
-        this.gl.FLOAT,  // type of data in buffer
-        false,          // normalize
-        0,              // stride (0 = auto)
-        0,              // offset
-      );
-
-      // bind uniforms
-      this.gl.useProgram(this.prog_render_torus);
-      // Tell the shader to get the scalar texture from texture unit 4
-      this.gl.uniform1i(renderTexLoc, 4);
-    }
 
     // add canvas handler
     this.canvas.current!.addEventListener('mousedown', this.handleMouseDown);
     this.canvas.current!.addEventListener('mouseup', this.handleMouseUp);
     this.canvas.current!.addEventListener('mousemove', this.handleMouseMove);
+
+
+    {
+      // init camera
+      this.camera = new TrackballCamera(this.torusCanvas.current!, {});
+
+      // get webgl
+      this.torusGl = this.torusCanvas.current!.getContext('webgl2', { premultipliedAlpha: false })!;
+
+      const program = createProgram(
+        this.torusGl,
+        [
+          createShader(this.torusGl, this.torusGl.VERTEX_SHADER, torus_vs),
+          createShader(this.torusGl, this.torusGl.FRAGMENT_SHADER, torus_fs),
+        ]
+      )!;
+
+      const positionLoc = this.torusGl.getAttribLocation(program, 'a_position');
+      const renderTexLoc =
+        this.torusGl.getUniformLocation(program, "u_render_tex");
+
+      this.torusWorldViewProjectionLoc =
+        this.torusGl.getUniformLocation(program, "u_worldViewProjection")!;
+
+      const buffer = this.torusGl.createBuffer();
+      this.torusGl.bindBuffer(this.torusGl.ARRAY_BUFFER, buffer);
+      this.torusGl.bufferData(
+        this.torusGl.ARRAY_BUFFER,
+        new Float32Array(torusVertexes.flatMap(x => ([x[0], x[1]]))),
+        this.torusGl.STATIC_DRAW
+      );
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.torusGl.enableVertexAttribArray(positionLoc);
+      this.torusGl.vertexAttribPointer(
+        positionLoc,
+        2,                   // size (num components)
+        this.torusGl.FLOAT,  // type of data in buffer
+        false,          // normalize
+        0,              // stride (0 = auto)
+        0,              // offset
+      );
+
+      this.torusGl.useProgram(program);
+
+      // Tell the shader to get the render texture from texture unit 0
+      this.torusGl.uniform1i(renderTexLoc, 0);
+    }
 
     // start animation loop
     this.animationLoop();
@@ -933,11 +935,14 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
     window.cancelAnimationFrame(this.requestID!);
     // destroy webgl
     this.gl.getExtension('WEBGL_lose_context')!.loseContext();
+    this.torusGl.getExtension('WEBGL_lose_context')!.loseContext();
+
+    this.camera.cleanup();
   }
 
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
-
+    this.camera.update();
 
     // handle draw when there's no loops
     if (this.mouseDown) {
@@ -1114,9 +1119,8 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
         this.velIndex = (this.velIndex + 1) % 2;
       }
     }
-
     {
-      // now draw to render texture
+      // now draw to canvas
       this.gl.useProgram(this.prog_render);
 
       if (this.viewPressure) {
@@ -1131,30 +1135,32 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
         this.gl.uniform1f(this.renderOffset, 0);
       }
 
-      // set the framebuffer to draw at the render texture
-      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.renderFramebuffer);
-
-      // execute program, doing paint
+      // set the canvas as the current framebuffer
+      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+      // execute draw to canvas
       this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
     }
 
-    this.gl.useProgram(this.prog_render_torus);
+    {
+      // set uniform
+      const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.size, this.props.size);
+      this.torusGl.uniformMatrix4fv(this.torusWorldViewProjectionLoc, false, worldViewProjectionMat);
 
-    // bind the render texture to 4
-    this.gl.activeTexture(this.gl.TEXTURE4);
-    this.gl.bindTexture(this.gl.TEXTURE_2D, this.renderTexture);
 
-    // set uniform
-    const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.size, this.props.size);
-    this.gl.uniformMatrix4fv(this.worldViewProjectionLoc, false, worldViewProjectionMat);
+      // bind the render pressure texture to texture unit 0
+      this.torusGl.activeTexture(this.torusGl.TEXTURE0);
+      this.torusGl.bindTexture(this.torusGl.TEXTURE_2D,  createTextureFromCanvas(this.torusGl, this.canvas.current!));
 
-    // set the canvas as the current framebuffer
-    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
 
-    // draw triangles
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, torusVertexes.length);
+      // settings
+      this.torusGl.enable(this.torusGl.BLEND);
+      this.torusGl.blendFunc(this.torusGl.SRC_ALPHA, this.torusGl.ONE_MINUS_SRC_ALPHA);
 
-    this.camera.update();
+      // draw triangles
+      this.torusGl.drawArrays(this.torusGl.TRIANGLES, 0, torusVertexes.length);
+    }
+
+
   }
 
   render() {
@@ -1165,6 +1171,12 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
             <canvas
               className="border border-dark mx-auto my-3"
               ref={this.canvas}
+              height={this.props.size}
+              width={this.props.size}
+            />
+            <canvas
+              className="border border-dark mx-auto my-3"
+              ref={this.torusCanvas}
               height={this.props.size}
               width={this.props.size}
             />
