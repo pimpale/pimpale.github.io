@@ -1,0 +1,1 @@
+import{L as e,S as o}from"./style.3938089f.js";import{R as r,j as t,a as n}from"./vendor.6b2d0444.js";function a(){return t(e,{children:t(o,{id:"motivation",name:"Motivation",children:"Todo..."})})}r.render(t(n.StrictMode,{children:t(a,{})}),document.getElementById("root"));

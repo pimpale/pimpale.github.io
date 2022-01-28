@@ -1,1 +1,0 @@
-import"./style.bb859433.js";import{R as e,j as t,a as r}from"./vendor.6874924e.js";import{A as o}from"./ArticleLayout.9b9a55b6.js";import{A as a}from"./Articles.2eaf31c8.js";const i=()=>t(o,{children:({Citation:s,CitationBank:c})=>t(a,{})});e.render(t(r.StrictMode,{children:t(i,{})}),document.getElementById("root"));
