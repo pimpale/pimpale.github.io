@@ -126,3 +126,5 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, WebGL2SetupD
 }
 
 export default WebGL2SetupDemo;
+
+// color: 0xEBDBB2,
