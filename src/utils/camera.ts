@@ -1,5 +1,4 @@
 import { glMatrix, quat, vec3, mat4 } from 'gl-matrix';
-import { TouchEvent } from 'react';
 import assert from '../utils/assert';
 
 // https://www.xarg.org/2021/07/trackball-rotation-using-quaternions/
@@ -20,26 +19,57 @@ function projectTrackball(v: { x: number, y: number }) {
 }
 
 export type TrackballCameraOptions = {
-  ortho?: { top: number, bottom: number, near: number, far: number, left: number, right: number },
+  ortho?: Ortho,
   rotation?: quat,
+  dampingFactor?: number,
 }
+
+type Ortho = {
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  near: number,
+  far: number,
+}
+
+type Point = {
+  x: number,
+  y: number
+}
+
 
 export class TrackballCamera {
 
-  private options: TrackballCameraOptions;
+  // options
+
+  // the orthographic camera settings
+  private ortho: Ortho;
+  // this is the rotation that would applied to the object every frame not being dragged
+  private rotationQ;
+  // how much to damp the rotation at each step
+  private dampingFactor: number;
 
   private canvas: HTMLCanvasElement;
 
-  // if mouse is pressed
-  private start: null | { x: number, y: number } = null;
+  // if mouse is pressed, start location of drag
+  private mouseLoc: null | { start: Point, current: Point, previous: Point } = null;
 
-  // current quaternion
+  // the following two quaternions are multiplied together to produce the
+  // real rotation
+
+  // the base orientation of the object
   private baseQ = quat.create();
+  // the rotation added by the mouse (generated each frame)
   private currQ = quat.create();
+  // the rotation used for momentum
+  private momentumQ = quat.create();
 
+  // when not being dragged, how much to show the momentum
+  private currentMomentumLevel = 0;
 
   // normalizes the mouse coords such that the edge of the trackball is +-1
-  getNormalizedMouseCoords = (e: {clientX:number, clientY:number}) => {
+  getNormalizedMouseCoords = (e: { clientX: number, clientY: number }) => {
     const rect = this.canvas.getBoundingClientRect();
     // get client canvas x and y
     const client_cx = (rect.left + rect.right) / 2;
@@ -60,61 +90,114 @@ export class TrackballCamera {
     return q;
   }
 
-  handleMouseDown = (e: {clientX:number, clientY:number}) => {
-    this.start = this.getNormalizedMouseCoords(e);
+  handleMouseDown = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // set data
+    const loc = this.getNormalizedMouseCoords(e);
+    this.mouseLoc = { start: loc, current: loc, previous: loc };
   }
 
-  handleMouseMove = (e: {clientX:number, clientY:number}) => {
-    if (this.start === null) {
+  handleMouseMove = (e: MouseEvent) => {
+    if (this.mouseLoc === null) {
       return;
     }
 
-    const a = projectTrackball(this.start);
-    const b = projectTrackball(this.getNormalizedMouseCoords(e));
+    e.preventDefault();
+    e.stopPropagation();
+
+    // set mouse locations
+    this.mouseLoc.previous = this.mouseLoc.current
+    this.mouseLoc.current = this.getNormalizedMouseCoords(e);
+
+    const a = projectTrackball(this.mouseLoc.start);
+    const b = projectTrackball(this.mouseLoc.current);
 
     vec3.normalize(a, a);
     vec3.normalize(b, b);
 
     // quaternion rotation between these vectors
     quat.rotationTo(this.currQ, a, b);
+
   }
 
-
-  handleMouseUp = (e: {clientX:number, clientY:number}) => {
-    if (this.start === null) {
+  handleMouseUp = (e: MouseEvent) => {
+    if (this.mouseLoc === null) {
       return;
     }
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    // save the rotational diff between the last pos and the current one
+    const a = projectTrackball(this.mouseLoc.previous);
+    const b = projectTrackball(this.mouseLoc.current);
+
+    vec3.normalize(a, a);
+    vec3.normalize(b, b);
+
+    quat.rotationTo(this.momentumQ, a, b);
 
     // commit the quaternion change
     quat.mul(this.baseQ, this.currQ, this.baseQ);
     this.currQ = quat.create();
 
     // mouse up
-    this.start = null;
+    this.mouseLoc = null;
+
+    // set momentum level to 1
+    this.currentMomentumLevel = 1;
   }
 
   constructor(ctx: HTMLCanvasElement, options: TrackballCameraOptions) {
-    this.options = options;
+    if (options.ortho) {
+      this.ortho = options.ortho;
+    } else {
+      this.ortho = {
+        left: -1,
+        right: 1,
+        bottom: -1,
+        top: 1,
+        near: -1,
+        far: 1,
+      };
+    }
+
+    if (options.rotation) {
+      this.rotationQ = options.rotation;
+    } else {
+      this.rotationQ = quat.create();
+    }
+
+    if(options.dampingFactor !== undefined) {
+        this.dampingFactor = options.dampingFactor;
+    } else {
+        this.dampingFactor = 0.9;
+    }
+
 
     this.canvas = ctx;
 
-    this.canvas.addEventListener('pointerdown', this.handleMouseDown);
-    window.addEventListener('pointermove', this.handleMouseMove);
-    window.addEventListener('pointerup', this.handleMouseUp);
+    this.canvas.addEventListener('mousedown', this.handleMouseDown);
+    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('mouseup', this.handleMouseUp);
 
   }
 
 
   cleanup = () => {
-    this.canvas.removeEventListener('pointerdown', this.handleMouseDown);
-    window.removeEventListener('pointermove', this.handleMouseMove);
-    window.removeEventListener('pointerup', this.handleMouseUp);
+    this.canvas.removeEventListener('mousedown', this.handleMouseDown);
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('mouseup', this.handleMouseUp);
   }
 
   update = () => {
-    if (this.start === null && this.options.rotation !== undefined) {
-      quat.mul(this.baseQ, this.baseQ, this.options.rotation);
-    }
+    if (this.mouseLoc === null) {
+      const combinedQ = quat.slerp(quat.create(), this.rotationQ, this.momentumQ, this.currentMomentumLevel);
+      this.currentMomentumLevel *= this.dampingFactor;
+      quat.mul(this.baseQ, combinedQ , this.baseQ);
+    }  
   }
 
   getTrackballCameraMatrix = (width: number, height: number) => {
@@ -124,13 +207,8 @@ export class TrackballCamera {
     mat4.fromQuat(view, tmp);
 
     const proj = mat4.create();
-    if (this.options.ortho) {
-      const b = this.options.ortho;
-      mat4.ortho(proj, b.left, b.right, b.bottom, b.top, b.near, b.far);
-    } else {
-      let r = 1;
-      mat4.ortho(proj, -r, r, -r, r, -r, r);
-    }
+    const b = this.ortho;
+    mat4.ortho(proj, b.left, b.right, b.bottom, b.top, b.near, b.far);
 
     const out = mat4.create();
     mat4.mul(out, proj, view);

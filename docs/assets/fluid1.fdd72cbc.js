@@ -1,4 +1,4 @@
-import{S as g}from"./style.64e13ac1.js";import{a as h,j as t,b as l,R as y,F as L}from"./vendor.86d6a677.js";import{A as C}from"./ArticleLayout.71e43f1c.js";import{c as p,A as _}from"./math.c6be20ca.js";import{c as u,a,o as T,b as x,d as f,e as D,f as b,g as R}from"./webgl.eb3a0ae9.js";import{c as A}from"./noise.adf819e7.js";const U=`#version 300 es
+import{S as g}from"./style.23d33e06.js";import{a as h,j as t,b as l,R as y,F as L}from"./vendor.8c8c5e31.js";import{A as C}from"./ArticleLayout.576cc918.js";import{c as p,A as _}from"./math.d1c16880.js";import{c as u,a,o as T,b as x,d as f,e as D,f as b,g as R}from"./webgl.eb3a0ae9.js";import{c as A}from"./noise.d9f37728.js";const U=`#version 300 es
 in vec4 position;
 void main() {
   gl_Position = position;

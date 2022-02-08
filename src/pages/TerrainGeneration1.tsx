@@ -352,7 +352,6 @@ const TerrainGeneration = () => <ArticleLayout>{
         <TorusDemo
           className="mx-auto"
           style={{ width: "20em" }}
-          texture={grayscaleMap(new ScalarMap(240, 240, (x, y) => noise2D(x / 20, y / 20) / 2 + 0.5))}
           aspectRatio={2}
           detailLevel={10}
           wireframe
