@@ -276,9 +276,14 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     }
 
     // add canvas handler
-    this.canvas.current!.addEventListener('mousedown', this.handleMouseDown);
-    this.canvas.current!.addEventListener('mouseup', this.handleMouseUp);
-    this.canvas.current!.addEventListener('mousemove', this.handleMouseMove);
+    this.canvas.current!.addEventListener('pointerdown', this.handleMouseDown);
+    this.canvas.current!.addEventListener('pointermove', this.handleMouseMove);
+    window.addEventListener('pointerup', this.handleMouseUp);
+    // disable touch movements
+    this.canvas.current!.addEventListener("touchstart",  this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchmove",   this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchend",    this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchcancel", this.discardTouchEvent)
 
     // start animation loop
     this.animationLoop();
@@ -286,6 +291,8 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
   handleReset = () => {
   }
+
+  discardTouchEvent = (e: TouchEvent) => e.preventDefault();
 
   getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
     const rect = canvas.getBoundingClientRect(); // abs. size of element
@@ -300,9 +307,11 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
   handleMouseDown = (e: MouseEvent) => {
     this.mouseDown = true;
+    this.mousePos = this.getMousePos(this.canvas.current!, e);
   }
   handleMouseUp = (e: MouseEvent) => {
     this.mouseDown = false;
+    this.mousePos = this.getMousePos(this.canvas.current!, e);
   }
 
   handleMouseMove = (e: MouseEvent) => {
@@ -310,10 +319,17 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   }
 
   componentWillUnmount() {
+
     // remove listeners on canvas
-    this.canvas.current!.removeEventListener('mousedown', this.handleMouseDown);
-    this.canvas.current!.removeEventListener('mouseup', this.handleMouseUp);
-    this.canvas.current!.removeEventListener('mousemove', this.handleMouseMove);
+    this.canvas.current!.removeEventListener('pointerdown', this.handleMouseDown);
+    this.canvas.current!.removeEventListener('pointermove', this.handleMouseMove);
+    window.removeEventListener('pointerup', this.handleMouseUp);
+    // reenable touch movements
+    this.canvas.current!.removeEventListener("touchstart",  this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchmove",   this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchend",    this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchcancel", this.discardTouchEvent)
+
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
     // destroy webgl

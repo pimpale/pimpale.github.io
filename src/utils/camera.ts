@@ -91,9 +91,6 @@ export class TrackballCamera {
   }
 
   handleMouseDown = (e: MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
     // set data
     const loc = this.getNormalizedMouseCoords(e);
     this.mouseLoc = { start: loc, current: loc, previous: loc };
@@ -103,9 +100,6 @@ export class TrackballCamera {
     if (this.mouseLoc === null) {
       return;
     }
-
-    e.preventDefault();
-    e.stopPropagation();
 
     // set mouse locations
     this.mouseLoc.previous = this.mouseLoc.current
@@ -127,9 +121,6 @@ export class TrackballCamera {
       return;
     }
 
-    e.preventDefault();
-    e.stopPropagation();
-
     // save the rotational diff between the last pos and the current one
     const a = projectTrackball(this.mouseLoc.previous);
     const b = projectTrackball(this.mouseLoc.current);
@@ -149,6 +140,8 @@ export class TrackballCamera {
     // set momentum level to 1
     this.currentMomentumLevel = 1;
   }
+
+  discardTouchEvent = (e: TouchEvent) => e.preventDefault();
 
   constructor(ctx: HTMLCanvasElement, options: TrackballCameraOptions) {
     if (options.ortho) {
@@ -179,18 +172,30 @@ export class TrackballCamera {
 
     this.canvas = ctx;
 
-    this.canvas.addEventListener('mousedown', this.handleMouseDown);
-    window.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('mouseup', this.handleMouseUp);
+    this.canvas.addEventListener('pointerdown', this.handleMouseDown);
+    window.addEventListener('pointermove', this.handleMouseMove);
+    window.addEventListener('pointerup', this.handleMouseUp);
 
+    // disable touch movements
+    this.canvas.addEventListener("touchstart",  this.discardTouchEvent)
+    this.canvas.addEventListener("touchmove",   this.discardTouchEvent)
+    this.canvas.addEventListener("touchend",    this.discardTouchEvent)
+    this.canvas.addEventListener("touchcancel", this.discardTouchEvent)
   }
 
 
   cleanup = () => {
-    this.canvas.removeEventListener('mousedown', this.handleMouseDown);
-    window.removeEventListener('mousemove', this.handleMouseMove);
-    window.removeEventListener('mouseup', this.handleMouseUp);
+    this.canvas.removeEventListener('pointerdown', this.handleMouseDown);
+    window.removeEventListener('pointermove', this.handleMouseMove);
+    window.removeEventListener('pointerup', this.handleMouseUp);
+
+    // reenable touch movements
+    this.canvas.removeEventListener("touchstart",  this.discardTouchEvent)
+    this.canvas.removeEventListener("touchmove",   this.discardTouchEvent)
+    this.canvas.removeEventListener("touchend",    this.discardTouchEvent)
+    this.canvas.removeEventListener("touchcancel", this.discardTouchEvent)
   }
+
 
   update = () => {
     if (this.mouseLoc === null) {

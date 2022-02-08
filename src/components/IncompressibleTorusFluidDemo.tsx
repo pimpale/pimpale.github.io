@@ -430,6 +430,12 @@ const xn = 20;
 const yn = 20
 const torusVertexes = genPlane(xn, yn);
 
+type Point = {
+  x: number,
+  y: number
+}
+
+
 
 // TODO: learn how to handle error cases
 
@@ -494,10 +500,9 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
   private needsScalarReset = true;
   private needsVelocityReset = true;
 
-  // if mouse is pressed
-  private mouseDown = false;
-  private prevMousePos = { x: 0, y: 0 };
-  private mousePos = { x: 0, y: 0 };
+
+  // mouse status
+  private mousePos: { current: Point, previous: Point } | null = null;
 
   // if we're viewing pressure
   private viewPressure = false;
@@ -870,9 +875,14 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
 
     // add canvas handler
-    this.canvas.current!.addEventListener('mousedown', this.handleMouseDown);
-    this.canvas.current!.addEventListener('mouseup', this.handleMouseUp);
-    this.canvas.current!.addEventListener('mousemove', this.handleMouseMove);
+    this.canvas.current!.addEventListener('pointerdown', this.handleMouseDown);
+    this.canvas.current!.addEventListener('pointermove', this.handleMouseMove);
+    window.addEventListener('pointerup', this.handleMouseUp);
+    // disable touch movements
+    this.canvas.current!.addEventListener("touchstart", this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchmove", this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchend", this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchcancel", this.discardTouchEvent)
 
 
     {
@@ -977,23 +987,43 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
     }
   }
 
+
   handleMouseDown = (e: MouseEvent) => {
-    this.mouseDown = true;
+    const v = this.getMousePos(this.canvas.current!, e);
+    this.mousePos = {
+      current: v,
+      previous: v
+    };
   }
   handleMouseUp = (e: MouseEvent) => {
-    this.mouseDown = false;
+    this.mousePos = null;
   }
 
   handleMouseMove = (e: MouseEvent) => {
-    this.prevMousePos = this.mousePos;
-    this.mousePos = this.getMousePos(this.canvas.current!, e);
+    if (!this.mousePos) {
+      return;
+    }
+    this.mousePos = {
+      current: this.getMousePos(this.canvas.current!, e),
+      previous: this.mousePos.current
+    };
   }
 
+  discardTouchEvent = (e: TouchEvent) => e.preventDefault();
+
+
   componentWillUnmount() {
+
     // remove listeners on canvas
-    this.canvas.current!.removeEventListener('mousedown', this.handleMouseDown);
-    this.canvas.current!.removeEventListener('mouseup', this.handleMouseUp);
-    this.canvas.current!.removeEventListener('mousemove', this.handleMouseMove);
+    this.canvas.current!.removeEventListener('pointerdown', this.handleMouseDown);
+    this.canvas.current!.removeEventListener('pointermove', this.handleMouseMove);
+    window.removeEventListener('pointerup', this.handleMouseUp);
+    // reenable touch movements
+    this.canvas.current!.removeEventListener("touchstart", this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchmove", this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchend", this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchcancel", this.discardTouchEvent)
+
 
     // remove listeners on thing
     this.torusnessRange.current!.removeEventListener('input', this.handleTorusChange);
@@ -1015,7 +1045,7 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
     this.camera.update();
 
     // handle draw when there's no loops
-    if (this.mouseDown) {
+    if (this.mousePos) {
       // in order to draw the velocity texture we will execute a program
       this.gl.useProgram(this.prog_paint_vel);
 
@@ -1027,12 +1057,12 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
       // set old and new mouse positions
       this.gl.uniform2f(this.oldMouseLoc,
-        clamp(this.prevMousePos.x, 0, this.props.size) / this.props.size,
-        clamp(this.props.size - this.prevMousePos.y, 0, this.props.size) / this.props.size,
+        clamp(this.mousePos.previous.x, 0, this.props.size) / this.props.size,
+        clamp(this.props.size - this.mousePos.previous.y, 0, this.props.size) / this.props.size,
       );
       this.gl.uniform2f(this.newMouseLoc,
-        clamp(this.mousePos.x, 0, this.props.size) / this.props.size,
-        clamp(this.props.size - this.mousePos.y, 0, this.props.size) / this.props.size,
+        clamp(this.mousePos.current.x, 0, this.props.size) / this.props.size,
+        clamp(this.props.size - this.mousePos.current.y, 0, this.props.size) / this.props.size,
       );
 
       // execute program, doing paint
