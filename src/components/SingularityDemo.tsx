@@ -189,7 +189,7 @@ class SingularityDemo extends React.Component<SingularityDemoProps, SingularityD
   render() {
     return <div style={this.props.style} className={this.props.className}>
       <div ref={this.mount} className="ratio ratio-1x1 border border-dark" />
-      <div className="mx-auto d-block flex-grow-1 ">
+      <div className="mx-auto flex-grow-1 ">
         <label className="form-label">Circularness</label>
         <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.range} />
       </div>

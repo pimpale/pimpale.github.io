@@ -21,7 +21,7 @@ import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import AsideCard from '../components/AsideCard';
 import ImageDataDisplay from '../components/ImageDataDisplay';
 import ZoomableImageDataDisplay from '../components/ZoomableImageDataDisplay';
-import { loadImage, extend, boxBlur } from '../utils/image';
+import { loadImage, extend, boxBlur, imageDataFromFn } from '../utils/image';
 
 import WrappingNoise3TsUrl from "../assets/terrain_generation/wrapping_noise3_ts.txt?url";
 import WrappingNoise4TsUrl from "../assets/terrain_generation/wrapping_noise4_ts.txt?url";
@@ -50,7 +50,7 @@ const TerrainGeneration = () => <ArticleLayout>{
     <Section id="overview" name="Overview">
       <h4>Goals</h4>
       <p>
-        Our goal in this article will be to procedurally generate and simulate a small game world.
+        Our goal in this series of articles will be to procedurally generate and simulate a small game world.
         There are hundreds of ways to do this, and as we go along, we'll explore some of the different strategies we could have chosen and their tradeoffs.
       </p>
       <h4>Rationale</h4>
@@ -82,6 +82,10 @@ const TerrainGeneration = () => <ArticleLayout>{
       <p>
         To keep things interesting, we'll make our game world unique by putting it on a torus planet.
         This will have a ton of effects on the terrain, climate, and overall environment.
+      </p>
+      <h4>In this article</h4>
+      <p>
+        In this article specifically, we'll decide on the game world's topology and generate the height map.
       </p>
     </Section>
     <Section id="topology" name="World Topology">
@@ -351,9 +355,28 @@ const TerrainGeneration = () => <ArticleLayout>{
         </p>
         <TorusDemo
           className="mx-auto"
-          style={{ width: "20em" }}
+          style={{ maxWidth: "30em" }}
+          size={400}
+          texture={imageDataFromFn(200, 200, (x, y) => {
+            const txsize = 200;
+            const tysize = 200;
+            if (x === 0 || x === txsize - 1) {
+              return 0xdc3545;
+            } else if (y === 0 || y === tysize - 1) {
+              return 0x6610f2;
+            } else {
+              const count = 10;
+              const a = Math.floor(x / (txsize / count)) % 2;
+              const b = Math.floor(y / (tysize / count)) % 2;
+              if (a + b == 1) {
+                return 0xEBDBB2;
+              } else {
+                return 0x1d2021;
+              }
+            }
+          })}
           aspectRatio={2}
-          detailLevel={10}
+          detailLevel={40}
           wireframe
         />
       </AsideCard>
@@ -459,7 +482,8 @@ const TerrainGeneration = () => <ArticleLayout>{
       <AsideCard title="Nonwrapping Texture" id="nonwrapping-textures-demo">
         <TorusDemo
           className="mx-auto"
-          style={{ width: "20em" }}
+          style={{ maxWidth: "30em" }}
+          size={400}
           texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => noise2D(x / 20, y / 20) / 2 + 0.5))}
           aspectRatio={2}
           detailLevel={20}
@@ -615,13 +639,14 @@ const TerrainGeneration = () => <ArticleLayout>{
       <AsideCard title="Wrapping Texture" id="torus3-textures-demo">
         <TorusDemo
           className="mx-auto"
-          style={{ width: "20em" }}
+          style={{ maxWidth: "30em" }}
+          size={400}
           aspectRatio={2}
           texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => {
             const scale = 0.3;
             const R = 2;
             const r = 1;
-            const theta = (x / 200) * Math.PI;
+            const theta = (x / 200) * Math.PI + Math.PI;
             const phi = (y / 200) * Math.PI;
             const noise = noise3D(
               (R + r * Math.cos(theta)) * Math.cos(phi) / scale,
@@ -672,12 +697,12 @@ const TerrainGeneration = () => <ArticleLayout>{
         However, it means that dungeons or player built structures will be heavily distorted.
       </p>
       <p>
-        If the distortion ratio were small enough, the problems could be small enough to ignore.
-        However, with a distortion ratio of 3, these problems must be addressed somehow.
+        If the distortion ratio were small, the problems could be minor enough to ignore.
+        With a distortion ratio of 3, however, these problems must be addressed somehow.
       </p>
       <h4>Cheating using the 4th dimension</h4>
       <p>
-        In the following section, we'll describe a method to eliminate distortion.
+        In the following section, we'll describe a method to eliminate distortion at the expense of physical realism.
         However, it may not be necessary depending on your requirements.
       </p>
       <p>
@@ -685,7 +710,7 @@ const TerrainGeneration = () => <ArticleLayout>{
         Unfortunately, our texture suffered from distortion, preventing us from using voxels.
       </p>
       <p>
-        It turns out that all toruses have this problem, to varying extents.
+        This problem is present in all toruses embedded in 3D space.
         The fundamental reason why is revealed when we take a look at the parametric equation once again:
       </p>
       <TeX block>{String.raw`
@@ -705,6 +730,8 @@ const TerrainGeneration = () => <ArticleLayout>{
       </p>
       <p>
         In order to get the degree of freedom necessary, we need to add another dimension.
+      </p>
+      <p>
         OpenSimplex supports up to 4 dimensions, so we're able to define the following function:
       </p>
       <TeX block>
@@ -753,7 +780,8 @@ const TerrainGeneration = () => <ArticleLayout>{
       <AsideCard title="Wrapping Texture" id="torus4-textures-demo">
         <TorusDemo
           className="mx-auto"
-          style={{ width: "20em" }}
+          style={{ maxWidth: "30em" }}
+          size={400}
           aspectRatio={2}
           texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => {
             const scale = 0.3;
@@ -779,56 +807,138 @@ const TerrainGeneration = () => <ArticleLayout>{
         When flat, it's also distortion free.
       </p>
       <p>
-        However, this solution is a little bit of "cheating" on our part, since this isn't a realistic torus that could form in 3D space.
-        For the sake of gameplay reasons however, we'll allow it.
+        However, this solution is a little bit of "cheating" on our part, since this isn't a torus that could form in 3D space.
         In addition, another downside of this method is that the texture generated from this process doesn't actually correspond to the shape of the torus in 3D space.
-        It won't be noticeable from the player's perspective, but if we want to render a the torus from space, we'll run into problems.
+        It won't be noticeable from the player's perspective, but if we want to render the torus from space, we'll run into problems.
       </p>
       <h4>More realistic noise</h4>
       <p>
-        Using our new noise, let's try placing some oceans.
-        We'll paint all regions at the halfway point or below blue:
+        Now that we have our noise, let's try making a map.
+        Note that this section is unrelated to our torus parametrization.
+        We'll use normal 2D noise in this section to keep things simple, but the methods here are generally applicable to all kinds of noise.
       </p>
-      <AsideCard title="Noise With Oceans">
+      <AsideCard title="Noise With Oceans, Attempt 1" id="noise-with-oceans-1">
+        <p>
+          Recall that we are sampling the value of our noise function at every point on our grid to produce an elevation map.
+          This will be a good starting point for further generation such as determining the temperature, adding erosion, and more.
+        </p>
+        <p>
+          OpenSimplex noise returns a value between -1 and 1.
+          Let's designate this value <TeX>H</TeX> and let it designate kilometers above sea level.
+        </p>
+        <p>
+          So, all areas where <TeX>{String.raw`H < 0`}</TeX> are underwater. We'll paint them blue.
+          <br />
+          If <TeX>{String.raw`H \ge 0`}</TeX>, then the area is above sea level. We'll paint those regions gray.
+        </p>
         <ImageDataDisplay
-          style={{ width: "15em", height: "15em" }}
-          className="border border-dark mx-auto d-block"
+          style={{ width: "20em", }}
+          className="border border-dark mx-auto d-block mb-3"
           data={thresholdHeightMap(new ScalarMap(400, 400, (x, y) => {
-            const scale = 1.3;
-            const theta = (x / 200) * Math.PI;
-            const phi = (y / 200) * Math.PI;
-            const noise = noise4D(
-              Math.cos(phi) / scale,
-              Math.sin(phi) / scale,
-              Math.cos(theta) / scale,
-              Math.sin(theta) / scale
+
+            const scale1 = 0.005;
+            const noise1 = noise2D(
+              x * scale1,
+              y * scale1,
             );
-            return noise / 2 + 0.5;
+
+            return noise1 / 2 + 0.5;
           }
           ), 0.5, [0x07, 0x66, 0x78])}
         />
       </AsideCard>
       <p>
-        Unfortunately, it looks rather bland.
-        Realistic coastlines don't look like this, they have a lot more fine detail.
+        Unfortunately, our map looks rather bland.
+        There aren't any fine details on the coastlines, nor small islands.
+        On land, we're missing mountains, valleys and rivers.
       </p>
       <p>
-        A simple fix is to make another layer of noise, this one with a higher frequency.
-        Then, we can add together these two layers to get a more natural looking terrain.
+        A simple fix is to increase the <b>frequency</b>, of our noise.
+        That is, we'll increase how quickly the noise can change values.
       </p>
+
+      <AsideCard title="Noise With Oceans, Attempt 2" id="noise-with-oceans-2">
+        <ImageDataDisplay
+          style={{ width: "20em", }}
+          className="border border-dark mx-auto d-block mb-3"
+          data={thresholdHeightMap(new ScalarMap(400, 400, (x, y) => {
+
+            const scale2 = 0.025;
+            const noise2 = noise2D(
+              x * scale2,
+              y * scale2
+            );
+
+            return noise2 / 2 + 0.5;
+
+          }
+          ), 0.5, [0x07, 0x66, 0x78])}
+        />
+      </AsideCard>
+
+      <p>
+        This map definitely has more details, but it lacks any large scale structure like oceans and continents.
+      </p>
+      <p>
+        However, there's an intuitive way to combine the strengths of both of these maps: add them together!
+        <br />
+        That is, if we have elevations:
+        <TeX block>{String.raw`
+          H_{lowfreq} : \reals^2 \to \reals \\
+          H_{hifreq} : \reals^2 \to \reals
+        `}</TeX>
+        then we can create a new weighted sum <TeX>H</TeX>:
+        <TeX block>{String.raw`
+          H(\theta, \phi) = \alpha H_{lowfreq}(\theta, \phi) + \beta H_{hifreq}(\theta, \phi)
+        `}</TeX>
+      </p>
+
+      <p>
+        Note that we can apply weights on one or more of the elevation maps.
+        In general, the rule of thumb is that we want to apply higher weights to low frequency noise, otherwise you get fragmentation.
+      </p>
+      <p>
+        Using this method, we would be able to have both large scale structure and fine details, and overall get a more natural looking terrain.
+      </p>
+      <AsideCard title="Noise With Oceans, Attempt 3" id="noise-with-oceans-3">
+        <p>
+          In this image, we add together the two noises above, giving the lower frequency noise slightly more weight.
+        </p>
+        <ImageDataDisplay
+          style={{ width: "20em", }}
+          className="border border-dark mx-auto d-block mt-3"
+          data={thresholdHeightMap(new ScalarMap(400, 400, (x, y) => {
+
+            const scale1 = 0.005;
+            const noise1 = noise2D(
+              x * scale1,
+              y * scale1,
+            );
+
+            const scale2 = 0.025;
+            const noise2 = noise2D(
+              x * scale2,
+              y * scale2
+            );
+
+            return (0.6 * noise1 + 0.4 * noise2) / 2 + 0.5;
+          }
+          ), 0.5, [0x07, 0x66, 0x78])}
+        />
+      </AsideCard>
       <p>
         We need not stop at two layers however.
         In the example below, we have 7 layers.
+        Each layer is a multiple of two larger than the previous one.
       </p>
-      <AsideCard title="Fractal Noise With Oceans">
+      <AsideCard title="Fractal Noise With Oceans" id="fractal-noise-demo">
         <FractalNoiseTerrainDemo
           className="mx-auto mb-3"
           showMountainNoise={false}
           defaultSeed={1}
           height={400}
           width={400}
-          defaultSeaLevel={0.2}
-          defaultPower={4}
+          defaultHeightOffset={0.0}
           defaultNoise128={70}
           defaultNoise64={19}
           defaultNoise32={15}
@@ -839,9 +949,25 @@ const TerrainGeneration = () => <ArticleLayout>{
         />
       </AsideCard>
       <p>
-        When we look at a small portion of the noise, it appears similar (although not necessarily identical) to the larger whole.
-        Therefore, a common name for this kind of noise is <b>fractal noise</b>.
+        A common name for this kind of noise is <b>fractal noise</b>,
+        since the noise has the same structure on multiple scales, giving it a sort of self-similarity.
       </p>
+    </Section>
+    <Section id="conclusion" name="Conclusion">
+      <h4>Summary</h4>
+      To wrap up what we've done so far:
+      <ul>
+        <li>We discussed the pros and cons of different world topologies.</li>
+        <li>We parameterized the torus world.</li>
+        <li>We created a height map using fractal noise.</li>
+      </ul>
+      <h4>Next Time</h4>
+      In the next article, we'll discuss the weather of a torus world.
+      <ul>
+        <li>What would the exact shape of a torus world be?</li>
+        <li>How would the sun illuminate a torus world?</li>
+        <li>What would the weather patterns be like?</li>
+      </ul>
     </Section>
     <Section id="sources" name="Sources">
       <CitationBank />

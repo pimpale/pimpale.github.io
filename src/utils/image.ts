@@ -13,7 +13,6 @@ export async function loadImage(imageUrl: string) {
   return context.getImageData(0, 0, bitmap.width, bitmap.height);
 }
 
-
 export type BoundaryConditions = "FIXED" | "MIRROR" | "PERIODIC";
 
 

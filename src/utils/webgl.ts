@@ -108,6 +108,19 @@ export function overwriteR32UITexture(gl: WebGL2RenderingContext, xoff: number, 
   );
 }
 
+export function overwriteTexture(gl: WebGL2RenderingContext, xoff: number, yoff: number, data: ImageData) {
+  gl.texSubImage2D(
+    gl.TEXTURE_2D,
+    0,                // mip level
+    xoff,             // xoffset
+    yoff,             // yoffset
+    gl.RGBA,          // format
+    gl.UNSIGNED_BYTE, // type
+    data
+  );
+}
+
+
 export function createR32FTexture(gl: WebGL2RenderingContext, width: number, height: number, data: Float32Array) {
   const tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);

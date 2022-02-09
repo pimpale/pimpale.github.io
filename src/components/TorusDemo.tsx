@@ -1,16 +1,76 @@
 import React from "react";
-import * as THREE from 'three';
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-
+import { genPlane } from '../utils/uvplane';
+import { vec2 } from 'gl-matrix';
+import { TrackballCamera, } from '../utils/camera';
+import { createShader, createProgram, createTexture, overwriteTexture } from '../utils/webgl';
 
 type TorusDemoProps = {
   style?: React.CSSProperties,
   className?: string,
-  texture?: ImageData,
+  texture: ImageData,
   wireframe: boolean,
+  size: number,
   aspectRatio: number,
   detailLevel: number,
 }
+
+
+const torus_vs = `#version 300 es
+#define PI 3.1415926538
+
+in vec2 a_position;
+
+const float u_majorRadius = 0.5;
+const float u_minorRadius = 0.25;
+
+uniform float u_majorAlpha;
+uniform float u_minorAlpha;
+uniform float u_lerpAlpha;
+uniform mat4 u_worldViewProjection;
+
+out vec2 v_texCoord;
+
+void main() {
+   float theta = a_position.x * u_minorAlpha * 2.0 * PI + PI;
+   float phi = a_position.y * u_majorAlpha * 2.0 * PI;
+
+   v_texCoord = a_position;
+
+   vec3 oldpos = vec3(a_position - 0.5, 0.0);
+   vec3 newpos = vec3(
+       (u_majorRadius + u_minorRadius * cos(theta)) * cos(phi),
+       (u_majorRadius + u_minorRadius * cos(theta)) * sin(phi),
+       u_minorRadius * sin(theta)
+    );
+
+   vec3 lerpedPos = mix(oldpos, newpos, u_lerpAlpha);
+
+   gl_Position = u_worldViewProjection * vec4(lerpedPos, 1.0);
+}
+`;
+
+const torus_fs = `#version 300 es
+precision highp float;
+precision highp sampler2D;
+
+// the rendered texture
+uniform sampler2D u_render_tex;
+
+in vec2 v_texCoord;
+
+out vec4 v_outColor;
+
+void main() {
+  v_outColor  = texture(u_render_tex, v_texCoord);
+}
+`;
+
+
+type Point = {
+  x: number,
+  y: number
+}
+
 
 type TorusDemoState = {}
 
@@ -19,7 +79,12 @@ type TorusDemoState = {}
 class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
 
   // this is the ref that three js uses
-  private mount = React.createRef<HTMLDivElement>();
+  private canvas = React.createRef<HTMLCanvasElement>();
+
+
+  // the torus vertexes
+  private readonly torusVertexes: vec2[];
+  private readonly imageData: ImageData;
 
   // this is the ref we use to monitor circularization
   private torusnessRange = React.createRef<HTMLInputElement>();
@@ -28,186 +93,102 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
   private minorRange = React.createRef<HTMLInputElement>();
   private lerpRange = React.createRef<HTMLInputElement>();
 
-  // we assume these variables are properly initialized
+  private gl!: WebGL2RenderingContext;
+
+  private camera!: TrackballCamera;
+
+  private torusTexture!: WebGLTexture;
+  private torusWorldViewProjectionLoc!: WebGLUniformLocation;
+  private torusMajorAlpha!: WebGLUniformLocation;
+  private torusMinorAlpha!: WebGLUniformLocation;
+  private torusLerpAlpha!: WebGLUniformLocation;
+
+
   private requestID!: number;
-  private controls!: TrackballControls;
-  private scene!: THREE.Scene;
-  private camera!: THREE.PerspectiveCamera;
-  private renderer!: THREE.WebGLRenderer;
-  private mesh!: THREE.Mesh;
 
-
-  private planeMaterial!: THREE.Material;
-  private wireframeMaterial!: THREE.Material;
-  private planeGeometry!: THREE.PlaneGeometry;
-
-  private xEdgeMaterial!: THREE.Material;
-  private yEdgeMaterial!: THREE.Material;
-
-  private leftEdgeGeometry!: THREE.BufferGeometry;
-  private rightEdgeGeometry!: THREE.BufferGeometry;
-  private topEdgeGeometry!: THREE.BufferGeometry;
-  private bottomEdgeGeometry!: THREE.BufferGeometry;
+  constructor(props: TorusDemoProps) {
+    super(props);
+    this.torusVertexes = genPlane(props.detailLevel, props.detailLevel);
+    this.imageData = props.texture;
+  }
 
   componentDidMount() {
-    this.sceneSetup();
-    this.addCustomSceneObjects();
-    this.handleCircularityChange();
-    this.startAnimationLoop();
-    window.addEventListener('resize', this.handleWindowResize);
-    this.torusnessRange.current!.addEventListener('input', this.handleTorusChange);
-    this.majorRange.current!.addEventListener('input', this.handleCircularityChange);
-    this.minorRange.current!.addEventListener('input', this.handleCircularityChange);
-    this.lerpRange.current!.addEventListener('input', this.handleCircularityChange);
+    // init camera
+    this.camera = new TrackballCamera(this.canvas.current!, {});
+
+    // get webgl
+    this.gl = this.canvas.current!.getContext('webgl2')!;
+    this.gl.enable(this.gl.DEPTH_TEST);
+
+    // create and set texture
+    this.torusTexture = createTexture(this.gl, this.imageData.width, this.imageData.height)!;
+    overwriteTexture(this.gl, 0, 0, this.imageData);
+
+    const program = createProgram(
+      this.gl,
+      [
+        createShader(this.gl, this.gl.VERTEX_SHADER, torus_vs),
+        createShader(this.gl, this.gl.FRAGMENT_SHADER, torus_fs),
+      ]
+    )!;
+
+    const positionLoc = this.gl.getAttribLocation(program, 'a_position');
+
+    const renderTexLoc = this.gl.getUniformLocation(program, "u_render_tex");
+    this.torusMajorAlpha = this.gl.getUniformLocation(program, "u_majorAlpha")!;
+    this.torusMinorAlpha = this.gl.getUniformLocation(program, "u_minorAlpha")!;
+    this.torusLerpAlpha = this.gl.getUniformLocation(program, "u_lerpAlpha")!;
+    this.torusWorldViewProjectionLoc = this.gl.getUniformLocation(program, "u_worldViewProjection")!;
+
+
+    const buffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array(this.torusVertexes.flatMap(x => ([x[0], x[1]]))),
+      this.gl.STATIC_DRAW
+    );
+    // setup our attributes to tell WebGL how to pull
+    // the data from the buffer above to the position attribute
+    this.gl.enableVertexAttribArray(positionLoc);
+    this.gl.vertexAttribPointer(
+      positionLoc,
+      2,                   // size (num components)
+      this.gl.FLOAT,  // type of data in buffer
+      false,          // normalize
+      0,              // stride (0 = auto)
+      0,              // offset
+    );
+
+    this.gl.useProgram(program);
+
+    // set defaults
+    this.gl.uniform1f(this.torusMajorAlpha, 0.0);
+    this.gl.uniform1f(this.torusMinorAlpha, 0.0);
+    this.gl.uniform1f(this.torusLerpAlpha, 0.0);
+
+    // Tell the shader to get the render texture from texture unit 0
+    this.gl.uniform1i(renderTexLoc, 0);
+
+    // start animation loop
+    this.animationLoop();
+
   }
 
 
   componentWillUnmount() {
-    this.torusnessRange.current!.removeEventListener('input', this.handleTorusChange);
-    this.majorRange.current!.removeEventListener('input', this.handleCircularityChange);
-    this.minorRange.current!.removeEventListener('input', this.handleCircularityChange);
-    this.lerpRange.current!.removeEventListener('input', this.handleCircularityChange);
-    window.removeEventListener('resize', this.handleWindowResize);
     window.cancelAnimationFrame(this.requestID!);
-    this.controls!.dispose();
-    this.renderer.dispose();
-  }
-
-  // Standard scene setup in Three.js. Check "Creating a scene" manual for more information
-  // https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
-  sceneSetup = () => {
-    // get container dimensions and use them for scene sizing
-    const width = this.mount.current!.clientWidth;
-    const height = this.mount.current!.clientHeight;
-
-    // setup plane material
-    if(this.props.texture) {
-      const texture = new THREE.DataTexture(this.props.texture.data, this.props.texture.width, this.props.texture.height, THREE.RGBAFormat);
-      texture.needsUpdate = true;
-      this.planeMaterial =
-        new THREE.MeshBasicMaterial({
-          polygonOffset: true,
-          polygonOffsetFactor: 1, // positive value pushes polygon further away
-          polygonOffsetUnits: 1,
-          map: texture,
-          side: THREE.DoubleSide,
-        });
-    } else {
-      this.planeMaterial = new THREE.MeshBasicMaterial({
-        polygonOffset: true,
-        polygonOffsetFactor: 1, // positive value pushes polygon further away
-        polygonOffsetUnits: 1,
-        color: 0x8ec07c,
-        side: THREE.DoubleSide,
-      });
-    }
-
-    const xn = this.props.detailLevel;
-    const yn = this.props.detailLevel;
-    
-    this.planeGeometry = new THREE.PlaneGeometry(1, 1, xn, yn)
-    
-    this.wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x1d2021 });
-    
-    this.xEdgeMaterial = new THREE.LineBasicMaterial({ color: 0xdc3545 });
-    this.yEdgeMaterial = new THREE.LineBasicMaterial({ color: 0x6610f2});
-    
-    this.leftEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
-      new Array(xn).fill(null).flatMap((_, i) => [
-          new THREE.Vector3(-0.5, i / xn - 0.5, 0),
-          new THREE.Vector3(-0.5, (i+1) / xn - 0.5, 0),
-      ])
-    );
-    
-    this. rightEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
-      new Array(xn).fill(null).flatMap((_, i) => [
-          new THREE.Vector3(0.5, i / xn - 0.5, 0),
-          new THREE.Vector3(0.5, (i+1) / xn - 0.5, 0),
-      ])
-    );
-    
-     this.topEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
-      new Array(yn).fill(null).flatMap((_, i) => [
-          new THREE.Vector3(i / yn - 0.5, 0.5, 0),
-          new THREE.Vector3((i+1) / yn - 0.5, 0.5, 0),
-      ])
-    );
-    
-    this.bottomEdgeGeometry = new THREE.BufferGeometry().setFromPoints(
-      new Array(yn).fill(null).flatMap((_, i) => [
-          new THREE.Vector3(i / yn - 0.5, -0.5, 0),
-          new THREE.Vector3((i+1) / yn - 0.5, -0.5, 0),
-      ])
-    );
-
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(
-      45,
-      1,
-      0.1,
-      100,
-    );
-
-    this.camera.position.z = 2; // is used here to set some distance from a plane that is located at z = 0
-    // TrackballControls allow a camera to trackball around the object
-    // https://threejs.org/docs/#examples/controls/TrackballControls
-    this.controls = new TrackballControls(this.camera, this.mount.current!);
-
-    this.controls.noPan = true;
-    this.controls.noZoom = true;
-
-    this.renderer = new THREE.WebGLRenderer({ alpha: true }); // alpha true enables transparency
-    this.renderer.setSize(width, height);
-    this.mount.current!.appendChild(this.renderer.domElement); // mount using React ref
-  };
-
-  // Here should come custom code.
-  // Code below is taken from Three.js BoxGeometry example
-  // https://threejs.org/docs/#api/en/geometries/BoxGeometry
-  addCustomSceneObjects = () => {
-    // add ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff);
-    this.scene.add(ambientLight);
-  };
-
-  interpolate = (geoBuf: ArrayLike<number>, majorAlpha: number, minorAlpha: number, lerpAlpha: number) => {
-    // we're going to calculate a new position that's an interpolation
-    const newPosition = new Float32Array(geoBuf.length);
-
-    const majorRadius = 0.5;
-    const minorRadius = majorRadius / this.props.aspectRatio;
-
-    for (let i = 0; i < geoBuf.length / 3; i++) {
-      // original x positions
-      const x = geoBuf[i * 3 + 0];
-      const y = geoBuf[i * 3 + 1];
-      const z = geoBuf[i * 3 + 2];
-
-      const theta = (x * minorAlpha + 0.5) * 2 * Math.PI;
-      const phi = y * majorAlpha * 2 * Math.PI;
-
-      // circular x positions
-      const nx = (majorRadius + minorRadius * Math.cos(theta)) * Math.cos(phi);
-      const ny = (majorRadius + minorRadius * Math.cos(theta)) * Math.sin(phi);
-      const nz = minorRadius * Math.sin(theta);
-
-      // lerp the new values between the circle calculated
-      newPosition[i * 3 + 0] = x + (nx - x) * lerpAlpha;
-      newPosition[i * 3 + 1] = y + (ny - y) * lerpAlpha;
-      newPosition[i * 3 + 2] = z + (nz - z) * lerpAlpha;
-    }
-
-    return newPosition;
+    this.camera.cleanup();
   }
 
   handleTorusChange = () => {
-      const torusnessAlpha = this.torusnessRange.current!.valueAsNumber;
+    const torusnessAlpha = this.torusnessRange.current!.valueAsNumber;
 
-      this.majorRange.current!.valueAsNumber = torusnessAlpha;
-      this.minorRange.current!.valueAsNumber = torusnessAlpha;
-      this.lerpRange.current!.valueAsNumber = Math.min(torusnessAlpha*1.5, 1);
-      //now continue
-      this.handleCircularityChange();
+    this.majorRange.current!.valueAsNumber = torusnessAlpha;
+    this.minorRange.current!.valueAsNumber = torusnessAlpha;
+    this.lerpRange.current!.valueAsNumber = Math.min(torusnessAlpha * 1.5, 1);
+    //now continue
+    this.handleCircularityChange();
   }
 
 
@@ -217,155 +198,77 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     const minorAlpha = this.minorRange.current!.valueAsNumber;
     const lerpAlpha = this.lerpRange.current!.valueAsNumber;
 
-    // remove old mesh
-    this.scene.remove(this.mesh);
-
-    const newPosition = this.interpolate(
-      this.planeGeometry.attributes.position.array,
-      majorAlpha, minorAlpha, lerpAlpha
-    );
-
-    // set our new geometry
-    let newGeometry = this.planeGeometry.clone();
-    newGeometry.setAttribute('position', new THREE.BufferAttribute(newPosition, 3));
-
-
-    // create mesh
-    const mesh = new THREE.Mesh(newGeometry, this.planeMaterial);
-
-    // wireframe
-    if(this.props.wireframe) {
-      mesh.add(
-        new THREE.LineSegments(
-          new THREE.WireframeGeometry(mesh.geometry),
-          this.wireframeMaterial
-        )
-      );
-    }
-
-    // left edge
-    let newLeftEdgeGeometry = this.leftEdgeGeometry.clone();
-    newLeftEdgeGeometry.setAttribute(
-      'position',
-      new THREE.BufferAttribute(
-        this.interpolate(
-          this.leftEdgeGeometry.attributes.position.array,
-          majorAlpha, minorAlpha, lerpAlpha
-        ),
-        3
-      )
-    );
-    mesh.add(
-      new THREE.LineSegments(
-        newLeftEdgeGeometry,
-        this.xEdgeMaterial
-      )
-    );
-
-    // right edge
-    let newRightEdgeGeometry = this.rightEdgeGeometry.clone();
-    newRightEdgeGeometry.setAttribute(
-      'position',
-      new THREE.BufferAttribute(
-        this.interpolate(
-          this.rightEdgeGeometry.attributes.position.array,
-          majorAlpha, minorAlpha, lerpAlpha
-        ),
-        3
-      )
-    );
-    mesh.add(
-      new THREE.LineSegments(
-        newRightEdgeGeometry,
-        this.xEdgeMaterial
-      )
-    );
-
-    // top edge
-    let newTopEdgeGeometry = this.topEdgeGeometry.clone();
-    newTopEdgeGeometry.setAttribute(
-      'position',
-      new THREE.BufferAttribute(
-        this.interpolate(
-          this.topEdgeGeometry.attributes.position.array,
-          majorAlpha, minorAlpha, lerpAlpha
-        ),
-        3
-      )
-    );
-    mesh.add(
-      new THREE.LineSegments(
-        newTopEdgeGeometry,
-        this.yEdgeMaterial
-      )
-    );
-
-    // bottom edge
-    let newBottomEdgeGeometry = this.bottomEdgeGeometry.clone();
-    newBottomEdgeGeometry.setAttribute(
-      'position',
-      new THREE.BufferAttribute(
-        this.interpolate(
-          this.bottomEdgeGeometry.attributes.position.array,
-          majorAlpha, minorAlpha, lerpAlpha
-        ),
-        3
-      )
-    );
-    mesh.add(
-      new THREE.LineSegments(
-        newBottomEdgeGeometry,
-        this.yEdgeMaterial
-      )
-    );
-
-
-
-    // add mesh
-    this.scene.add(mesh);
-    this.mesh = mesh;
+    this.gl.uniform1f(this.torusMajorAlpha, majorAlpha);
+    this.gl.uniform1f(this.torusMinorAlpha, minorAlpha);
+    this.gl.uniform1f(this.torusLerpAlpha, lerpAlpha);
   }
 
-  startAnimationLoop = () => {
-    this.controls.update();
-    this.renderer.render(this.scene, this.camera);
 
-    // The window.requestAnimationFrame() method tells the browser that you wish to perform
-    // an animation and requests that the browser call a specified function
-    // to update an animation before the next repaint
-    this.requestID = window.requestAnimationFrame(this.startAnimationLoop);
-  };
 
-  handleWindowResize = () => {
-    const width = this.mount.current!.clientWidth;
-    const height = this.mount.current!.clientHeight;
+  animationLoop = () => {
+    this.camera.update();
 
-    this.controls.handleResize();
-    this.renderer.setSize(width, height);
+    {
+      // set uniform
+      const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.size, this.props.size);
+      this.gl.uniformMatrix4fv(this.torusWorldViewProjectionLoc, false, worldViewProjectionMat);
+
+      // bind the newly updated texture to texture unit 0
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.torusTexture);
+
+      // draw triangles
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, this.torusVertexes.length);
+    }
+
+    this.requestID = window.requestAnimationFrame(this.animationLoop);
   };
 
   render() {
     return <div style={this.props.style} className={this.props.className}>
-      <div ref={this.mount} className="ratio ratio-1x1 border border-dark mb-3" />
-
-      <div className="mx-auto d-block flex-grow-1 mb-2">
+      <canvas
+        ref={this.canvas}
+        height={this.props.size}
+        width={this.props.size}
+        className="border border-dark mb-3 d-block mx-auto"
+      />
+      <div className="mb-2">
         <label className="form-label">Torusness</label>
-        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.torusnessRange} />
+        <input
+          type="range" className="form-range"
+          min="0" max="1" step="0.05" defaultValue="0"
+          ref={this.torusnessRange}
+          onInput={this.handleTorusChange}
+        />
       </div>
-
       <details>
         <summary>Advanced Torus Controls</summary>
-        <div className="mx-auto d-block flex-grow-1 ">
+        <div className="mx-auto">
           <label className="form-label">Join Major</label>
-          <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.majorRange} />
+          <input
+            type="range" className="form-range"
+            min="0" max="1" step="0.05" defaultValue="0"
+            ref={this.majorRange}
+            onInput={this.handleCircularityChange}
+          />
         </div>
-        <div className="mx-auto d-block flex-grow-1 ">
+        <div className="mx-auto">
           <label className="form-label">Join Minor</label>
-          <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.minorRange} />
+          <input
+            type="range" className="form-range"
+            min="0" max="1" step="0.05" defaultValue="0"
+            ref={this.minorRange}
+            onInput={this.handleCircularityChange}
+          />
         </div>
-        <div className="mx-auto d-block flex-grow-1 ">
+        <div className="mx-auto">
           <label className="form-label">Alpha</label>
-          <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.lerpRange} />
+          <input
+            type="range" className="form-range"
+            min="0" max="1" step="0.05" defaultValue="0"
+            ref={this.lerpRange}
+            onInput={this.handleCircularityChange}
+          />
         </div>
       </details>
     </div>;

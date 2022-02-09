@@ -12,8 +12,7 @@ type FractalNoiseTerrainDemoProps = {
   width: number,
   height: number
   defaultSeed: number,
-  defaultSeaLevel: number,
-  defaultPower: number,
+  defaultHeightOffset: number,
   defaultNoise128: number,
   defaultNoise64: number,
   defaultNoise32: number,
@@ -31,8 +30,7 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
 
   private seedInput = React.createRef<HTMLInputElement>();
   private seedSet = React.createRef<HTMLButtonElement>();
-  private seaLevelRange = React.createRef<HTMLInputElement>();
-  private powerRange = React.createRef<HTMLInputElement>();
+  private heightOffsetRange = React.createRef<HTMLInputElement>();
 
   private noiseRange128 = React.createRef<HTMLInputElement>();
   private noiseRange64 = React.createRef<HTMLInputElement>();
@@ -57,8 +55,7 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
 
     this.state = {
       img: this.computeImage( //
-        this.props.defaultSeaLevel, //
-        this.props.defaultPower, //
+        this.props.defaultHeightOffset, //
         this.props.defaultNoise128, //
         this.props.defaultNoise64, //
         this.props.defaultNoise32, //
@@ -76,8 +73,7 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
     this.paint();
 
     this.seedSet.current!.addEventListener('click', this.handleSeedChange);
-    this.seaLevelRange.current!.addEventListener('input', this.paint);
-    this.powerRange.current!.addEventListener('input', this.paint);
+    this.heightOffsetRange.current!.addEventListener('input', this.paint);
     this.noiseRange128.current!.addEventListener('input', this.paint);
     this.noiseRange64.current!.addEventListener('input', this.paint);
     this.noiseRange32.current!.addEventListener('input', this.paint);
@@ -90,8 +86,7 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
 
   componentWillUnmount() {
     this.seedSet.current!.removeEventListener('click', this.handleSeedChange);
-    this.seaLevelRange.current!.removeEventListener('input', this.paint);
-    this.powerRange.current!.removeEventListener('input', this.paint);
+    this.heightOffsetRange.current!.removeEventListener('input', this.paint);
     this.noiseRange128.current!.removeEventListener('input', this.paint);
     this.noiseRange64.current!.removeEventListener('input', this.paint);
     this.noiseRange32.current!.removeEventListener('input', this.paint);
@@ -137,8 +132,7 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
 
   // uses the provided weights and parameters along with the noise buffers to produce an image
   computeImage = (
-    seaLevel: number,
-    power: number,
+    heightOffset: number,
     weight128: number,
     weight64: number,
     weight32: number,
@@ -169,6 +163,7 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
     const dataArr = data.getData();
 
 
+    // first compute logical data
     for (let i = 0; i < dataArr.length; i++) {
       dataArr[i] += noiseField128Arr[i] * weight128;
       dataArr[i] += noiseField64Arr[i] * weight64;
@@ -178,17 +173,21 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
       dataArr[i] += noiseField4Arr[i] * weight4;
       dataArr[i] += noiseField2Arr[i] * weight2;
       dataArr[i] = dataArr[i] / weightSum;
-      dataArr[i] += 0.5;
-      dataArr[i] = Math.pow(dataArr[i], power);
+      dataArr[i] += heightOffset;
+    }
+
+    // now squish down to render
+    for (let i = 0; i < dataArr.length; i++) {
+      dataArr[i] += (dataArr[i] + 1)/2;
     }
 
 
-    return thresholdHeightMap(data, seaLevel, [0x07, 0x66, 0x78]);
+
+    return thresholdHeightMap(data, 0.5, [0x07, 0x66, 0x78]);
   }
 
   paint = () => {
-    const seaLevel = this.seaLevelRange.current!.valueAsNumber;
-    const power = this.powerRange.current!.valueAsNumber;
+    const heightOffset = this.heightOffsetRange.current!.valueAsNumber;
 
     const weight128 = this.noiseRange128.current!.valueAsNumber;
     const weight64 = this.noiseRange64.current!.valueAsNumber;
@@ -200,8 +199,7 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
 
     this.setState({
       img: this.computeImage( //
-        seaLevel, //
-        power, //
+        heightOffset, //
         weight128, //
         weight64, //
         weight32, //
@@ -227,11 +225,7 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
             <h6>Parameters</h6>
             <div className="form-group">
               <label className="form-label">Sea Level</label>
-              <input type="range" className="form-range" min="0" max="1" step={0.05} defaultValue={this.props.defaultSeaLevel} ref={this.seaLevelRange} />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Power level</label>
-              <input type="range" className="form-range" min="0.1" max="5" step={0.05} defaultValue={this.props.defaultPower} ref={this.powerRange} />
+              <input type="range" className="form-range" min="-0.5" max="0.5" step={0.05} defaultValue={this.props.defaultHeightOffset} ref={this.heightOffsetRange} />
             </div>
             <div className="form-group">
               <label className="form-label">Seed</label>
