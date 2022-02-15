@@ -1,1 +1,0 @@
-import{a as f}from"./camera.3ca27c90.js";import{f as r}from"./vendor.09abfc52.js";function i(t,s){f(t>0),f(s>0);let o=[];for(let n=0;n<t;n++){const c=n/t,p=(n+1)/t;for(let a=0;a<s;a++){const u=a/s,e=(a+1)/s;o.push(r(c,u)),o.push(r(p,u)),o.push(r(c,e)),o.push(r(p,u)),o.push(r(p,e)),o.push(r(c,e))}}return o}export{i as g};

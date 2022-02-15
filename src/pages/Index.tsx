@@ -9,7 +9,7 @@ import ResumePdfUrl from '../assets/govind_pimpale_resume.pdf?url';
 
 const ResumeUrl = '/resume.html';
 const AchernarUrl = '/achernar.html';
-const TerrainGenerationUrl = '/terraingeneration.html';
+const TerrainGenerationUrl = '/terraingeneration1.html';
 
 import { CaretDownFill } from 'react-bootstrap-icons';
 
