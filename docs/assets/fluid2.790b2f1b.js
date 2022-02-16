@@ -1,4 +1,4 @@
-import{S as d}from"./style.0186e557.js";import{a,j as t,b as i,R as T,F as E}from"./vendor.d935a807.js";import{A as b}from"./ArticleLayout.2f895ddf.js";import{c as p,A as R}from"./math.b5561366.js";import{b as m,f as A,u as y,d as g,g as F,c as u,a as o,h as C}from"./webgl.9b9ef8e8.js";import{c as L}from"./noise.0a1856c8.js";import{g as w}from"./uvplane.4b6fecb7.js";import{T as D}from"./camera.c22341c4.js";const c=`#version 300 es
+import{S as d}from"./style.aeb796c7.js";import{a,j as t,b as i,R as T,F as E}from"./vendor.50e9061a.js";import{A as b}from"./ArticleLayout.da48ff30.js";import{c as p,A as R}from"./math.b66657b6.js";import{b as m,f as A,u as y,d as g,g as F,c as u,a as o,h as C}from"./webgl.9b9ef8e8.js";import{c as L}from"./noise.11926ec8.js";import{g as w}from"./uvplane.e46903e9.js";import{T as D}from"./camera.c529e790.js";const c=`#version 300 es
 in vec2 c_position;
 out vec2 v_texCoord;
 
