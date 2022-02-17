@@ -265,7 +265,6 @@ const Fluid1 = () => <ArticleLayout>{
       </AsideCard>
     </Section>
 
-
     <Section id="sources" name="Sources">
       <CitationBank />
     </Section>
