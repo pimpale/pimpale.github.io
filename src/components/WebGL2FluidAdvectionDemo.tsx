@@ -11,15 +11,15 @@ type WebGL2FluidAdvectionDemoProps = {
 
 // the vertex shader is used in 2 different programs, it basically is just for translating clip space
 const vs = `#version 300 es
-in vec2 c_position;
+in vec2 a_position;
 out vec2 v_texCoord;
 
 void main() {
-  v_texCoord = c_position;
+  v_texCoord = a_position;
 
   // convert from 0->1 to 0->2
   // convert from 0->2 to -1->+1 (clip space)
-  vec2 clipSpace = (c_position * 2.0) - 1.0;
+  vec2 clipSpace = (a_position * 2.0) - 1.0;
 
   gl_Position = vec4(clipSpace, 0, 1);
 }
@@ -298,7 +298,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         ]
       )!;
 
-      const positionLoc = this.gl.getAttribLocation(this.prog_advect_scalar, 'c_position');
+      const positionLoc = this.gl.getAttribLocation(this.prog_advect_scalar, 'a_position');
       const scalarTexLoc = this.gl.getUniformLocation(this.prog_advect_scalar, 'u_scalar_tex');
       const velTexLoc = this.gl.getUniformLocation(this.prog_advect_scalar, 'u_vel_tex');
 
@@ -378,7 +378,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         ]
       )!;
 
-      const positionLoc = this.gl.getAttribLocation(this.prog_render, 'c_position');
+      const positionLoc = this.gl.getAttribLocation(this.prog_render, 'a_position');
       const scalarTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_scalar_tex');
       const velTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_vel_tex');
 
@@ -415,7 +415,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         ]
       )!;
 
-      const positionLoc = this.gl.getAttribLocation(this.prog_paint_vel, 'c_position');
+      const positionLoc = this.gl.getAttribLocation(this.prog_paint_vel, 'a_position');
       const velTexLoc = this.gl.getUniformLocation(this.prog_paint_vel, 'u_vel_tex');
       this.newMouseLoc = this.gl.getUniformLocation(this.prog_paint_vel, 'u_new_mouse')!;
       this.oldMouseLoc = this.gl.getUniformLocation(this.prog_paint_vel, 'u_old_mouse')!;

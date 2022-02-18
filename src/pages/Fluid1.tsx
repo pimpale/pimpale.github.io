@@ -3,14 +3,23 @@ import ArticleLayout from '../components/ArticleLayout';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 
+import { Async } from 'react-async';
+import { fetchText } from '../utils/load';
+
 import Tex from '@matejmazur/react-katex';
 
 import AsideCard from '../components/AsideCard';
+
+import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
+import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 
 import WebGL2SetupDemo from '../components/WebGL2SetupDemo';
 import WebGL2HeatEqnDemo from '../components/WebGL2HeatEqnDemo';
 import WebGL2FluidAdvectionDemo from '../components/WebGL2FluidAdvectionDemo';
 import WebGL2IncompressibleFluidDemo from '../components/WebGL2IncompressibleFluidDemo';
+
+import WebGL2SetupDemoTsxUrl from "../assets/fluid1/WebGL2SetupDemo_tsx.txt?url";
 
 const Fluid1 = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -61,6 +70,97 @@ const Fluid1 = () => <ArticleLayout>{
         <li><HrefLink href="https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API" /></li>
       </ul>
     </Section>
+    <Section id="webgl2-setup" name="Working with WebGL2">
+      <h4>Why GPU?</h4>
+      <p>
+        Fluid simulations can be parallelized, which means that the work can be split up into chunks that run independently.
+        Your CPU (if you're running on a reasonably normal computer) probably has 4-32 threads.
+        So, we could theoretically speed up the simulation 32x by taking advantage of multi-threading (although in practice it might not be so high).
+        However, your GPU has the capability to run far more threads simultaneously.
+        Depending on exactly which card you have, you can have a couple thousand threads concurrently running.
+        <Citation source="https://stackoverflow.com/questions/6490572/cuda-how-many-concurrent-threads-in-total" />.
+      </p>
+      <p>
+        There are downsides to running on the GPU however.
+        First of all, the GPU is limited in what it can do.
+        Secondly, GPU code is deployed in a batch manner, where the same code is given to all cores of the GPU.
+        And finally, you can't use system calls in GPU code.
+        So things like reading from a file or making a network request are not allowed.
+      </p>
+      <p>
+        Although there are caveats, the GPU is still the best choice for simple fluid simulations like this one.
+        So, let's get started.
+      </p>
+      <h4>WebGL Setup</h4>
+      <p>
+        WebGL2 was primary designed as a graphics api, and not really so much as a general purpose GPU compute API.
+        As such, we will have to make use of a few workarounds in order to be able to do what we want.
+      </p>
+      <p>
+        Let's first look at setting up a canvas:
+      </p>
+
+      <AsideCard title="Canvas Setup" id="canvas-setup-demo">
+        <p>
+          Code:
+        </p>
+        <Async promise={fetchText(WebGL2SetupDemoTsxUrl)}>
+          <Async.Pending>
+            <div className="spinner-border" role="status" />
+          </Async.Pending>
+          <Async.Fulfilled<string>>{code =>
+            <SyntaxHighligher className="mx-5 mb-5" language="tsx" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
+          }</Async.Fulfilled>
+          <Async.Rejected>
+            {/* TOOD: put error here */}
+            <div className="spinner-border" role="status" />
+          </Async.Rejected>
+        </Async>
+        <p>
+          Result:
+        </p>
+        <WebGL2SetupDemo
+          className="mx-auto mb-5"
+          style={{ display: "block" }}
+          size={400}
+        />
+      </AsideCard>
+      <p>
+        The code is mostly boilerplate associated with setting up WebGL.
+        If any of it is confusing, I reccomend reading some of the WebGL resources linked above.
+      </p>
+      <p>
+        However, there are a few tricky points that I wanted to highlight:
+      </p>
+      <Async promise={fetchText(WebGL2SetupDemoTsxUrl)}>
+        <Async.Pending>
+          <div className="spinner-border" role="status" />
+        </Async.Pending>
+        <Async.Fulfilled<string>>{code =>
+          <SyntaxHighligher className="mx-5 mb-5" language="tsx" showLineNumbers style={a11yDark}>
+            {code}
+          </SyntaxHighligher>
+        }</Async.Fulfilled>
+        <Async.Rejected>
+          {/* TOOD: put error here */}
+          <div className="spinner-border" role="status" />
+        </Async.Rejected>
+      </Async>
+
+    </Section>
+    <Section id="webgl2-heat" name="Heat Equation with WebGL2">
+      <p>
+        Now, we'll approach the heat equation
+      </p>
+      <AsideCard title="Heat Equation" id="heat-equation-demo">
+        <WebGL2HeatEqnDemo
+          className="mx-auto"
+          style={{ maxWidth: "40em" }}
+          size={400}
+        />
+      </AsideCard>
+    </Section>
+
     <Section id="math-fluid-simulation" name="Math of Fluid Simulation">
       <h4>Prerequisites</h4>
       <p>
@@ -104,27 +204,27 @@ const Fluid1 = () => <ArticleLayout>{
       <h4>Notation</h4>
       <p>
         In this article, we'll use the following notation, which is consistent with that used by Khan Academy:
-        <ul>
-          <li>
-            Lowercase letters and greek letters for scalars.
-            <br />
-            Examples:
-            <ul>
-              <li><Tex math="a = 5"/></li>
-              <li><Tex math="y = x^2 + 1"/></li>
-            </ul>
-          </li>
-          <li>
-            Lowercase letters and greek letters with an arrow on top for vectors.
-            <br />
-            Examples:
-            <ul>
-              <li><Tex math="\vec v = \begin{bmatrix} 1 \\ -2 \end{bmatrix}"/></li>
-              <li><Tex math="\vec f = \nabla (x^2 + y^2)"/></li>
-            </ul>
-          </li>
-        </ul>
       </p>
+      <ul>
+        <li>
+          Lowercase letters and greek letters for scalars.
+          <br />
+          Examples:
+          <ul>
+            <li><Tex math="a = 5" /></li>
+            <li><Tex math="y = x^2 + 1" /></li>
+          </ul>
+        </li>
+        <li>
+          Lowercase letters and greek letters with an arrow on top for vectors.
+          <br />
+          Examples:
+          <ul>
+            <li><Tex math="\vec v = \begin{bmatrix} 1 \\ -2 \end{bmatrix}" /></li>
+            <li><Tex math="\vec f = \nabla (x^2 + y^2)" /></li>
+          </ul>
+        </li>
+      </ul>
       <h4>Navier Stokes</h4>
       <p>
         Fluids are complicated.
@@ -207,37 +307,6 @@ const Fluid1 = () => <ArticleLayout>{
 
     </Section>
 
-    <Section id="webgl2-setup" name="Working with WebGL2">
-      <p>
-        Simulating fluids is what's known as an embarrassingly parallel problem
-        <Citation source="https://en.wikipedia.org/wiki/Embarrassingly_parallel" />.
-        This means that each part of the pro
-      </p>
-      <p>
-        WebGL2 was primary designed as a graphics api, and not really so much as a general purpose GPU compute API.
-        As such, we will have to work
-      </p>
-      <AsideCard title="Canvas Setup" id="canvas-setup-demo">
-        <WebGL2SetupDemo
-          className="mx-auto"
-          style={{ display: "block" }}
-          width={400}
-          height={400}
-        />
-      </AsideCard>
-    </Section>
-    <Section id="webgl2-heat" name="Heat Equation with WebGL2">
-      <p>
-        Now, we'll approach the heat equation
-      </p>
-      <AsideCard title="Heat Equation" id="heat-equation-demo">
-        <WebGL2HeatEqnDemo
-          className="mx-auto"
-          style={{ maxWidth: "40em" }}
-          size={400}
-        />
-      </AsideCard>
-    </Section>
 
     <Section id="webgl2-advection" name="Fluid Advection with WebGL2">
       <p>
