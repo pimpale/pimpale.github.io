@@ -8,7 +8,6 @@ type TorusDemoProps = {
   style?: React.CSSProperties,
   className?: string,
   texture: ImageData,
-  wireframe: boolean,
   size: number,
   aspectRatio: number,
   detailLevel: number,

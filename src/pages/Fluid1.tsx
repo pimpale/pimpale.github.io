@@ -20,6 +20,7 @@ import WebGL2FluidAdvectionDemo from '../components/WebGL2FluidAdvectionDemo';
 import WebGL2IncompressibleFluidDemo from '../components/WebGL2IncompressibleFluidDemo';
 
 import WebGL2SetupDemoTsxUrl from "../assets/fluid1/WebGL2SetupDemo_tsx.txt?url";
+import WebGL2SetupDemo_VertexShader_TsxUrl from "../assets/fluid1/WebGL2SetupDemo_VertexShader_tsx.txt?url";
 
 const Fluid1 = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -132,7 +133,7 @@ const Fluid1 = () => <ArticleLayout>{
       <p>
         However, there are a few tricky points that I wanted to highlight:
       </p>
-      <Async promise={fetchText(WebGL2SetupDemoTsxUrl)}>
+      <Async promise={fetchText(WebGL2SetupDemo_VertexShader_TsxUrl)}>
         <Async.Pending>
           <div className="spinner-border" role="status" />
         </Async.Pending>

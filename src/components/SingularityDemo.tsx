@@ -1,200 +1,266 @@
 import React from "react";
-import * as THREE from 'three';
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
-
+import { genPlane } from '../utils/uvplane';
+import { vec2 } from 'gl-matrix';
+import { TrackballCamera, } from '../utils/camera';
+import { createShader, createProgram, createTexture, overwriteTexture } from '../utils/webgl';
 
 type SingularityDemoProps = {
   style?: React.CSSProperties,
-  className?: string
+  className?: string,
+  size: number,
 }
 
-type SingularityDemoState = {}
 
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1, 5, 5, 5)
+const torus_vs = `#version 300 es
+layout(location=0) in vec3 a_position;
+layout(location=1) in vec3 a_color;
+layout(location=2) in vec2 a_barycenter;
 
-const cubeMaterials = [
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0x458588,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0xdc3545,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0x98971a,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0xb16286,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0xd79921,
-  }),
-  new THREE.MeshBasicMaterial({
-    polygonOffset: true,
-    polygonOffsetFactor: 1, // positive value pushes polygon further away
-    polygonOffsetUnits: 1,
-    color: 0xEBDBB2,
-  }),
-];
+uniform float u_lerpAlpha;
+uniform mat4 u_worldViewProjection;
 
+out vec3 v_color;
+out vec2 v_barycenter;
 
-class SingularityDemo extends React.Component<SingularityDemoProps, SingularityDemoState> {
+void main() {
+   vec3 oldpos = vec3(a_position - vec3(0.5, 0.5, 0.5));
+   vec3 newpos = oldpos/length(oldpos);
+
+   vec3 lerpedPos = mix(oldpos, newpos, u_lerpAlpha)*0.9;
+
+   v_color = a_color;
+   v_barycenter = a_barycenter;
+   gl_Position = u_worldViewProjection * vec4(lerpedPos, 1.0);
+}
+`;
+
+const torus_fs = `#version 300 es
+precision highp float;
+
+in vec3 v_color;
+in vec2 v_barycenter;
+
+out vec4 v_outColor;
+
+float gridFactor (vec2 vBC, float width) {
+  vec3 bary = vec3(vBC.x, vBC.y, 1.0 - vBC.x - vBC.y);
+  vec3 d = fwidth(bary);
+  vec3 a3 = smoothstep(d * (width - 0.5), d * (width + 0.5), bary);
+  return min(min(a3.x, a3.y), a3.z);
+}
+
+void main() {
+  float alpha = 1.0-gridFactor(v_barycenter, 1.0);
+  v_outColor  = vec4(v_color, alpha);
+}
+`;
+
+function getBarycenter(i: number) {
+  let barycenter;
+  switch (i % 3) {
+    case 0:
+      barycenter = [0, 0];
+      break;
+    case 1:
+      barycenter = [0, 1];
+      break;
+    default:
+      barycenter = [1, 0];
+      break;
+  }
+  return barycenter;
+}
+
+const detailLevel = 3;
+
+type Point = {
+  x: number,
+  y: number
+}
+
+function convertColor(color: number) {
+  return [
+    (color >> 16) / 0xFF,
+    ((color >> 8) & 0xFF) / 0xFF,
+    (color & 0xFF) / 0xFF,
+  ];
+}
+
+class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
 
   // this is the ref that three js uses
-  private mount = React.createRef<HTMLDivElement>();
+  private canvas = React.createRef<HTMLCanvasElement>();
 
-  // this is the ref we use to monitor circularization
-  private range = React.createRef<HTMLInputElement>();
 
-  // we assume these variables are properly initialized
+  // the torus vertexes
+  private readonly vertexes!: vec2[];
+
+  // how much to lerp to a circle
+  private lerpRange = React.createRef<HTMLInputElement>();
+
+  private gl!: WebGL2RenderingContext;
+
+  private camera!: TrackballCamera;
+
+  private torusWorldViewProjectionLoc!: WebGLUniformLocation;
+  private torusLerpAlpha!: WebGLUniformLocation;
+
+  private filledbuffer!: WebGLBuffer;
+  private wireframebuffer!: WebGLBuffer;
+
+
   private requestID!: number;
-  private controls!: TrackballControls;
-  private scene!: THREE.Scene;
-  private camera!: THREE.OrthographicCamera;
-  private renderer!: THREE.WebGLRenderer;
-  private mesh!: THREE.Mesh;
 
+  constructor(props: SingularityDemoProps) {
+    super(props);
+  }
 
   componentDidMount() {
-    this.sceneSetup();
-    this.addCustomSceneObjects();
-    this.handleCircularityChange();
-    this.startAnimationLoop();
-    window.addEventListener('resize', this.handleWindowResize);
-    this.range.current!.addEventListener('input', this.handleCircularityChange);
+    // init camera
+    this.camera = new TrackballCamera(this.canvas.current!, {});
+
+    // get webgl
+    this.gl = this.canvas.current!.getContext('webgl2')!;
+    this.gl.enable(this.gl.DEPTH_TEST);
+
+    const program = createProgram(
+      this.gl,
+      [
+        createShader(this.gl, this.gl.VERTEX_SHADER, torus_vs),
+        createShader(this.gl, this.gl.FRAGMENT_SHADER, torus_fs),
+      ]
+    )!;
+
+    const positionLoc = this.gl.getAttribLocation(program, 'a_position');
+    const colorLoc = this.gl.getAttribLocation(program, 'a_color');
+    const barycenterLoc = this.gl.getAttribLocation(program, 'a_barycenter');
+
+    this.torusLerpAlpha = this.gl.getUniformLocation(program, "u_lerpAlpha")!;
+    this.torusWorldViewProjectionLoc = this.gl.getUniformLocation(program, "u_worldViewProjection")!;
+
+    const topcolor = convertColor(0x458588);
+    const bottomcolor = convertColor(0xdc3545);
+    const leftcolor = convertColor(0x98971a);
+    const rightcolor = convertColor(0xb16286);
+    const frontcolor = convertColor(0xd79921);
+    const backcolor = convertColor(0xEBDBB2);
+
+
+    // map different buffers
+    let filled = [
+      // top level
+      ...genPlane(detailLevel, detailLevel).flatMap((v, i) => [v[0], 0, v[1], ...topcolor, ...getBarycenter(i % 3)]),
+      // bottomlevel
+      ...genPlane(detailLevel, detailLevel).flatMap((v, i) => [v[0], 1, v[1], ...bottomcolor, ...getBarycenter(i % 3)]),
+      // left level
+      ...genPlane(detailLevel, detailLevel).flatMap((v, i) => [0, v[0], v[1], ...leftcolor, ...getBarycenter(i % 3)]),
+      // right level
+      ...genPlane(detailLevel, detailLevel).flatMap((v, i) => [1, v[0], v[1], ...rightcolor, ...getBarycenter(i % 3)]),
+      // front level
+      ...genPlane(detailLevel, detailLevel).flatMap((v, i) => [v[0], v[1], 0, ...frontcolor, ...getBarycenter(i % 3)]),
+      // back level
+      ...genPlane(detailLevel, detailLevel).flatMap((v, i) => [v[0], v[1], 1, ...backcolor, ...getBarycenter(i % 3)]),
+    ];
+
+
+    this.filledbuffer = this.gl.createBuffer()!;
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.filledbuffer);
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array(filled),
+      this.gl.STATIC_DRAW
+    );
+
+    // setup our attributes to tell WebGL how to pull
+    // the data from the buffer above to the position attribute
+    this.gl.enableVertexAttribArray(positionLoc);
+    this.gl.vertexAttribPointer(
+      positionLoc,
+      3,              // size (num components)
+      this.gl.FLOAT,  // type of data in buffer
+      false,          // normalize
+      8 * 4,            // stride (0 = auto)
+      0,              // offset
+    );
+    this.gl.enableVertexAttribArray(colorLoc);
+    this.gl.vertexAttribPointer(
+      colorLoc,
+      3,              // size (num components)
+      this.gl.FLOAT,  // type of data in buffer
+      false,          // normalize
+      8 * 4,            // stride (0 = auto)
+      3 * 4,            // offset
+    );
+    this.gl.enableVertexAttribArray(barycenterLoc);
+    this.gl.vertexAttribPointer(
+      barycenterLoc,
+      2,              // size (num components)
+      this.gl.FLOAT,  // type of data in buffer
+      false,          // normalize
+      8 * 4,            // stride (0 = auto)
+      6 * 4,            // offset
+    );
+
+    this.gl.useProgram(program);
+
+    // set defaults
+    this.gl.uniform1f(this.torusLerpAlpha, 0.0);
+
+    // start animation loop
+    this.animationLoop();
+
   }
 
 
   componentWillUnmount() {
-    this.range.current!.removeEventListener('input', this.handleCircularityChange);
-    window.removeEventListener('resize', this.handleWindowResize);
     window.cancelAnimationFrame(this.requestID!);
-    this.controls!.dispose();
-    this.renderer.dispose();
+    this.camera.cleanup();
   }
-
-  // Standard scene setup in Three.js. Check "Creating a scene" manual for more information
-  // https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
-  sceneSetup = () => {
-    // get container dimensions and use them for scene sizing
-    const width = this.mount.current!.clientWidth;
-    const height = this.mount.current!.clientHeight;
-
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.OrthographicCamera(
-      -1.5,
-      1.5,
-      1.5,
-      -1.5,
-    );
-
-    this.camera.position.z = 10; // is used here to set some distance from a cube that is located at z = 0
-    // TrackballControls allow a camera to trackball around the object
-    // https://threejs.org/docs/#examples/controls/TrackballControls
-    this.controls = new TrackballControls(this.camera, this.mount.current!);
-
-    this.controls.noPan = true;
-    this.controls.noZoom = true;
-
-    this.renderer = new THREE.WebGLRenderer({ alpha: true }); // alpha true enables transparency
-    this.renderer.setSize(width, height);
-    this.mount.current!.appendChild(this.renderer.domElement); // mount using React ref
-  };
-
-  // Here should come custom code.
-  // Code below is taken from Three.js BoxGeometry example
-  // https://threejs.org/docs/#api/en/geometries/BoxGeometry
-  addCustomSceneObjects = () => {
-    // add ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff);
-    this.scene.add(ambientLight);
-  };
 
   handleCircularityChange = () => {
     // how much to lerp towards circle
-    const alpha = this.range.current!.valueAsNumber;
-
-    // we're going to calculate a new position that's an interpolation
-    const newPosition = new Float32Array(cubeGeometry.attributes.position.count * 3);
-
-    for (let i = 0; i < cubeGeometry.attributes.position.count; i++) {
-      // original x positions
-      const x = cubeGeometry.attributes.position.getX(i);
-      const y = cubeGeometry.attributes.position.getY(i);
-      const z = cubeGeometry.attributes.position.getZ(i);
-
-      const dist = Math.hypot(x, y, z);
-
-      // circular x positions
-      const nx = x / dist;
-      const ny = y / dist;
-      const nz = z / dist;
-
-      // lerp the new values between the circle calculated
-      newPosition[i * 3 + 0] = x + (nx - x) * alpha;
-      newPosition[i * 3 + 1] = y + (ny - y) * alpha;
-      newPosition[i * 3 + 2] = z + (nz - z) * alpha;
-    }
-
-    // set our new geometry
-    let newGeometry = cubeGeometry.clone();
-    newGeometry.setAttribute('position', new THREE.BufferAttribute(newPosition, 3));
-
-    // remove old mesh
-    this.scene.remove(this.mesh);
-
-    // add mesh
-    const mesh = new THREE.Mesh(newGeometry, cubeMaterials);
-    this.scene.add(mesh);
-    this.mesh = mesh;
-
-    // wireframe
-    let geo = new THREE.WireframeGeometry(this.mesh.geometry);
-    let mat = new THREE.LineBasicMaterial({ color: 0x1d2021 });
-    let wireframe = new THREE.LineSegments(geo, mat);
-    mesh.add(wireframe);
+    const lerpAlpha = this.lerpRange.current!.valueAsNumber;
+    this.gl.uniform1f(this.torusLerpAlpha, lerpAlpha);
   }
 
-  startAnimationLoop = () => {
-    this.controls.update();
-    this.renderer.render(this.scene, this.camera);
-    // The window.requestAnimationFrame() method tells the browser that you wish to perform
-    // an animation and requests that the browser call a specified function
-    // to update an animation before the next repaint
-    this.requestID = window.requestAnimationFrame(this.startAnimationLoop);
-  };
 
-  handleWindowResize = () => {
-    const width = this.mount.current!.clientWidth;
-    const height = this.mount.current!.clientHeight;
 
-    this.controls.handleResize();
-    this.renderer.setSize(width, height);
+  animationLoop = () => {
+    this.camera.update();
+
+    {
+      // set uniform
+      const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.size, this.props.size);
+      this.gl.uniformMatrix4fv(this.torusWorldViewProjectionLoc, false, worldViewProjectionMat);
+
+      // draw triangles
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.filledbuffer);
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, detailLevel * detailLevel * 6 * 6);
+    }
+
+    this.requestID = window.requestAnimationFrame(this.animationLoop);
   };
 
   render() {
     return <div style={this.props.style} className={this.props.className}>
-      <div ref={this.mount} className="ratio ratio-1x1 border border-dark" />
-      <div className="mx-auto flex-grow-1 ">
-        <label className="form-label">Circularness</label>
-        <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.range} />
+      <canvas
+        ref={this.canvas}
+        height={this.props.size}
+        width={this.props.size}
+        className="border border-dark mb-3 d-block mx-auto"
+      />
+      <div className="mb-2">
+        <label className="form-label">Circularity</label>
+        <input
+          type="range" className="form-range"
+          min="0" max="1" step="0.05" defaultValue="0"
+          onInput={this.handleCircularityChange}
+          ref={this.lerpRange}
+        />
       </div>
     </div>;
   }
 }
 
 export default SingularityDemo;
+
