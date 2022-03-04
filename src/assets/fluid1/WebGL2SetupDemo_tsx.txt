@@ -20,6 +20,7 @@ void main() {
 
   // converts the position (which is from 0 to 1)
   // to clip space (which is from -1 to 1)
+  // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_model_view_projection
   vec2 clipSpace = (a_position * 2.0) - 1.0;
 
   gl_Position = vec4(clipSpace, 0, 1);

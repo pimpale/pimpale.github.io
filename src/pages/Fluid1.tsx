@@ -21,6 +21,7 @@ import WebGL2IncompressibleFluidDemo from '../components/WebGL2IncompressibleFlu
 
 import WebGL2SetupDemoTsxUrl from "../assets/fluid1/WebGL2SetupDemo_tsx.txt?url";
 import WebGL2SetupDemo_VertexShader_TsxUrl from "../assets/fluid1/WebGL2SetupDemo_VertexShader_tsx.txt?url";
+import WebGL2SetupDemo_BufferSetup_TsxUrl from "../assets/fluid1/WebGL2SetupDemo_BufferSetup_tsx.txt?url";
 
 const Fluid1 = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -113,7 +114,7 @@ const Fluid1 = () => <ArticleLayout>{
             <SyntaxHighligher className="mx-5 mb-5" language="tsx" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
           }</Async.Fulfilled>
           <Async.Rejected>
-            {/* TOOD: put error here */}
+            {/* TODO: put error here */}
             <div className="spinner-border" role="status" />
           </Async.Rejected>
         </Async>
@@ -128,26 +129,9 @@ const Fluid1 = () => <ArticleLayout>{
       </AsideCard>
       <p>
         The code is mostly boilerplate associated with setting up WebGL.
+        It draws two triangles, forming a suqare covering the entire clip space.
         If any of it is confusing, I reccomend reading some of the WebGL resources linked above.
       </p>
-      <p>
-        However, there are a few tricky points that I wanted to highlight:
-      </p>
-      <Async promise={fetchText(WebGL2SetupDemo_VertexShader_TsxUrl)}>
-        <Async.Pending>
-          <div className="spinner-border" role="status" />
-        </Async.Pending>
-        <Async.Fulfilled<string>>{code =>
-          <SyntaxHighligher className="mx-5 mb-5" language="tsx" showLineNumbers style={a11yDark}>
-            {code}
-          </SyntaxHighligher>
-        }</Async.Fulfilled>
-        <Async.Rejected>
-          {/* TOOD: put error here */}
-          <div className="spinner-border" role="status" />
-        </Async.Rejected>
-      </Async>
-
     </Section>
     <Section id="webgl2-heat" name="Heat Equation with WebGL2">
       <p>
@@ -291,10 +275,7 @@ const Fluid1 = () => <ArticleLayout>{
         \begin{gather}
           \frac {\partial \vec{u}} {\partial t} =
           -(\vec{u} \cdot \nabla)\vec{u}
-          -\frac {1} {\rho} \nabla{p}
-
-          \\
-
+          -\frac {1} {\rho} \nabla{p} \\
           \nabla \cdot \vec{u} = 0
         \end{gather}
       `}</Tex>
@@ -330,7 +311,8 @@ const Fluid1 = () => <ArticleLayout>{
         <WebGL2IncompressibleFluidDemo
           className="mx-auto"
           style={{ maxWidth: "40em" }}
-          size={400}
+          xsize={400}
+          ysize={800}
         />
       </AsideCard>
     </Section>

@@ -8,7 +8,9 @@ import { TrackballCamera, } from '../utils/camera';
 type IncompressibleTorusFluidDemoProps = {
   style?: React.CSSProperties,
   className?: string
-  size: number
+  xsize: number
+  ysize: number
+  torussize: number
 }
 
 // the vertex shader is used in 2 different programs, it basically is just for translating clip space
@@ -218,13 +220,10 @@ void main() {
 
   // calculate the gradient
   // remember, the gradient is [df/dx, df/dy]
-  vec2 pGradient = vec2((p21 - p01)/(2.0*x_off), (p12 - p10)/(2.0*y_off));
-
-  // rho is an experimentally determined multiplier intended not to let the simulation diverge
-  const float rho = 70000.0;
+  vec2 pGradient = vec2((p21 - p01)/resolution.x, (p12 - p10)/resolution.y);
 
   // adjust the velocity by the pressure gradient
-  vec2 vel = texture(u_vel_tex, v_texCoord).xy - (pGradient/rho);
+  vec2 vel = texture(u_vel_tex, v_texCoord).xy - pGradient;
 
   value = vec4(vel, 0, 0);
 }
@@ -340,9 +339,9 @@ precision highp sampler2D;
 // the velocity texture
 uniform sampler2D u_vel_tex;
 
-// old normalized mouse position
+// old mouse position
 uniform vec2 u_old_mouse;
-// new normalized mouse position
+// new mouse position
 uniform vec2 u_new_mouse;
 
 // the texCoords passed in from the vertex shader.
@@ -359,12 +358,17 @@ float sdSegment( in vec2 p, in vec2 a, in vec2 b )
 }
 
 void main() {
+  // both textures are the same size
+  vec2 resolution = vec2(textureSize(u_vel_tex, 0));
+
   // the direction to paint in
-  vec2 paintDir = (u_new_mouse - u_old_mouse)*0.01;
+  vec2 paintDir = 0.01*(u_new_mouse - u_old_mouse)/resolution.y;
 
-  float dist = sdSegment(v_texCoord, u_old_mouse, u_new_mouse);
+  // coordinate in pixels
+  vec2 pxCoord = v_texCoord*resolution;
+  float pxDist = sdSegment(pxCoord, u_old_mouse, u_new_mouse);
 
-  if(dist < 0.03) {
+  if(pxDist < 20.0) {
     value = texture(u_vel_tex, v_texCoord) + vec4(paintDir, 0, 0);
   } else {
     value = texture(u_vel_tex, v_texCoord);
@@ -422,7 +426,7 @@ out vec4 v_outColor;
 void main() {
   // color: 0xEBDBB2,
   // v_outColor = vec4(0.922,0.859,0.698, 1.0);
-  v_outColor = texture(u_render_tex, v_texCoord);
+  v_outColor = texture(u_render_tex, v_texCoord.yx);
 }
 `;
 
@@ -556,7 +560,7 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
     // create pingpongable textures and framebuffers for the scalar field
     for (let i = 0; i < 2; i++) {
-      const tex = createR32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size))!;
+      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize))!;
       this.scalarTextures.push(tex);
 
       const fbo = this.gl.createFramebuffer()!;
@@ -577,7 +581,7 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
     // create pingpongable textures and framebuffers for the velocity field
     for (let i = 0; i < 2; i++) {
       // create velocity texture
-      const tex = createRG32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size * 2))!;
+      const tex = createRG32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize*2))!;
 
       this.velTextures.push(tex);
 
@@ -598,7 +602,7 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
     // create pingpongable textures and framebuffers for the divergence field
     // create divergence texture
-    this.divTexture = createR32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size))!;
+    this.divTexture = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize))!;
     this.divFramebuffer = this.gl.createFramebuffer()!;
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.divFramebuffer);
     // configure the currently active framebuffer to use te
@@ -613,7 +617,7 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
     // create pingpongable textures and framebuffers for the pressure field
     for (let i = 0; i < 2; i++) {
       // create pressure texture
-      const tex = createR32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size))!;
+      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize))!;
 
       this.pressureTextures.push(tex);
 
@@ -894,7 +898,7 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
       this.torusGl.enable(this.torusGl.DEPTH_TEST);
 
       // create texture
-      this.torusTexture = createTexture(this.torusGl, this.props.size, this.props.size)!;
+      this.torusTexture = createTexture(this.torusGl, this.props.torussize, this.props.torussize)!;
 
       const program = createProgram(
         this.torusGl,
@@ -973,8 +977,6 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
     this.torusGl.uniform1f(this.torusMinorAlpha, minorAlpha);
     this.torusGl.uniform1f(this.torusLerpAlpha, lerpAlpha);
   }
-
-
 
   getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
     const rect = canvas.getBoundingClientRect(); // abs. size of element
@@ -1057,12 +1059,12 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
       // set old and new mouse positions
       this.gl.uniform2f(this.oldMouseLoc,
-        clamp(this.mousePos.previous.x, 0, this.props.size) / this.props.size,
-        clamp(this.props.size - this.mousePos.previous.y, 0, this.props.size) / this.props.size,
+        clamp(this.mousePos.previous.x, 0, this.props.xsize),
+        clamp(this.props.ysize - this.mousePos.previous.y, 0, this.props.ysize),
       );
       this.gl.uniform2f(this.newMouseLoc,
-        clamp(this.mousePos.current.x, 0, this.props.size) / this.props.size,
-        clamp(this.props.size - this.mousePos.current.y, 0, this.props.size) / this.props.size,
+        clamp(this.mousePos.current.x, 0, this.props.xsize),
+        clamp(this.props.ysize - this.mousePos.current.y, 0, this.props.ysize),
       );
 
       // execute program, doing paint
@@ -1072,24 +1074,25 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
     }
 
     if (this.needsScalarReset) {
+      const size = this.props.ysize;
       // select the scalar texture being used as a source
       this.gl.activeTexture(this.gl.TEXTURE0);
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
       // overwrite the whole thing with a checkerboard
       const checkerboardCount = parseInt(this.scalarSelect.current?.value!);
-      const resetScalarFieldTex = new Float32Array(this.props.size * this.props.size)
-      for (let y = 0; y < this.props.size; y++) {
-        const b = Math.floor(y / (this.props.size / checkerboardCount)) % 2;
-        for (let x = 0; x < this.props.size; x++) {
-          const a = Math.floor(x / (this.props.size / checkerboardCount)) % 2;
+      const resetScalarFieldTex = new Float32Array(this.props.xsize * this.props.ysize)
+      for (let y = 0; y < this.props.ysize; y++) {
+        const b = Math.floor(y / (size / checkerboardCount)) % 2;
+        for (let x = 0; x < this.props.xsize; x++) {
+          const a = Math.floor(x / (size / checkerboardCount)) % 2;
           if (a + b == 1) {
-            resetScalarFieldTex[y * this.props.size + x] = 1;
+            resetScalarFieldTex[y * this.props.xsize + x] = 1;
           } else {
-            resetScalarFieldTex[y * this.props.size + x] = 0;
+            resetScalarFieldTex[y * this.props.xsize + x] = 0;
           }
         }
       }
-      overwriteR32FTexture(this.gl, 0, 0, this.props.size, this.props.size, resetScalarFieldTex);
+      overwriteR32FTexture(this.gl, 0, 0, this.props.xsize, this.props.ysize, resetScalarFieldTex);
       this.needsScalarReset = false;
     }
 
@@ -1098,7 +1101,7 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
       this.gl.activeTexture(this.gl.TEXTURE3);
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
       // overwrite pressure with 0
-      overwriteR32FTexture(this.gl, 0, 0, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size));
+      overwriteR32FTexture(this.gl, 0, 0, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize * this.props.ysize));
 
 
       // select the vel texture being used as a source
@@ -1109,13 +1112,13 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
       let data;
       switch (this.velocitySelect.current?.value) {
         case 'curlnoise':
-          data = createCurlNoise(3, this.props.size, this.props.size, Math.random() * 500);
+          data = createCurlNoise(3,this.props.xsize, this.props.ysize, Math.random() * 500);
           break;
         default:
-          data = new Float32Array(this.props.size * this.props.size * 2);
+          data = new Float32Array(this.props.xsize * this.props.ysize * 2);
           break;
       }
-      overwriteRG32FTexture(this.gl, 0, 0, this.props.size, this.props.size, data);
+      overwriteRG32FTexture(this.gl, 0, 0, this.props.xsize, this.props.ysize, data);
 
       this.needsVelocityReset = false;
     }
@@ -1243,7 +1246,7 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
     {
       // set uniform
-      const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.size, this.props.size);
+      const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.torussize, this.props.torussize);
       this.torusGl.uniformMatrix4fv(this.torusWorldViewProjectionLoc, false, worldViewProjectionMat);
 
       // update the texture
@@ -1272,14 +1275,14 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
             <canvas
               className="border border-dark mx-auto my-3"
               ref={this.canvas}
-              height={this.props.size}
-              width={this.props.size}
+              width={this.props.xsize}
+              height={this.props.ysize}
             />
             <canvas
               className="border border-dark mx-auto my-3"
               ref={this.torusCanvas}
-              height={this.props.size}
-              width={this.props.size}
+              width={this.props.torussize}
+              height={this.props.torussize}
             />
           </div>
         </div>

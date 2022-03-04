@@ -163,7 +163,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   componentDidMount() {
     // get webgl
     this.gl = this.canvas.current!.getContext('webgl2')!;
-
+    // enable extension
     this.gl.getExtension('EXT_color_buffer_float');
 
     // setup a full canvas clip space quad
@@ -319,7 +319,6 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   }
 
   componentWillUnmount() {
-
     // remove listeners on canvas
     this.canvas.current!.removeEventListener('pointerdown', this.handleMouseDown);
     this.canvas.current!.removeEventListener('pointermove', this.handleMouseMove);

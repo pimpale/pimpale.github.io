@@ -1,13 +1,16 @@
 import React from "react";
-import { createShader, createProgram, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
+import { createShader, createProgram, createTexture, updateTextureFromCanvas, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
 import { createCurlNoise } from '../utils/noise';
+import { genPlane } from '../utils/uvplane';
+import { TrackballCamera, } from '../utils/camera';
 
-type WebGL2IncompressibleFluidDemoProps = {
+type IncompressibleTorusFluidDemoProps = {
   style?: React.CSSProperties,
   className?: string
   xsize: number
   ysize: number
+  torussize: number
 }
 
 // the vertex shader is used in 2 different programs, it basically is just for translating clip space
@@ -127,7 +130,6 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
-
 void main() {
   // get neighboring cell distances
   vec2 resolution = vec2(textureSize(u_vel_tex, 0));
@@ -246,7 +248,7 @@ in vec2 v_texCoord;
 // the output
 out vec4 outColor;
 
-const float ARROW_TILE_SIZE = 16.0;
+const float ARROW_TILE_SIZE = 32.0;
 
 // Computes the center pixel of the tile containing pixel pos
 vec2 arrowTileCenterCoord(vec2 pos) {
@@ -279,7 +281,7 @@ float arrow(vec2 p, vec2 v) {
     
     // We can't draw arrows larger than the tile radius, so clamp magnitude.
     // Enforce a minimum length to help see direction
-    mag_v = clamp(mag_v, 5.0, ARROW_TILE_SIZE * 0.5);
+    mag_v = clamp(mag_v, 5.0, ARROW_TILE_SIZE * 0.5)*2.0;
 
     // Arrow tip location
     v = dir_v * mag_v;
@@ -326,7 +328,7 @@ void main() {
   float scalar_val = clamp(texture(u_scalar_tex, v_texCoord).x + u_offset, 0.0, 1.0);
   vec4 field_col = vec4(inferno(scalar_val), 1.0);
 
-  outColor = mix(arrow_col, field_col, arrow_col.a);
+  outColor = vec4(mix(arrow_col.rgb, field_col.rgb, arrow_col.a), 1);
 }
 `
 
@@ -374,17 +376,149 @@ void main() {
 }
 `
 
+const coriolis_fs = `#version 300 es
+precision highp float;
+precision highp sampler2D;
+
+#define PI 3.1415926538
+
+// the velocity texture
+uniform sampler2D u_vel_tex;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// the output
+out vec4 value;
+
+void main() {
+  float phi = (v_texCoord.y + 0.5)*2.0*PI;
+
+  // express the rotation vector in terms of local coordinates
+  vec3 omega = vec3(
+      0,
+      cos(phi),
+      sin(phi)
+   );
+
+  vec2 src = texture(u_vel_tex, v_texCoord).xy;
+
+  // express the wind direction in terms of local coordinates
+  vec3 v = vec3(src, 0);
+
+  vec2 acc = cross(omega, v).xy;
+
+  vec2 ret = src;
+
+  // rescale so we don't get infinite energy
+  if(length(acc) > 0.0) {
+    ret = src-src*0.01*length(acc)+0.01*acc;
+  }
+
+  value = vec4(ret, 0, 0);
+}
+`
+
+const thermal_fs = `#version 300 es
+precision highp float;
+precision highp sampler2D;
+
+#define PI 3.1415926538
+
+// the thermal texture
+uniform sampler2D u_scalar_tex;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// the output
+out vec4 value;
+
+void main() {
+  const float dissipation_rate = 0.999;
+
+  float phi = (v_texCoord.y + 0.5)*2.0*PI;
+  float xComponentNormal = cos(phi);
+  float added_load = 0.0;
+  if(xComponentNormal > 0.0) {
+      added_load = 0.001*cos(phi);
+  }
+
+  value = texture(u_scalar_tex, v_texCoord)*dissipation_rate + vec4(added_load, 0, 0, 0);
+  //value = texture(u_scalar_tex, v_texCoord);
+}
+`
+
+
+const torus_vs = `#version 300 es
+#define PI 3.1415926538
+
+in vec2 a_position;
+out vec2 v_texCoord;
+
+const float u_majorRadius = 0.5;
+const float u_minorRadius = 0.25;
+
+uniform float u_majorAlpha;
+uniform float u_minorAlpha;
+uniform float u_lerpAlpha;
+
+uniform mat4 u_worldViewProjection;
+
+
+void main() {
+   float theta = (a_position.y * u_minorAlpha + 0.5) * 2.0 * PI;
+   float phi = a_position.x * u_majorAlpha * 2.0 * PI;
+
+   v_texCoord = a_position;
+
+   vec3 oldpos = vec3(a_position - 0.5, 0.0);
+   vec3 newpos = vec3(
+       (u_majorRadius + u_minorRadius * cos(theta)) * cos(phi),
+       (u_majorRadius + u_minorRadius * cos(theta)) * sin(phi),
+       u_minorRadius * sin(theta)
+    );
+
+   vec3 lerpedPos = mix(oldpos, newpos, u_lerpAlpha);
+
+   gl_Position = u_worldViewProjection * vec4(lerpedPos, 1.0);
+}
+`;
+
+const torus_fs = `#version 300 es
+precision highp float;
+precision highp sampler2D;
+
+// the rendered texture
+uniform sampler2D u_render_tex;
+
+in vec2 v_texCoord;
+
+out vec4 v_outColor;
+
+void main() {
+  // color: 0xEBDBB2,
+  // v_outColor = vec4(0.922,0.859,0.698, 1.0);
+  v_outColor = texture(u_render_tex, v_texCoord);
+}
+`;
+
+const xn = 20;
+const yn = 20
+const torusVertexes = genPlane(xn, yn);
+
 type Point = {
   x: number,
   y: number
 }
 
 
+
 // TODO: learn how to handle error cases
 
-type WebGL2IncompressibleFluidDemoState = {}
+type IncompressibleTorusFluidDemoState = {}
 
-class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2IncompressibleFluidDemoProps, WebGL2IncompressibleFluidDemoState> {
+class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFluidDemoProps, IncompressibleTorusFluidDemoState> {
 
   // this is the ref to the canvas
   private canvas = React.createRef<HTMLCanvasElement>();
@@ -430,6 +564,10 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
   private prog_render!: WebGLProgram;
   private prog_paint_vel!: WebGLProgram;
 
+  // environmental
+  private prog_thermal!: WebGLProgram;
+  private prog_coriolis!: WebGLProgram;
+
   // The index of the scalar texture we're using as a source
   private scalarIndex = 0;
 
@@ -443,6 +581,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
   private needsScalarReset = true;
   private needsVelocityReset = true;
 
+
   // mouse status
   private mousePos: { current: Point, previous: Point } | null = null;
 
@@ -451,7 +590,28 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
   private requestID!: number;
 
-  constructor(props: WebGL2IncompressibleFluidDemoProps) {
+
+  // this is the ref we use to monitor circularization
+  private torusnessRange = React.createRef<HTMLInputElement>();
+
+  private majorRange = React.createRef<HTMLInputElement>();
+  private minorRange = React.createRef<HTMLInputElement>();
+  private lerpRange = React.createRef<HTMLInputElement>();
+
+  // this is the ref to the canvas
+  private torusCanvas = React.createRef<HTMLCanvasElement>();
+  private torusGl!: WebGL2RenderingContext;
+
+  private camera!: TrackballCamera;
+
+  private torusTexture!: WebGLTexture;
+
+  private torusWorldViewProjectionLoc!: WebGLUniformLocation;
+  private torusMajorAlpha!: WebGLUniformLocation;
+  private torusMinorAlpha!: WebGLUniformLocation;
+  private torusLerpAlpha!: WebGLUniformLocation;
+
+  constructor(props: IncompressibleTorusFluidDemoProps) {
     super(props);
   }
 
@@ -793,22 +953,171 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
       this.gl.uniform1i(velTexLoc, 1);
     }
 
+    // build the thermal program
+    {
+      // create program
+      this.prog_thermal = createProgram(
+        this.gl,
+        [
+          createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+          createShader(this.gl, this.gl.FRAGMENT_SHADER, thermal_fs),
+        ]
+      )!;
 
+      const positionLoc = this.gl.getAttribLocation(this.prog_thermal, 'c_position');
+      const scalarTexLoc = this.gl.getUniformLocation(this.prog_thermal, 'u_scalar_tex');
+
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.gl.enableVertexAttribArray(positionLoc);
+      this.gl.vertexAttribPointer(
+        positionLoc,
+        2,         // size (num components)
+        this.gl.FLOAT,  // type of data in buffer
+        false,     // normalize
+        0,         // stride (0 = auto)
+        0,         // offset
+      );
+
+      // bind uniforms
+      this.gl.useProgram(this.prog_thermal);
+
+      // Tell the shader to get the scalar texture from texture unit 1
+      this.gl.uniform1i(scalarTexLoc , 0);
+    }
+
+    // build the coriolis program
+    {
+      // create program
+      this.prog_coriolis = createProgram(
+        this.gl,
+        [
+          createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+          createShader(this.gl, this.gl.FRAGMENT_SHADER, coriolis_fs),
+        ]
+      )!;
+
+      const positionLoc = this.gl.getAttribLocation(this.prog_coriolis, 'c_position');
+      const velTexLoc = this.gl.getUniformLocation(this.prog_coriolis, 'u_vel_tex');
+
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.gl.enableVertexAttribArray(positionLoc);
+      this.gl.vertexAttribPointer(
+        positionLoc,
+        2,         // size (num components)
+        this.gl.FLOAT,  // type of data in buffer
+        false,     // normalize
+        0,         // stride (0 = auto)
+        0,         // offset
+      );
+
+      // bind uniforms
+      this.gl.useProgram(this.prog_coriolis);
+
+      // Tell the shader to get the vel texture from texture unit 1
+      this.gl.uniform1i(velTexLoc , 1);
+    }
 
     // add canvas handler
     this.canvas.current!.addEventListener('pointerdown', this.handleMouseDown);
     this.canvas.current!.addEventListener('pointermove', this.handleMouseMove);
     window.addEventListener('pointerup', this.handleMouseUp);
     // disable touch movements
-    this.canvas.current!.addEventListener("touchstart",  this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchmove",   this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchend",    this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchstart", this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchmove", this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchend", this.discardTouchEvent)
     this.canvas.current!.addEventListener("touchcancel", this.discardTouchEvent)
+
+
+    {
+      // init camera
+      this.camera = new TrackballCamera(this.torusCanvas.current!, {});
+
+      // get webgl
+      this.torusGl = this.torusCanvas.current!.getContext('webgl2', { premultipliedAlpha: false })!;
+      this.torusGl.enable(this.torusGl.DEPTH_TEST);
+
+      // create texture
+      this.torusTexture = createTexture(this.torusGl, this.props.torussize, this.props.torussize)!;
+
+      const program = createProgram(
+        this.torusGl,
+        [
+          createShader(this.torusGl, this.torusGl.VERTEX_SHADER, torus_vs),
+          createShader(this.torusGl, this.torusGl.FRAGMENT_SHADER, torus_fs),
+        ]
+      )!;
+
+      const positionLoc = this.torusGl.getAttribLocation(program, 'a_position');
+      const renderTexLoc = this.torusGl.getUniformLocation(program, "u_render_tex");
+      this.torusMajorAlpha = this.torusGl.getUniformLocation(program, "u_majorAlpha")!;
+      this.torusMinorAlpha = this.torusGl.getUniformLocation(program, "u_minorAlpha")!;
+      this.torusLerpAlpha = this.torusGl.getUniformLocation(program, "u_lerpAlpha")!;
+
+      this.torusWorldViewProjectionLoc = this.torusGl.getUniformLocation(program, "u_worldViewProjection")!;
+
+      const buffer = this.torusGl.createBuffer();
+      this.torusGl.bindBuffer(this.torusGl.ARRAY_BUFFER, buffer);
+      this.torusGl.bufferData(
+        this.torusGl.ARRAY_BUFFER,
+        new Float32Array(torusVertexes.flatMap(x => ([x[0], x[1]]))),
+        this.torusGl.STATIC_DRAW
+      );
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.torusGl.enableVertexAttribArray(positionLoc);
+      this.torusGl.vertexAttribPointer(
+        positionLoc,
+        2,                   // size (num components)
+        this.torusGl.FLOAT,  // type of data in buffer
+        false,          // normalize
+        0,              // stride (0 = auto)
+        0,              // offset
+      );
+
+      this.torusGl.useProgram(program);
+
+      // set defaults
+      this.torusGl.uniform1f(this.torusMajorAlpha, 0.0);
+      this.torusGl.uniform1f(this.torusMinorAlpha, 0.0);
+      this.torusGl.uniform1f(this.torusLerpAlpha, 0.0);
+
+      // Tell the shader to get the render texture from texture unit 0
+      this.torusGl.uniform1i(renderTexLoc, 0);
+    }
+
+    this.torusnessRange.current!.addEventListener('input', this.handleTorusChange);
+    this.majorRange.current!.addEventListener('input', this.handleCircularityChange);
+    this.minorRange.current!.addEventListener('input', this.handleCircularityChange);
+    this.lerpRange.current!.addEventListener('input', this.handleCircularityChange);
 
     // start animation loop
     this.animationLoop();
   }
 
+
+  handleTorusChange = () => {
+    const torusnessAlpha = this.torusnessRange.current!.valueAsNumber;
+
+    this.majorRange.current!.valueAsNumber = torusnessAlpha;
+    this.minorRange.current!.valueAsNumber = torusnessAlpha;
+    this.lerpRange.current!.valueAsNumber = Math.min(torusnessAlpha * 1.5, 1);
+    //now continue
+    this.handleCircularityChange();
+  }
+
+
+  handleCircularityChange = () => {
+    // how much to lerp towards circle
+    const majorAlpha = this.majorRange.current!.valueAsNumber;
+    const minorAlpha = this.minorRange.current!.valueAsNumber;
+    const lerpAlpha = this.lerpRange.current!.valueAsNumber;
+
+    this.torusGl.uniform1f(this.torusMajorAlpha, majorAlpha);
+    this.torusGl.uniform1f(this.torusMinorAlpha, minorAlpha);
+    this.torusGl.uniform1f(this.torusLerpAlpha, lerpAlpha);
+  }
 
   getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
     const rect = canvas.getBoundingClientRect(); // abs. size of element
@@ -820,6 +1129,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
       y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
     }
   }
+
 
   handleMouseDown = (e: MouseEvent) => {
     const v = this.getMousePos(this.canvas.current!, e);
@@ -836,7 +1146,6 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     if (!this.mousePos) {
       return;
     }
-
     this.mousePos = {
       current: this.getMousePos(this.canvas.current!, e),
       previous: this.mousePos.current
@@ -845,6 +1154,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
   discardTouchEvent = (e: TouchEvent) => e.preventDefault();
 
+
   componentWillUnmount() {
 
     // remove listeners on canvas
@@ -852,20 +1162,30 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     this.canvas.current!.removeEventListener('pointermove', this.handleMouseMove);
     window.removeEventListener('pointerup', this.handleMouseUp);
     // reenable touch movements
-    this.canvas.current!.removeEventListener("touchstart",  this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchmove",   this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchend",    this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchstart", this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchmove", this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchend", this.discardTouchEvent)
     this.canvas.current!.removeEventListener("touchcancel", this.discardTouchEvent)
+
+
+    // remove listeners on thing
+    this.torusnessRange.current!.removeEventListener('input', this.handleTorusChange);
+    this.majorRange.current!.removeEventListener('input', this.handleCircularityChange);
+    this.minorRange.current!.removeEventListener('input', this.handleCircularityChange);
+    this.lerpRange.current!.removeEventListener('input', this.handleCircularityChange);
 
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
     // destroy webgl
     this.gl.getExtension('WEBGL_lose_context')!.loseContext();
+    this.torusGl.getExtension('WEBGL_lose_context')!.loseContext();
+
+    this.camera.cleanup();
   }
 
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
-
+    this.camera.update();
 
     // handle draw when there's no loops
     if (this.mousePos) {
@@ -893,7 +1213,6 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
       this.velIndex = (this.velIndex + 1) % 2;
     }
-
 
     if (this.needsScalarReset) {
       const size = this.props.ysize;
@@ -947,6 +1266,42 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
 
     for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
+
+      // do thermal
+      {
+        this.gl.useProgram(this.prog_thermal);
+
+        // make tex the texture to read from at texture0
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
+
+        // make fbo corresponding to the next texture the current framebuffer
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.scalarFramebuffers[(this.scalarIndex + 1) % 2]);
+
+        // execute draw to the next framebuffer
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+        // swap source and dest for the next frame
+        this.scalarIndex = (this.scalarIndex + 1) % 2;
+      }
+
+      // do coriolis
+      {
+        this.gl.useProgram(this.prog_coriolis);
+
+        // bind the source velocity texture to texture unit 1
+        this.gl.activeTexture(this.gl.TEXTURE1);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.velTextures[this.velIndex]);
+
+        // set the framebuffer to draw at the other velocity texture
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.velFramebuffers[(this.velIndex + 1) % 2]);
+
+        // execute program, doing paint
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+        // swap source and dest for the next frame
+        this.velIndex = (this.velIndex + 1) % 2;
+      }
+
       // we will advect scalar now
       {
         this.gl.useProgram(this.prog_advect_scalar);
@@ -1044,44 +1399,72 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
         this.velIndex = (this.velIndex + 1) % 2;
       }
     }
+    {
+      // now draw to canvas
+      this.gl.useProgram(this.prog_render);
 
-    // now draw to canvas
-    this.gl.useProgram(this.prog_render);
+      if (this.viewPressure) {
+        //bind the pressure texture to texture unit 0
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
+        // this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
+        this.gl.uniform1f(this.renderOffset, 0.5);
+      } else {
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
+        this.gl.uniform1f(this.renderOffset, 0);
+      }
 
-    if (this.viewPressure) {
-      //bind the pressure texture to texture unit 0
-      this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
-      // this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
-      this.gl.uniform1f(this.renderOffset, 0.5);
-    } else {
-      this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
-      this.gl.uniform1f(this.renderOffset, 0);
+      // set the canvas as the current framebuffer
+      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+      // execute draw to canvas
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
     }
 
-    // set the canvas as the current framebuffer
-    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
-    // execute draw to canvas
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+    {
+      // set uniform
+      const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.torussize, this.props.torussize);
+      this.torusGl.uniformMatrix4fv(this.torusWorldViewProjectionLoc, false, worldViewProjectionMat);
+
+      // update the texture
+      updateTextureFromCanvas(this.torusGl, this.torusTexture, this.canvas.current!);
+
+      // bind the newly updated texture to texture unit 0
+      this.torusGl.activeTexture(this.torusGl.TEXTURE0);
+      this.torusGl.bindTexture(this.torusGl.TEXTURE_2D, this.torusTexture);
+
+      // settings
+      this.torusGl.enable(this.torusGl.BLEND);
+      this.torusGl.blendFunc(this.torusGl.SRC_ALPHA, this.torusGl.ONE_MINUS_SRC_ALPHA);
+
+      // draw triangles
+      this.torusGl.drawArrays(this.torusGl.TRIANGLES, 0, torusVertexes.length);
+    }
+
+
   }
 
   render() {
     return <div style={this.props.style} className={this.props.className}>
       <div className="row">
         <div className="col-md-8 d-flex">
-        <div>
-          <canvas
-            className="border border-dark mx-auto my-3"
-            ref={this.canvas}
-            height={this.props.ysize}
-            width={this.props.xsize}
-          />
+          <div>
+            <canvas
+              className="border border-dark mx-auto my-3"
+              ref={this.canvas}
+              width={this.props.xsize}
+              height={this.props.ysize}
+            />
+            <canvas
+              className="border border-dark mx-auto my-3"
+              ref={this.torusCanvas}
+              width={this.props.torussize}
+              height={this.props.torussize}
+            />
           </div>
         </div>
         <div className="col-md-4">
           <div className="border border-dark p-3 m-3">
-            <h6>Controls</h6>
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>
               <input type="range" className="form-range" min="0" max="5" step={1} defaultValue={1} ref={this.range} />
@@ -1104,11 +1487,37 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
               </select>
               <button className="btn btn-primary btn-sm" onClick={() => this.needsVelocityReset = true}>Reset Velocity</button>
             </div>
-            <div className="form-group">
-              <div className="custom-control custom-checkbox">
-                <input type="checkbox" className="custom-control-input" onClick={() => this.viewPressure = !this.viewPressure}/>
-                <label className="custom-control-label">View Pressure</label>
+
+            <div className="form-group mb-3">
+              <div className="form-check">
+                <input type="checkbox" className="form-check-input" onClick={() => this.viewPressure = !this.viewPressure} />
+                <label className="form-check-label">View Pressure</label>
               </div>
+            </div>
+          </div>
+
+          <div className="border border-dark p-3 m-3">
+            <div className="form-group mb-3">
+              <label className="form-label">Torusness</label>
+              <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.torusnessRange} />
+            </div>
+
+            <div className="form-group mb-3">
+              <details>
+                <summary>Advanced Torus Controls</summary>
+                <div className="mx-auto d-block flex-grow-1 ">
+                  <label className="form-label">Join Major</label>
+                  <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.majorRange} />
+                </div>
+                <div className="mx-auto d-block flex-grow-1 ">
+                  <label className="form-label">Join Minor</label>
+                  <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.minorRange} />
+                </div>
+                <div className="mx-auto d-block flex-grow-1 ">
+                  <label className="form-label">Alpha</label>
+                  <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.lerpRange} />
+                </div>
+              </details>
             </div>
           </div>
         </div>
@@ -1117,4 +1526,4 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
   }
 }
 
-export default WebGL2IncompressibleFluidDemo;
+export default IncompressibleTorusFluidDemo;

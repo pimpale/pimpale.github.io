@@ -6,6 +6,7 @@ import HrefLink from '../components/HrefLink';
 import AsideCard from '../components/AsideCard';
 
 import IncompressibleTorusFluidDemo from '../components/IncompressibleTorusFluidDemo';
+import CoriolisTorusFluidDemo from '../components/CoriolisTorusFluidDemo';
 
 const Fluid2 = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -27,7 +28,19 @@ const Fluid2 = () => <ArticleLayout>{
         <IncompressibleTorusFluidDemo
           className="mx-auto"
           style={{maxWidth: "40em"}}
-          size={400}
+          xsize={600}
+          ysize={200}
+          torussize={400}
+        />
+      </AsideCard>
+
+      <AsideCard title="Canvas Setup" id="canvas-setup-demo">
+        <CoriolisTorusFluidDemo
+          className="mx-auto"
+          style={{maxWidth: "40em"}}
+          xsize={800}
+          ysize={400}
+          torussize={400}
         />
       </AsideCard>
     </Section>
