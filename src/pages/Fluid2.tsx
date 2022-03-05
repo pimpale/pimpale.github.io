@@ -24,15 +24,17 @@ const Fluid2 = () => <ArticleLayout>{
         Incompressible
       </p>
 
+      {/*
       <AsideCard title="Canvas Setup" id="canvas-setup-demo">
         <IncompressibleTorusFluidDemo
           className="mx-auto"
           style={{maxWidth: "40em"}}
-          xsize={600}
-          ysize={200}
+          xsize={400}
+          ysize={400}
           torussize={400}
         />
       </AsideCard>
+      */}
 
       <AsideCard title="Canvas Setup" id="canvas-setup-demo">
         <CoriolisTorusFluidDemo

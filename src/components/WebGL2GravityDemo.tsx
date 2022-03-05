@@ -1,12 +1,13 @@
 import React from "react";
 import {
-    createShader,
-    createProgram,
-    createR32FTexture,
-    overwriteR32FTexture,
-    createRG32FTexture,
-    overwriteRG32FTexture,
-    createR32UITexture
+  createShader,
+  createProgram,
+  createR32FTexture,
+  overwriteR32FTexture,
+  createRG32FTexture,
+  overwriteRG32FTexture,
+  createR32UITexture,
+  overwriteR32UITexture
 } from '../utils/webgl';
 import { clamp } from '../utils/math';
 import { createCurlNoise } from '../utils/noise';
@@ -57,7 +58,7 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
-const float G = 0.0001;
+const float G = 0.001;
 
 void main() {
   // get the resolution
@@ -71,22 +72,28 @@ void main() {
 
   vec2 p = texture(u_particle_momentum_tex, v_texCoord).xy;
 
-  for(int y = 0; y < resolution.y; y++) {
-    for(int x = 0; x < resolution.x; x++) {
-      vec2 loc = vec2(float(x)*x_off, float(y)*y_off);
-      float m2 = texture(u_particle_mass_tex, loc).x;
-      vec2 pos2 = texture(u_particle_position_tex, loc).xy;
-      vec2 r_vec = pos2-pos1;
-      float r_mag = length(r_vec);
-      vec2 r_hat = r_vec/r_mag;
-      vec2 accel = G*m2*r_hat/(r_mag*r_mag);
-      if(!isnan(accel.x) && !isnan(accel.y)) {
-        p += accel;
+  uint state1 = texture(u_particle_state_tex, v_texCoord).x;
+  if(state1 == 0u) {
+    for(int y = 0; y < resolution.y; y++) {
+      for(int x = 0; x < resolution.x; x++) {
+        vec2 loc = vec2(float(x)*x_off, float(y)*y_off);
+        uint state2 = texture(u_particle_state_tex, loc).x;
+        if(state2 == 0u) {
+          float m2 = texture(u_particle_mass_tex, loc).x;
+          vec2 pos2 = texture(u_particle_position_tex, loc).xy;
+          vec2 r_vec = pos2-pos1;
+          float r_mag = length(r_vec);
+          vec2 r_hat = r_vec/r_mag;
+          vec2 accel = G*m2*r_hat/(r_mag*r_mag);
+          if(!isnan(accel.x) && !isnan(accel.y)) {
+            p += accel;
+          }
+        }
       }
     }
   }
 
-  // run potential
+  // apply momentum
   value = vec4(p, 0, 0);
 }
 `;
@@ -117,12 +124,15 @@ in vec2 v_texCoord;
 out vec4 value;
 
 void main() {
+  uint state = texture(u_particle_state_tex, v_texCoord).x;
   float mass = texture(u_particle_mass_tex, v_texCoord).x;
   vec2 position = texture(u_particle_position_tex, v_texCoord).xy;
   vec2 momentum = texture(u_particle_momentum_tex, v_texCoord).xy;
 
-  // do position
-  position = position + momentum/mass;
+  // change position only if live
+  if(state == 0u) {
+    position = position + momentum/mass;
+  }
 
   value = vec4(position , 0, 1);
 }
@@ -154,26 +164,41 @@ void main() {
 `;
 
 // a no-op for now
-const _fs = `#version 300 es
+const handle_state_fs = `#version 300 es
 precision highp float;
 precision highp sampler2D;
 precision highp usampler2D;
 
-// the particle texture
+// the state texture
 uniform usampler2D u_particle_state_tex;
 
 // the particle texture
 uniform sampler2D u_particle_mass_tex;
 
+// the position texture
+uniform sampler2D u_particle_position_tex;
+
+// the momentum texture
+uniform sampler2D u_particle_momentum_tex;
+
+
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
 
 // the output
-out vec4 value;
+out uvec4 value;
+
+const vec2 upperCorner = vec2(0, 0);
+const vec2 lowerCorner = vec2(512, 512);
 
 void main() {
-  float mass = texture(u_particle_mass_tex, v_texCoord).x;
-  value = vec4(mass, 0, 0, 1);
+  uint state = texture(u_particle_state_tex, v_texCoord).x;
+  vec2 position = texture(u_particle_position_tex, v_texCoord).xy;
+  if(position == clamp(position, upperCorner, lowerCorner)) {
+    value = uvec4(state, 0, 0, 1);
+  } else {
+    value = uvec4(1, 0, 0, 1);
+  }
 }
 `;
 
@@ -189,8 +214,8 @@ type WebGL2FluidAdvectionDemoState = {}
 
 class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoProps, WebGL2FluidAdvectionDemoState> {
 
-  private particle_tex_xsize: number;
-  private particle_tex_ysize: number;
+  private particle_tex_xsize = 32;
+  private particle_tex_ysize = 32;
 
   // this is the ref to the canvas we use to work with particles
   private particle_canvas = React.createRef<HTMLCanvasElement>();
@@ -223,12 +248,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   private particleMomentumTextures: WebGLTexture[] = [];
   private particleMomentumFramebuffers: WebGLFramebuffer[] = [];
 
-  private newMouseLoc!: WebGLUniformLocation;
-  private oldMouseLoc!: WebGLUniformLocation;
-
   private prog_apply_gravity!: WebGLProgram;
   private prog_move_particle!: WebGLProgram;
   private prog_handle_mass!: WebGLProgram;
+  private prog_handle_state!: WebGLProgram;
 
   // The index of the mass texture we're using as a source
   private particleStateIndex = 0;
@@ -242,12 +265,16 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   // mouse status
   private mousePos: { current: Point, previous: Point } | null = null;
 
+  // data
+  private state_data = new Uint32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
+  private mass_data = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
+  private position_data = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
+  private momentum_data = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
+
   private requestID!: number;
 
   constructor(props: WebGL2FluidAdvectionDemoProps) {
     super(props);
-    this.particle_tex_xsize = 16;
-    this.particle_tex_ysize = 16;
   }
 
   componentDidMount() {
@@ -255,7 +282,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     this.gl = this.particle_canvas.current!.getContext('webgl2')!;
     this.gl.getExtension('EXT_color_buffer_float');
 
-    // create pingpongable textures and frambuffers for the particle textures
+    // create pingpongable textures and frambuffers for the state textures
     for (let i = 0; i < 2; i++) {
       const tex = createR32UITexture(
         this.gl,
@@ -487,6 +514,49 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.gl.uniform1i(particleMassTexLoc, 1);
     }
 
+    // build the move_particle
+    {
+      // create program
+      this.prog_handle_state = createProgram(
+        this.gl,
+        [
+          createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+          createShader(this.gl, this.gl.FRAGMENT_SHADER, handle_state_fs),
+        ]
+      )!;
+
+      const positionLoc = this.gl.getAttribLocation(this.prog_handle_state, 'a_position');
+      const particleStateTexLoc = this.gl.getUniformLocation(this.prog_handle_state, 'u_particle_state_tex');
+      const particleMassTexLoc = this.gl.getUniformLocation(this.prog_handle_state, 'u_particle_mass_tex');
+      const particlePositionTexLoc = this.gl.getUniformLocation(this.prog_handle_state, 'u_particle_position_tex');
+      const particleMomentumTexLoc = this.gl.getUniformLocation(this.prog_handle_state, 'u_particle_momentum_tex');
+
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.gl.enableVertexAttribArray(positionLoc);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+      this.gl.vertexAttribPointer(
+        positionLoc,
+        2,              // size (num components)
+        this.gl.FLOAT,  // type of data in buffer
+        false,          // normalize
+        0,              // stride (0 = auto)
+        0,              // offset
+      );
+
+      // bind uniforms
+      this.gl.useProgram(this.prog_handle_state);
+      // Tell the shader to get the state texture from texture unit 0
+      this.gl.uniform1i(particleStateTexLoc, 0);
+      // Tell the shader to get the mass texture from texture unit 1
+      this.gl.uniform1i(particleMassTexLoc, 1);
+      // Tell the shader to get the position texture from texture unit 2
+      this.gl.uniform1i(particlePositionTexLoc, 2);
+      // Tell the shader to get the momentum texture from texture unit 3
+      this.gl.uniform1i(particleMomentumTexLoc, 3);
+
+    }
+
 
     // add canvas handler
     this.render_canvas.current!.addEventListener('pointerdown', this.handleMouseDown);
@@ -513,29 +583,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     }
   }
 
-  handleMouseDown = (e: MouseEvent) => {
-    const v = this.getMousePos(this.render_canvas.current!, e);
-    this.mousePos = {
-      current: v,
-      previous: v
-    };
-  }
-  handleMouseUp = (e: MouseEvent) => {
-    this.mousePos = null;
-  }
-
-  handleMouseMove = (e: MouseEvent) => {
-    if (!this.mousePos) {
-      return;
-    }
-    this.mousePos = {
-      current: this.getMousePos(this.render_canvas.current!, e),
-      previous: this.mousePos.current
-    };
-  }
-
-  discardTouchEvent = (e: TouchEvent) => e.preventDefault();
-
   componentWillUnmount() {
 
     // remove listeners on render_canvas
@@ -558,10 +605,19 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
     if (this.needsReset) {
+      // give everything state of 0
+      const state_data = new Uint32Array(this.particle_tex_xsize * this.particle_tex_ysize);
+      for (let i = 0; i < state_data.length; i++) {
+        state_data[i] = 0;
+      }
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleStateTextures[this.particleStateIndex]);
+      overwriteR32UITexture(this.gl, 0, 0, this.particle_tex_xsize, this.particle_tex_ysize, state_data);
+
       // give everything mass of 1
       const mass_data = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize);
       for (let i = 0; i < mass_data.length; i++) {
-        mass_data[i] = Math.random()*5;
+        mass_data[i] = Math.random() * 50;
       }
       this.gl.activeTexture(this.gl.TEXTURE0);
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleMassTextures[this.particleMassIndex]);
@@ -572,8 +628,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       for (let y = 0; y < this.particle_tex_ysize; y++) {
         for (let x = 0; x < this.particle_tex_xsize; x++) {
           const i = y * this.particle_tex_xsize + x;
-          position_data[i * 2 + 0] = x * 3 + 32;
-          position_data[i * 2 + 1] = y * 3 + 32;
+          position_data[i * 2 + 0] = x * 20 + 32;
+          position_data[i * 2 + 1] = y * 20 + 32;
         }
       }
       this.gl.activeTexture(this.gl.TEXTURE1);
@@ -587,8 +643,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       for (let y = 0; y < this.particle_tex_ysize; y++) {
         for (let x = 0; x < this.particle_tex_xsize; x++) {
           const i = y * this.particle_tex_xsize + x;
-          momentum_data[i * 2 + 0] = (Math.random() - 0.5) * 1.0;
-          momentum_data[i * 2 + 1] = (Math.random() - 0.5) * 1.0;
+          momentum_data[i * 2 + 0] = (Math.random() - 0.5) * 0.0;
+          momentum_data[i * 2 + 1] = (Math.random() - 0.5) * 0.0;
         }
       }
       this.gl.activeTexture(this.gl.TEXTURE2);
@@ -602,14 +658,47 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     // run the physics code
     for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
 
+      // we will handle_state now
+      {
+        // we will handle_state now
+        this.gl.useProgram(this.prog_handle_state);
+
+        // bind the mass to texture 1
+        this.gl.activeTexture(this.gl.TEXTURE1);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleMassTextures[this.particleMassIndex]);
+
+        // bind the position to texture 2
+        this.gl.activeTexture(this.gl.TEXTURE2);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionTextures[this.particlePositionIndex]);
+
+        // bind the momentum to texture 3
+        this.gl.activeTexture(this.gl.TEXTURE3);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleMomentumTextures[this.particleMomentumIndex]);
+
+        // bind the state to texture 0
+        const tex = this.particleStateTextures[this.particleStateIndex];
+        const fbo = this.particleStateFramebuffers[(this.particleStateIndex + 1) % 2];
+
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+
+        // make fbo corresponding to the next texture the current framebuffer
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
+
+        // execute draw to the next framebuffer
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+        this.particleStateIndex = (this.particleStateIndex + 1) % 2;
+      }
+
       // we will handle_mass now
       {
         // we will handle_mass now
         this.gl.useProgram(this.prog_handle_mass);
 
+        // bind the state to texture 0
         this.gl.activeTexture(this.gl.TEXTURE0);
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleMassTextures[this.particleMassIndex]);
-
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleStateTextures[this.particleStateIndex]);
 
         // bind the mass to texture 1
         const tex = this.particleMassTextures[this.particleMassIndex];
@@ -632,19 +721,24 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         // we will apply_gravity now
         this.gl.useProgram(this.prog_apply_gravity);
 
-        // bind the mass to texture 0
+        // bind the state to texture 0
         this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleStateTextures[this.particleStateIndex]);
+
+
+        // bind the mass to texture 1
+        this.gl.activeTexture(this.gl.TEXTURE1);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleMassTextures[this.particleMassIndex]);
 
-        // bind the position to texture 1
-        this.gl.activeTexture(this.gl.TEXTURE1);
+        // bind the position to texture 2
+        this.gl.activeTexture(this.gl.TEXTURE2);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionTextures[this.particlePositionIndex]);
 
-        // bind the momentum to texture 2
+        // bind the momentum to texture 3
         const tex = this.particleMomentumTextures[this.particleMomentumIndex];
         const fbo = this.particleMomentumFramebuffers[(this.particleMomentumIndex + 1) % 2];
 
-        this.gl.activeTexture(this.gl.TEXTURE2);
+        this.gl.activeTexture(this.gl.TEXTURE3);
         this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
 
         // make fbo corresponding to the next texture the current framebuffer
@@ -660,19 +754,23 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         // we will move_particle now
         this.gl.useProgram(this.prog_move_particle);
 
-        // bind the mass to texture 0
+        // bind the state to texture 0
         this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleStateTextures[this.particleStateIndex]);
+
+        // bind the mass to texture 1
+        this.gl.activeTexture(this.gl.TEXTURE1);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleMassTextures[this.particleMassIndex]);
 
-        // bind the momentum to texture 2
-        this.gl.activeTexture(this.gl.TEXTURE2);
+        // bind the momentum to texture 3
+        this.gl.activeTexture(this.gl.TEXTURE3);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleMomentumTextures[this.particleMomentumIndex]);
 
-        // bind the momentum to texture 1
+        // bind the position to texture 2
         const tex = this.particlePositionTextures[this.particlePositionIndex];
         const fbo = this.particlePositionFramebuffers[(this.particlePositionIndex + 1) % 2];
 
-        this.gl.activeTexture(this.gl.TEXTURE1);
+        this.gl.activeTexture(this.gl.TEXTURE2);
         this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
 
         // make fbo corresponding to the next texture the current framebuffer
@@ -685,11 +783,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       }
     }
 
-    const state = new Uint32Array(this.particle_tex_xsize * this.particle_tex_ysize);
-    const mass = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
-    const position = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
-    const momentum = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
-
     // read the positions
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particleStateFramebuffers[this.particleStateIndex]);
     this.gl.readPixels(
@@ -697,11 +790,11 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       0,  // y
       this.particle_tex_xsize, // width
       this.particle_tex_ysize, // height
-      this.gl.RED_INTEGER,     // format
+      this.gl.RGBA_INTEGER,    // format
       this.gl.UNSIGNED_INT,    // type
-      state                    // pixels
+      this.state_data                    // pixels
     );
-    // read the positions
+    // read the masses
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particleMassFramebuffers[this.particleMassIndex]);
     this.gl.readPixels(
       0,  // x
@@ -710,7 +803,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.particle_tex_ysize, // height
       this.gl.RGBA, // format
       this.gl.FLOAT, // type
-      mass // pixels
+      this.mass_data // pixels
     );
     // read the positions
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particlePositionFramebuffers[this.particlePositionIndex]);
@@ -721,9 +814,9 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.particle_tex_ysize, // height
       this.gl.RGBA, // format
       this.gl.FLOAT, // type
-      position // pixels
+      this.position_data // pixels
     );
-    // read the positions
+    // read the momentum
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particleMomentumFramebuffers[this.particleMomentumIndex]);
     this.gl.readPixels(
       0,  // x
@@ -732,33 +825,135 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.particle_tex_ysize, // height
       this.gl.RGBA, // format
       this.gl.FLOAT, // type
-      momentum // pixels
+      this.momentum_data // pixels
     );
-    this.draw(state, mass, position, momentum);
+    this.draw(this.state_data, this.mass_data, this.position_data, this.momentum_data);
   }
 
-  private tick = 0;
+  private editData: { id: number, dragging: Point | null } | null = null
+
+  handleMouseDown = (e: MouseEvent) => {
+    const v = this.getMousePos(this.render_canvas.current!, e);
+    this.mousePos = {
+      current: v,
+      previous: v
+    };
+
+    for (let i = 0; i < this.position_data.length / 4; i++) {
+      if (this.state_data[i * 4] == 0) {
+        const r = this.calcRadius(this.mass_data[i * 4]);
+        const dist = Math.hypot(
+          (v.x - this.position_data[i * 4 + 0]),
+          (v.y - this.position_data[i * 4 + 1]),
+        );
+        if (dist < r) {
+          this.editData = {
+            id: i,
+            dragging: v
+          };
+          // set state to dead so that we don't interfere while dragging
+          this.gl.activeTexture(this.gl.TEXTURE0);
+          this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleStateTextures[this.particleStateIndex]);
+          overwriteR32UITexture(
+            this.gl,
+            i % this.particle_tex_xsize, // x
+            i / this.particle_tex_xsize, // y
+            1, // width
+            1, // height
+            Uint32Array.from([1])
+          );
+          break;
+        }
+      }
+    }
+
+  }
+
+  handleMouseUp = (e: MouseEvent) => {
+    if (this.editData?.dragging) {
+      // change location
+      this.gl.activeTexture(this.gl.TEXTURE2);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionTextures[this.particlePositionIndex]);
+      overwriteRG32FTexture(
+        this.gl,
+        this.editData.id % this.particle_tex_xsize, // x
+        this.editData.id / this.particle_tex_xsize, // y
+        1, // width
+        1, // height
+        Float32Array.from([this.editData.dragging.x, this.editData.dragging.y]) // data
+      );
+
+      // set state to live so the particle starts interacting with gravity again
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleStateTextures[this.particleStateIndex]);
+      overwriteR32UITexture(
+        this.gl,
+        this.editData.id % this.particle_tex_xsize, // x
+        this.editData.id / this.particle_tex_xsize, // y
+        1, // width
+        1, // height
+        Uint32Array.from([0]) //data
+      );
+      this.editData.dragging = null;
+    }
+    this.mousePos = null;
+  }
+
+  handleMouseMove = (e: MouseEvent) => {
+    if (!this.mousePos) {
+      return;
+    }
+    const v = this.getMousePos(this.render_canvas.current!, e);
+    this.mousePos = {
+      current: v,
+      previous: this.mousePos.current
+    };
+
+    if (this.editData?.dragging) {
+      this.editData.dragging = v;
+
+      // change location
+      this.gl.activeTexture(this.gl.TEXTURE2);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionTextures[this.particlePositionIndex]);
+      overwriteRG32FTexture(
+        this.gl,
+        this.editData.id % this.particle_tex_xsize, // x
+        this.editData.id / this.particle_tex_xsize, // y
+        1, // width
+        1, // height
+        Float32Array.from([this.editData.dragging.x, this.editData.dragging.y]) // data
+      );
+
+    }
+  }
+
+  discardTouchEvent = (e: TouchEvent) => e.preventDefault();
+
+  calcRadius = (m: number) => 1.5 * Math.sqrt(m) + 5;
 
   draw = (state: Uint32Array, mass: Float32Array, position: Float32Array, momentum: Float32Array) => {
-    if (this.tick == 100) {
-      console.log(position);
-      this.tick = 0;
-    } else {
-      this.tick++;
-    }
+
     const render_canvas = this.render_canvas.current!
     const ctx = this.render_canvas.current!.getContext("2d")!;
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, render_canvas.width, render_canvas.height);
-    ctx.fillStyle = "#FFFFFF";
-    ctx.strokeStyle= "#FF0000";
+    ctx.strokeStyle = "#FF0000";
     for (let i = 0; i < position.length / 4; i++) {
+      let s = state[i * 4];
       let x = position[i * 4 + 0];
       let y = position[i * 4 + 1];
       let m = mass[i * 4]
       let r = Math.sqrt(m);
       ctx.beginPath();
       ctx.arc(x, y, r, 0, 2 * Math.PI);
+      switch (s) {
+        case 0:
+          ctx.fillStyle = "#FFFFFF";
+          break;
+        default:
+          ctx.fillStyle = "#FF0000";
+          break;
+      }
       ctx.fill();
       // now draw momentum
       ctx.beginPath()
@@ -767,6 +962,14 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       let vy = momentum[i * 4 + 1] / m;
       ctx.lineTo(x + vx, y + vy);
       ctx.stroke();
+      if (i == this.editData?.id) {
+        // draw blue circle around the thing we're editing
+        ctx.strokeStyle = "#0000FF";
+        ctx.beginPath();
+        ctx.arc(x, y, this.calcRadius(m), 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.strokeStyle = "#FF0000";
+      }
     }
   }
 
@@ -803,7 +1006,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
                 <option value={32}>2^6: 64</option>
                 <option value={32}>2^6: 64</option>
                 <option value={16}>2^8 64</option>
-                <option value={32}>Grid 64</option>
               </select>
               <button className="btn btn-primary btn-sm" onClick={() => this.needsReset = true}>Reset</button>
             </div>
