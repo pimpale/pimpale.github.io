@@ -166,6 +166,29 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     // enable extension
     this.gl.getExtension('EXT_color_buffer_float');
 
+    // create pingpongable textures and frambuffers
+    for (let i = 0; i < 2; i++) {
+      const tex = createR32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size))!;
+      this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+      this.textures.push(tex);
+
+      const fbo = this.gl.createFramebuffer()!;
+      // this makes fbo the current active framebuffer
+      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
+      // configure the currently active framebuffer to use te
+      this.gl.framebufferTexture2D(
+        this.gl.FRAMEBUFFER, // will bind as a framebuffer
+        this.gl.COLOR_ATTACHMENT0, // Attaches the texture to the framebuffer's color buffer. 
+        this.gl.TEXTURE_2D, // we have a 2d texture
+        tex, // the texture to attach
+        0 // the mipmap level (we don't want mipmapping, so we set to 0)
+      );
+      // push framebuffer
+      this.framebuffers.push(fbo);
+    }
+
     // setup a full canvas clip space quad
     const buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
@@ -205,28 +228,6 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
         0,         // offset
       );
 
-      // create pingpongable textures and frambuffers
-      for (let i = 0; i < 2; i++) {
-        const tex = createR32FTexture(this.gl, this.props.size, this.props.size, new Float32Array(this.props.size * this.props.size))!;
-        this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-        this.textures.push(tex);
-
-        const fbo = this.gl.createFramebuffer()!;
-        // this makes fbo the current active framebuffer
-        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
-        // configure the currently active framebuffer to use te
-        this.gl.framebufferTexture2D(
-          this.gl.FRAMEBUFFER, // will bind as a framebuffer
-          this.gl.COLOR_ATTACHMENT0, // Attaches the texture to the framebuffer's color buffer. 
-          this.gl.TEXTURE_2D, // we have a 2d texture
-          tex, // the texture to attach
-          0 // the mipmap level (we don't want mipmapping, so we set to 0)
-        );
-        // push framebuffer
-        this.framebuffers.push(fbo);
-      }
 
       // bind uniforms
       this.gl.useProgram(this.prog_diffuse);
@@ -280,9 +281,9 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     this.canvas.current!.addEventListener('pointermove', this.handleMouseMove);
     window.addEventListener('pointerup', this.handleMouseUp);
     // disable touch movements
-    this.canvas.current!.addEventListener("touchstart",  this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchmove",   this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchend",    this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchstart", this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchmove", this.discardTouchEvent)
+    this.canvas.current!.addEventListener("touchend", this.discardTouchEvent)
     this.canvas.current!.addEventListener("touchcancel", this.discardTouchEvent)
 
     // start animation loop
@@ -324,9 +325,9 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     this.canvas.current!.removeEventListener('pointermove', this.handleMouseMove);
     window.removeEventListener('pointerup', this.handleMouseUp);
     // reenable touch movements
-    this.canvas.current!.removeEventListener("touchstart",  this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchmove",   this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchend",    this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchstart", this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchmove", this.discardTouchEvent)
+    this.canvas.current!.removeEventListener("touchend", this.discardTouchEvent)
     this.canvas.current!.removeEventListener("touchcancel", this.discardTouchEvent)
 
     // stop animation loop

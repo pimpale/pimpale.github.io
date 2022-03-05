@@ -499,7 +499,6 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     for (let i = 0; i < 2; i++) {
       // create velocity texture
       const tex = createRG32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize*2))!;
-
       this.velTextures.push(tex);
 
       const fbo = this.gl.createFramebuffer()!;

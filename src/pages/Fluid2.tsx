@@ -38,7 +38,7 @@ const Fluid2 = () => <ArticleLayout>{
         <CoriolisTorusFluidDemo
           className="mx-auto"
           style={{maxWidth: "40em"}}
-          xsize={800}
+          xsize={400}
           ysize={400}
           torussize={400}
         />

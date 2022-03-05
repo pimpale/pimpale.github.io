@@ -412,7 +412,7 @@ void main() {
 
   // rescale so we don't get infinite energy
   if(length(acc) > 0.0) {
-    ret = src-src*0.01*length(acc)+0.01*acc;
+    ret = src-src*0.05*length(acc)+0.05*acc;
   }
 
   value = vec4(ret, 0, 0);
