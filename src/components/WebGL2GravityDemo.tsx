@@ -1,5 +1,13 @@
 import React from "react";
-import { createShader, createProgram, createR32FTexture, overwriteR32FTexture, createRG32FTexture, overwriteRG32FTexture } from '../utils/webgl';
+import {
+    createShader,
+    createProgram,
+    createR32FTexture,
+    overwriteR32FTexture,
+    createRG32FTexture,
+    overwriteRG32FTexture,
+    createR32UITexture
+} from '../utils/webgl';
 import { clamp } from '../utils/math';
 import { createCurlNoise } from '../utils/noise';
 
@@ -29,6 +37,10 @@ void main() {
 const apply_gravity_fs = `#version 300 es
 precision highp float;
 precision highp sampler2D;
+precision highp usampler2D;
+
+// the particle texture
+uniform usampler2D u_particle_state_tex;
 
 // the particle texture
 uniform sampler2D u_particle_mass_tex;
@@ -84,6 +96,10 @@ void main() {
 const move_particle_fs = `#version 300 es
 precision highp float;
 precision highp sampler2D;
+precision highp usampler2D;
+
+// the particle texture
+uniform usampler2D u_particle_state_tex;
 
 // the particle texture
 uniform sampler2D u_particle_mass_tex;
@@ -117,6 +133,10 @@ void main() {
 const handle_mass_fs = `#version 300 es
 precision highp float;
 precision highp sampler2D;
+precision highp usampler2D;
+
+// the particle texture
+uniform usampler2D u_particle_state_tex;
 
 // the particle texture
 uniform sampler2D u_particle_mass_tex;
@@ -133,6 +153,29 @@ void main() {
 }
 `;
 
+// a no-op for now
+const _fs = `#version 300 es
+precision highp float;
+precision highp sampler2D;
+precision highp usampler2D;
+
+// the particle texture
+uniform usampler2D u_particle_state_tex;
+
+// the particle texture
+uniform sampler2D u_particle_mass_tex;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// the output
+out vec4 value;
+
+void main() {
+  float mass = texture(u_particle_mass_tex, v_texCoord).x;
+  value = vec4(mass, 0, 0, 1);
+}
+`;
 
 
 type Point = {
@@ -164,10 +207,13 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   private gl!: WebGL2RenderingContext;
 
+  // the texture that shows the state of each particle (dead, alive, or
+  private particleStateTextures: WebGLTexture[] = [];
+  private particleStateFramebuffers: WebGLFramebuffer[] = [];
+
   // the texture that shows scalar density (this is going to be advected)
   private particleMassTextures: WebGLTexture[] = [];
   private particleMassFramebuffers: WebGLFramebuffer[] = [];
-
 
   // position texture
   private particlePositionTextures: WebGLTexture[] = [];
@@ -185,6 +231,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   private prog_handle_mass!: WebGLProgram;
 
   // The index of the mass texture we're using as a source
+  private particleStateIndex = 0;
   private particleMassIndex = 0;
   private particlePositionIndex = 0;
   private particleMomentumIndex = 0;
@@ -210,6 +257,29 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
     // create pingpongable textures and frambuffers for the particle textures
     for (let i = 0; i < 2; i++) {
+      const tex = createR32UITexture(
+        this.gl,
+        this.particle_tex_xsize,
+        this.particle_tex_ysize,
+      )!;
+      this.particleStateTextures.push(tex);
+      const fbo = this.gl.createFramebuffer()!;
+      // this makes fbo the current active framebuffer
+      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
+      // configure the currently active framebuffer to use te
+      this.gl.framebufferTexture2D(
+        this.gl.FRAMEBUFFER, // will bind as a framebuffer
+        this.gl.COLOR_ATTACHMENT0, // Attaches the texture to the framebuffer's color buffer. 
+        this.gl.TEXTURE_2D, // we have a 2d texture
+        tex, // the texture to attach
+        0 // the mipmap level (we don't want mipmapping, so we set to 0)
+      );
+      // push framebuffer
+      this.particleStateFramebuffers.push(fbo);
+    }
+
+    // create pingpongable textures and frambuffers for the particle textures
+    for (let i = 0; i < 2; i++) {
       const tex = createR32FTexture(
         this.gl,
         this.particle_tex_xsize,
@@ -217,7 +287,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize)
       )!;
       this.particleMassTextures.push(tex);
-
       const fbo = this.gl.createFramebuffer()!;
       // this makes fbo the current active framebuffer
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, fbo);
@@ -309,6 +378,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       )!;
 
       const positionLoc = this.gl.getAttribLocation(this.prog_apply_gravity, 'a_position');
+      const particleStateTexLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_particle_state_tex');
       const particleMassTexLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_particle_mass_tex');
       const particlePositionTexLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_particle_position_tex');
       const particleMomentumTexLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_particle_momentum_tex');
@@ -328,12 +398,14 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
       // bind uniforms
       this.gl.useProgram(this.prog_apply_gravity);
-      // Tell the shader to get the mass texture from texture unit 0
-      this.gl.uniform1i(particleMassTexLoc, 0);
-      // Tell the shader to get the position texture from texture unit 1
-      this.gl.uniform1i(particlePositionTexLoc, 1);
-      // Tell the shader to get the momentum texture from texture unit 2
-      this.gl.uniform1i(particleMomentumTexLoc, 2);
+      // Tell the shader to get the state texture from texture unit 0
+      this.gl.uniform1i(particleStateTexLoc, 0);
+      // Tell the shader to get the mass texture from texture unit 1
+      this.gl.uniform1i(particleMassTexLoc, 1);
+      // Tell the shader to get the position texture from texture unit 2
+      this.gl.uniform1i(particlePositionTexLoc, 2);
+      // Tell the shader to get the momentum texture from texture unit 3
+      this.gl.uniform1i(particleMomentumTexLoc, 3);
     }
 
     // build the move_particle
@@ -348,6 +420,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       )!;
 
       const positionLoc = this.gl.getAttribLocation(this.prog_move_particle, 'a_position');
+      const particleStateTexLoc = this.gl.getUniformLocation(this.prog_move_particle, 'u_particle_state_tex');
       const particleMassTexLoc = this.gl.getUniformLocation(this.prog_move_particle, 'u_particle_mass_tex');
       const particlePositionTexLoc = this.gl.getUniformLocation(this.prog_move_particle, 'u_particle_position_tex');
       const particleMomentumTexLoc = this.gl.getUniformLocation(this.prog_move_particle, 'u_particle_momentum_tex');
@@ -367,12 +440,15 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
       // bind uniforms
       this.gl.useProgram(this.prog_move_particle);
-      // Tell the shader to get the mass texture from texture unit 0
-      this.gl.uniform1i(particleMassTexLoc, 0);
-      // Tell the shader to get the position texture from texture unit 1
-      this.gl.uniform1i(particlePositionTexLoc, 1);
-      // Tell the shader to get the momentum texture from texture unit 2
-      this.gl.uniform1i(particleMomentumTexLoc, 2);
+      // Tell the shader to get the state texture from texture unit 0
+      this.gl.uniform1i(particleStateTexLoc, 0);
+      // Tell the shader to get the mass texture from texture unit 1
+      this.gl.uniform1i(particleMassTexLoc, 1);
+      // Tell the shader to get the position texture from texture unit 2
+      this.gl.uniform1i(particlePositionTexLoc, 2);
+      // Tell the shader to get the momentum texture from texture unit 3
+      this.gl.uniform1i(particleMomentumTexLoc, 3);
+
     }
 
     // build the mass particle
@@ -387,6 +463,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       )!;
 
       const positionLoc = this.gl.getAttribLocation(this.prog_handle_mass, 'a_position');
+      const particleStateTexLoc = this.gl.getUniformLocation(this.prog_handle_mass, 'u_particle_state_tex');
       const particleMassTexLoc = this.gl.getUniformLocation(this.prog_handle_mass, 'u_particle_mass_tex');
 
       // setup our attributes to tell WebGL how to pull
@@ -404,8 +481,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
       // bind uniforms
       this.gl.useProgram(this.prog_handle_mass);
-      // Tell the shader to get the mass texture from texture unit 0
-      this.gl.uniform1i(particleMassTexLoc, 0);
+      // Tell the shader to get the state texture from texture unit 0
+      this.gl.uniform1i(particleStateTexLoc, 0);
+      // Tell the shader to get the mass texture from texture unit 1
+      this.gl.uniform1i(particleMassTexLoc, 1);
     }
 
 
@@ -418,7 +497,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     this.render_canvas.current!.addEventListener("touchmove", this.discardTouchEvent)
     this.render_canvas.current!.addEventListener("touchend", this.discardTouchEvent)
     this.render_canvas.current!.addEventListener("touchcancel", this.discardTouchEvent)
-
 
     // start animation loop
     this.animationLoop();
@@ -529,11 +607,15 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         // we will handle_mass now
         this.gl.useProgram(this.prog_handle_mass);
 
-        // bind the mass to texture 0
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleMassTextures[this.particleMassIndex]);
+
+
+        // bind the mass to texture 1
         const tex = this.particleMassTextures[this.particleMassIndex];
         const fbo = this.particleMassFramebuffers[(this.particleMassIndex + 1) % 2];
 
-        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.activeTexture(this.gl.TEXTURE1);
         this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
 
         // make fbo corresponding to the next texture the current framebuffer
@@ -574,8 +656,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         this.particleMomentumIndex = (this.particleMomentumIndex + 1) % 2;
       }
 
-
-
       {
         // we will move_particle now
         this.gl.useProgram(this.prog_move_particle);
@@ -605,9 +685,22 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       }
     }
 
+    const state = new Uint32Array(this.particle_tex_xsize * this.particle_tex_ysize);
     const mass = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
     const position = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
     const momentum = new Float32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
+
+    // read the positions
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particleStateFramebuffers[this.particleStateIndex]);
+    this.gl.readPixels(
+      0,  // x
+      0,  // y
+      this.particle_tex_xsize, // width
+      this.particle_tex_ysize, // height
+      this.gl.RED_INTEGER,     // format
+      this.gl.UNSIGNED_INT,    // type
+      state                    // pixels
+    );
     // read the positions
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particleMassFramebuffers[this.particleMassIndex]);
     this.gl.readPixels(
@@ -641,12 +734,12 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.gl.FLOAT, // type
       momentum // pixels
     );
-    this.draw(mass, position, momentum);
+    this.draw(state, mass, position, momentum);
   }
 
   private tick = 0;
 
-  draw = (mass: Float32Array, position: Float32Array, momentum: Float32Array) => {
+  draw = (state: Uint32Array, mass: Float32Array, position: Float32Array, momentum: Float32Array) => {
     if (this.tick == 100) {
       console.log(position);
       this.tick = 0;
@@ -658,20 +751,18 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, render_canvas.width, render_canvas.height);
     ctx.fillStyle = "#FFFFFF";
+    ctx.strokeStyle= "#FF0000";
     for (let i = 0; i < position.length / 4; i++) {
       let x = position[i * 4 + 0];
       let y = position[i * 4 + 1];
       let m = mass[i * 4]
-      ctx.fillRect(x - m/2, y - m/2, m, m);
-    }
-
-    ctx.strokeStyle= "#FF0000";
-    for (let i = 0; i < mass.length / 4; i++) {
+      let r = Math.sqrt(m);
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, 2 * Math.PI);
+      ctx.fill();
+      // now draw momentum
       ctx.beginPath()
-      let x = position[i * 4 + 0];
-      let y = position[i * 4 + 1];
       ctx.moveTo(x, y);
-      let m = mass[i * 4]
       let vx = momentum[i * 4 + 0] / m;
       let vy = momentum[i * 4 + 1] / m;
       ctx.lineTo(x + vx, y + vy);
@@ -709,10 +800,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
             <div className="form-group mb-3">
               <label className="form-label">Scalar Field</label>
               <select className="form-select mb-3" defaultValue={8} ref={this.scalarSelect}>
-                <option value={1}>Empty</option>
-                <option value={2}>Grid 2</option>
-                <option value={8}>Grid 8</option>
-                <option value={64}>Grid 64</option>
+                <option value={32}>2^6: 64</option>
+                <option value={32}>2^6: 64</option>
+                <option value={16}>2^8 64</option>
+                <option value={32}>Grid 64</option>
               </select>
               <button className="btn btn-primary btn-sm" onClick={() => this.needsReset = true}>Reset</button>
             </div>
