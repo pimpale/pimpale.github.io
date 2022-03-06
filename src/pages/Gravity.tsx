@@ -9,6 +9,7 @@ import AsideCard from '../components/AsideCard';
 
 
 import WebGL2GravityDemo from '../components/WebGL2GravityDemo';
+import LennardJonesDemo from '../components/LennardJonesDemo';
 
 // Bootstrap CSS & JS
 import '../styles/style.scss';
@@ -25,6 +26,14 @@ const GravityPage = () => <ArticleLayout>{
       </p>
       <AsideCard title="Canvas Setup" id="canvas-setup-demo">
         <WebGL2GravityDemo
+          className="mx-auto"
+          style={{maxWidth: "50em"}}
+          size={512}
+        />
+      </AsideCard>
+
+      <AsideCard title="Canvas Setup" id="canvas-setup-demo">
+        <LennardJonesDemo
           className="mx-auto"
           style={{maxWidth: "50em"}}
           size={512}
