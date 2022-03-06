@@ -58,8 +58,11 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
-const float sigma = 1.0;
-const float epsilon = 1.0;
+uniform float u_gravity;
+uniform float u_repulsion;
+uniform float u_attraction;
+uniform float u_wall_spring_damping;
+uniform float u_wall_spring_constant;
 
 void main() {
   // get the resolution
@@ -70,6 +73,7 @@ void main() {
 
   // our current position
   vec2 pos1 = texture(u_particle_position_tex, v_texCoord).xy;
+  float m1 = texture(u_particle_mass_tex, v_texCoord).x;
 
   vec2 p = texture(u_particle_momentum_tex, v_texCoord).xy;
 
@@ -85,10 +89,10 @@ void main() {
           float r = length(r_vec);
           vec2 r_hat = r_vec/r;
 
-          float force_strength = epsilon*(pow(sigma/r, 6.0) - 400.0*pow(sigma/r, 12.0) );
+          float force_strength = u_attraction*pow(r, -7.0) - u_repulsion*pow(r, -13.0);
 
-          vec2 accel = r_hat*force_strength;
-          if(!isnan(force_strength) && abs(force_strength) < 0.1) {
+          if(!isnan(force_strength)) {
+            vec2 accel = r_hat*clamp(force_strength, -10.0, 10.0);
             p += accel;
           }
         }
@@ -96,7 +100,7 @@ void main() {
     }
   }
 
-  p.y += 0.00001;
+  p.y += u_gravity*m1;
 
   const float xl = 10.0;
   const float yl = 10.0;
@@ -104,16 +108,16 @@ void main() {
   const float yg = 502.0;
 
   if(pos1.x < xl) {
-    p.x = 0.99*p.x + 0.001*pow(pos1.x-xl, 2.0);
+    p.x = u_wall_spring_damping*p.x + u_wall_spring_constant*pow(pos1.x-xl, 2.0);
   }
   if(pos1.x > xg) {
-    p.x = 0.99*p.x -0.001*pow(pos1.x-xg, 2.0);
+    p.x = u_wall_spring_damping*p.x -u_wall_spring_constant*pow(pos1.x-xg, 2.0);
   }
   if(pos1.y < yl) {
-    p.y = 0.99*p.y + 0.001*pow(pos1.y-yl, 2.0);
+    p.y = u_wall_spring_damping*p.y + u_wall_spring_constant*pow(pos1.y-yl, 2.0);
   }
   if(pos1.y > yg) {
-    p.y = 0.99*p.y -0.001*pow(pos1.y-yg, 2.0);
+    p.y = u_wall_spring_damping*p.y -u_wall_spring_constant*pow(pos1.y-yg, 2.0);
   }
 
   // apply momentum
@@ -238,8 +242,8 @@ type WebGL2FluidAdvectionDemoState = {}
 
 class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoProps, WebGL2FluidAdvectionDemoState> {
 
-  private particle_tex_xsize = 64;
-  private particle_tex_ysize = 64;
+  private particle_tex_xsize = 23;
+  private particle_tex_ysize = 23;
 
   // this is the ref to the canvas we use to work with particles
   private particle_canvas = React.createRef<HTMLCanvasElement>();
@@ -250,11 +254,30 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   // this is the ref we use to monitor sim speed
   private range = React.createRef<HTMLInputElement>();
 
+  private readonly gravityDefault = 0;
+  private readonly attractionDefault = 1;
+  private readonly repulsionDefault = 1000;
+  private readonly wallSpringConstantDefault = 0.001;
+  private readonly wallSpringDampingDefault = 0.99;
+
+
+  private gravityRange = React.createRef<HTMLInputElement>();
+  private attractionRange = React.createRef<HTMLInputElement>();
+  private repulsionRange = React.createRef<HTMLInputElement>();
+  private wallSpringConstantRange = React.createRef<HTMLInputElement>();
+  private wallSpringDampingRange = React.createRef<HTMLInputElement>();
+
   // this is the ref we use to choose color background
   private scalarSelect = React.createRef<HTMLSelectElement>();
   private velocitySelect = React.createRef<HTMLSelectElement>();
 
   private gl!: WebGL2RenderingContext;
+
+  private gravityLoc!: WebGLUniformLocation;
+  private attractionLoc!: WebGLUniformLocation;
+  private repulsionLoc!: WebGLUniformLocation;
+  private wallSpringConstantLoc!: WebGLUniformLocation;
+  private wallSpringDampingLoc!: WebGLUniformLocation;
 
   // the texture that shows the state of each particle (dead, alive, or
   private particleStateTextures: WebGLTexture[] = [];
@@ -434,6 +457,12 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       const particlePositionTexLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_particle_position_tex');
       const particleMomentumTexLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_particle_momentum_tex');
 
+      this.gravityLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_gravity')!;
+      this.attractionLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_attraction')!;
+      this.repulsionLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_repulsion')!;
+      this.wallSpringConstantLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_wall_spring_constant')!;
+      this.wallSpringDampingLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_wall_spring_damping')!;
+
       // setup our attributes to tell WebGL how to pull
       // the data from the buffer above to the position attribute
       this.gl.enableVertexAttribArray(positionLoc);
@@ -449,6 +478,15 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
       // bind uniforms
       this.gl.useProgram(this.prog_apply_gravity);
+
+      // set defaults
+      this.gl.uniform1f(this.gravityLoc, this.gravityDefault);
+      this.gl.uniform1f(this.attractionLoc, this.attractionDefault);
+      this.gl.uniform1f(this.repulsionLoc, this.repulsionDefault);
+      this.gl.uniform1f(this.wallSpringConstantLoc, this.wallSpringConstantDefault);
+      this.gl.uniform1f(this.wallSpringDampingLoc, this.wallSpringDampingDefault);
+
+
       // Tell the shader to get the state texture from texture unit 0
       this.gl.uniform1i(particleStateTexLoc, 0);
       // Tell the shader to get the mass texture from texture unit 1
@@ -592,6 +630,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     this.render_canvas.current!.addEventListener("touchend", this.discardTouchEvent)
     this.render_canvas.current!.addEventListener("touchcancel", this.discardTouchEvent)
 
+
     // start animation loop
     this.animationLoop();
   }
@@ -652,8 +691,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       for (let y = 0; y < this.particle_tex_ysize; y++) {
         for (let x = 0; x < this.particle_tex_xsize; x++) {
           const i = y * this.particle_tex_xsize + x;
-          position_data[i * 2 + 0] = x * 3 + 100;
-          position_data[i * 2 + 1] = y * 3 + 100;
+          position_data[i * 2 + 0] = x * 4.5 + 10;
+          position_data[i * 2 + 1] = y * 4.5 + 10;
         }
       }
       this.gl.activeTexture(this.gl.TEXTURE1);
@@ -951,6 +990,21 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     }
   }
 
+  handleChange = () => {
+    this.gl.useProgram(this.prog_apply_gravity);
+    const gravity = this.gravityRange.current!.valueAsNumber;
+    const attraction = this.attractionRange.current!.valueAsNumber;
+    const repulsion = this.repulsionRange.current!.valueAsNumber;
+    const wallSpringConstant = this.wallSpringConstantRange.current!.valueAsNumber;
+    const wallSpringDamping = this.wallSpringDampingRange.current!.valueAsNumber;
+
+    this.gl.uniform1f(this.gravityLoc, gravity);
+    this.gl.uniform1f(this.attractionLoc, attraction);
+    this.gl.uniform1f(this.repulsionLoc, repulsion);
+    this.gl.uniform1f(this.wallSpringConstantLoc, wallSpringConstant);
+    this.gl.uniform1f(this.wallSpringDampingLoc, wallSpringDamping);
+  }
+
   discardTouchEvent = (e: TouchEvent) => e.preventDefault();
 
   calcRadius = (m: number) => 1.5 * Math.sqrt(m) + 5;
@@ -1022,15 +1076,50 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
             <h6>Controls</h6>
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>
-              <input type="range" className="form-range" min="0" max="20" step={1} defaultValue={1} ref={this.range} />
+              <input type="range" className="form-range" min="0" max="100" step={1} defaultValue={1} ref={this.range} />
+            </div>
+            <div className="form-group mb-3">
+              <label className="form-label">Gravity</label>
+              <input type="range" className="form-range"
+                min="-0.00001" max="0.00001"
+                step="0.000005"
+                defaultValue={this.gravityDefault}
+                ref={this.gravityRange} onInput={this.handleChange}
+              />
+            </div>
+            <div className="form-group mb-3">
+              <label className="form-label">Repulsion</label>
+              <input type="range" className="form-range"
+                min="100" max="1000"
+                step="100"
+                defaultValue={this.repulsionDefault}
+                ref={this.repulsionRange} onInput={this.handleChange}
+              />
+            </div>
+            <div className="form-group mb-3">
+              <label className="form-label">Attraction</label>
+              <input type="range" className="form-range" min="1" max="5" step="1"
+                defaultValue={this.attractionDefault}
+                ref={this.attractionRange} onInput={this.handleChange}
+              />
+            </div>
+            <div className="form-group mb-3">
+              <label className="form-label">Wall Spring Constant</label>
+              <input type="range" className="form-range" min="0.001" max="0.01" step="0.001"
+                defaultValue={this.wallSpringConstantDefault}
+                ref={this.wallSpringConstantRange} onInput={this.handleChange}
+              />
+            </div>
+            <div className="form-group mb-3">
+              <label className="form-label">Wall Spring Damping</label>
+              <input type="range" className="form-range" min="0.9" max="0.999" step="0.001"
+                defaultValue={this.wallSpringDampingDefault}
+                ref={this.wallSpringDampingRange} onInput={this.handleChange}
+              />
             </div>
             <div className="form-group mb-3">
               <label className="form-label">Scalar Field</label>
-              <select className="form-select mb-3" defaultValue={8} ref={this.scalarSelect}>
-                <option value={32}>2^6: 64</option>
-                <option value={32}>2^6: 64</option>
-                <option value={16}>2^8 64</option>
-              </select>
+              <br />
               <button className="btn btn-primary btn-sm" onClick={() => this.needsReset = true}>Reset</button>
             </div>
           </div>
