@@ -1273,13 +1273,13 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
         <div className="col-md-8 d-flex">
           <div>
             <canvas
-              className="border border-dark mx-auto my-3"
+              className="border border-dark mx-3 my-3"
               ref={this.canvas}
               width={this.props.xsize}
               height={this.props.ysize}
             />
             <canvas
-              className="border border-dark mx-auto my-3"
+              className="border border-dark mx-3 my-3"
               ref={this.torusCanvas}
               width={this.props.torussize}
               height={this.props.torussize}

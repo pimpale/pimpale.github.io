@@ -1,4 +1,4 @@
-import{S as g}from"./style.2e6bf75d.js";import{a as c,j as e,b as i,R as D,F as S,A as E,S as U,c as z,i as p}from"./vendor.943a4930.js";import{A as M}from"./ArticleLayout.c88c37a7.js";import{H as d}from"./HrefLink.f1e4ab75.js";import{f as I}from"./load.41e68f77.js";import{A as T}from"./AsideCard.9c7dc37c.js";import{c as u,a,o as R,b as w,d as b,e as P,f as F,g as L}from"./webgl.9b9ef8e8.js";import{c as v}from"./math.e4175633.js";import{c as C}from"./noise.a4f1d95c.js";const N=`#version 300 es
+import"./style.7f2dd081.js";import{a as c,j as e,b as i,R as D,F as S,A as E,S as U,i as z,k as p}from"./vendor.e11d5c45.js";import{A as M}from"./ArticleLayout.e0c35980.js";import{S as g}from"./Section.5a4a8c75.js";import{H as d}from"./HrefLink.c2c74b7f.js";import{f as I}from"./load.41e68f77.js";import{A as T}from"./AsideCard.742d0e43.js";import{d as u,e as a,g as R,o as w,c as b,h as P,a as F,b as L}from"./webgl.90ba2bd8.js";import{c as v}from"./math.e4175633.js";import{c as C}from"./noise.85c01bf0.js";const N=`#version 300 es
 in vec2 a_position;
 out vec2 v_texCoord;
 void main() {

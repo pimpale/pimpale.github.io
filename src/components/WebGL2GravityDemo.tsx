@@ -214,8 +214,8 @@ type WebGL2FluidAdvectionDemoState = {}
 
 class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoProps, WebGL2FluidAdvectionDemoState> {
 
-  private particle_tex_xsize = 32;
-  private particle_tex_ysize = 32;
+  private particle_tex_xsize = 2;
+  private particle_tex_ysize = 2;
 
   // this is the ref to the canvas we use to work with particles
   private particle_canvas = React.createRef<HTMLCanvasElement>();
