@@ -191,20 +191,6 @@ const Home = () =>
         </p>
       </Section>
       <Articles/>
-      <Section id="terraingeneration" name="TerrainGeneration">
-        <div>
-          {/* This is pretty expensive to load so we'll only do it when necessary */}
-          <TerrainGenIntro
-            width={400}
-            height={400}
-            style={{ width: 800, maxWidth: "100%" }}
-            className="border border-dark ratio ratio-1x1"
-          />
-          <br />
-          <a href={TerrainGenerationUrl}>More Terrain Generation</a>
-        </div>
-      </Section>
-      <br />
     </div>
   </Layout>
 

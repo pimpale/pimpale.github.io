@@ -58,7 +58,8 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
-uniform float u_gravity;
+uniform float u_x_gravity;
+uniform float u_y_gravity;
 uniform float u_viscosity;
 uniform float u_repulsion;
 uniform float u_attraction;
@@ -92,10 +93,9 @@ void main() {
           vec2 r_hat = r_vec/r;
 
           float force_strength = u_attraction*pow(r, -7.0) - u_repulsion*pow(r, -13.0);
-          //vec2 accel = sign(m2)*r_hat*clamp(force_strength, -0.01, 0.01)/m1;
-          vec2 accel = sign(m2)*r_hat*force_strength/m1;
+          vec2 accel = r_hat*force_strength/abs(m1);
 
-          if(!isnan(accel.x) && !isinf(accel.x) && !isnan(accel.y) && !isinf(accel.y)) {
+          if(!isnan(accel.x) && !isnan(accel.y)) {
             v += accel;
           }
         }
@@ -104,7 +104,9 @@ void main() {
   }
 
   v *= (1.0-u_viscosity);
-  v.y += u_gravity;
+
+  v.x += u_x_gravity;
+  v.y += u_y_gravity;
 
   const float xl = 10.0;
   const float yl = 10.0;
@@ -265,7 +267,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   private readonly wallSpringDampingDefault = 0.99;
 
 
-  private gravityRange = React.createRef<HTMLInputElement>();
+  private xGravityRange = React.createRef<HTMLInputElement>();
+  private yGravityRange = React.createRef<HTMLInputElement>();
   private viscosityRange = React.createRef<HTMLInputElement>();
   private attractionRange = React.createRef<HTMLInputElement>();
   private repulsionRange = React.createRef<HTMLInputElement>();
@@ -278,7 +281,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   private gl!: WebGL2RenderingContext;
 
-  private gravityLoc!: WebGLUniformLocation;
+  private xGravityLoc!: WebGLUniformLocation;
+  private yGravityLoc!: WebGLUniformLocation;
   private viscosityLoc!: WebGLUniformLocation;
   private attractionLoc!: WebGLUniformLocation;
   private repulsionLoc!: WebGLUniformLocation;
@@ -463,7 +467,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       const particlePositionTexLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_particle_position_tex');
       const particleVelocityTexLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_particle_velocity_tex');
 
-      this.gravityLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_gravity')!;
+      this.xGravityLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_x_gravity')!;
+      this.yGravityLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_y_gravity')!;
       this.viscosityLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_viscosity')!;
       this.attractionLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_attraction')!;
       this.repulsionLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_repulsion')!;
@@ -487,7 +492,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.gl.useProgram(this.prog_apply_gravity);
 
       // set defaults
-      this.gl.uniform1f(this.gravityLoc, this.gravityDefault);
+      this.gl.uniform1f(this.xGravityLoc, this.gravityDefault);
+      this.gl.uniform1f(this.yGravityLoc, this.gravityDefault);
       this.gl.uniform1f(this.viscosityLoc, this.viscosityDefault);
       this.gl.uniform1f(this.attractionLoc, this.attractionDefault);
       this.gl.uniform1f(this.repulsionLoc, this.repulsionDefault);
@@ -692,8 +698,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
             position_data[i * 2 + 1] = y * 4+ 20;
           } else {
             mass_data[i] = -1;
-            position_data[i * 2 + 0] = x * 2.5 + 200;
-            position_data[i * 2 + 1] = y * 2.5 + 10;
+            position_data[i * 2 + 0] = x * 4 + 200;
+            position_data[i * 2 + 1] = y * 4 + 10;
           }
           velocity_data[i * 2 + 0] = (Math.random() - 0.5) * 0.01;
           velocity_data[i * 2 + 1] = (Math.random() - 0.5) * 0.01;
@@ -987,14 +993,16 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   handleChange = () => {
     this.gl.useProgram(this.prog_apply_gravity);
-    const gravity = this.gravityRange.current!.valueAsNumber;
+    const xGravity = this.xGravityRange.current!.valueAsNumber;
+    const yGravity = this.yGravityRange.current!.valueAsNumber;
     const viscosity = this.viscosityRange.current!.valueAsNumber;
     const attraction = this.attractionRange.current!.valueAsNumber;
     const repulsion = this.repulsionRange.current!.valueAsNumber;
     const wallSpringConstant = this.wallSpringConstantRange.current!.valueAsNumber;
     const wallSpringDamping = this.wallSpringDampingRange.current!.valueAsNumber;
 
-    this.gl.uniform1f(this.gravityLoc, gravity);
+    this.gl.uniform1f(this.xGravityLoc, xGravity);
+    this.gl.uniform1f(this.yGravityLoc, yGravity);
     this.gl.uniform1f(this.viscosityLoc, viscosity);
     this.gl.uniform1f(this.attractionLoc, attraction);
     this.gl.uniform1f(this.repulsionLoc, repulsion);
@@ -1084,15 +1092,24 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
             <h6>Controls</h6>
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>
-              <input type="range" className="form-range" min="0" max="100" step={1} defaultValue={1} ref={this.range} />
+              <input type="range" className="form-range" min="0" max="500" step={1} defaultValue={1} ref={this.range} />
             </div>
             <div className="form-group mb-3">
-              <label className="form-label">Gravity</label>
+              <label className="form-label">X Gravity</label>
               <input type="range" className="form-range"
                 min="-0.00001" max="0.00001"
                 step="0.000005"
                 defaultValue={this.gravityDefault}
-                ref={this.gravityRange} onInput={this.handleChange}
+                ref={this.xGravityRange} onInput={this.handleChange}
+              />
+            </div>
+            <div className="form-group mb-3">
+              <label className="form-label">Y Gravity</label>
+              <input type="range" className="form-range"
+                min="-0.00001" max="0.00001"
+                step="0.000005"
+                defaultValue={this.gravityDefault}
+                ref={this.yGravityRange} onInput={this.handleChange}
               />
             </div>
             <div className="form-group mb-3">
@@ -1107,7 +1124,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
             <div className="form-group mb-3">
               <label className="form-label">Repulsion</label>
               <input type="range" className="form-range"
-                min="100" max="5000"
+                min="1000" max="10000"
                 step="100"
                 defaultValue={this.repulsionDefault}
                 ref={this.repulsionRange} onInput={this.handleChange}
@@ -1115,14 +1132,14 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
             </div>
             <div className="form-group mb-3">
               <label className="form-label">Attraction</label>
-              <input type="range" className="form-range" min="1" max="5" step="1"
+              <input type="range" className="form-range" min="1" max="5" step="0.1"
                 defaultValue={this.attractionDefault}
                 ref={this.attractionRange} onInput={this.handleChange}
               />
             </div>
-            <div className="form-group mb-3" hidden>
+            <div className="form-group mb-3">
               <label className="form-label">Wall Spring Constant</label>
-              <input type="range" className="form-range" min="0.001" max="0.01" step="0.001"
+              <input type="range" className="form-range" min="0.00001" max="0.001" step="0.00001"
                 defaultValue={this.wallSpringConstantDefault}
                 ref={this.wallSpringConstantRange} onInput={this.handleChange}
               />
