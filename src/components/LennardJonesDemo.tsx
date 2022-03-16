@@ -85,7 +85,7 @@ void main() {
       for(int x = 0; x < resolution.x; x++) {
         vec2 loc = vec2(float(x)*x_off, float(y)*y_off);
         uint state2 = texture(u_particle_state_tex, loc).x;
-        if(state2 == 0u) {
+        if(state2 == 0u && loc != v_texCoord) {
           vec2 pos2 = texture(u_particle_position_tex, loc).xy;
           float m2 = texture(u_particle_mass_tex, loc).x;
           vec2 r_vec = pos2-pos1;
@@ -93,6 +93,7 @@ void main() {
           vec2 r_hat = r_vec/r;
 
           float force_strength = u_attraction*pow(r, -7.0) - u_repulsion*pow(r, -13.0);
+          force_strength = clamp(force_strength, -0.1, 0.001);
           vec2 accel = r_hat*force_strength/abs(m1);
 
           if(!isnan(accel.x) && !isnan(accel.y)) {
@@ -701,8 +702,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
             position_data[i * 2 + 0] = x * 4 + 200;
             position_data[i * 2 + 1] = y * 4 + 10;
           }
-          velocity_data[i * 2 + 0] = (Math.random() - 0.5) * 0.01;
-          velocity_data[i * 2 + 1] = (Math.random() - 0.5) * 0.01;
+          velocity_data[i * 2 + 0] = (Math.random() - 0.5) * 0.00;
+          velocity_data[i * 2 + 1] = (Math.random() - 0.5) * 0.00;
         }
       }
 
