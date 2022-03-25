@@ -1,12 +1,12 @@
 import ArticleLayout from '../components/ArticleLayout';
 import Section from '../components/Section';
 
-const AchernarUrl = '/achernar.html';
-const GravityUrl = '/gravity.html';
-const TerrainGeneration1Url = '/terraingeneration1.html';
-const TerrainGeneration2Url = '/terraingeneration2.html';
-const Fluid1Url = '/fluid1.html';
-const Fluid2Url = '/fluid2.html';
+import AchernarUrl from '../achernar.html?url';
+import GravityUrl from '../gravity.html?url';
+import TerrainGeneration1Url from '../terraingeneration1.html?url';
+import TerrainGeneration2Url from '../terraingeneration2.html?url';
+import Fluid1Url from '../fluid1.html?url';
+import Fluid2Url from '../fluid2.html?url';
 
 const Articles = () =>
   <Section id="articles" name="Articles">

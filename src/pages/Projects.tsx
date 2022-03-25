@@ -15,6 +15,11 @@ import { fetchText } from '../utils/load';
 import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+import TorusWeatherScreenshot from "../assets/projects/torus_weather_screenshot.png";
+import TorusWeatherDemo1Url from "../demo_fluid_torus_1.html?url";
+import TorusWeatherDemo2Url from "../demo_fluid_torus_2.html?url";
+import TorusWeatherArticleUrl from '../terraingeneration2.html?url';
+
 import CompugenesisScreenshot from "../assets/projects/compugenesis_screenshot.png";
 import CompugenesisFlowchart from "../assets/projects/compugenesis_flowchart.png";
 import VulkanTriangleV2Screenshot from "../assets/projects/vulkan-triangle-v2_screenshot.png";
@@ -24,8 +29,27 @@ import COpenCLRaymarcherWarp from "../assets/projects/c-opencl-raymarcher_warp.g
 import LasagnaLogo from "../assets/projects/lasagna.png";
 import LasagnaFizzbuzzTxtUrl from "../assets/projects/lasagna_fizzbuzz.txt?url";
 
+
 const ProjectsPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
+    <Section name="Torus Weather Simulation" id="torus-weather-sim">
+      <p>
+        A naive simulation of weather on a torus shaped planet.
+      </p>
+      <p className="mt-4">
+        Demo 1: <HrefLink href={TorusWeatherDemo1Url} />
+        <br/>
+        Demo 2: <HrefLink href={TorusWeatherDemo2Url} />
+        <br/>
+        Article: <HrefLink href={TorusWeatherArticleUrl} />
+      </p>
+      <p>
+        Screenshot:
+      </p>
+      <figure className="text-center my-3">
+        <img src={TorusWeatherScreenshot} style={{ height: "30em" }} className="border border-dark mx-auto d-block" alt="Demo of the Torus Weather System" />
+      </figure>
+    </Section>
     <Section name="Compugenesis" id="compugenesis">
       <p>
         Compugenesis is a Rust simulation that uses L-Systems to model plants efficiently and accurately.

@@ -203,7 +203,7 @@ const TerrainGeneration = () => <ArticleLayout>{
           The most common use of the word <strong>singularity</strong> is in reference to the center of a black hole, where gravity is infinitely strong.
           However, a singularity can refer to any point where a mathematical function is undefined or has a undefined derivative.
         </p>
-        <SingularityDemo className="mx-auto" style={{ width: "20em" }} size={400}/>
+        <SingularityDemo className="mx-auto" style={{ width: "20em" }} size={400} />
         <p>
           The demo above shows a simple way to tile a sphere using squares.
           In the context of using a square grid to title over a sphere, singularties are points where our regular grid breaks down.
@@ -545,9 +545,11 @@ const TerrainGeneration = () => <ArticleLayout>{
         <p>
           Parametric functions with 2 parameters are commonly used to describe 3D surfaces.
           A <strong>parameterization</strong> of a surface is parametric function with the signature:
-          <TeX block>
-            r: \reals^2 \to \reals^3
-          </TeX>
+        </p>
+        <TeX block>
+          r: \reals^2 \to \reals^3
+        </TeX>
+        <p>
           It maps from a 2D parameter space to a 3D surface.
         </p>
         <p>
@@ -579,14 +581,16 @@ const TerrainGeneration = () => <ArticleLayout>{
       </p>
       <p>
         The parameterization of a torus with major radius <TeX>R</TeX> and minor radius <TeX>r</TeX> is given by the function:
-        <TeX block>{String.raw`
-          r(\theta, \phi) =
-          \begin{bmatrix}
-            (R + r\cos \theta) \cos \phi \\
-            (R + r\cos \theta) \sin \phi \\
-            r \sin \theta
-          \end{bmatrix}
-        `}</TeX>
+      </p>
+      <TeX block>{String.raw`
+        r(\theta, \phi) =
+        \begin{bmatrix}
+          (R + r\cos \theta) \cos \phi \\
+          (R + r\cos \theta) \sin \phi \\
+          r \sin \theta
+        \end{bmatrix}
+      `}</TeX>
+      <p>
         We can gain a better intuition for how this function works if we understand what <TeX>\theta</TeX> and <TeX>\phi</TeX> really do.
       </p>
       <ul>
@@ -879,16 +883,19 @@ const TerrainGeneration = () => <ArticleLayout>{
         However, there's an intuitive way to combine the strengths of both of these maps: add them together!
         <br />
         That is, if we have elevations:
-        <TeX block>{String.raw`
-          H_{lowfreq} : \reals^2 \to \reals \\
-          H_{hifreq} : \reals^2 \to \reals
-        `}</TeX>
-        then we can create a new weighted sum <TeX>H</TeX>:
-        <TeX block>{String.raw`
-          H(\theta, \phi) = \alpha H_{lowfreq}(\theta, \phi) + \beta H_{hifreq}(\theta, \phi)
-        `}</TeX>
       </p>
-
+      <TeX block>{String.raw`
+        H_{lowfreq} : \reals^2 \to \reals
+      `}</TeX>
+      <TeX block>{String.raw`
+        H_{hifreq} : \reals^2 \to \reals
+      `}</TeX>
+      <p>
+        then we can create a new weighted sum <TeX>H</TeX>:
+      </p>
+      <TeX block>{String.raw`
+        H(\theta, \phi) = \alpha H_{lowfreq}(\theta, \phi) + \beta H_{hifreq}(\theta, \phi)
+      `}</TeX>
       <p>
         Note that we can apply weights on one or more of the elevation maps.
         In general, the rule of thumb is that we want to apply higher weights to low frequency noise, otherwise you get fragmentation.
