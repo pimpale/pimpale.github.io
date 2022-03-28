@@ -1,4 +1,4 @@
-import"./style.7f2dd081.js";import{a as n,b as c,j as r,R as z,F as w}from"./vendor.0a90af40.js";import{S as I}from"./Section.14fdf622.js";import{H as F}from"./HrefLink.052fd9c5.js";import{A as P}from"./ArticleLayout.20fcb19f.js";import{A}from"./AsideCard.96ba556d.js";import{g as f,o as D,a as g,h as U,c as M,b as E,d as x,e as _}from"./webgl.90ba2bd8.js";const v=`#version 300 es
+import"./style.7f2dd081.js";import{a as n,b as c,j as r,R as z,F as w}from"./vendor.b5e298da.js";import{S as I}from"./Section.89a659af.js";import{H as F}from"./HrefLink.eee41877.js";import{A as P}from"./ArticleLayout.7f6296e4.js";import{A}from"./AsideCard.2e92c73b.js";import{g as f,o as D,a as g,h as U,c as M,b as E,d as x,e as _}from"./webgl.90ba2bd8.js";const v=`#version 300 es
 in vec2 a_position;
 out vec2 v_texCoord;
 

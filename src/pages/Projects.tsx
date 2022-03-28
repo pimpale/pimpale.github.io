@@ -16,9 +16,10 @@ import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import TorusWeatherScreenshot from "../assets/projects/torus_weather_screenshot.png";
-import TorusWeatherDemo1Url from "../demo_fluid_torus_1.html?url";
-import TorusWeatherDemo2Url from "../demo_fluid_torus_2.html?url";
-import TorusWeatherArticleUrl from '../terraingeneration2.html?url';
+
+const TorusWeatherDemo1Url = "../demo_fluid_torus_1.html";
+const TorusWeatherDemo2Url = "../demo_fluid_torus_2.html";
+const TorusWeatherArticleUrl = '../terraingeneration2.html';
 
 import CompugenesisScreenshot from "../assets/projects/compugenesis_screenshot.png";
 import CompugenesisFlowchart from "../assets/projects/compugenesis_flowchart.png";
@@ -28,7 +29,6 @@ import COpenCLRaymarcherSierpinskiScreenshot from "../assets/projects/c-opencl-r
 import COpenCLRaymarcherWarp from "../assets/projects/c-opencl-raymarcher_warp.gif";
 import LasagnaLogo from "../assets/projects/lasagna.png";
 import LasagnaFizzbuzzTxtUrl from "../assets/projects/lasagna_fizzbuzz.txt?url";
-
 
 const ProjectsPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -43,9 +43,7 @@ const ProjectsPage = () => <ArticleLayout>{
         <br/>
         Article: <HrefLink href={TorusWeatherArticleUrl} />
       </p>
-      <p>
-        Screenshot:
-      </p>
+      <p>Screenshot:</p>
       <figure className="text-center my-3">
         <img src={TorusWeatherScreenshot} style={{ height: "30em" }} className="border border-dark mx-auto d-block" alt="Demo of the Torus Weather System" />
       </figure>
@@ -54,22 +52,20 @@ const ProjectsPage = () => <ArticleLayout>{
       <p>
         Compugenesis is a Rust simulation that uses L-Systems to model plants efficiently and accurately.
       </p>
-      <figure className="text-center my-3">
-        <img src={CompugenesisScreenshot} className="border border-dark mx-auto d-block" alt="Demo of the Compugenesis system" />
-      </figure>
-      <h4>Goals:</h4>
+      <h5>Goals:</h5>
       <ul>
         <li>Create a flexible plant simulation and paired microclimate implementation that uses the parallelization capabilities of a GPU.</li>
         <li>Use the L-System implementation to simulate plant topology within a 95% confidence interval (CI) for actual plant dimensions.</li>
         <li>Simulate plant topology in response to temperature, soil moisture, and sunlight.</li>
       </ul>
-      <figure className="text-center my-3">
-        <img src={CompugenesisFlowchart} className="border border-dark mx-auto d-block bg-dark" alt="Flowchart of Compugenesis" />
-      </figure>
-      <p className="mt-4">
-        Link: <HrefLink href="https://github.com/pimpale/compugenesis" />
-      </p>
     </Section>
+      <p className="mt-4">
+        Source code: <HrefLink href="https://github.com/pimpale/compugenesis" />
+      </p>
+      <p>Screenshot:</p>
+      <figure className="text-center my-3">
+        <img src={CompugenesisScreenshot} className="border border-dark mx-auto d-block" alt="Demo of the Compugenesis system" />
+      </figure>
     <Section name="Vulkan Voxel Renderer" id="vulkan-voxel-renderer">
       <p>
         This project is a simple voxel renderer made using Vulkan and C.
