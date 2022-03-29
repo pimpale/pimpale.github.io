@@ -50,7 +50,7 @@ export class TrackballCamera {
   // how much to damp the rotation at each step
   private dampingFactor: number;
 
-  private canvas: HTMLCanvasElement;
+  private canvas: HTMLElement;
 
   // if mouse is pressed, start location of drag
   private mouseLoc: null | { start: Point, current: Point, previous: Point } = null;
@@ -143,7 +143,7 @@ export class TrackballCamera {
 
   discardTouchEvent = (e: TouchEvent) => e.preventDefault();
 
-  constructor(ctx: HTMLCanvasElement, options: TrackballCameraOptions) {
+  constructor(ctx: HTMLElement, options: TrackballCameraOptions) {
     if (options.ortho) {
       this.ortho = options.ortho;
     } else {

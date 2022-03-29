@@ -30,17 +30,79 @@ import COpenCLRaymarcherWarp from "../assets/projects/c-opencl-raymarcher_warp.g
 import LasagnaLogo from "../assets/projects/lasagna.png";
 import LasagnaFizzbuzzTxtUrl from "../assets/projects/lasagna_fizzbuzz.txt?url";
 
+
+type ProjectProps = {
+  id: string,
+  title: string,
+  blurb: string,
+  begindate: string,
+  enddate?: string,
+  links: { key: string, url: string }[],
+  images: { src: string, alt: string }[],
+}
+
+const Project = (props: ProjectProps) => <>
+  {
+    props.images === undefined ? false :
+      <Carousel images={props.images} />
+  }
+  <Section id={props.id} name={props.title}>
+    <p>{props.blurb}</p>
+    <p>{props.begindate}</p>
+
+
+    <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
+      <div className="carousel-inner">
+        {props.images.map(({ src, alt }) =>
+          <div className="carousel-item active">
+            <img src={src} className="d-block w-100" alt={alt} />
+          </div>
+        )}
+      </div>
+      <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span className="visually-hidden">Previous</span>
+      </button>
+      <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span className="carousel-control-next-icon" aria-hidden="true"></span>
+        <span className="visually-hidden">Next</span>
+      </button>
+    </div>
+
+
+  </Section>
+</>
+
 const ProjectsPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
+
     <Section name="Torus Weather Simulation" id="torus-weather-sim">
       <p>
         A naive simulation of weather on a torus shaped planet.
       </p>
       <p className="mt-4">
         Demo 1: <HrefLink href={TorusWeatherDemo1Url} />
-        <br/>
+        <br />
         Demo 2: <HrefLink href={TorusWeatherDemo2Url} />
-        <br/>
+        <br />
+        Article: <HrefLink href={TorusWeatherArticleUrl} />
+      </p>
+      <p>Screenshot:</p>
+      <figure className="text-center my-3">
+        <img src={TorusWeatherScreenshot} style={{ height: "30em" }} className="border border-dark mx-auto d-block" alt="Demo of the Torus Weather System" />
+      </figure>
+    </Section>
+
+
+    <Section name="Torus Weather Simulation" id="torus-weather-sim">
+      <p>
+        A naive simulation of weather on a torus shaped planet.
+      </p>
+      <p className="mt-4">
+        Demo 1: <HrefLink href={TorusWeatherDemo1Url} />
+        <br />
+        Demo 2: <HrefLink href={TorusWeatherDemo2Url} />
+        <br />
         Article: <HrefLink href={TorusWeatherArticleUrl} />
       </p>
       <p>Screenshot:</p>
@@ -59,13 +121,13 @@ const ProjectsPage = () => <ArticleLayout>{
         <li>Simulate plant topology in response to temperature, soil moisture, and sunlight.</li>
       </ul>
     </Section>
-      <p className="mt-4">
-        Source code: <HrefLink href="https://github.com/pimpale/compugenesis" />
-      </p>
-      <p>Screenshot:</p>
-      <figure className="text-center my-3">
-        <img src={CompugenesisScreenshot} className="border border-dark mx-auto d-block" alt="Demo of the Compugenesis system" />
-      </figure>
+    <p className="mt-4">
+      Source code: <HrefLink href="https://github.com/pimpale/compugenesis" />
+    </p>
+    <p>Screenshot:</p>
+    <figure className="text-center my-3">
+      <img src={CompugenesisScreenshot} className="border border-dark mx-auto d-block" alt="Demo of the Compugenesis system" />
+    </figure>
     <Section name="Vulkan Voxel Renderer" id="vulkan-voxel-renderer">
       <p>
         This project is a simple voxel renderer made using Vulkan and C.
