@@ -18,6 +18,7 @@ type RotatedProps = {
   distance: number,
   // when collapsed should this be its own row
   ownRow?: boolean
+  children: React.ReactNode
 }
 
 const Rotated: React.FunctionComponent<RotatedProps> = props => {
@@ -66,6 +67,7 @@ const Rotated: React.FunctionComponent<RotatedProps> = props => {
 
 type IntroCardProps = {
   title: string,
+  children: React.ReactNode
 }
 
 const IntroCard: React.FunctionComponent<IntroCardProps> = props =>
@@ -190,12 +192,14 @@ const Home = () =>
           <a href={AchernarUrl}>More Info</a>
         </p>
       </Section>
-      <Articles/>
+      <Articles />
     </div>
   </Layout>
 
 
 import React from 'react';
+import { createRoot } from 'react-dom/client';
+
 import ReactDOM from 'react-dom';
 
 // Bootstrap CSS & JS
@@ -204,7 +208,9 @@ import 'bootstrap/dist/js/bootstrap';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Home />
+    <Home/>
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+

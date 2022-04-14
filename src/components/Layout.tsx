@@ -9,8 +9,11 @@ function Footer() {
   )
 }
 
+type LayoutProps = {
+    children: React.ReactNodeArray | React.ReactNode
+}
 
-const Layout: React.FunctionComponent<{}> = props =>
+const Layout: React.FunctionComponent<LayoutProps > = props =>
   <>
     <Header />
     {props.children}

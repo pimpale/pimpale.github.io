@@ -1,7 +1,9 @@
+import React from 'react';
 
 type AsideCardProps = {
   title: string,
-  id?: string
+  id?: string,
+  children: React.ReactNode | React.ReactNodeArray,
 }
 
 

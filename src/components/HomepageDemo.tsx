@@ -148,8 +148,6 @@ class HomepageDemo extends React.Component<HomepageDemoProps, HomepageDemoState>
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
     // TODO: destroy vao, buffer, programs, shaders, etc
-    // destroy webgl
-    this.gl.getExtension('WEBGL_lose_context')!.loseContext();
     this.camera.cleanup();
   }
 
