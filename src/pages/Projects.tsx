@@ -5,9 +5,6 @@ import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 import ArticleLayout from '../components/ArticleLayout';
 
-// Bootstrap CSS & JS
-import '../styles/style.scss';
-import 'bootstrap/dist/js/bootstrap';
 import AsideCard from '../components/AsideCard';
 
 import { Async } from 'react-async';
@@ -71,7 +68,7 @@ type ProjectProps = {
   images: React.ReactNode[],
 }
 
-const Project = (props: ProjectProps) => <>
+const Project = (props: ProjectProps) =>
   <Section id={props.id} name={props.title}>
     <p>{props.blurb}</p>
     {props.enddate !== undefined
@@ -86,7 +83,6 @@ const Project = (props: ProjectProps) => <>
     <h5>Screenshots</h5>
     <ToggleableImageList children={props.images} />
   </Section>
-</>
 
 const ProjectsPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -132,64 +128,65 @@ const ProjectsPage = () => <ArticleLayout>{
     />
 
 
+    <Project
+      id="vulkan-voxel-renderer"
+      title="Vulkan Voxel Renderer"
+      blurb="Simple Voxel Renderer made with vulkan and C"
+      begindate={parse("Mar 2022", "MMM y", new Date())}
+      explanation={<>
+        <p>
+          This project is a simple voxel renderer made using Vulkan and C.
+          It's a small demo example and not a full game,
+          but it successfully demonstrates the basic principles of building texture atlases, chunk generation, and dynamic chunk loading without a game engine
+        </p>
+        <h4>Features</h4>
+        <ul>
+          <li>Internal face culling</li>
+          <li>Cubical chunks</li>
+          <li>Chunks are dynamically loaded and unloaded</li>
+          <li>Infinite terrain generation</li>
+          <li>Textured blocks (using texture atlas)</li>
+          <li>Proper camera movement</li>
+        </ul>
+        <h4>Goals</h4>
+        <p>
+          We will add these later at some point, but they're not present right now:
+        </p>
+        <ul>
+          <li>Destroying blocks</li>
+          <li>Adding blocks</li>
+          <li>Being able to walk around without flying</li>
+          <li>Entities</li>
+          <li>Block picker</li>
+          <li>Lighting</li>
+        </ul>
+        <p>
+          This project's code and assets are 100% public domain, and you can do whatever you like with them.
+        </p>
+      </>}
+      images={[
+        <img src={VulkanTriangleV2Screenshot} className="border border-dark w-100" alt="Demo of the game" />
+      ]}
+      links={[
+        { key: "Source code", url: "https://github.com/pimpale/vulkan-triangle-v2" },
+      ]}
+    />
 
-    <Section name="Vulkan Voxel Renderer" id="vulkan-voxel-renderer">
-      <p>
-        This project is a simple voxel renderer made using Vulkan and C.
-        It's a small demo example and not a full game,
-        but it successfully demonstrates the basic principles of building texture atlases, chunk generation, and dynamic chunk loading without a game engine
-      </p>
-      <p>
-        This project's code and assets are 100% public domain, and you can do whatever you like with them.
-      </p>
-      <figure className="text-center my-3">
-        <img src={VulkanTriangleV2Screenshot} className="border border-dark m-5 w-75" alt="Demo of the game" />
-      </figure>
-      <h4>Features</h4>
-      <ul>
-        <li>Internal face culling</li>
-        <li>Cubical chunks</li>
-        <li>Chunks are dynamically loaded and unloaded</li>
-        <li>Infinite terrain generation</li>
-        <li>Textured blocks (using texture atlas)</li>
-        <li>Proper camera movement</li>
-      </ul>
-      <h4>Goals</h4>
-      <p>
-        We will add these later at some point, but they're not present right now:
-      </p>
-      <ul>
-        <li>Destroying blocks</li>
-        <li>Adding blocks</li>
-        <li>Being able to walk around without flying</li>
-        <li>Entities</li>
-        <li>Block picker</li>
-        <li>Lighting</li>
-      </ul>
-      <p className="mt-4">
-        Link: <HrefLink href="https://github.com/pimpale/vulkan-triangle-v2" />
-      </p>
-    </Section>
-
-    <Section name="C OpenCL Raymarcher" id="c-opencl-raymarcher">
-      <p>
-        A simple raymarcher written in C with OpenCL acceleration.
-      </p>
-      <p>
-        Below are some screenshots:
-      </p>
-      <figure className="text-center my-3">
-        <img src={COpenCLRaymarcherSierpinskiScreenshot} className="border border-dark mx-auto d-block w-50" alt="3D Sierpinski triangle produced by raymarcher" />
-        <figcaption>3D Sierpinski Triangle</figcaption>
-      </figure>
-      <figure className="text-center my-3">
-        <img src={COpenCLRaymarcherWarp} className="border border-dark mx-auto d-block w-50" alt="Black hole rendered by raymarcher" />
-        <figcaption>Black hole rendered by raymarcher</figcaption>
-      </figure>
-      <p className="mt-4">
-        Link: <HrefLink href="https://github.com/pimpale/c-opencl-raymarcher" />
-      </p>
-    </Section>
+    <Project
+      id="c-opencl-raymarcher"
+      title="C OpenCL Raymarcher"
+      blurb="A simple raymarcher written in C with OpenCL acceleration."
+      begindate={parse("Nov 2020", "MMM y", new Date())}
+      enddate={parse("Mar 2021", "MMM y", new Date())}
+      links={[
+        { key: "Source code", url: "https://github.com/pimpale/c-opencl-raymarcher" },
+      ]}
+      images={[
+        <img src={COpenCLRaymarcherSierpinskiScreenshot} className="border border-dark w-100" alt="3D Sierpinski triangle produced by raymarcher" />,
+        <img src={COpenCLRaymarcherWarp} className="border border-dark w-100" alt="Black hole rendered by raymarcher" />
+      ]}
+      explanation={<> </>}
+    />
 
     <Section name="Lasagna" id="lasagna">
       <figure className="text-center my-3">
