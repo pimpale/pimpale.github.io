@@ -2,6 +2,7 @@ import React from "react";
 import { createShader, createProgram, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
 import { createCurlNoise } from '../utils/noise';
+import { CanvasMouseTracker } from '../utils/canvas';
 
 type WebGL2IncompressibleFluidDemoProps = {
   style?: React.CSSProperties,
@@ -374,14 +375,6 @@ void main() {
 }
 `
 
-type Point = {
-  x: number,
-  y: number
-}
-
-
-// TODO: learn how to handle error cases
-
 type WebGL2IncompressibleFluidDemoState = {}
 
 class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2IncompressibleFluidDemoProps, WebGL2IncompressibleFluidDemoState> {
@@ -444,7 +437,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
   private needsVelocityReset = true;
 
   // mouse status
-  private mousePos: { current: Point, previous: Point } | null = null;
+  private cmt!: CanvasMouseTracker;
 
   // if we're viewing pressure
   private viewPressure = false;
@@ -472,7 +465,6 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
       1, 0,
       1, 1,
     ]), this.gl.STATIC_DRAW);
-
 
 
     // create pingpongable textures and framebuffers for the scalar field
@@ -792,70 +784,16 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
       this.gl.uniform1i(velTexLoc, 1);
     }
 
-
-
-    // add canvas handler
-    this.canvas.current!.addEventListener('pointerdown', this.handleMouseDown);
-    this.canvas.current!.addEventListener('pointermove', this.handleMouseMove);
-    window.addEventListener('pointerup', this.handleMouseUp);
-    // disable touch movements
-    this.canvas.current!.addEventListener("touchstart",  this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchmove",   this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchend",    this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchcancel", this.discardTouchEvent)
+    // add mouse tracker
+    this.cmt = new CanvasMouseTracker(this.canvas.current!);
 
     // start animation loop
     this.animationLoop();
   }
 
-
-  getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
-    const rect = canvas.getBoundingClientRect(); // abs. size of element
-    const scaleX = canvas.width / rect.width;    // relationship bitmap vs. element for X
-    const scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
-
-    return {
-      x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
-      y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
-    }
-  }
-
-  handleMouseDown = (e: MouseEvent) => {
-    const v = this.getMousePos(this.canvas.current!, e);
-    this.mousePos = {
-      current: v,
-      previous: v
-    };
-  }
-  handleMouseUp = (e: MouseEvent) => {
-    this.mousePos = null;
-  }
-
-  handleMouseMove = (e: MouseEvent) => {
-    if (!this.mousePos) {
-      return;
-    }
-
-    this.mousePos = {
-      current: this.getMousePos(this.canvas.current!, e),
-      previous: this.mousePos.current
-    };
-  }
-
-  discardTouchEvent = (e: TouchEvent) => e.preventDefault();
-
   componentWillUnmount() {
-
-    // remove listeners on canvas
-    this.canvas.current!.removeEventListener('pointerdown', this.handleMouseDown);
-    this.canvas.current!.removeEventListener('pointermove', this.handleMouseMove);
-    window.removeEventListener('pointerup', this.handleMouseUp);
-    // reenable touch movements
-    this.canvas.current!.removeEventListener("touchstart",  this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchmove",   this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchend",    this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchcancel", this.discardTouchEvent)
-
+    // remove canvas mouse tracker
+    this.cmt.cleanup();
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
     // destroy webgl
@@ -866,8 +804,9 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
 
-    // handle draw when there's no loops
-    if (this.mousePos) {
+    // handle drawing
+    const mousePos = this.cmt.mousePos;
+    if (mousePos) {
       // in order to draw the velocity texture we will execute a program
       this.gl.useProgram(this.prog_paint_vel);
 
@@ -879,12 +818,12 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
       // set old and new mouse positions
       this.gl.uniform2f(this.oldMouseLoc,
-        clamp(this.mousePos.previous.x, 0, this.props.xsize),
-        clamp(this.props.ysize - this.mousePos.previous.y, 0, this.props.ysize),
+        clamp(mousePos.previous.x, 0, this.props.xsize),
+        clamp(this.props.ysize - mousePos.previous.y, 0, this.props.ysize),
       );
       this.gl.uniform2f(this.newMouseLoc,
-        clamp(this.mousePos.current.x, 0, this.props.xsize),
-        clamp(this.props.ysize - this.mousePos.current.y, 0, this.props.ysize),
+        clamp(mousePos.current.x, 0, this.props.xsize),
+        clamp(this.props.ysize - mousePos.current.y, 0, this.props.ysize),
       );
 
       // execute program, doing paint
@@ -892,7 +831,6 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
       this.velIndex = (this.velIndex + 1) % 2;
     }
-
 
     if (this.needsScalarReset) {
       const size = this.props.ysize;

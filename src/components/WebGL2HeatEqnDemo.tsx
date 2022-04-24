@@ -1,6 +1,7 @@
 import React from "react";
 import { createShader, createProgram, createR32UITexture, overwriteR32UITexture, createR32FTexture, overwriteR32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
+import { CanvasMouseTracker } from '../utils/canvas';
 
 type WebGL2HeatEqnDemoProps = {
   style?: React.CSSProperties,
@@ -115,23 +116,17 @@ void main() {
 
 
 
-// TODO: learn how to handle error cases
-
 type WebGL2HeatEqnDemoState = {}
 
 class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2HeatEqnDemoState> {
 
-  // this is the ref to the canvas
   private canvas = React.createRef<HTMLCanvasElement>();
-
-  // this is the ref we use to monitor sim speed
-  private range = React.createRef<HTMLInputElement>();
-
+  private simSpeedRange = React.createRef<HTMLInputElement>();
   // this is the ref we use to choose color
   private drawSelect = React.createRef<HTMLSelectElement>();
 
-
   private gl!: WebGL2RenderingContext;
+  private vao!: WebGLVertexArrayObject;
 
   // the control texture that tells which parts are hot vs cold
   private controlTexture!: WebGLTexture;
@@ -150,9 +145,8 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   // whether we need to reset on the next frame
   private needsReset = false;
 
-  // if mouse is pressed
-  private mouseDown = false;
-  private mousePos = { x: 0, y: 0 };
+  // mouse status
+  private cmt!: CanvasMouseTracker;
 
   private requestID!: number;
 
@@ -165,6 +159,24 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     this.gl = this.canvas.current!.getContext('webgl2')!;
     // enable extension
     this.gl.getExtension('EXT_color_buffer_float');
+
+    // create a vao and bind it
+    // the vao stores all our data about attributes for a program
+    this.vao = this.gl.createVertexArray()!;
+    this.gl.bindVertexArray(this.vao);
+
+    // setup a full canvas clip space quad
+    const buffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+      0, 0,
+      1, 0,
+      0, 1,
+      0, 1,
+      1, 0,
+      1, 1,
+    ]), this.gl.STATIC_DRAW);
+
 
     // create pingpongable textures and frambuffers
     for (let i = 0; i < 2; i++) {
@@ -188,18 +200,6 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       // push framebuffer
       this.framebuffers.push(fbo);
     }
-
-    // setup a full canvas clip space quad
-    const buffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-      0, 0,
-      1, 0,
-      0, 1,
-      0, 1,
-      1, 0,
-      1, 1,
-    ]), this.gl.STATIC_DRAW);
 
     // build the compute program
     {
@@ -228,7 +228,6 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
         0,         // offset
       );
 
-
       // bind uniforms
       this.gl.useProgram(this.prog_diffuse);
 
@@ -241,7 +240,6 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       // Tell the shader to get the control texture from texture unit 1
       this.gl.uniform1i(ctrlTexLoc, 1);
     }
-
 
     // build the render program
     {
@@ -276,15 +274,8 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       this.gl.uniform1i(texLoc, 0);
     }
 
-    // add canvas handler
-    this.canvas.current!.addEventListener('pointerdown', this.handleMouseDown);
-    this.canvas.current!.addEventListener('pointermove', this.handleMouseMove);
-    window.addEventListener('pointerup', this.handleMouseUp);
-    // disable touch movements
-    this.canvas.current!.addEventListener("touchstart", this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchmove", this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchend", this.discardTouchEvent)
-    this.canvas.current!.addEventListener("touchcancel", this.discardTouchEvent)
+    // track mouse
+    this.cmt = new CanvasMouseTracker(this.canvas.current!);
 
     // start animation loop
     this.animationLoop();
@@ -293,43 +284,10 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   handleReset = () => {
   }
 
-  discardTouchEvent = (e: TouchEvent) => e.preventDefault();
-
-  getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
-    const rect = canvas.getBoundingClientRect(); // abs. size of element
-    const scaleX = canvas.width / rect.width;    // relationship bitmap vs. element for X
-    const scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
-
-    return {
-      x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
-      y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
-    }
-  }
-
-  handleMouseDown = (e: MouseEvent) => {
-    this.mouseDown = true;
-    this.mousePos = this.getMousePos(this.canvas.current!, e);
-  }
-  handleMouseUp = (e: MouseEvent) => {
-    this.mouseDown = false;
-    this.mousePos = this.getMousePos(this.canvas.current!, e);
-  }
-
-  handleMouseMove = (e: MouseEvent) => {
-    this.mousePos = this.getMousePos(this.canvas.current!, e);
-  }
 
   componentWillUnmount() {
-    // remove listeners on canvas
-    this.canvas.current!.removeEventListener('pointerdown', this.handleMouseDown);
-    this.canvas.current!.removeEventListener('pointermove', this.handleMouseMove);
-    window.removeEventListener('pointerup', this.handleMouseUp);
-    // reenable touch movements
-    this.canvas.current!.removeEventListener("touchstart", this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchmove", this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchend", this.discardTouchEvent)
-    this.canvas.current!.removeEventListener("touchcancel", this.discardTouchEvent)
-
+    // clean up mouse tracker
+    this.cmt.cleanup();
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
     // destroy webgl
@@ -342,8 +300,9 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
     this.gl.useProgram(this.prog_diffuse);
 
-    // handle draw when there's no loops
-    if (this.mouseDown) {
+    // handle drawing on the canvas
+    const mousePos = this.cmt.mousePos;
+    if (mousePos) {
       // set texture unit 1 to active so we can work on it
       this.gl.activeTexture(this.gl.TEXTURE1);
       // bind control texture
@@ -359,8 +318,8 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       }
 
       // where to begin drawing
-      const x = clamp(this.mousePos.x - brushRadius, 0, this.props.size - brushSize);
-      const y = clamp(this.props.size - this.mousePos.y - brushRadius, 0, this.props.size - brushSize);
+      const x = clamp(mousePos.current.x - brushRadius, 0, this.props.size - brushSize);
+      const y = clamp(this.props.size - mousePos.current.y - brushRadius, 0, this.props.size - brushSize);
 
       overwriteR32UITexture(this.gl, Math.floor(x), Math.floor(y), brushSize, brushSize, data);
     }
@@ -385,7 +344,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
     // set texture unit 0 to active
     this.gl.activeTexture(this.gl.TEXTURE0);
-    for (let i = 0; i < this.range.current!.valueAsNumber; i++) {
+    for (let i = 0; i < this.simSpeedRange.current!.valueAsNumber; i++) {
       const fbo = this.framebuffers[this.frameCount % 2];
       const tex = this.textures[(this.frameCount + 1) % 2];
 
@@ -426,7 +385,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
             <h6>Controls</h6>
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>
-              <input type="range" className="form-range" min="0" max="100" step={1} defaultValue={1} ref={this.range} />
+              <input type="range" className="form-range" min="0" max="100" step={1} defaultValue={1} ref={this.simSpeedRange} />
             </div>
             <div className="form-group mb-3">
               <select className="form-select" defaultValue={2} ref={this.drawSelect}>

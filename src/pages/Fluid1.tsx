@@ -23,6 +23,33 @@ import WebGL2SetupDemoTsxUrl from "../assets/fluid1/WebGL2SetupDemo_tsx.txt?url"
 import WebGL2SetupDemo_VertexShader_TsxUrl from "../assets/fluid1/WebGL2SetupDemo_VertexShader_tsx.txt?url";
 import WebGL2SetupDemo_BufferSetup_TsxUrl from "../assets/fluid1/WebGL2SetupDemo_BufferSetup_tsx.txt?url";
 
+
+type CodeBlockProps = {
+  url: string,
+  lang: string
+}
+
+function CodeBlock(props: CodeBlockProps) {
+  return <Async promise={fetchText(props.url)}>
+    <Async.Pending>
+      <div className="spinner-border" role="status" />
+    </Async.Pending>
+    <Async.Fulfilled<string>>{code =>
+      <SyntaxHighligher
+        className="mx-5 mb-5"
+        language={props.lang}
+        showLineNumbers
+        style={a11yDark}
+        children={code}
+      />
+    }</Async.Fulfilled>
+    <Async.Rejected>
+      {/* TODO: put error here */}
+      <div className="spinner-border" role="status" />
+    </Async.Rejected>
+  </Async>
+}
+
 const Fluid1 = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
     <Section id="overview" name="Overview">
@@ -106,18 +133,7 @@ const Fluid1 = () => <ArticleLayout>{
         <p>
           Code:
         </p>
-        <Async promise={fetchText(WebGL2SetupDemoTsxUrl)}>
-          <Async.Pending>
-            <div className="spinner-border" role="status" />
-          </Async.Pending>
-          <Async.Fulfilled<string>>{code =>
-            <SyntaxHighligher className="mx-5 mb-5" language="tsx" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
-          }</Async.Fulfilled>
-          <Async.Rejected>
-            {/* TODO: put error here */}
-            <div className="spinner-border" role="status" />
-          </Async.Rejected>
-        </Async>
+        <CodeBlock lang="tsx" url={WebGL2SetupDemoTsxUrl} />
         <p>
           Result:
         </p>
@@ -135,8 +151,54 @@ const Fluid1 = () => <ArticleLayout>{
     </Section>
     <Section id="webgl2-heat" name="Heat Equation with WebGL2">
       <p>
-        Now, we'll approach the heat equation
+        Now, we'll approach the heat equation, since it's a good starting point for dealing with interactive simulations.
       </p>
+      <p>
+        Here's the scenario:
+        Imagine you have a uniform square metal plate.
+        You're able to focus a hot blowtorch on some parts of the plate, and chill other parts with liquid nitrogen.
+        What is the temperature of a given point on the plate?
+      </p>
+      <p>
+        It turns out that it's pretty easy to simulate.
+        We'll split our metal plate into a <Tex math="N" /> by <Tex math="N" /> square grid.
+        At each timestep, for each cell, we set it to the average of its neighbors.
+        If you want to know why this works,
+        you can check out this link: <HrefLink href="https://mattferraro.dev/posts/poissons-equation" />.
+      </p>
+      <h4>Implementation</h4>
+      <p>
+        To implement it, we'll have to make several changes to our old boilerplate code.
+      </p>
+      <ul>
+        <li>Adding a mutable heat buffer on the GPU.</li>
+        <li>Adding a program that computes the next state of the heat.</li>
+        <li>Adding a way to render the heat data.</li>
+        <li>Adding a control buffer that sets which parts are hot and cold.</li>
+        <li>Adding a way to edit the control buffer.</li>
+      </ul>
+      <h5>Adding a mutable heat buffer on the GPU.</h5>
+      <p>
+        Adding mutable data on the GPU is quite tricky.
+        Since WebGL was primarily defined as a graphics rendering API,
+        not a general purpose compute system,
+        we'll have to abuse some rendering features to get what we want.
+      </p>
+      <p>
+        The basic plan is to store our heat data in a texture.
+        Since textures are more or less 2D arrays, this works great for our purposes.
+        However, it's not allowed to mutate a texture during shader execution.
+        What we'll do instead, is <i>render</i> the texture, applying a fragment shader over it,
+        and store the result in a framebuffer.
+      </p>
+      <p>
+        In the next iteration, we'll use the texture data stored in the framebuffer as the heat data.
+        We'll render to another framebuffer linked to the original place we stored our heat data.
+      </p>
+      <p>
+        In this way, we'll "ping-pong" between the two textures.
+      </p>
+
       <AsideCard title="Heat Equation" id="heat-equation-demo">
         <WebGL2HeatEqnDemo
           className="mx-auto"

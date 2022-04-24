@@ -1,5 +1,4 @@
 import { glMatrix, quat, vec3, mat4 } from 'gl-matrix';
-import assert from '../utils/assert';
 
 // https://www.xarg.org/2021/07/trackball-rotation-using-quaternions/
 function projectTrackball(v: { x: number, y: number }) {
