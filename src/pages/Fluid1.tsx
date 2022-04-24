@@ -177,8 +177,7 @@ const Fluid1 = () => <ArticleLayout>{
         <li>Adding a mutable heat buffer on the GPU.</li>
         <li>Adding a program that computes the next state of the heat.</li>
         <li>Adding a way to render the heat data.</li>
-        <li>Adding a control buffer that sets which parts are hot and cold.</li>
-        <li>Adding a way to edit the control buffer.</li>
+        <li>Adding a way to edit the control buffer that determines which parts are being pinned.</li>
       </ul>
       <h5>Adding a mutable heat buffer on the GPU.</h5>
       <p>
@@ -237,7 +236,8 @@ const Fluid1 = () => <ArticleLayout>{
         We can write another fragment shader to handle rendering the heat data to the canvas.
       </p>
       <p>
-        In order to make it look good, we use the inferno
+        In order to make it look good, we use the inferno colorscheme,
+        using code from here: <HrefLink href="https://www.shadertoy.com/view/WlfXRN" />.
       </p>
       <AsideCard title="HeatEqn Render Fragment Shader">
         <CodeBlock lang="tsx" url={WebGL2HeatEqnDemo_RenderFragmentShader_TsxUrl} />
