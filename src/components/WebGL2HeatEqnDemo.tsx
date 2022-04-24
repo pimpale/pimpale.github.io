@@ -136,11 +136,11 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   // a list of framebuffers we will cycle through
   private framebuffers: WebGLFramebuffer[] = [];
 
-  private prog_diffuse!: WebGLProgram;
-  private prog_render!: WebGLProgram;
-
   // the frame number we're on
   private frameCount = 0;
+
+  private prog_diffuse!: WebGLProgram;
+  private prog_render!: WebGLProgram;
 
   // whether we need to reset on the next frame
   private needsReset = false;

@@ -20,9 +20,12 @@ import WebGL2FluidAdvectionDemo from '../components/WebGL2FluidAdvectionDemo';
 import WebGL2IncompressibleFluidDemo from '../components/WebGL2IncompressibleFluidDemo';
 
 import WebGL2SetupDemoTsxUrl from "../assets/fluid1/WebGL2SetupDemo_tsx.txt?url";
-import WebGL2SetupDemo_VertexShader_TsxUrl from "../assets/fluid1/WebGL2SetupDemo_VertexShader_tsx.txt?url";
-import WebGL2SetupDemo_BufferSetup_TsxUrl from "../assets/fluid1/WebGL2SetupDemo_BufferSetup_tsx.txt?url";
 
+import WebGL2HeatEqnDemo_BufferVars_TsxUrl from "../assets/fluid1/WebGL2HeatEqnDemo_BufferVars_tsx.txt?url";
+import WebGL2HeatEqnDemo_BufferSetup_TsxUrl from "../assets/fluid1/WebGL2HeatEqnDemo_BufferSetup_tsx.txt?url";
+import WebGL2HeatEqnDemo_Simulate_TsxUrl from "../assets/fluid1/WebGL2HeatEqnDemo_Simulate_tsx.txt?url";
+import WebGL2HeatEqnDemo_FragmentShader_TsxUrl from "../assets/fluid1/WebGL2HeatEqnDemo_FragmentShader_tsx.txt?url";
+import WebGL2HeatEqnDemo_RenderFragmentShader_TsxUrl from "../assets/fluid1/WebGL2HeatEqnDemo_RenderFragmentShader_tsx.txt?url";
 
 type CodeBlockProps = {
   url: string,
@@ -187,18 +190,58 @@ const Fluid1 = () => <ArticleLayout>{
       <p>
         The basic plan is to store our heat data in a texture.
         Since textures are more or less 2D arrays, this works great for our purposes.
-        However, it's not allowed to mutate a texture during shader execution.
-        What we'll do instead, is <i>render</i> the texture, applying a fragment shader over it,
-        and store the result in a framebuffer.
+        However, WebGL doesn't let us mutate a texture during shader execution.
       </p>
       <p>
-        In the next iteration, we'll use the texture data stored in the framebuffer as the heat data.
-        We'll render to another framebuffer linked to the original place we stored our heat data.
+        So, in order to simulate one timestep
+        we can render a <Tex math="N" /> by <Tex math="N" /> image,
+        which will run a fragment shader for each pixel in the output.
+        In the fragment shader, we'll do the work of computing the average of the neighboring pixels.
+        We can take the output of that rendering, and stick it into a framebuffer.
+      </p>
+      <p>
+        In the next timestep, we'll use the texture data stored in the framebuffer as the heat data.
+        We'll render to the framebuffer linked to the original place we stored our heat data.
       </p>
       <p>
         In this way, we'll "ping-pong" between the two textures.
       </p>
-
+      <AsideCard title="HeatEqn Texture/Framebuffer Setup">
+        <p>
+          Defining Texture/Framebuffer pair:
+        </p>
+        <CodeBlock lang="tsx" url={WebGL2HeatEqnDemo_BufferVars_TsxUrl} />
+        <p>
+          Initializing Texture/Framebuffer pair:
+        </p>
+        <CodeBlock lang="tsx" url={WebGL2HeatEqnDemo_BufferSetup_TsxUrl} />
+        <p>
+          Running the simulation:
+        </p>
+        <CodeBlock lang="tsx" url={WebGL2HeatEqnDemo_Simulate_TsxUrl} />
+      </AsideCard>
+      <h5>Adding a program that computes the next state of the heat</h5>
+      <p>
+        Now that we've set up our two framebuffer-texture pairs,
+        we can write the code to read from one and write to the other.
+      </p>
+      <p>
+        The vertex shader can be reused as is from the WebGL setup code.
+        All the actual work of simulation happens in the fragment shader.
+      </p>
+      <AsideCard title="HeatEqn Heat Fragment Shader">
+        <CodeBlock lang="tsx" url={WebGL2HeatEqnDemo_FragmentShader_TsxUrl} />
+      </AsideCard>
+      <h5>Adding a way to render the heat data</h5>
+      <p>
+        We can write another fragment shader to handle rendering the heat data to the canvas.
+      </p>
+      <p>
+        In order to make it look good, we use the inferno
+      </p>
+      <AsideCard title="HeatEqn Render Fragment Shader">
+        <CodeBlock lang="tsx" url={WebGL2HeatEqnDemo_RenderFragmentShader_TsxUrl} />
+      </AsideCard>
       <AsideCard title="Heat Equation" id="heat-equation-demo">
         <WebGL2HeatEqnDemo
           className="mx-auto"
