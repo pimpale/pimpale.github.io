@@ -361,6 +361,7 @@ void main() {
   vec2 resolution = vec2(textureSize(u_vel_tex, 0));
 
   // the direction to paint in
+  //vec2 paintDir = 0.01*(u_new_mouse - u_old_mouse)/resolution.y;
   vec2 paintDir = 0.01*(u_new_mouse - u_old_mouse)/resolution.y;
 
   // coordinate in pixels

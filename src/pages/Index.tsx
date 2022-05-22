@@ -127,7 +127,7 @@ const Home = () =>
         <p>
           I'm a student at UCLA, studying Computer Science and Engineering.
           I believe in <a
-            href="https://globalprioritiesinstitute.org/wp-content/uploads/2019/Greaves_MacAskill_The_Case_for_Strong_Longtermism.pdf?url">
+            href="https://globalprioritiesinstitute.org/summary-the-case-for-strong-longtermism/">
             Strong Longtermism
           </a> and the <a href="https://suckless.org/philosophy/">Suckless philosophy</a>.
           In my free time, I enjoy recreational programming (especially in C).

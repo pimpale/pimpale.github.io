@@ -165,7 +165,10 @@ const Fluid1 = () => <ArticleLayout>{
       <p>
         It turns out that it's pretty easy to simulate.
         We'll split our metal plate into a <Tex math="N" /> by <Tex math="N" /> square grid.
-        At each timestep, for each cell, we set it to the average of its neighbors.
+        Newton's law of cooling states that the rate of heat transfer is proportional to the difference in temperature.
+        What this means is that for each timestep, for each cell, we set it to the average of its neighbors.
+      </p>
+      <p>
         If you want to know why this works,
         you can check out this link: <HrefLink href="https://mattferraro.dev/posts/poissons-equation" />.
       </p>
@@ -199,8 +202,8 @@ const Fluid1 = () => <ArticleLayout>{
         We can take the output of that rendering, and stick it into a framebuffer.
       </p>
       <p>
-        In the next timestep, we'll use the texture data stored in the framebuffer as the heat data.
-        We'll render to the framebuffer linked to the original place we stored our heat data.
+        In the next timestep, we'll swap buffers. We'll use the data we just rendered into the framebuffer as the source data.
+        We'll render to the framebuffer linked to the place we stored our original heat data in the first frame.
       </p>
       <p>
         In this way, we'll "ping-pong" between the two textures.
@@ -242,6 +245,10 @@ const Fluid1 = () => <ArticleLayout>{
       <AsideCard title="HeatEqn Render Fragment Shader">
         <CodeBlock lang="tsx" url={WebGL2HeatEqnDemo_RenderFragmentShader_TsxUrl} />
       </AsideCard>
+      <p>
+        Now, let's bring it all together.
+        The code for the entire operation is quite long, but you can view it here in its full glory:
+      </p>
       <AsideCard title="Heat Equation" id="heat-equation-demo">
         <WebGL2HeatEqnDemo
           className="mx-auto"
