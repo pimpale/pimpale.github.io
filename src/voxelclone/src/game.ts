@@ -1,93 +1,65 @@
 import { makeNoise4D } from 'open-simplex-noise';
 import { createShader, createProgram } from './webgl';
-import Camera from './camera';
 import World from './world';
-import { vec3, vec2, mat4_to_uniform } from './utils';
+import { vec3, mat4_to_uniform } from './utils';
 import { BlockManager } from './block';
+import { Camera } from './camera';
+import { Entity, PlayerControlComponent, CameraComponent, PhysicsComponent, BlockInteractionComponent } from './entity-component-system';
+
+const worldup: vec3 = [0.0, -1.0, 0.0];
 
 export type Vertex = {
   position: vec3,
-  uv: vec2,
+  tuv: vec3,
 }
 
 const vs = `#version 300 es
 precision highp float;
 layout(location=0) in vec3 a_position;
-layout(location=1) in vec2 a_uv;
+layout(location=1) in vec3 a_tuv;
 
 // premultiplied mvp matrix
 uniform mat4 u_mvpMat;
 
-out vec2 v_uv;
+out vec3 v_tuv;
 
 void main() {
-   v_uv = a_uv;
+   v_tuv = a_tuv;
    gl_Position = u_mvpMat * vec4(a_position, 1.0);
 }
 `;
 
 const fs = `#version 300 es
 precision highp float;
-precision highp sampler2D;
+precision highp sampler2DArray;
 
 // the texture atlas for the blocks
-uniform sampler2D u_textureAtlas;
+uniform sampler2DArray u_textureAtlas;
 // the normal atlas for the blocks
-uniform sampler2D u_normalAtlas;
+uniform sampler2DArray u_normalAtlas;
 
 // texCoord
-in vec2 v_uv;
+in vec3 v_tuv;
 
 out vec4 v_outColor;
 
 void main() {
-  vec3 color = texture(u_textureAtlas, v_uv).rgb;
+  vec4 color = texture(u_textureAtlas, v_tuv);
 
-  v_outColor = vec4(color, 1.0);
+  v_outColor = vec4(color.rgb*color.a, color.a);
 }
 `;
 
-function genPlane(xseg: number, yseg: number): vec2[] {
-
-  let vertexes: vec2[] = [];
-
-  for (let xi = 0; xi < xseg; xi++) {
-    const x = xi / xseg;
-    const nx = (xi + 1) / xseg;
-    for (let yi = 0; yi < yseg; yi++) {
-      const y = yi / yseg;
-      const ny = (yi + 1) / yseg;
-
-      // add two triangles
-
-      // upper triangle
-      vertexes.push([x, y]);
-      vertexes.push([nx, y]);
-      vertexes.push([x, ny]);
-      // lower triangle
-      vertexes.push([nx, y]);
-      vertexes.push([nx, ny]);
-      vertexes.push([x, ny]);
-    }
-  }
-
-  return vertexes;
+function makePlayer() {
 }
-function convertColor(color: number) {
-  return [
-    (color >> 16) / 0xFF,
-    ((color >> 8) & 0xFF) / 0xFF,
-    (color & 0xFF) / 0xFF,
-  ];
-}
-
-
 
 class Game {
 
   private canvas: HTMLCanvasElement;
   private camera: Camera;
   private world: World;
+
+  private entityList: Entity[];
 
   private blockManager: BlockManager;
 
@@ -108,12 +80,18 @@ class Game {
     this.canvas = canvas;
     this.blockManager = blockManager;
 
-    this.camera = new Camera([0, 0, 0], this.canvas);
+    this.camera = new Camera(
+      // camera starts at origin
+      [0, 0, 0],
+      // camera starts looking in positive z direction
+      [0, 0, 1],
+      // camera rescales with canvas's aspect ratio
+      this.canvas,
+      // give camera worldup
+      worldup
+    );
 
     this.gl = canvas.getContext('webgl2')!
-    this.gl.enable(this.gl.DEPTH_TEST);
-
-
 
     const program = createProgram(
       this.gl,
@@ -128,9 +106,32 @@ class Game {
 
     // get attribute locations
     const positionLoc = this.gl.getAttribLocation(program, 'a_position');
-    const uvLoc = this.gl.getAttribLocation(program, 'a_uv');
+    const tuvLoc = this.gl.getAttribLocation(program, 'a_tuv');
 
-    this.world = new World(42, [0, 0, 0], this.gl, positionLoc, uvLoc, blockManager);
+    this.world = new World(0, this.camera.getPos(), this.gl, positionLoc, tuvLoc, blockManager);
+
+    // construct player
+    const playerPhysics = new PhysicsComponent(this.world);
+    const playerBlockInteraction = new BlockInteractionComponent(this.camera, this.world);
+    const player = new Entity([
+      // this component handles player interaction with controls
+      new PlayerControlComponent(
+        // click on the canvas to grab the cursor
+        this.canvas,
+        // physics to use
+        playerPhysics,
+        // block interaction to use
+        playerBlockInteraction
+      ),
+      // this component updates the camera to follow the entity
+      new CameraComponent(this.camera),
+      // handle physics
+      playerPhysics,
+      // break blocks
+      playerBlockInteraction,
+    ], worldup)
+
+    this.entityList = [player];
 
     // retrieve uniforms
     this.mvpMatLoc = this.gl.getUniformLocation(program, "u_mvpMat")!;
@@ -169,8 +170,13 @@ class Game {
 
 
   animationLoop = () => {
-    this.camera.update();
-    this.world.update(this.camera.getLoc());
+    // update all entities
+    for (const entity of this.entityList) {
+      entity.update();
+    }
+
+    // update the world with the camera position
+    this.world.update(this.camera.getPos());
 
     {
       // set uniform

@@ -16,6 +16,10 @@ export function vec3_norm(a: vec3): vec3 {
   return a.map(x => x / dist) as vec3;
 }
 
+export function vec3_dup([a1, a2, a3]: vec3): vec3{
+    return [a1, a2, a3]
+}
+
 export function vec3_dot([a1, a2, a3]: vec3, [b1, b2, b3]: vec3): number {
   return a1 * b1 + a2 * b2 + a3 * b3;
 }
@@ -122,8 +126,6 @@ export function mat4_to_uniform(m: mat4) {
   return [...c0, ...c1, ...c2, ...c3];
 }
 
-export type vec2 = [x: number, y: number];
-
 export function clamp(v: number, min: number, max: number) {
   return Math.min(Math.max(v, min), max);
 }
@@ -133,3 +135,24 @@ export function assert(cond: boolean, error: string) {
     throw new Error(error)
   }
 }
+
+export function mod(n: number, d: number) {
+  const ret = n % d;
+  if (ret < 0) {
+    return ret + d;
+  } else {
+    return ret;
+  }
+}
+
+// takes in color as a hexadecimal number, returns a vec3 of color components
+export function convertColor(color: number) {
+  return [
+    (color >> 16) / 0xFF,
+    ((color >> 8) & 0xFF) / 0xFF,
+    (color & 0xFF) / 0xFF,
+  ] as vec3;
+}
+
+
+

@@ -1,4 +1,4 @@
-import { assert } from './utils';
+import { assert, vec3 } from './utils';
 // this file contains block definitions
 export enum Face {
   LEFT = 0,
@@ -9,24 +9,51 @@ export enum Face {
   BACK = 5,
 }
 
-export type BlockDef =
-  { name: string } &
-  (
-    {
-      transparent: true
-    } |
-    {
-      transparent: false,
-      textures: [
-        left: HTMLImageElement,
-        right: HTMLImageElement,
-        up: HTMLImageElement,
-        down: HTMLImageElement,
-        front: HTMLImageElement,
-        back: HTMLImageElement
-      ]
+export function getNormal(face: Face) {
+  switch (face) {
+    case Face.LEFT: {
+      return [-1, 0, 0] as vec3
     }
-  )
+    case Face.RIGHT: {
+      return [+1, 0, 0] as vec3
+    }
+    case Face.UP: {
+      return [0, -1, 0] as vec3
+    }
+    case Face.DOWN: {
+      return [0, +1, 0] as vec3
+    }
+    case Face.BACK: {
+      return [0, 0, -1] as vec3
+    }
+    case Face.FRONT: {
+      return [0, 0, +1] as vec3
+    }
+  }
+}
+
+export type BlockTextures = [
+  left: HTMLImageElement,
+  right: HTMLImageElement,
+  up: HTMLImageElement,
+  down: HTMLImageElement,
+  front: HTMLImageElement,
+  back: HTMLImageElement
+];
+
+export type BlockDef = {
+  // name of block
+  name: string,
+  // if the block is solid to pointer
+  pointable: boolean,
+  // if the block emits light
+  light: boolean,
+  // if the block should be treated with transparency
+  // light implies this. Otherwise only the block face will be lit up
+  transparent: boolean
+  // if undefined the block is invisible
+  textures?: BlockTextures
+}
 
 // TODO: create a const here that a texture atlas using the defs
 // Each row represents a block. The first row will be ignored, since air is transparent
@@ -35,30 +62,23 @@ export type BlockDef =
 
 
 export class BlockManager {
-
-  // The reason its 1/6 is that there are 6 faces on a cube.
-  // The texture map tile takes up 1/6
-  readonly tileTexXsize: number;
-  readonly tileTexYsize: number;
   readonly defs: BlockDef[];
   readonly tileSize: number;
 
   constructor(tileSize: number, defs: BlockDef[]) {
     this.tileSize = tileSize;
     this.defs = defs;
-    this.tileTexXsize = 1 / 6;
-    this.tileTexYsize = 1 / defs.length;
 
     // validate tiles
     for (let block_index = 0; block_index < this.defs.length; block_index++) {
       const block = this.defs[block_index];
-      if (block.transparent) {
+      if (block.textures === undefined) {
         continue;
       }
       for (let face_index = 0; face_index < block.textures.length; face_index++) {
         const img = block.textures[face_index];
-        assert(img.height === tileSize, `block #{block_index} face #{face_index} height != {tileSize}`);
-        assert(img.width === tileSize, `block #{block_index} face #{face_index} width != {tileSize}`);
+        assert(img.height === tileSize, `block #${block_index} face #${face_index} height != ${tileSize}, found ${img.height}`);
+        assert(img.width === tileSize, `block #${block_index} face #${face_index} width != ${tileSize}, found ${img.width}`);
       }
     }
 
@@ -66,48 +86,45 @@ export class BlockManager {
 
   buildTextureAtlas = (gl: WebGL2RenderingContext) => {
     let tex = gl.createTexture()!;
-    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.bindTexture(gl.TEXTURE_2D_ARRAY, tex);
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
+    // initialize image by loading with transparent black for now
+    const data = new Uint8Array(this.tileSize * this.tileSize * this.defs.length *  6 * 4);
 
-    // atlas must be big enough to store all the images
-    const atlasXsize = this.tileSize*6;
-    const atlasYsize = this.tileSize*this.defs.length;
-
-    // initialize image by loading with black for now
-    const data = new Uint8Array(atlasXsize*atlasYsize*4);
-
-    // (required to initialize before doing texSubImage2D)
-    gl.texImage2D(
-      gl.TEXTURE_2D, // texture kind
+    // (required to initialize before doing texSubImage3D)
+    gl.texImage3D(
+      gl.TEXTURE_2D_ARRAY, // texture kind
       0, // write at 0 level
       gl.RGBA, // internalformat
-      atlasXsize, // width
-      atlasYsize, // height
+      this.tileSize, // width
+      this.tileSize, // height
+      this.defs.length * 6, // depth (has to be enough to store all faces)
       0, // border
       gl.RGBA, // format
       gl.UNSIGNED_BYTE, // type
       data, // pixels
     );
 
-
     for (let block_index = 0; block_index < this.defs.length; block_index++) {
       const block = this.defs[block_index];
       // do nothing if transparent block
-      if (block.transparent) {
+      if (block.textures === undefined) {
         continue;
       }
       // write each face
       for (let face_index = 0; face_index < block.textures.length; face_index++) {
-        gl.texSubImage2D(
-          gl.TEXTURE_2D, // texture kind
+        gl.texSubImage3D(
+          gl.TEXTURE_2D_ARRAY, // texture kind
           0, // write at 0 level
-          face_index * this.tileSize, // x offset
-          block_index * this.tileSize, // y offset
+          0, // x offset
+          0, // y offset
+          block_index * 6 + face_index, // z offset
           this.tileSize, // width
           this.tileSize, // height
+          1, // depth
           gl.RGBA, // format
           gl.UNSIGNED_BYTE, // type
           block.textures[face_index]
@@ -115,7 +132,7 @@ export class BlockManager {
       }
     }
 
-    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.generateMipmap(gl.TEXTURE_2D_ARRAY);
 
     return tex;
   }
