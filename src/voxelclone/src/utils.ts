@@ -5,14 +5,17 @@ export function RADIANS(x: number) {
   return Math.PI * x / 180;
 }
 
-// normalizes a vector in place
-export function vec3_norm(a: vec3): vec3 {
+export function vec3_length(a:vec3): number {
   let sum = 0;
   for (const i of a) {
     sum += i * i;
   }
-  const dist = Math.sqrt(sum);
+  return Math.sqrt(sum);
+}
 
+// normalizes a vector in place
+export function vec3_norm(a: vec3): vec3 {
+  const dist = vec3_length(a);
   return a.map(x => x / dist) as vec3;
 }
 
@@ -79,7 +82,7 @@ export function mat4_look_at(eye: vec3, at: vec3, up: vec3) {
   // Check for NaN, indicating a degenerate cross product, which
   // happens if eye == at, or if at minus eye is parallel to up.
   if (!x.every(i => i == i))
-    throw "Two parallel vectors were given";
+    throw "two parallel vectors were given";
 
   // Enforce right-handed coordinate system.
   z = vec3_scale(z, -1);

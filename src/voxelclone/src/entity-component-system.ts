@@ -4,7 +4,6 @@ import World, { Highlight } from './world'
 import { getNormal } from './block';
 
 type GlobalComponentData = {
-
 }
 
 
@@ -140,7 +139,7 @@ export class PlayerControlComponent extends Component {
     // only do things if control is locked
     if (this.controlsEnabled) {
       const forwarddir = vec3_norm(vec3_cross(basis.right, e.worldup));
-      let movscale = this.fast ? 0.1 : 0.02;
+      let movscale = this.fast ? 0.1 : 0.04;
       if (this.fly) {
         // fly
         if (this.keys.has('KeyW')) {
@@ -180,10 +179,27 @@ export class PlayerControlComponent extends Component {
         }
       }
 
+      if (this.keys.has('Digit1')) {
+        this.blockInteraction.placeID = 1;
+      }
+      if (this.keys.has('Digit2')) {
+        this.blockInteraction.placeID = 2;
+      }
+      if (this.keys.has('Digit3')) {
+        this.blockInteraction.placeID = 3;
+      }
+      if (this.keys.has('Digit4')) {
+        this.blockInteraction.placeID = 4;
+      }
+      if (this.keys.has('Digit5')) {
+        this.blockInteraction.placeID = 5;
+      }
+
+
       // break/place block
       if (this.leftMouseDown) {
         this.blockInteraction.breakSelectedBlock();
-      } else if(this.rightMouseDown) {
+      } else if (this.rightMouseDown) {
         this.blockInteraction.placeSelectedBlock();
       }
 
@@ -246,9 +262,12 @@ export class BlockInteractionComponent extends Component {
   private camera: Camera;
   private world: World;
 
+  placeID = 2;
+
   private ray: Highlight | null = null;
 
-  private lastBlockTime = 0;
+  private breakRequests = new Map<string, number>();
+  private placeRequests = new Map<string, number>();
 
   constructor(camera: Camera, world: World,) {
     super();
@@ -262,11 +281,9 @@ export class BlockInteractionComponent extends Component {
     const now = Date.now();
     // figure out where camera is pointing
     if (this.ray) {
-      // check that we arent breaking too many blocks at once
-      if (this.lastBlockTime + 50 < now ) {
-        this.world.setBlock(this.ray.coords, 0);
-        this.lastBlockTime = now;
-      }
+      const dest = JSON.stringify(this.ray.coords);
+      const n = this.breakRequests.get(dest);
+      this.breakRequests.set(dest, n === undefined ? 0 : n + 1);
     }
   }
 
@@ -275,17 +292,27 @@ export class BlockInteractionComponent extends Component {
     const now = Date.now();
     // figure out where camera is pointing
     if (this.ray) {
-      // check that we arent breaking too many blocks at once
-      if (this.lastBlockTime + 50 < now ) {
-        const newBlockCoord= vec3_add(this.ray.coords, getNormal(this.ray.face));
-        this.world.setBlock(newBlockCoord, 4);
-        this.lastBlockTime = now;
-      }
+      const dest = JSON.stringify(vec3_add(this.ray.coords, getNormal(this.ray.face)));
+      const n = this.placeRequests.get(dest);
+      this.placeRequests.set(dest, n === undefined ? 0 : n + 1);
     }
   }
 
   // figure out where camera is looking and break block
   applySystem = (e: Entity) => {
+    for (const [loc, count] of this.breakRequests) {
+      if (count > 30) {
+        this.world.setBlock(JSON.parse(loc), 0);
+        this.breakRequests.delete(loc);
+      }
+    }
+    for (const [loc, count] of this.placeRequests) {
+      if (count > 20) {
+        this.world.setBlock(JSON.parse(loc), this.placeID);
+        this.placeRequests.delete(loc);
+      }
+    }
+    // update ray
     this.ray = this.world.castRay(this.camera.getPos(), this.camera.getDir(), 100);
     if (this.ray) {
       this.world.addHighlight(this.uniqueId, this.ray);
