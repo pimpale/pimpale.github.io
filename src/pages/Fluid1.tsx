@@ -30,6 +30,9 @@ import WebGL2HeatEqnDemo_ControlEdit_TsxUrl from "../assets/fluid1/WebGL2HeatEqn
 import TextureCoordImgUrl from '../assets/fluid1/texturecoords.png';
 import PingPongImgUrl from '../assets/fluid1/pingpong.png';
 
+import { ArticleLink } from '../components/Articles';
+import { articleData } from '../components/ArticleData';
+
 type CodeBlockProps = {
   url: string,
   lang: string
@@ -323,19 +326,56 @@ const Fluid1 = () => <ArticleLayout>{
       <h4>The Final Product</h4>
       <p>
         Now, let's bring it all together.
-        The code for the entire operation is quite long, but you can view it here in its full glory:
+        The code for the entire operation is quite long, but you can click the dropdown to view it here in its full glory:
+      </p>
+      <details className="mb-3 mx-5">
+        <summary>Full Code (long!)</summary>
+        <CodeBlock lang="tsx" url={WebGL2HeatEqnDemo_TsxUrl} />
+      </details>
+      <p>
+        It's also available on github here: <HrefLink href="https://github.com/pimpale/pimpale.github.io/blob/master/src/components/WebGL2HeatEqnDemo.tsx" />
       </p>
       <AsideCard title="Heat Equation" id="heat-equation-demo">
+        <p>
+          Drag your mouse across the canvas to draw.
+        </p>
+        <p>
+          Use the dropdown menu to select whether to draw with hot, cold, or switch to eraser mode.
+        </p>
+        <p>
+          Use button to reset canvas to default.
+        </p>
         <WebGL2HeatEqnDemo
           className="mx-auto"
           style={{ maxWidth: "40em" }}
           size={400}
         />
-        <details className="mb-3 mx-5">
-          <summary>Full Code (long!)</summary>
-          <CodeBlock lang="tsx" url={WebGL2HeatEqnDemo_TsxUrl} />
-        </details>
+
       </AsideCard>
+    </Section>
+    <Section id="conclusion" name="Conclusion">
+      <h4>Summary</h4>
+      <p>
+        It's somewhat more difficult to use WebGL2 to simulate than using plain JS,
+        but it's a lot faster, especially for very parallelizable problems.
+      </p>
+      <p>
+        We learned how to setup a WebGL to simulate and render a simple numerical simulation
+        calculating heat transfer.
+      </p>
+      <h4>Next Time</h4>
+      <p>
+        In the next article, we'll:
+      </p>
+      <ul>
+        <li>explain simply the math behind fluid simulation</li>
+        <li>learn how to use the Navier-Stokes equations to simulate fluids</li>
+        <li>provide working code to simulate 2D incompressible flow</li>
+      </ul>
+      <p>Link:</p>
+      <ul>
+        <li><ArticleLink a={articleData.get("fluid2")!} /></li>
+      </ul>
     </Section>
     <Section id="sources" name="Sources">
       <CitationBank />

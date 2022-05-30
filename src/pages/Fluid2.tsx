@@ -13,6 +13,8 @@ import AsideCard from '../components/AsideCard';
 import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+import {ArticleLink} from '../components/Articles';
+import {articleData} from '../components/ArticleData';
 
 import WebGL2SetupDemo from '../components/WebGL2SetupDemo';
 import WebGL2HeatEqnDemo from '../components/WebGL2HeatEqnDemo';
@@ -60,7 +62,7 @@ const Fluid2 = () => <ArticleLayout>{
         Prerequisites:
       </p>
       <ul>
-        <li></li>
+        <li><ArticleLink a={articleData.get("fluid1")!}/></li>
       </ul>
     </Section>
     <Section id="math-fluid-simulation" name="Math of Fluid Simulation">
