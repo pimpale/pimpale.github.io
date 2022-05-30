@@ -281,10 +281,6 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     this.animationLoop();
   }
 
-  handleReset = () => {
-  }
-
-
   componentWillUnmount() {
     // clean up mouse tracker
     this.cmt.cleanup();
@@ -317,8 +313,10 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
         data[i] = this.drawSelect.current!.selectedIndex;
       }
 
-      // where to begin drawing
+      // x and y vars store top left location of draw site
+
       const x = clamp(mousePos.current.x - brushRadius, 0, this.props.size - brushSize);
+      // note that y axis is inverted on the texture!
       const y = clamp(this.props.size - mousePos.current.y - brushRadius, 0, this.props.size - brushSize);
 
       overwriteR32UITexture(this.gl, Math.floor(x), Math.floor(y), brushSize, brushSize, data);
@@ -405,4 +403,3 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 }
 
 export default WebGL2HeatEqnDemo;
-
