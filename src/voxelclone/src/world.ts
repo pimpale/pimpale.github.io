@@ -31,7 +31,7 @@ type Chunk = {
   blocks?: Uint16Array,
   mesh?: { stale: boolean, solid: BlockFace[], transparent: BlockFace[], lights: BlockFace[] }
   graphics?: { stale: boolean, solid: Graphics, transparent: Graphics }
-  lights?: { stale: boolean, data: ChunkLightingGPUData, pos: vec3[], matrixes: mat4[] }
+  lights?: { stale: boolean, data: ChunkLightingGPUData, pos: vec3[], matrixes: mat4[], mdata: Float32Array, pdata: Float32Array }
 }
 
 // these should not get deleted! they merely transfer ownership (to avoid the massive costs of creation/deletion)
@@ -42,7 +42,7 @@ type ChunkLightingGPUData = {
 
 const SHADOWMAP_SIZE = 64;
 // max number of lights to render per chunk
-const LIGHTS_PER_CHUNK = 20;
+const LIGHTS_PER_CHUNK = 18;
 // there are 9 chunks surrounding us
 const N_LIGHTS = 9 * LIGHTS_PER_CHUNK;
 
@@ -103,7 +103,7 @@ out vec4 v_outColor;
 void main() {
   vec4 color = texture(u_textureAtlas, v_tuv);
 
-  float lightSum = 0.0;
+  float lightSum = 0.4;
 
   for(int i = 0; i < u_lightNumber; i++) {
     mat4 mvp = mat4(
@@ -127,18 +127,16 @@ void main() {
     vec2 texCoord = (projectedCoord.xy + vec2(1.0, 1.0))/2.0;
 
     float depthMapDepth = texture(u_lightDepthArr, vec3(texCoord, i)).r;
-    const float bias = 0.02;
+    const float bias = 0.017;
     float currentDepth = (projectedCoord.z + 1.0)/2.0 - bias;
 
     if(inRange && currentDepth <= depthMapDepth) {
-        float intensity = pow((1.0-currentDepth), 0.5);
+        float intensity = (1.0-currentDepth);
         vec3 lightDir = normalize(v_lightPosArr[i] - v_position);
         float diffuseIntensity = max(dot(v_normal, lightDir), 0.0);
-        lightSum += 2.0*diffuseIntensity*intensity;
+        lightSum += 5.0*diffuseIntensity*intensity;
     }
   }
-  // global ambient light
-  lightSum = max(lightSum, 0.2);
   v_outColor = vec4(color.rgb*lightSum, color.a);
 }
 `;
@@ -194,7 +192,6 @@ class World {
   private worldChunkCenterLoc: vec3;
 
   // worldgen function
-  private readonly worldup: vec3;
   private readonly seed: number;
   private readonly noiseFn: (x: number, y: number, z: number) => number;
 
@@ -208,7 +205,7 @@ class World {
   private chunk_map: Map<string, Chunk>;
 
   private gl: WebGL2RenderingContext;
-  private blockManager: BlockManager
+  public blockManager: BlockManager
 
   getWorldChunkLoc = (cameraLoc: vec3) => [
     Math.floor(cameraLoc[0] / CHUNK_X_SIZE),
@@ -216,11 +213,10 @@ class World {
     Math.floor(cameraLoc[2] / CHUNK_Z_SIZE),
   ] as vec3;
 
-  constructor(seed: number, cameraLoc: vec3, worldup: vec3, gl: WebGL2RenderingContext, blockManager: BlockManager, camera: Camera) {
+  constructor(seed: number, cameraLoc: vec3, gl: WebGL2RenderingContext, blockManager: BlockManager, camera: Camera) {
     this.gl = gl;
     this.blockManager = blockManager;
     this.seed = seed;
-    this.worldup = worldup;
     this.noiseFn = makeNoise3D(seed);
     this.worldChunkCenterLoc = this.getWorldChunkLoc(cameraLoc);
     this.chunk_map = new Map();
@@ -360,7 +356,7 @@ class World {
     }
 
     // create list of all locs that should be rendered
-    const toLoad :vec3[] = []
+    const toLoad: vec3[] = []
     for (let x = -RENDER_RADIUS_X; x <= RENDER_RADIUS_X; x++) {
       for (let y = -RENDER_RADIUS_Y; y <= RENDER_RADIUS_Y; y++) {
         for (let z = -RENDER_RADIUS_Z; z <= RENDER_RADIUS_Z; z++) {
@@ -371,19 +367,19 @@ class World {
 
     // sort by closest to us
     toLoad.sort((a, b) => {
-        const a_d = vec3_length(vec3_sub(a, this.worldChunkCenterLoc));
-        const b_d = vec3_length(vec3_sub(b, this.worldChunkCenterLoc));
+      const a_d = vec3_length(vec3_sub(a, this.worldChunkCenterLoc));
+      const b_d = vec3_length(vec3_sub(b, this.worldChunkCenterLoc));
 
-        return a_d - b_d;
+      return a_d - b_d;
     });
 
     // initialize if not exists
-    for(const coord of toLoad) {
-        const strCoord =JSON.stringify(coord);
-        const chunk = this.chunk_map.get(strCoord);
-        if(chunk === undefined) {
-            this.chunk_map.set(strCoord, {})
-        }
+    for (const coord of toLoad) {
+      const strCoord = JSON.stringify(coord);
+      const chunk = this.chunk_map.get(strCoord);
+      if (chunk === undefined) {
+        this.chunk_map.set(strCoord, {})
+      }
     }
   }
 
@@ -393,7 +389,7 @@ class World {
       this.deleteGraphics(highlight);
     }
     const graphics = this.createGraphics(writeMesh([{
-      bi: 5,
+      bi: 6,
       cubeLoc: ray.coords,
       face: ray.face,
     }]));
@@ -613,16 +609,30 @@ class World {
         // camera view matrix of each point
         const matrixes = lightsToRender.map(face => this.createLightMatrix(face));
 
+        // premake into array
+        const mdata = new Float32Array(matrixes.length * 16);
+        for (let i = 0; i < matrixes.length; i++) {
+          mdata.set(mat4_to_uniform(matrixes[i]), i * 16);
+        }
+
+        // set positions correctly
+        const pdata = new Float32Array(pos.length * 3);
+        for (let i = 0; i < pos.length; i++) {
+          pdata.set(pos[i], i * 3);
+        }
+
         // update data
         if (chunk.lights === undefined) {
           const data = this.freeChunkLightingGPUData.pop();
           if (data === undefined) {
             continue;
           }
-          chunk.lights = { matrixes, pos, data, stale: true, }
+          chunk.lights = { matrixes, pos, data, stale: true, mdata, pdata }
         } else {
           chunk.lights.pos = pos;
           chunk.lights.matrixes = matrixes;
+          chunk.lights.pdata = pdata;
+          chunk.lights.mdata = mdata;
         }
 
         // now iterate through our graphics map and render world
@@ -660,6 +670,10 @@ class World {
     // bind matrix
     this.gl.uniformMatrix4fv(this.renderMvpMatLoc, false, mat4_to_uniform(mvpMat));
 
+    // bind the texture 0 to render atlas
+    this.gl.activeTexture(this.gl.TEXTURE0);
+    this.gl.bindTexture(this.gl.TEXTURE_2D_ARRAY, this.textureAtlas);
+
     this.gl.enable(this.gl.DEPTH_TEST); // enable depth tests
     this.gl.enable(this.gl.CULL_FACE) // remove reversed faces
     this.gl.enable(this.gl.BLEND) // enable blending
@@ -673,31 +687,18 @@ class World {
         // bind this chunk's vertex array
         this.gl.bindVertexArray(chunk.graphics.solid.vao);
 
-        // bind the texture 0 to render atlas
-        this.gl.activeTexture(this.gl.TEXTURE0);
-        this.gl.bindTexture(this.gl.TEXTURE_2D_ARRAY, this.textureAtlas);
-
         // bind this chunk's lights to tex 1
         this.gl.activeTexture(this.gl.TEXTURE1);
         this.gl.bindTexture(this.gl.TEXTURE_2D_ARRAY, chunk.lights.data.tex);
 
         // set n lights correctly
         this.gl.uniform1i(this.renderLightNumber, chunk.lights.matrixes.length);
-
-        if (chunk.lights.pos.length > 0) {
-          // set shadow matrixes correctly
-          const mdata = new Float32Array(chunk.lights.matrixes.length * 16);
-          for (let i = 0; i < chunk.lights.matrixes.length; i++) {
-            mdata.set(mat4_to_uniform(chunk.lights.matrixes[i]), i * 16);
-          }
-          this.gl.uniform4fv(this.renderLightMvpArr, mdata);
-
-          // set positions correctly
-          const pdata = new Float32Array(chunk.lights.pos.length * 3);
-          for (let i = 0; i < chunk.lights.pos.length; i++) {
-            pdata.set(chunk.lights.pos[i], i * 3);
-          }
-          this.gl.uniform3fv(this.renderLightPosArr, pdata);
+        // set light matrix and positions correctly
+        if (chunk.lights.mdata.length !== 0) {
+          this.gl.uniform4fv(this.renderLightMvpArr, chunk.lights.mdata);
+        }
+        if (chunk.lights.pdata.length !== 0) {
+          this.gl.uniform3fv(this.renderLightPosArr, chunk.lights.pdata);
         }
 
         this.gl.drawArrays(this.gl.TRIANGLES, 0, chunk.graphics.solid.vertexCount);
@@ -736,7 +737,7 @@ class World {
 
   setBlock = (coords: vec3, val: number) => {
     const setMeshStaleIfExists = (chunkLoc: vec3) => {
-      const chunk = this.chunk_map.get(JSON.stringify(chunkCoord));
+      const chunk = this.chunk_map.get(JSON.stringify(chunkLoc));
       if (chunk && chunk.mesh) {
         chunk.mesh.stale = true;
       }
@@ -745,10 +746,11 @@ class World {
     const chunkCoord = this.getWorldChunkLoc(coords);
     const chunk = this.chunk_map.get(JSON.stringify(chunkCoord));
     if (chunk && chunk.blocks) {
+      const x = Math.floor(mod(coords[0], CHUNK_X_SIZE));
+      const y = Math.floor(mod(coords[1], CHUNK_Y_SIZE));
+      const z = Math.floor(mod(coords[2], CHUNK_Z_SIZE));
 
-      const x = mod(coords[0], CHUNK_X_SIZE);
-      const y = mod(coords[1], CHUNK_Y_SIZE);
-      const z = mod(coords[2], CHUNK_Z_SIZE);
+      console.log(x, y, z);
 
       chunk.blocks[chunkDataIndex(x, y, z)] = val;
 
@@ -933,8 +935,8 @@ function genChunkData(worldChunkCoords: vec3, noise: (x: number, y: number, z: n
         const valHere = noise(wx / scale1, wy / scale1, wz / scale1);
         const valAbove = noise(wx / scale1, (wy - 1) / scale1, wz / scale1);
 
-        if (valHere > 0) {
-          if (valAbove > 0) {
+        if (valHere > 0.5) {
+          if (valAbove > 0.5) {
             blocks[off_xyz] = 3; // stone
           } else {
             blocks[off_xyz] = 1; // grass
