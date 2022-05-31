@@ -24,7 +24,8 @@
       }
       #blocktable {
           position: absolute;
-          left: 0px;
+          background-color: rgba(255, 255, 255, 0.3);
+          right: 0px;
           top: 0px;
           z-index: 10;
       }
@@ -36,60 +37,75 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <canvas id="canvas"></canvas>
+    <table id="blocktable">
+        <thead>
+            <tr>
+                <td></td>
+                <td>L</td>
+                <td>R</td>
+                <td>U</td>
+                <td>D</td>
+                <td>F</td>
+                <td>B</td>
+             </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Grass</th>
+                <td><img src="/assets/left.0c336afd.png" id="grass-left"></td>
+                <td><img src="/assets/left.0c336afd.png" id="grass-right"></td>
+                <td><img src="/assets/up.6183b011.png" id="grass-up"></td>
+                <td><img src="/assets/down.15f3a0c0.png" id="grass-down"></td>
+                <td><img src="/assets/left.0c336afd.png" id="grass-front"></td>
+                <td><img src="/assets/left.0c336afd.png" id="grass-back"></td>
+             </tr>
+            <tr>
+                <th>Soil</th>
+                <td><img src="/assets/left.9c373d84.png" id="soil-left"></td>
+                <td><img src="/assets/left.9c373d84.png" id="soil-right"></td>
+                <td><img src="/assets/left.9c373d84.png" id="soil-up"></td>
+                <td><img src="/assets/left.9c373d84.png" id="soil-down"></td>
+                <td><img src="/assets/left.9c373d84.png" id="soil-front"></td>
+                <td><img src="/assets/left.9c373d84.png" id="soil-back"></td>
+             </tr>
+            <tr>
+                <th>Stone</th>
+                <td><img src="/assets/left.b85ec6de.png" id="stone-left"></td>
+                <td><img src="/assets/left.b85ec6de.png" id="stone-right"></td>
+                <td><img src="/assets/left.b85ec6de.png" id="stone-up"></td>
+                <td><img src="/assets/left.b85ec6de.png" id="stone-down"></td>
+                <td><img src="/assets/left.b85ec6de.png" id="stone-front"></td>
+                <td><img src="/assets/left.b85ec6de.png" id="stone-back"></td>
+             </tr>
+             <tr>
+                <th>Glass</th>
+                <td><img src="/assets/left.80b05773.png" id="glass-left"></td>
+                <td><img src="/assets/left.80b05773.png" id="glass-right"></td>
+                <td><img src="/assets/left.80b05773.png" id="glass-up"></td>
+                <td><img src="/assets/left.80b05773.png" id="glass-down"></td>
+                <td><img src="/assets/left.80b05773.png" id="glass-front"></td>
+                <td><img src="/assets/left.80b05773.png" id="glass-back"></td>
+             </tr>
+            <tr>
+                <th>Lamp</th>
+                <td><img src="/assets/left.85bf573b.png" id="lamp-left"></td>
+                <td><img src="/assets/left.85bf573b.png" id="lamp-right"></td>
+                <td><img src="/assets/left.85bf573b.png" id="lamp-up"></td>
+                <td><img src="/assets/left.85bf573b.png" id="lamp-down"></td>
+                <td><img src="/assets/left.85bf573b.png" id="lamp-front"></td>
+                <td><img src="/assets/left.85bf573b.png" id="lamp-back"></td>
+              </tr>
+            <tr>
+                <th>Selector</th>
+                <td><img src="/assets/left.38428f79.png" id="selector-left"></td>
+                <td><img src="/assets/right.4b517590.png" id="selector-right"></td>
+                <td><img src="/assets/up.a27be786.png" id="selector-up"></td>
+                <td><img src="/assets/down.cccfacb0.png" id="selector-down"></td>
+                <td><img src="/assets/front.8d831a7c.png" id="selector-front"></td>
+                <td><img src="/assets/back.2056cb61.png" id="selector-back"></td>
+              </tr>
+        </tbody>
+    </table>
     
   </body>
-  <table id="blocktable">
-      <thead>
-          <tr>
-              <td>L</td>
-              <td>R</td>
-              <td>U</td>
-              <td>D</td>
-              <td>F</td>
-              <td>B</td>
-           </tr>
-      </thead>
-      <tbody>
-          <tr>
-              <td><img src="/assets/left.0c336afd.png" id="grass-left"></td>
-              <td><img src="/assets/left.0c336afd.png" id="grass-right"></td>
-              <td><img src="/assets/up.6183b011.png" id="grass-up"></td>
-              <td><img src="/assets/down.15f3a0c0.png" id="grass-down"></td>
-              <td><img src="/assets/left.0c336afd.png" id="grass-front"></td>
-              <td><img src="/assets/left.0c336afd.png" id="grass-back"></td>
-           </tr>
-          <tr>
-              <td><img src="/assets/left.9c373d84.png" id="soil-left"></td>
-              <td><img src="/assets/left.9c373d84.png" id="soil-right"></td>
-              <td><img src="/assets/left.9c373d84.png" id="soil-up"></td>
-              <td><img src="/assets/left.9c373d84.png" id="soil-down"></td>
-              <td><img src="/assets/left.9c373d84.png" id="soil-front"></td>
-              <td><img src="/assets/left.9c373d84.png" id="soil-back"></td>
-           </tr>
-          <tr>
-              <td><img src="/assets/left.b85ec6de.png" id="stone-left"></td>
-              <td><img src="/assets/left.b85ec6de.png" id="stone-right"></td>
-              <td><img src="/assets/left.b85ec6de.png" id="stone-up"></td>
-              <td><img src="/assets/left.b85ec6de.png" id="stone-down"></td>
-              <td><img src="/assets/left.b85ec6de.png" id="stone-front"></td>
-              <td><img src="/assets/left.b85ec6de.png" id="stone-back"></td>
-           </tr>
-          <tr>
-              <td><img src="/assets/left.80b05773.png" id="glass-left"></td>
-              <td><img src="/assets/left.80b05773.png" id="glass-right"></td>
-              <td><img src="/assets/left.80b05773.png" id="glass-up"></td>
-              <td><img src="/assets/left.80b05773.png" id="glass-down"></td>
-              <td><img src="/assets/left.80b05773.png" id="glass-front"></td>
-              <td><img src="/assets/left.80b05773.png" id="glass-back"></td>
-           </tr>
-          <tr>
-              <td><img src="/assets/left.38428f79.png" id="light-left"></td>
-              <td><img src="/assets/right.4b517590.png" id="light-right"></td>
-              <td><img src="/assets/up.a27be786.png" id="light-up"></td>
-              <td><img src="/assets/down.cccfacb0.png" id="light-down"></td>
-              <td><img src="/assets/front.8d831a7c.png" id="light-front"></td>
-              <td><img src="/assets/back.2056cb61.png" id="light-back"></td>
-           </tr>
-      </tbody>
-  </table>
 </html>
