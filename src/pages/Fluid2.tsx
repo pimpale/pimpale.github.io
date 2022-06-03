@@ -257,8 +257,19 @@ const Fluid2 = () => <ArticleLayout>{
       </p>
       <p>
         That being said, it's definitely possible to numerically approximate solutions, and this is indeed what we have to do.
+        Numerically approximated solutions are never 100% accurate, and since the Navier-Stokes equations are chaotic, we'll
+        eventually diverge from the true state of the fluid.
+      </p>
+      <p>
+        For certain applications, like weather forecasting, this can be a real problem.
+        For others, like video games, it's not as big of a deal.
+        We're focusing on the second use case for now, so we won't worry too much about accuracy, especially where it conflicts with performance.
       </p>
       <AsideCard title="Simulating a solution to Navier-Stokes">
+        <p>
+          Let's walk through what we are going to do to in our simulation.
+
+        </p>
         <ol>
         </ol>
         <p>
@@ -320,15 +331,16 @@ const Fluid2 = () => <ArticleLayout>{
   </>
 }</ArticleLayout>
 
-import ReactDOM from 'react-dom';
 
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
 
-ReactDOM.render(
+import { createRoot } from 'react-dom/client';
+
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
     <Fluid2 />
   </React.StrictMode>,
-  document.getElementById('root')
 );

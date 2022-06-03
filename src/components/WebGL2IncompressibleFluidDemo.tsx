@@ -797,8 +797,6 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     this.cmt.cleanup();
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
-    // destroy webgl
-    this.gl.getExtension('WEBGL_lose_context')!.loseContext();
   }
 
   animationLoop = () => {

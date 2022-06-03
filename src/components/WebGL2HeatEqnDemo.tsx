@@ -286,8 +286,6 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     this.cmt.cleanup();
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
-    // destroy webgl
-    this.gl.getExtension('WEBGL_lose_context')!.loseContext();
   }
 
   animationLoop = () => {

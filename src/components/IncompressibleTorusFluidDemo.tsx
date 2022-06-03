@@ -982,9 +982,6 @@ class IncompressibleTorusFluidDemo extends React.Component<IncompressibleTorusFl
 
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
-    // destroy webgl
-    this.gl.getExtension('WEBGL_lose_context')!.loseContext();
-    this.torusGl.getExtension('WEBGL_lose_context')!.loseContext();
 
     this.camera.cleanup();
   }

@@ -383,15 +383,16 @@ const Fluid1 = () => <ArticleLayout>{
   </>
 }</ArticleLayout>
 
-import ReactDOM from 'react-dom';
 
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
 
-ReactDOM.render(
+import { createRoot } from 'react-dom/client';
+
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
     <Fluid1 />
   </React.StrictMode>,
-  document.getElementById('root')
 );
