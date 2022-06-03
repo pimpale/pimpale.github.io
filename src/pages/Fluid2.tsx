@@ -23,7 +23,7 @@ import WebGL2IncompressibleFluidDemo from '../components/WebGL2IncompressibleFlu
 
 type CodeBlockProps = {
   url: string,
-  lang: string
+  lang: string,
 }
 
 function CodeBlock(props: CodeBlockProps) {
