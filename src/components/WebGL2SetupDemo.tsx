@@ -119,8 +119,6 @@ class WebGL2SetupDemo extends React.Component<WebGL2SetupDemoProps, {}> {
   componentWillUnmount() {
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
-    // destroy context
-    this.gl.getExtension('WEBGL_lose_context')!.loseContext();
   }
 
   animationLoop = () => {

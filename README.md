@@ -1,10 +1,10 @@
 This project uses vite, to dev do:
 
 ```
-yarn start
+npm run start
 ```
 
 To build do:
 ```
-yarn build
+npm run build
 ```

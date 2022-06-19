@@ -1,6 +1,6 @@
 import path from 'path';
 import { defineConfig } from 'vite'
-import reactRefresh from '@vitejs/plugin-react-refresh'
+import react from '@vitejs/plugin-react'
 import reactJsx from 'vite-react-jsx'
 import multiInput from 'rollup-plugin-multi-input';
 
@@ -9,8 +9,7 @@ import multiInput from 'rollup-plugin-multi-input';
 export default defineConfig({
   root: path.resolve(__dirname, "src"),
   plugins: [
-    reactRefresh(),
-    reactJsx(),
+    react(),
     multiInput(),
   ],
   build: {

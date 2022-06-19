@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import ArticleLayout from '../components/ArticleLayout';
 import Articles from '../components/Articles';
@@ -12,9 +11,16 @@ const ArticlesPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <Articles/>
 }</ArticleLayout>
 
-ReactDOM.render(
+
+// Bootstrap CSS & JS
+import '../styles/style.scss';
+import 'bootstrap/dist/js/bootstrap';
+
+import { createRoot } from 'react-dom/client';
+
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
     <ArticlesPage />
   </React.StrictMode>,
-  document.getElementById('root')
 );

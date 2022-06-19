@@ -1,3 +1,4 @@
+import React from 'react';
 const IndexUrl = '../index.html';
 
 function Error() {
@@ -16,16 +17,15 @@ function Error() {
   )
 }
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
 
-ReactDOM.render(
+import { createRoot } from 'react-dom/client';
+
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
     <Error />
   </React.StrictMode>,
-  document.getElementById('root')
 );

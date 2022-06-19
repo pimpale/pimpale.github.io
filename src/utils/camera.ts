@@ -1,5 +1,4 @@
 import { glMatrix, quat, vec3, mat4 } from 'gl-matrix';
-import assert from '../utils/assert';
 
 // https://www.xarg.org/2021/07/trackball-rotation-using-quaternions/
 function projectTrackball(v: { x: number, y: number }) {
@@ -50,7 +49,7 @@ export class TrackballCamera {
   // how much to damp the rotation at each step
   private dampingFactor: number;
 
-  private canvas: HTMLCanvasElement;
+  private canvas: HTMLElement;
 
   // if mouse is pressed, start location of drag
   private mouseLoc: null | { start: Point, current: Point, previous: Point } = null;
@@ -143,7 +142,7 @@ export class TrackballCamera {
 
   discardTouchEvent = (e: TouchEvent) => e.preventDefault();
 
-  constructor(ctx: HTMLCanvasElement, options: TrackballCameraOptions) {
+  constructor(ctx: HTMLElement, options: TrackballCameraOptions) {
     if (options.ortho) {
       this.ortho = options.ortho;
     } else {
