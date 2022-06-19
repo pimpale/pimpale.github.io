@@ -1,4 +1,4 @@
-import"./modulepreload-polyfill.b7f2da20.js";import{a as h,b as c,j as s,R as S,F as w}from"./bootstrap.a10c2d65.js";import{S as z}from"./Section.745827e5.js";import{H as b}from"./HrefLink.0bae1eeb.js";import{A as P}from"./ArticleLayout.548dac57.js";import{A as F}from"./AsideCard.93aad05c.js";import{g as T,o as I,a as f,h as C,c as N,b as A,d,e as u,i as y,j as E,k as X,l as B}from"./webgl.a929ddf3.js";const v=`#version 300 es
+import"./modulepreload-polyfill.b7f2da20.js";import{a as h,b as c,j as s,R as S,F as w}from"./bootstrap.526f4e94.js";import{S as z}from"./Section.8305a258.js";import{H as b}from"./HrefLink.9b4a8e85.js";import{A as P}from"./ArticleLayout.e3479b89.js";import{A as F}from"./AsideCard.f0436470.js";import{g as T,o as I,a as f,h as C,c as N,b as A,d,e as u,i as y,j as E,k as X,l as B}from"./webgl.a929ddf3.js";const v=`#version 300 es
 in vec2 a_position;
 out vec2 v_texCoord;
 
