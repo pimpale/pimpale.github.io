@@ -54,7 +54,7 @@ export function createTexture(gl: WebGL2RenderingContext, width: number, height:
   return tex;
 }
 
-export function updateTextureFromCanvas(gl: WebGL2RenderingContext, tex: WebGLTexture, canvas:HTMLCanvasElement) {
+export function updateTextureFromCanvas(gl: WebGL2RenderingContext, tex: WebGLTexture, canvas: HTMLCanvasElement) {
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
   gl.texImage2D(
@@ -104,6 +104,41 @@ export function overwriteR32UITexture(gl: WebGL2RenderingContext, xoff: number, 
     height,           // height
     gl.RED_INTEGER,   // format
     gl.UNSIGNED_INT,  // type
+    data
+  );
+}
+
+
+export function createRG32ITexture(gl: WebGL2RenderingContext, width: number, height: number) {
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,                 // mip level
+    gl.RG32I,          // internal format
+    width,
+    height,
+    0,                // border
+    gl.RG_INTEGER,   // format
+    gl.INT,  // type
+    null
+  );
+  return tex;
+}
+
+export function overwriteRG32ITexture(gl: WebGL2RenderingContext, xoff: number, yoff: number, width: number, height: number, data: Int32Array) {
+  gl.texSubImage2D(
+    gl.TEXTURE_2D,
+    0,                // mip level
+    xoff,             // xoffset
+    yoff,             // yoffset
+    width,            // width
+    height,           // height
+    gl.RG_INTEGER,   // format
+    gl.INT,  // type
     data
   );
 }
@@ -188,3 +223,39 @@ export function overwriteRG32FTexture(gl: WebGL2RenderingContext, xoff: number, 
     data
   );
 }
+
+
+export function createRGBA32FTexture(gl: WebGL2RenderingContext, width: number, height: number, data: Float32Array) {
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1); // see https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,                // mip level
+    gl.RGBA32F,          // internal format
+    width,
+    height,
+    0,                // border
+    gl.RGBA,           // format
+    gl.FLOAT,         // type
+    data
+  );
+  return tex;
+}
+
+export function overwriteRGBA32FTexture(gl: WebGL2RenderingContext, xoff: number, yoff: number, width: number, height: number, data: Float32Array) {
+  gl.texSubImage2D(
+    gl.TEXTURE_2D,
+    0,                // mip level
+    xoff,             // xoffset
+    yoff,             // yoffset
+    width,            // width
+    height,           // height
+    gl.RGBA,           // format
+    gl.FLOAT,         // type
+    data
+  );
+}
+
