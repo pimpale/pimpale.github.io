@@ -1,10 +1,22 @@
 import ArticleLayout from '../components/ArticleLayout';
 import Section from '../components/Section';
 
+import format from 'date-fns/format';
+
 import { Article, articleData } from '../components/ArticleData';
 
-export const ArticleLink = ({ a }: { a: Article }) =>
-  <a href={a.url} children={a.name} />
+type ArticleLinkProps = {
+  a: Article,
+  showDate?: boolean
+}
+
+export const ArticleLink = ({ a, showDate }: ArticleLinkProps) => {
+  if (showDate === true) {
+    return <a href={a.url} children={`${a.name} (${format(a.published, "MMM d, y")})`} />
+  } else {
+    return <a href={a.url} children={a.name} />
+  }
+}
 
 const Articles = () =>
   <Section id="articles" name="Articles">

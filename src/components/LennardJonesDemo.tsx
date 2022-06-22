@@ -439,8 +439,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
-    // destroy webgl
-    this.gl.getExtension('WEBGL_lose_context')!.loseContext();
   }
 
   animationLoop = () => {

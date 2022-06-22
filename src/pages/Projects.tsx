@@ -137,8 +137,6 @@ const ProjectsPage = () => <ArticleLayout>{
         { key: "Play the Game!", url: "../voxelclone/index.html" },
       ]}
     />
-
-
     <Project
       id="torus-weather-sim"
       title="Torus Weather Simulation"
@@ -178,8 +176,6 @@ const ProjectsPage = () => <ArticleLayout>{
       </>
       }
     />
-
-
     <Project
       id="vulkan-voxel-renderer"
       title="Vulkan Voxel Renderer"
@@ -249,6 +245,7 @@ const ProjectsPage = () => <ArticleLayout>{
       links={[
         { key: "Source Code", url: "https://github.com/pimpale/lasagna" },
       ]}
+      articles={[articleData.get('lasagna')!]}
       explanation={
         <>
           <img src={LasagnaLogo} className="border border-dark d-block mx-auto mb-5" style={{ width: "30rem" }} alt="Lasagna Logo" />

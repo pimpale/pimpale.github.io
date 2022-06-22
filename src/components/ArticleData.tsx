@@ -62,7 +62,13 @@ export const articleData:Map<string, Article> = new Map([
     ["lasagna", {
         name:"Lasagna: Combining Lisp and Forth",
         url: '../lasagna.html',
-        published: parse("Jun 2022", "MMM y", new Date()),
+        published: parse("20 Jun 2022", "d MMM y", new Date()),
         listed: true,
+    }],
+    ["whyvoxels", {
+        name:"Why do all voxel games use cubes?",
+        url: '../whyvoxels.html',
+        published: parse("22 Jun 2022", "d MMM y", new Date()),
+        listed: false,
     }],
 ]);
