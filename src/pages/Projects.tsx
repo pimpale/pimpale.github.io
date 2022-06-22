@@ -26,7 +26,8 @@ import VulkanTriangleV2Screenshot from "../assets/projects/vulkan-triangle-v2_sc
 import COpenCLRaymarcherSierpinskiScreenshot from "../assets/projects/c-opencl-raymarcher_sierpinski.png";
 import COpenCLRaymarcherWarp from "../assets/projects/c-opencl-raymarcher_warp.gif";
 import LasagnaLogo from "../assets/projects/lasagna.png";
-import LasagnaFizzbuzzTxtUrl from "../assets/projects/lasagna_fizzbuzz.txt?url";
+
+import outdent from 'outdent';
 
 type ToggleableImageListProps = {
   children: React.ReactNode[],
@@ -256,18 +257,37 @@ const ProjectsPage = () => <ArticleLayout>{
             (hello world) print
           </SyntaxHighligher>
           <h4 className="mb-3">Fizzbuzz</h4>
-          <Async promise={fetchText(LasagnaFizzbuzzTxtUrl)}>
-            <Async.Pending>
-              <div className="spinner-border" role="status" />
-            </Async.Pending>
-            <Async.Fulfilled<string>>{code =>
-              <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
-            }</Async.Fulfilled>
-            <Async.Rejected>
-              {/* TODO: put error here */}
-              <div className="spinner-border" role="status" />
-            </Async.Rejected>
-          </Async>
+          <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>{outdent`
+            100
+            1 ( # loop
+              # Although the loop counts down, we must count up
+              dupu8
+              100 -u8
+
+              dupu8 3 %u8 0 ==u8 dupu8 5 %u8 0 ==u8 &&u8 #if
+              (
+                (fizz buzz) println
+              )
+              # Else
+              (
+                dupu8 3 %u8 0 ==u8 #if
+                (
+                  (fizz) println
+                )
+                # Else
+                (
+                  dupu8 5 %u8 0 ==u8 #if
+                  (
+                    (buzz) println
+                  ) () ifelse
+                ) ifelse
+              ) ifelse
+
+              dropu8 # Drop the 100 - version
+              1 -u8  # Subtract 1 from counter
+              dupu8  # Make copy for loop to consume
+            ) loop
+          `}</SyntaxHighligher>
         </>
       }
     />
