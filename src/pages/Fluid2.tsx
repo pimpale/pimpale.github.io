@@ -268,7 +268,6 @@ const Fluid2 = () => <ArticleLayout>{
       <AsideCard title="Simulating a solution to Navier-Stokes">
         <p>
           Let's walk through what we are going to do to in our simulation.
-
         </p>
         <ol>
         </ol>

@@ -20,6 +20,9 @@ const TorusWeatherDemo1Url = "../demo_fluid_torus_1.html";
 const TorusWeatherDemo2Url = "../demo_fluid_torus_2.html";
 const TorusWeatherArticleUrl = '../terraingeneration2.html';
 
+import Cs174AProjectScreenshot1 from "../assets/projects/cs174a_project_screenshot1.png";
+import Cs174AProjectScreenshot2 from "../assets/projects/cs174a_project_screenshot2.png";
+
 import CompugenesisScreenshot from "../assets/projects/compugenesis_screenshot.png";
 import CompugenesisFlowchart from "../assets/projects/compugenesis_flowchart.png";
 import VulkanTriangleV2Screenshot from "../assets/projects/vulkan-triangle-v2_screenshot.png";
@@ -43,7 +46,7 @@ const ToggleableImageList = (props: ToggleableImageListProps) => {
 
   const compressedStyle = {
     overflow: "hidden" as const,
-    height: "20rem",
+    maxHeight: "20rem",
     mask: `linear-gradient(180deg, black, rgba(255, 255, 255, ${opacity})) center bottom/100% 5rem no-repeat, linear-gradient(180deg, black, black) center top/100% calc(100% - 5rem) no-repeat`
   }
 
@@ -65,7 +68,7 @@ type ProjectProps = {
   begindate: Date,
   enddate?: Date,
   links: { key: string, url: string }[],
-  images: React.ReactNode[],
+  images?: React.ReactNode[],
 }
 
 const Project = (props: ProjectProps) =>
@@ -80,12 +83,54 @@ const Project = (props: ProjectProps) =>
     <ul>
       {props.links.map(({ key, url }, i) => <li key={i}>{key}: <HrefLink href={url} /></li>)}
     </ul>
-    <h5>Screenshots</h5>
-    <ToggleableImageList children={props.images} />
+    {props.images !== undefined
+      ? <>
+        <h5>Screenshots</h5>
+        <ToggleableImageList children={props.images} />
+      </>
+      : null
+    }
   </Section>
 
 const ProjectsPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
+
+    <Project
+      id="browser-voxel-game"
+      title="Browser Voxel Game"
+      blurb="CS-174A Project"
+      begindate={parse("Apr 2022", "MMM y", new Date())}
+      enddate={parse("Jun 2022", "MMM y", new Date())}
+      explanation={<>
+        <p>
+          This project aims to replicate the popular game Minecraft!
+          In our version of the game, we predominantly support creative mode, with some aspects of survival mode supported as well.
+          We also add realistic shadows and lighting.
+          Made for the CS-174A (Intro to Computer Graphics) class at UCLA.
+        </p>
+        <h4>Features</h4>
+        <ul>
+          <li>Walking, Jumping, and Collision Detection</li>
+          <li>Transparency</li>
+          <li>Break and place blocks</li>
+          <li>Infinite world generation</li>
+          <li>Lighting using shadow maps</li>
+          <li>Diffuse illumination</li>
+        </ul>
+        <p>
+          Made with the help of Nidhi Panchal
+        </p>
+      </>}
+      images={[
+        <img src={Cs174AProjectScreenshot1} className="border border-dark w-100" alt="Showcasing various blocks" />,
+        <img src={Cs174AProjectScreenshot2} className="border border-dark w-100" alt="House Interior with lighting" />
+      ]}
+      links={[
+        { key: "Source code", url: "https://github.com/pimpale/cs174a-project" },
+        { key: "Play the Game!", url: "../voxelclone/index.html" },
+      ]}
+    />
+
 
     <Project
       id="torus-weather-sim"
@@ -147,14 +192,14 @@ const ProjectsPage = () => <ArticleLayout>{
           <li>Infinite terrain generation</li>
           <li>Textured blocks (using texture atlas)</li>
           <li>Proper camera movement</li>
+          <li>Destroying blocks</li>
+          <li>Adding blocks</li>
         </ul>
         <h4>Goals</h4>
         <p>
           We will add these later at some point, but they're not present right now:
         </p>
         <ul>
-          <li>Destroying blocks</li>
-          <li>Adding blocks</li>
           <li>Being able to walk around without flying</li>
           <li>Entities</li>
           <li>Block picker</li>
@@ -188,34 +233,38 @@ const ProjectsPage = () => <ArticleLayout>{
       explanation={<> </>}
     />
 
-    <Section name="Lasagna" id="lasagna">
-      <figure className="text-center my-3">
-        <img src={LasagnaLogo} className="border border-dark mx-auto d-block w-25" alt="Lasagna Logo" />
-      </figure>
-      <p>
-        Very small stack based language. Influenced by Lisp and Forth.
-      </p>
-      <h4 className="mb-3">Hello World</h4>
-      <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>
-        (hello world) print
-      </SyntaxHighligher>
-      <h4 className="mb-3">Fizzbuzz</h4>
-      <Async promise={fetchText(LasagnaFizzbuzzTxtUrl)}>
-        <Async.Pending>
-          <div className="spinner-border" role="status" />
-        </Async.Pending>
-        <Async.Fulfilled<string>>{code =>
-          <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
-        }</Async.Fulfilled>
-        <Async.Rejected>
-          {/* TODO: put error here */}
-          <div className="spinner-border" role="status" />
-        </Async.Rejected>
-      </Async>
-      <p className="mt-4">
-        Link: <HrefLink href="https://github.com/pimpale/lasagna" />
-      </p>
-    </Section>
+    <Project
+      id="lasagna"
+      title="Lasagna"
+      blurb="Very small stack based language. Influenced by Lisp and Forth."
+      begindate={parse("Nov 2020", "MMM y", new Date())}
+      enddate={parse("Mar 2021", "MMM y", new Date())}
+      links={[
+        { key: "Source Code", url: "https://github.com/pimpale/lasagna" },
+      ]}
+      explanation={
+        <>
+            <img src={LasagnaLogo} className="border border-dark d-block mx-auto mb-5" style={{width: "30rem"}} alt="Lasagna Logo" />
+          <h4 className="mb-3">Hello World</h4>
+          <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>
+            (hello world) print
+          </SyntaxHighligher>
+          <h4 className="mb-3">Fizzbuzz</h4>
+          <Async promise={fetchText(LasagnaFizzbuzzTxtUrl)}>
+            <Async.Pending>
+              <div className="spinner-border" role="status" />
+            </Async.Pending>
+            <Async.Fulfilled<string>>{code =>
+              <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>{code}</SyntaxHighligher>
+            }</Async.Fulfilled>
+            <Async.Rejected>
+              {/* TODO: put error here */}
+              <div className="spinner-border" role="status" />
+            </Async.Rejected>
+          </Async>
+        </>
+      }
+    />
   </>
 }</ArticleLayout >
 
