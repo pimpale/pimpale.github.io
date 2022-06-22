@@ -12,37 +12,37 @@ export type Article = {
 
 export const articleData:Map<string, Article> = new Map([
     ["terraingeneration1", {
-        name:"Terrain Generation 1 - Donut World Topology",
+        name:"Terrain Generation 1: Donut World Topology",
         url: '../terraingeneration1.html',
         published: parse("Jun 2021", "MMM y", new Date()),
         listed: true,
     }],
     ["fluid1", {
-        name:"Fluid Simulation 1 - Learning WebGL with Heat Transfer Simulation",
+        name:"Fluid Simulation 1: Learning WebGL with Heat Transfer Simulation",
         url: '../fluid1.html',
         published: parse("Feb 2022", "MMM y", new Date()),
         listed: true,
     }],
     ["fluid2", {
-        name:"Fluid Simulation 2 - WebGL Fluid Simulation from Scratch!",
+        name:"Fluid Simulation 2: WebGL Fluid Simulation from Scratch!",
         url: '../fluid2.html',
         published: parse("Apr 2022", "MMM y", new Date()),
         listed: true,
     }],
     ["fluid3", {
-        name:"Fluid Simulation 3 - Smoothed Particle Hydrodynamics",
+        name:"Fluid Simulation 3: Smoothed Particle Hydrodynamics",
         url: '../fluid3.html',
         published: parse("Apr 2022", "MMM y", new Date()),
         listed: false,
     }],
     ["terraingeneration2", {
-        name:"Terrain Generation 2 - Donut World Weather 1",
+        name:"Terrain Generation 2: Donut World Weather 1",
         url: '../terraingeneration2.html',
         published: parse("Apr 2022", "MMM y", new Date()),
         listed: true,
     }],
     ["gravity", {
-        name:"Gravity - WebGL Simulation",
+        name:"Gravity: WebGL Simulation",
         url: '../gravity.html',
         published: parse("Apr 2022", "MMM y", new Date()),
         listed: true,

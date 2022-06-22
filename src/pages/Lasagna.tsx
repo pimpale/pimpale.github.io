@@ -20,15 +20,35 @@ const LasagnaPage = () => <ArticleLayout>{
 
     <Section id="lasagna" name="Lasagna">
       <p>
-        Very small stack based language.
+        Very small stack based programming language.
       </p>
       <img src={LasagnaLogo} className="border border-dark d-block mx-auto mb-5" style={{ width: "30rem" }} alt="Lasagna Logo" />
+      <h4>Motivation</h4>
+      <p>
+        I created Lasagna mostly for fun, but also to try my hand at writing a very simple intepreter in C.
+        The entire source code (at time of writing) is only 824 lines of C, and could easily be compressed further while maintaining readability.
+      </p>
+      <p>
+        The language is very similar to <a href="https://en.wikipedia.org/wiki/Forth_(programming_language)">Forth</a>,
+        which similarly uses a stack to store arguments for functions.
+      </p>
+      <p>
+        It shares with <a href="https://en.wikipedia.org/wiki/Lisp_(programming_language)">Lisp</a> the property
+        of <a href="https://en.wikipedia.org/wiki/Homoiconicity">homoiconicity</a>.
+        This means that a program written in Lasagna treats its own code as data.
+        Lisp accomplishes this using lists, which means any Lisp code can be represented as a list.
+        Lasagna uses strings for this purpose.
+      </p>
+      <p>
+        Lasagna syntax uses code stored in strings heavily, for loops, if statements, and other control structures.
+        The string syntax is somewhat inspired by Lisp, since we use parentheses instead of double quotes.
+      </p>
     </Section>
-
     <Section id="usage" name="How to Use">
       <h4>Building the Interpreter</h4>
       <p>
-        First, ensure that you have a C Compiler installed (Clang and GCC both work).
+        First, ensure that you have <a href="https://en.wikipedia.org/wiki/Clang">Clang</a> installed,
+        as well as <a href="https://en.wikipedia.org/wiki/Make_(software)">make</a> and <a href="https://en.wikipedia.org/wiki/Find_(Unix)">find</a>.
       </p>
       <p>
         Then, clone the repository, and from within the top level folder run:
@@ -38,7 +58,7 @@ const LasagnaPage = () => <ArticleLayout>{
       </SyntaxHighligher>
       <h4>Running the Interpreter</h4>
       <p>
-        The interpreter binary will be located at <code>obj/lasagna</code>.
+        After compilation, the interpreter binary will be located at <code>obj/lasagna</code>.
       </p>
       <p>
         To get an interactive shell, run:
@@ -173,17 +193,17 @@ const LasagnaPage = () => <ArticleLayout>{
         Then we push the true branch and the false branch to the stack.
         When the ifelse function runs, all three of these are popped off the stack.
         Since the condition is 1, the first branch is evaluated.
-        This pushes the string "if the following condition is true, this will print" to the stack and then prints it.
+        This pushes the string <code>if the following condition is true, this will print</code> to the stack and then prints it.
       </p>
       <h4>Defining a Function</h4>
       <p>
-          In order to define a new function, you'll have to use the mkfun function.
+        In order to define a new function, you'll have to use the <code>mkfun</code> function.
       </p>
       <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>{outdent`
         ((hello) println) (say-hello) mkfun
       `}</SyntaxHighligher>
       <p>
-        Now, the word <code>say-hello</code> refers a function name that we can use.
+        Now, the word <code>say-hello</code> refers to a function name that we can use.
       </p>
       <p>
         The following example should print out <code>hello world</code>, if we run it after the above defintion:
@@ -193,48 +213,55 @@ const LasagnaPage = () => <ArticleLayout>{
       `}</SyntaxHighligher>
       <h4>Loops</h4>
       <p>
-        Loops loop forever as long as the value on the stack is not 0. They pop the value of the stack before executing the body.
+        To make a loop we use the <code>loop</code> function.
+        Loops repeatedly evaluate the given string as long as the topmost value on the stack is not 0.
+        They pop the value of the stack before executing the body.
       </p>
       <p>To print a word 10 times:</p>
       <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>{outdent`
         10
         (
-        (a word) println
-        1 -u8
-        dupu8
+          (a word) println
+          1 -u8
+          dupu8
         ) loop
       `}</SyntaxHighligher>
-
-      <p>Fizzbuzz:</p>
+      <p>
+        Note that we use the <code>dupu8</code> function to duplicate the topmost value on the stack before the end of the loop.
+      </p>
+      <h4>Fizzbuzz</h4>
+      <p>
+        Here's how to write the classic Fizzbuzz program in Lasagna:
+      </p>
       <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>{outdent`
         100
         1 ( # loop
-        # Although the loop counts down, we must count up
-        dupu8
-        100 -u8
+          # Although the loop counts down, we must count up
+          dupu8
+          100 -u8
 
-        dupu8 3 %u8 0 ==u8 dupu8 5 %u8 0 ==u8 &&u8 #if
-        (
-        (fizz buzz) println
-        )
-        # Else
-        (
-        dupu8 3 %u8 0 ==u8 #if
-        (
-        (fizz) println
-        )
-        # Else
-        (
-        dupu8 5 %u8 0 ==u8 #if
-        (
-        (buzz) println
-        ) () ifelse
-        ) ifelse
-        ) ifelse
+          dupu8 3 %u8 0 ==u8 dupu8 5 %u8 0 ==u8 &&u8 #if
+          (
+            (fizz buzz) println
+          )
+          # Else
+          (
+            dupu8 3 %u8 0 ==u8 #if
+            (
+              (fizz) println
+            )
+            # Else
+            (
+              dupu8 5 %u8 0 ==u8 #if
+              (
+                (buzz) println
+              ) () ifelse
+            ) ifelse
+          ) ifelse
 
-        dropu8 # Drop the 100 - version
-        1 -u8  # Subtract 1 from counter
-        dupu8  # Make copy for loop to consume
+          dropu8 # Drop the 100 - version
+          1 -u8  # Subtract 1 from counter
+          dupu8  # Make copy for loop to consume
         ) loop
       `}</SyntaxHighligher>
     </Section>
