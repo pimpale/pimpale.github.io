@@ -16,10 +16,6 @@ import parse from 'date-fns/parse'
 
 import TorusWeatherScreenshot from "../assets/projects/torus_weather_screenshot.png";
 
-const TorusWeatherDemo1Url = "../demo_fluid_torus_1.html";
-const TorusWeatherDemo2Url = "../demo_fluid_torus_2.html";
-const TorusWeatherArticleUrl = '../terraingeneration2.html';
-
 import Cs174AProjectScreenshot1 from "../assets/projects/cs174a_project_screenshot1.png";
 import Cs174AProjectScreenshot2 from "../assets/projects/cs174a_project_screenshot2.png";
 
@@ -67,6 +63,7 @@ type ProjectProps = {
   explanation?: React.ReactNode,
   begindate: Date,
   enddate?: Date,
+  articles?: Article[],
   links: { key: string, url: string }[],
   images?: React.ReactNode[],
 }
@@ -79,6 +76,15 @@ const Project = (props: ProjectProps) =>
       : <p><strong>Date: </strong>{format(props.begindate, "MMM y")} to present</p>
     }
     {props.explanation}
+    {props.articles !== undefined
+      ? <>
+        <h5>Articles</h5>
+        <ul>
+          {props.articles.map((a, i) => <li key={i}><ArticleLink a={a} /></li>)}
+        </ul>
+      </>
+      : null
+    }
     <h5>Links</h5>
     <ul>
       {props.links.map(({ key, url }, i) => <li key={i}>{key}: <HrefLink href={url} /></li>)}
@@ -138,10 +144,10 @@ const ProjectsPage = () => <ArticleLayout>{
       blurb="A naive simulation of weather on a torus shaped planet."
       begindate={parse("Jan 2022", "MMM y", new Date())}
       enddate={parse("Mar 2022", "MMM y", new Date())}
+      articles={[articleData.get('terraingeneration2')!]}
       links={[
-        { key: "Demo 1", url: TorusWeatherDemo1Url },
-        { key: "Demo 2", url: TorusWeatherDemo2Url },
-        { key: "Article", url: TorusWeatherArticleUrl },
+        { key: "Demo 1", url: "../demo_fluid_torus_1.html" },
+        { key: "Demo 2", url: "../demo_fluid_torus_2.html" },
       ]}
       images={[
         <img src={TorusWeatherScreenshot} className="border border-dark" alt="Demo of the Torus Weather System" />
@@ -244,7 +250,7 @@ const ProjectsPage = () => <ArticleLayout>{
       ]}
       explanation={
         <>
-            <img src={LasagnaLogo} className="border border-dark d-block mx-auto mb-5" style={{width: "30rem"}} alt="Lasagna Logo" />
+          <img src={LasagnaLogo} className="border border-dark d-block mx-auto mb-5" style={{ width: "30rem" }} alt="Lasagna Logo" />
           <h4 className="mb-3">Hello World</h4>
           <SyntaxHighligher className="mx-5" showLineNumbers style={a11yDark}>
             (hello world) print
@@ -273,6 +279,8 @@ import { createRoot } from 'react-dom/client';
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
+import { Article, articleData } from '../components/ArticleData';
+import { ArticleLink } from '../components/Articles';
 
 const root = createRoot(document.getElementById('root')!);
 root.render(

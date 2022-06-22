@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
@@ -7,13 +6,8 @@ import ArticleLayout from '../components/ArticleLayout';
 
 import AsideCard from '../components/AsideCard';
 
-
 import WebGL2GravityDemo from '../components/WebGL2GravityDemo';
 import LennardJonesDemo from '../components/LennardJonesDemo';
-
-// Bootstrap CSS & JS
-import '../styles/style.scss';
-import 'bootstrap/dist/js/bootstrap';
 
 const GravityPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -44,9 +38,15 @@ const GravityPage = () => <ArticleLayout>{
   </>
 }</ArticleLayout>
 
-ReactDOM.render(
+import { createRoot } from 'react-dom/client';
+
+// Bootstrap CSS & JS
+import '../styles/style.scss';
+import 'bootstrap/dist/js/bootstrap';
+
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
     <GravityPage />
   </React.StrictMode>,
-  document.getElementById('root')
 );

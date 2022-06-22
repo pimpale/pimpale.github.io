@@ -53,4 +53,10 @@ export const articleData:Map<string, Article> = new Map([
         published: parse("Apr 2022", "MMM y", new Date()),
         listed: true,
     }],
+    ["lasagna", {
+        name:"Lasagna: Combining Lisp and Forth",
+        url: '../lasagna.html',
+        published: parse("Jun 2022", "MMM y", new Date()),
+        listed: true,
+    }],
 ]);
