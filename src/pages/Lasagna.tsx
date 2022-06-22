@@ -9,11 +9,13 @@ import AsideCard from '../components/AsideCard';
 import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-
 import LasagnaLogo from "../assets/projects/lasagna.png";
 import LasagnaFizzbuzzTxtUrl from "../assets/projects/lasagna_fizzbuzz.txt?url";
 
 import outdent from 'outdent';
+
+import { ArticleLink } from '../components/Articles';
+import { articleData } from '../components/ArticleData';
 
 const LasagnaPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -43,9 +45,20 @@ const LasagnaPage = () => <ArticleLayout>{
         Lasagna syntax uses code stored in strings heavily, for loops, if statements, and other control structures.
         The string syntax is somewhat inspired by Lisp, since we use parentheses instead of double quotes.
       </p>
+      <h4>Name/Logo Explanation</h4>
+      <p>
+        It's named Lasagna due to its stack based nature.
+        Just as a lasagna has many delicious pasta layers, the executing program will also have layers of tasty strings and numbers.
+      </p>
+      <p>
+        The logo is remniscent of a famous cartoon cat who is notoriously fond of lasagna.
+      </p>
     </Section>
     <Section id="usage" name="How to Use">
       <h4>Building the Interpreter</h4>
+      <p>
+        The source code is located here: <HrefLink href="https://github.com/pimpale/lasagna" />
+      </p>
       <p>
         First, ensure that you have <a href="https://en.wikipedia.org/wiki/Clang">Clang</a> installed,
         as well as <a href="https://en.wikipedia.org/wiki/Make_(software)">make</a> and <a href="https://en.wikipedia.org/wiki/Find_(Unix)">find</a>.
@@ -264,6 +277,128 @@ const LasagnaPage = () => <ArticleLayout>{
           dupu8  # Make copy for loop to consume
         ) loop
       `}</SyntaxHighligher>
+    </Section>
+    <Section id="conclusion" name="Conclusion">
+      <p>
+        While Lasagna is a pretty simple language, it's also incredibly slow, and pretty much useless for production purposes.
+        Nonetheless, it was very fun and educational to make. Here is a list of the things I learned while making the project:
+      </p>
+      <ul>
+        <li>
+          <p>
+            It's hard to make a language homoiconic as well as legible.
+            Lasagna is not a particularly legible language.
+            The Forth style <a href="https://en.wikipedia.org/wiki/Reverse_Polish_notation">RPN</a> syntax is not intuititve
+            since most people are accustomed to reading equations with functions at the front.
+            Lasagna also has the disadvantage that math operations aren't infixed.
+          </p>
+          <p>
+            I think Lisp actually does a fairly good job with this (definitely better than Lasagna, since functions go at the front),
+            but even it is not super friendly when it comes to math.
+          </p>
+        </li>
+        <li>
+          C is a very poor language for writing templated code.
+          Take a look at this monstrosity:
+          <SyntaxHighligher className="mx-5" showLineNumbers language="c" style={a11yDark}>{outdent`
+            /* Function that takes in two args returns one */
+            #define DEFINE_ARG2_RET1_NATIVE_FUN(type, identifier, operation1) \\
+              static void identifier##_##type(Vector *stack, Table *funtab) { \\
+                UNUSED(funtab);                                               \\
+                type arg1, arg2, ret1;                                        \\
+                popVector(stack, &arg1, sizeof(arg1));                        \\
+                popVector(stack, &arg2, sizeof(arg2));                        \\
+                ret1 = operation1;                                            \\
+                *((type *)pushVector(stack, sizeof(ret1))) = ret1;            \\
+              }
+
+            #define DEFINE_TYPE(type)                                                \\
+              /* Define Math Functions */                                            \\
+              DEFINE_ARG2_RET1_NATIVE_FUN(type, add, arg2 + arg1)                    \\
+              DEFINE_ARG2_RET1_NATIVE_FUN(type, sub, arg2 - arg1)                    \\
+              DEFINE_ARG2_RET1_NATIVE_FUN(type, mul, arg2 *arg1)                     \\
+              DEFINE_ARG2_RET1_NATIVE_FUN(type, div, arg2 / arg1)                    \\
+              DEFINE_ARG2_RET1_NATIVE_FUN(type, mod, arg2 % arg1)                    \\
+              DEFINE_ARG2_RET1_NATIVE_FUN(type, or, arg2 || arg1)                    \\
+              DEFINE_ARG2_RET1_NATIVE_FUN(type, and, arg2 &&arg1)                    \\
+              DEFINE_ARG2_RET1_NATIVE_FUN(type, equ, arg2 == arg1)                   \\
+              /* Define dup, drop, and swp */                                        \\
+              static void dup_##type(Vector *stack, Table *funtab) {                 \\
+                UNUSED(funtab);                                                      \\
+                type arg1, ret1, ret2;                                               \\
+                popVector(stack, &arg1, sizeof(arg1));                               \\
+                ret1 = arg1;                                                         \\
+                ret2 = arg1;                                                         \\
+                *((type *)pushVector(stack, sizeof(ret1))) = ret1;                   \\
+                *((type *)pushVector(stack, sizeof(ret2))) = ret2;                   \\
+              }                                                                      \\
+              static void drop_##type(Vector *stack, Table *funtab) {                \\
+                UNUSED(funtab);                                                      \\
+                type arg1;                                                           \\
+                popVector(stack, &arg1, sizeof(arg1));                               \\
+              }                                                                      \\
+              static void swp_##type(Vector *stack, Table *funtab) {                 \\
+                UNUSED(funtab);                                                      \\
+                type arg1, arg2, ret1, ret2;                                         \\
+                popVector(stack, &arg1, sizeof(arg1));                               \\
+                popVector(stack, &arg2, sizeof(arg2));                               \\
+                ret1 = arg1;                                                         \\
+                ret2 = arg2;                                                         \\
+                *((type *)pushVector(stack, sizeof(ret1))) = ret1;                   \\
+                *((type *)pushVector(stack, sizeof(ret2))) = ret2;                   \\
+              }
+
+            #define NATIVE_FUNCTION_PUT(funName, stringLiteral)                     \\
+              do {                                                                  \\
+                char *string = stringLiteral;                                       \\
+                Function f;                                                         \\
+                initNativeFunction(&f, &(funName));                                 \\
+                putTable(funtab, string, strlen(string) + 1, &f, sizeof(Function)); \\
+              } while (0)
+
+            #define PUT_TYPE(type, name)                        \\
+              do {                                              \\
+                NATIVE_FUNCTION_PUT(add_##type, "+" #name);     \\
+                NATIVE_FUNCTION_PUT(sub_##type, "-" #name);     \\
+                NATIVE_FUNCTION_PUT(mul_##type, "*" #name);     \\
+                NATIVE_FUNCTION_PUT(div_##type, "/" #name);     \\
+                NATIVE_FUNCTION_PUT(mod_##type, "%" #name);     \\
+                NATIVE_FUNCTION_PUT(or_##type, "||" #name);     \\
+                NATIVE_FUNCTION_PUT(and_##type, "&&" #name);    \\
+                NATIVE_FUNCTION_PUT(equ_##type, "==" #name);    \\
+                NATIVE_FUNCTION_PUT(dup_##type, "dup" #name);   \\
+                NATIVE_FUNCTION_PUT(drop_##type, "drop" #name); \\
+                NATIVE_FUNCTION_PUT(swp_##type, "swp" #name);   \\
+              } while (0)
+
+            DEFINE_TYPE(uint8_t)
+            DEFINE_TYPE(uint64_t)
+
+            void initPrelude(Table *funtab) {
+              PUT_TYPE(uint8_t, u8);
+              PUT_TYPE(uint64_t, u64);
+
+              NATIVE_FUNCTION_PUT(mkfun, "mkfun");
+              NATIVE_FUNCTION_PUT(delfun, "delfun");
+              NATIVE_FUNCTION_PUT(eval, "eval");
+              NATIVE_FUNCTION_PUT(ifelse, "ifelse");
+              NATIVE_FUNCTION_PUT(loop, "loop");
+              NATIVE_FUNCTION_PUT(print, "print");
+              NATIVE_FUNCTION_PUT(println, "println");
+              NATIVE_FUNCTION_PUT(dump, "dump");
+            }
+         `}</SyntaxHighligher>
+          C has a lot of other annoying problems as well, like pointer decay, it's pointer syntax, and the way macros work.
+        </li>
+      </ul>
+      <h4>Next Steps</h4>
+      <p>
+        I think I'm pretty much finished with Lasagna, and I don't intend on developing it further.
+        However, if you find any bugs or have some suggestions, let me know.
+      </p>
+      <p>
+        Regarding programming language design, my attention has shifted to <ArticleLink a={articleData.get("achernar")!} />.
+      </p>
     </Section>
   </>
 }</ArticleLayout>

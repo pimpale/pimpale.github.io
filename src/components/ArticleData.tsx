@@ -47,6 +47,12 @@ export const articleData:Map<string, Article> = new Map([
         published: parse("Apr 2022", "MMM y", new Date()),
         listed: true,
     }],
+    ["achernar", {
+        name:"Achernar",
+        url: '../achernar.html',
+        published: parse("Apr 2022", "MMM y", new Date()),
+        listed: true,
+    }],
     ["lennardjones1", {
         name:"WebGL Simulation: Lennard Jones",
         url: '../lennardjones1.html',
