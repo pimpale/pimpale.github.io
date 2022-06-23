@@ -60,6 +60,8 @@ uniform float u_attraction;
 uniform float u_wall_spring_damping;
 uniform float u_wall_spring_constant;
 
+uniform vec2 u_dimensions;
+
 void main() {
   // get the resolution
   ivec2 resolution = textureSize(u_particle_state_tex, 0);
@@ -86,8 +88,7 @@ void main() {
           vec2 r_hat = r_vec/r;
 
           float force_strength = u_attraction*pow(r, -7.0) - u_repulsion*pow(r, -13.0);
-          force_strength = clamp(m2 * force_strength, -0.1, 0.1);
-          vec2 accel = r_hat*force_strength/m1;
+          vec2 accel = r_hat*clamp(force_strength/m1, -0.1, 0.1);
 
           if(!isnan(accel.x) && !isnan(accel.y)) {
             v1 += accel;
@@ -101,10 +102,10 @@ void main() {
     v1.x += u_x_gravity;
     v1.y += u_y_gravity;
   
-    const float xl = 10.0;
-    const float yl = 10.0;
-    const float xg = 502.0;
-    const float yg = 502.0;
+    float xl = 10.0;
+    float yl = 10.0;
+    float xg = u_dimensions.x - 10.0;
+    float yg = u_dimensions.y - 10.0;
   
     if(p1.x < xl) {
       v1.x = u_wall_spring_damping*v1.x + u_wall_spring_constant*pow(p1.x-xl, 2.0);
@@ -160,10 +161,10 @@ void main() {
   int state1 = texture(u_particle_state_tex, v_texCoord).x;
 
   if(state1 == 0) {
-      vec2 p_to_mouse = p1 - u_mouse;
+      vec2 p_to_mouse = u_mouse - p1;
       float d = length(p_to_mouse);
       if(d < 50.0) {
-          v1 += -0.01*(p_to_mouse/(d));
+          v1 += 0.01*(p_to_mouse/(d));
           v1 *= 0.9;
       }
   }
@@ -192,10 +193,13 @@ in vec2 v_texCoord;
 // the output
 out ivec4 value;
 
-const vec2 upperCorner = vec2(0, 0);
-const vec2 lowerCorner = vec2(512, 512);
+uniform vec2 u_dimensions;
+
 
 void main() {
+  vec2 upperCorner = vec2(0, 0);
+  vec2 lowerCorner = u_dimensions;
+
   int state = texture(u_particle_state_tex, v_texCoord).x;
   int mass = texture(u_particle_state_tex, v_texCoord).y;
   vec2 position = texture(u_particle_position_velocity_tex, v_texCoord).xy;
@@ -380,6 +384,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.wallSpringConstantLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_wall_spring_constant')!;
       this.wallSpringDampingLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_wall_spring_damping')!;
 
+
+
       // setup our attributes to tell WebGL how to pull
       // the data from the buffer above to the position attribute
       this.gl.enableVertexAttribArray(positionLoc);
@@ -404,6 +410,9 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.gl.uniform1f(this.repulsionLoc, this.repulsionDefault);
       this.gl.uniform1f(this.wallSpringConstantLoc, this.wallSpringConstantDefault);
       this.gl.uniform1f(this.wallSpringDampingLoc, this.wallSpringDampingDefault);
+
+      const dimensionsLoc = this.gl.getUniformLocation(this.prog_apply_gravity, 'u_dimensions')!;
+      this.gl.uniform2f(dimensionsLoc, this.props.xsize, this.props.ysize);
 
 
       // Tell the shader to get the state texture from texture unit 0
@@ -439,6 +448,9 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         0,              // stride (0 = auto)
         0,              // offset
       );
+
+      const dimensionsLoc = this.gl.getUniformLocation(this.prog_handle_state, 'u_dimensions')!;
+      this.gl.uniform2f(dimensionsLoc, this.props.xsize, this.props.ysize);
 
       // bind uniforms
       this.gl.useProgram(this.prog_handle_state);
@@ -534,34 +546,35 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     }
 
 
-    // handle drawing
-    const mousePos = this.cmt.mousePos;
-    if (mousePos) {
-      // in order to draw the velocity texture we will execute a program
-      this.gl.useProgram(this.prog_apply_mouse);
-
-      // bind the source velocity texture to texture unit 1
-      this.gl.activeTexture(this.gl.TEXTURE1);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionVelocityTextures[this.particlePositionVelocityIndex]);
-      // set the framebuffer to draw at the other velocity texture
-      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particlePositionVelocityFramebuffers[(this.particlePositionVelocityIndex + 1) % 2]);
-
-      // set old and new mouse positions
-      this.gl.uniform2f(this.mouseLoc,
-        clamp(mousePos.current.x, 0, this.props.xsize),
-        clamp(mousePos.current.y, 0, this.props.ysize),
-      );
-
-      // execute program, doing paint
-      this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
-
-      this.particlePositionVelocityIndex = (this.particlePositionVelocityIndex + 1) % 2;
-    }
-
     // run the physics code
     const speed = this.range.current!.valueAsNumber;
     const iterations = speed * speed;
     for (let i = 0; i < iterations; i++) {
+      // handle drawing
+      const mousePos = this.cmt.mousePos;
+      if (mousePos) {
+        // in order to draw the velocity texture we will execute a program
+        this.gl.useProgram(this.prog_apply_mouse);
+
+        // bind the source velocity texture to texture unit 1
+        this.gl.activeTexture(this.gl.TEXTURE1);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionVelocityTextures[this.particlePositionVelocityIndex]);
+        // set the framebuffer to draw at the other velocity texture
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particlePositionVelocityFramebuffers[(this.particlePositionVelocityIndex + 1) % 2]);
+
+        // set old and new mouse positions
+        this.gl.uniform2f(this.mouseLoc,
+          clamp(mousePos.current.x, 0, this.props.xsize),
+          clamp(mousePos.current.y, 0, this.props.ysize),
+        );
+
+        // execute program, doing paint
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+        this.particlePositionVelocityIndex = (this.particlePositionVelocityIndex + 1) % 2;
+      }
+
+
 
       // we will handle_state now
       {
@@ -821,8 +834,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
           <canvas
             className="border border-dark"
             ref={this.render_canvas}
-            height={this.props.xsize}
-            width={this.props.ysize}
+            width={this.props.xsize}
+            height={this.props.ysize}
           />
         </div>
         <div className="col-md-4">
