@@ -9,11 +9,13 @@ import {
 } from '../utils/webgl';
 import { clamp } from '../utils/math';
 import { createCurlNoise } from '../utils/noise';
+import { CanvasMouseTracker, Point } from "../utils/canvas";
 
 type WebGL2FluidAdvectionDemoProps = {
   style?: React.CSSProperties,
   className?: string
-  size: number
+  xsize: number
+  ysize: number
 }
 
 // the vertex shader is used in 2 different programs, it basically is just for translating clip space
@@ -93,35 +95,84 @@ void main() {
         }
       }
     }
-  }
 
-  v1 *= (1.0-u_viscosity);
-
-  v1.x += u_x_gravity;
-  v1.y += u_y_gravity;
-
-  const float xl = 10.0;
-  const float yl = 10.0;
-  const float xg = 502.0;
-  const float yg = 502.0;
-
-  if(p1.x < xl) {
-    v1.x = u_wall_spring_damping*v1.x + u_wall_spring_constant*pow(p1.x-xl, 2.0);
+    v1 *= (1.0-u_viscosity);
+  
+    v1.x += u_x_gravity;
+    v1.y += u_y_gravity;
+  
+    const float xl = 10.0;
+    const float yl = 10.0;
+    const float xg = 502.0;
+    const float yg = 502.0;
+  
+    if(p1.x < xl) {
+      v1.x = u_wall_spring_damping*v1.x + u_wall_spring_constant*pow(p1.x-xl, 2.0);
+    }
+    if(p1.x > xg) {
+      v1.x = u_wall_spring_damping*v1.x -u_wall_spring_constant*pow(p1.x-xg, 2.0);
+    }
+    if(p1.y < yl) {
+      v1.y = u_wall_spring_damping*v1.y + u_wall_spring_constant*pow(p1.y-yl, 2.0);
+    }
+    if(p1.y > yg) {
+      v1.y = u_wall_spring_damping*v1.y -u_wall_spring_constant*pow(p1.y-yg, 2.0);
+    }
+  
+  
+    // apply new values
+    value = vec4(p1 + v1, v1);
+  } else {
+    // do nothing if state == 1
+    value = vec4(p1, v1);
   }
-  if(p1.x > xg) {
-    v1.x = u_wall_spring_damping*v1.x -u_wall_spring_constant*pow(p1.x-xg, 2.0);
-  }
-  if(p1.y < yl) {
-    v1.y = u_wall_spring_damping*v1.y + u_wall_spring_constant*pow(p1.y-yl, 2.0);
-  }
-  if(p1.y > yg) {
-    v1.y = u_wall_spring_damping*v1.y -u_wall_spring_constant*pow(p1.y-yg, 2.0);
+}
+`;
+
+
+// this fragment shader applies the gravitational force to all particles
+const apply_mouse_fs = `#version 300 es
+precision highp float;
+precision highp sampler2D;
+precision highp isampler2D;
+
+// the particle texture
+uniform isampler2D u_particle_state_tex;
+
+// the position / velocity texture
+uniform sampler2D u_particle_position_velocity_tex;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// the output
+out vec4 value;
+
+// new mouse position
+uniform vec2 u_mouse;
+
+void main() {
+  // our current position and velocity
+  vec2 p1 = texture(u_particle_position_velocity_tex, v_texCoord).xy;
+  vec2 v1 = texture(u_particle_position_velocity_tex, v_texCoord).zw;
+
+  // our current state and mass
+  int state1 = texture(u_particle_state_tex, v_texCoord).x;
+
+  if(state1 == 0) {
+      vec2 p_to_mouse = p1 - u_mouse;
+      float d = length(p_to_mouse);
+      if(d < 50.0) {
+          v1 += -0.01*(p_to_mouse/(d));
+          v1 *= 0.9;
+      }
   }
 
   // apply new values
-  value = vec4(p1 + v1, v1);
+  value = vec4(p1, v1);
 }
 `;
+
 
 // a no-op for now
 const handle_state_fs = `#version 300 es
@@ -157,22 +208,21 @@ void main() {
 `;
 
 
-type Point = {
-  x: number,
-  y: number
-}
-
-// TODO: learn how to handle error cases
-
 type WebGL2FluidAdvectionDemoState = {}
 
 class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoProps, WebGL2FluidAdvectionDemoState> {
+
+  private xsize = 40;
+  private ysize = 40;
 
   private particle_tex_xsize = 40;
   private particle_tex_ysize = 40;
 
   // this is the ref to the canvas we use to work with particles
   private particle_canvas = React.createRef<HTMLCanvasElement>();
+
+  // mouse status
+  private cmt!: CanvasMouseTracker;
 
   // this is the ref to the canvas we use to render
   private render_canvas = React.createRef<HTMLCanvasElement>();
@@ -218,8 +268,12 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   private particlePositionVelocityTextures: WebGLTexture[] = [];
   private particlePositionVelocityFramebuffers: WebGLFramebuffer[] = [];
 
+  // Mouse loc
+  private mouseLoc!: WebGLUniformLocation;
+
   private prog_apply_gravity!: WebGLProgram;
   private prog_handle_state!: WebGLProgram;
+  private prog_apply_mouse!: WebGLProgram;
 
   // The index of the mass texture we're using as a source
   private particleStateIndex = 0;
@@ -227,9 +281,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   // whether we need to reset on the next frame
   private needsReset = true;
-
-  // mouse status
-  private mousePos: { current: Point, previous: Point } | null = null;
 
   // data
   private state_data = new Int32Array(this.particle_tex_xsize * this.particle_tex_ysize * 4);
@@ -398,45 +449,54 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
     }
 
+    // build the paint on vel texture program
+    {
+      // create program
+      this.prog_apply_mouse = createProgram(
+        this.gl,
+        [
+          createShader(this.gl, this.gl.VERTEX_SHADER, vs),
+          createShader(this.gl, this.gl.FRAGMENT_SHADER, apply_mouse_fs),
+        ]
+      )!;
 
-    // add canvas handler
-    this.render_canvas.current!.addEventListener('pointerdown', this.handleMouseDown);
-    this.render_canvas.current!.addEventListener('pointermove', this.handleMouseMove);
-    window.addEventListener('pointerup', this.handleMouseUp);
-    // disable touch movements
-    this.render_canvas.current!.addEventListener("touchstart", this.discardTouchEvent)
-    this.render_canvas.current!.addEventListener("touchmove", this.discardTouchEvent)
-    this.render_canvas.current!.addEventListener("touchend", this.discardTouchEvent)
-    this.render_canvas.current!.addEventListener("touchcancel", this.discardTouchEvent)
+      const positionLoc = this.gl.getAttribLocation(this.prog_apply_mouse, 'a_position');
+      const particleStateTexLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_particle_state_tex');
+      const particlePositionVelocityTexLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_particle_position_velocity_tex');
+      this.mouseLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_mouse')!;
 
+      // setup our attributes to tell WebGL how to pull
+      // the data from the buffer above to the position attribute
+      this.gl.enableVertexAttribArray(positionLoc);
+      this.gl.vertexAttribPointer(
+        positionLoc,
+        2,         // size (num components)
+        this.gl.FLOAT,  // type of data in buffer
+        false,     // normalize
+        0,         // stride (0 = auto)
+        0,         // offset
+      );
+
+      // bind uniforms
+      this.gl.useProgram(this.prog_apply_mouse);
+      // Tell the shader to get the state texture from texture unit 0
+      this.gl.uniform1i(particleStateTexLoc, 0);
+      // Tell the shader to get the position texture from texture unit 1
+      this.gl.uniform1i(particlePositionVelocityTexLoc, 1);
+    }
+
+    this.cmt = new CanvasMouseTracker(this.render_canvas.current!);
+    //this.cmt.addMouseDownListener(this.handleMouseDown);
+    //this.cmt.addMouseMoveListener(this.handleMouseMove);
+    //this.cmt.addMouseUpListener(this.handleMouseUp);
 
     // start animation loop
     this.animationLoop();
   }
 
-  getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
-    const rect = canvas.getBoundingClientRect(); // abs. size of element
-    const scaleX = canvas.width / rect.width;    // relationship bitmap vs. element for X
-    const scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
-
-    return {
-      x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
-      y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
-    }
-  }
-
   componentWillUnmount() {
-
-    // remove listeners on render_canvas
-    this.render_canvas.current!.removeEventListener('pointerdown', this.handleMouseDown);
-    this.render_canvas.current!.removeEventListener('pointermove', this.handleMouseMove);
-    window.removeEventListener('pointerup', this.handleMouseUp);
-    // reenable touch movements
-    this.render_canvas.current!.removeEventListener("touchstart", this.discardTouchEvent)
-    this.render_canvas.current!.removeEventListener("touchmove", this.discardTouchEvent)
-    this.render_canvas.current!.removeEventListener("touchend", this.discardTouchEvent)
-    this.render_canvas.current!.removeEventListener("touchcancel", this.discardTouchEvent)
-
+    // remove canvas mouse tracker
+    this.cmt.cleanup();
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
   }
@@ -452,13 +512,13 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       for (let y = 0; y < this.particle_tex_ysize; y++) {
         for (let x = 0; x < this.particle_tex_xsize; x++) {
           const i = y * this.particle_tex_xsize + x;
-          state_data[i*2] = 0;
-          if (x < this.particle_tex_xsize - 20) {
-            state_data[i*2 + 1] = 1;
-            position_velocity_data[i * 4 + 0] = x * 4+ 20;
-            position_velocity_data[i * 4 + 1] = y * 4+ 20;
+          state_data[i * 2] = 0;
+          if (x < this.particle_tex_xsize - 0) {
+            state_data[i * 2 + 1] = 1;
+            position_velocity_data[i * 4 + 0] = x * 4 + 20;
+            position_velocity_data[i * 4 + 1] = y * 4 + 20;
           } else {
-            state_data[i*2 + 1] = -1;
+            state_data[i * 2 + 1] = -1;
             position_velocity_data[i * 4 + 0] = x * 4 + 200;
             position_velocity_data[i * 4 + 1] = y * 4 + 10;
           }
@@ -474,9 +534,33 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     }
 
 
+    // handle drawing
+    const mousePos = this.cmt.mousePos;
+    if (mousePos) {
+      // in order to draw the velocity texture we will execute a program
+      this.gl.useProgram(this.prog_apply_mouse);
+
+      // bind the source velocity texture to texture unit 1
+      this.gl.activeTexture(this.gl.TEXTURE1);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionVelocityTextures[this.particlePositionVelocityIndex]);
+      // set the framebuffer to draw at the other velocity texture
+      this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particlePositionVelocityFramebuffers[(this.particlePositionVelocityIndex + 1) % 2]);
+
+      // set old and new mouse positions
+      this.gl.uniform2f(this.mouseLoc,
+        clamp(mousePos.current.x, 0, this.props.xsize),
+        clamp(mousePos.current.y, 0, this.props.ysize),
+      );
+
+      // execute program, doing paint
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+      this.particlePositionVelocityIndex = (this.particlePositionVelocityIndex + 1) % 2;
+    }
+
     // run the physics code
     const speed = this.range.current!.valueAsNumber;
-    const iterations = speed*speed;
+    const iterations = speed * speed;
     for (let i = 0; i < iterations; i++) {
 
       // we will handle_state now
@@ -552,20 +636,17 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       this.gl.RGBA, // format
       this.gl.FLOAT, // type
       this.position_velocity_data // pixels
-
     );
 
     this.draw(this.state_data, this.position_velocity_data);
   }
 
-  private editData: { id: number, mass: number, dragging: Point | null } | null = null
+  private editData?: { id: number, mass: number, dragging?: Point };
 
-  handleMouseDown = (e: MouseEvent) => {
-    const v = this.getMousePos(this.render_canvas.current!, e);
-    this.mousePos = {
-      current: v,
-      previous: v
-    };
+  handleMouseDown = (v: Point) => {
+    if (this.editData?.dragging !== undefined) {
+      return;
+    }
 
     for (let i = 0; i < this.position_velocity_data.length / 4; i++) {
       if (this.state_data[i * 4] == 0) {
@@ -575,7 +656,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
           (v.y - this.position_velocity_data[i * 4 + 1]),
         );
         if (dist < r) {
-          const mass = this.state_data[i* 4 + 1];
+          const mass = this.state_data[i * 4 + 1];
           this.editData = {
             id: i,
             mass,
@@ -599,62 +680,55 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   }
 
-  handleMouseUp = (e: MouseEvent) => {
-    if (this.editData?.dragging) {
-      // change location
-      this.gl.activeTexture(this.gl.TEXTURE1);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionVelocityTextures[this.particlePositionVelocityIndex]);
-      overwriteRGBA32FTexture(
-        this.gl,
-        this.editData.id % this.particle_tex_xsize, // x
-        this.editData.id / this.particle_tex_xsize, // y
-        1, // width
-        1, // height
-        Float32Array.from([this.editData.dragging.x, this.editData.dragging.y, 0, 0]) // data
-      );
-
-      // set state to live so the particle starts interacting with gravity again
-      this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleStateTextures[this.particleStateIndex]);
-      overwriteRG32ITexture(
-        this.gl,
-        this.editData.id % this.particle_tex_xsize, // x
-        this.editData.id / this.particle_tex_xsize, // y
-        1, // width
-        1, // height
-        Int32Array.from([0, this.editData.mass]) //data
-      );
-      this.editData.dragging = null;
-    }
-    this.mousePos = null;
-  }
-
-  handleMouseMove = (e: MouseEvent) => {
-    if (!this.mousePos) {
+  handleMouseUp = (v: Point) => {
+    if (this.editData?.dragging === undefined) {
       return;
     }
-    const v = this.getMousePos(this.render_canvas.current!, e);
-    this.mousePos = {
-      current: v,
-      previous: this.mousePos.current
-    };
 
-    if (this.editData?.dragging) {
-      this.editData.dragging = v;
+    // change location
+    this.gl.activeTexture(this.gl.TEXTURE1);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionVelocityTextures[this.particlePositionVelocityIndex]);
+    overwriteRGBA32FTexture(
+      this.gl,
+      this.editData.id % this.particle_tex_xsize, // x
+      this.editData.id / this.particle_tex_xsize, // y
+      1, // width
+      1, // height
+      Float32Array.from([this.editData.dragging.x, this.editData.dragging.y, 0, 0]) // data
+    );
 
-      // change location
-      this.gl.activeTexture(this.gl.TEXTURE1);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionVelocityTextures[this.particlePositionVelocityIndex]);
-      overwriteRGBA32FTexture(
-        this.gl,
-        this.editData.id % this.particle_tex_xsize, // x
-        this.editData.id / this.particle_tex_xsize, // y
-        1, // width
-        1, // height
-        Float32Array.from([this.editData.dragging.x, this.editData.dragging.y, 0, 0]) // data
-      );
+    // set state to live so the particle starts interacting with gravity again
+    this.gl.activeTexture(this.gl.TEXTURE0);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.particleStateTextures[this.particleStateIndex]);
+    overwriteRG32ITexture(
+      this.gl,
+      this.editData.id % this.particle_tex_xsize, // x
+      this.editData.id / this.particle_tex_xsize, // y
+      1, // width
+      1, // height
+      Int32Array.from([0, this.editData.mass]) //data
+    );
+    this.editData.dragging = undefined;
+  }
 
+  handleMouseMove = (v: Point) => {
+    if (this.editData?.dragging === undefined) {
+      return;
     }
+
+    // change location
+    this.editData.dragging = v;
+
+    this.gl.activeTexture(this.gl.TEXTURE1);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.particlePositionVelocityTextures[this.particlePositionVelocityIndex]);
+    overwriteRGBA32FTexture(
+      this.gl,
+      this.editData.id % this.particle_tex_xsize, // x
+      this.editData.id / this.particle_tex_xsize, // y
+      1, // width
+      1, // height
+      Float32Array.from([this.editData.dragging.x, this.editData.dragging.y, 0, 0]) // data
+    );
   }
 
   handleChange = () => {
@@ -675,8 +749,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     this.gl.uniform1f(this.wallSpringConstantLoc, wallSpringConstant);
     this.gl.uniform1f(this.wallSpringDampingLoc, wallSpringDamping);
   }
-
-  discardTouchEvent = (e: TouchEvent) => e.preventDefault();
 
   calcRadius = (m: number) => 1.5 * Math.sqrt(Math.abs(m)) + 5;
 
@@ -749,8 +821,8 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
           <canvas
             className="border border-dark"
             ref={this.render_canvas}
-            height={this.props.size}
-            width={this.props.size}
+            height={this.props.xsize}
+            width={this.props.ysize}
           />
         </div>
         <div className="col-md-4">
