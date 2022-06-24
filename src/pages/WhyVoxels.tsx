@@ -30,7 +30,8 @@ const WhyVoxelsPage  = () => <ArticleLayout>{
         <LennardJonesDemo
           className="mx-auto"
           style={{maxWidth: "50em"}}
-          size={512}
+          xsize={512}
+          ysize={512}
         />
       </AsideCard>
 
