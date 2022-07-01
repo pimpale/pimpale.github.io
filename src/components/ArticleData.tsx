@@ -66,9 +66,9 @@ export const articleData:Map<string, Article> = new Map([
         listed: true,
     }],
     ["whyvoxels", {
-        name:"Why do all voxel games use cubes?",
+        name:"Why are all voxels cubes?",
         url: '../whyvoxels.html',
         published: parse("22 Jun 2022", "d MMM y", new Date()),
-        listed: false,
+        listed: true,
     }],
 ]);
