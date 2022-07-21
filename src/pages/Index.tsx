@@ -206,11 +206,11 @@ import ReactDOM from 'react-dom';
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
-    <Home/>
+    <Home />
   </React.StrictMode>,
-  document.getElementById('root')
 );
 
 

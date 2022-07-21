@@ -30,7 +30,8 @@ $cyan:    #8ec07c;
 
 $link-hover-color: lighten($blue, 10);
 
-@import "typeface-literata/index";
+@import "@fontsource/literata/latin";
+
 $font-family-base: "Literata";
 
 
