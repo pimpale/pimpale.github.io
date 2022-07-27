@@ -18,11 +18,10 @@ type RotatedProps = {
   distance: number,
   // when collapsed should this be its own row
   ownRow?: boolean
-  children: React.ReactNode
+  children: React.ReactChild
 }
 
-const Rotated: React.FunctionComponent<RotatedProps> = props => {
-
+function Rotated(props: RotatedProps) {
   if (!useMediaQuery({ minWidth: 992 })) {
     const mx = `${props.ownRow ? 20 : 1}em`;
     return <div style={{ marginLeft: mx, marginRight: mx }} className="my-3" >
@@ -67,7 +66,7 @@ const Rotated: React.FunctionComponent<RotatedProps> = props => {
 
 type IntroCardProps = {
   title: string,
-  children: React.ReactNode
+  children: React.ReactChild
 }
 
 const IntroCard: React.FunctionComponent<IntroCardProps> = props =>

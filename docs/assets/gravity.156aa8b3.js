@@ -1,4 +1,4 @@
-import"./modulepreload-polyfill.b7f2da20.js";import{a as n,b as c,j as a,F as z}from"./bootstrap.eb315efa.js";import{S as w}from"./Section.9b064dd5.js";import{H as F}from"./HrefLink.b7871089.js";import{A as P}from"./ArticleLayout.080cae09.js";import{A}from"./AsideCard.20112497.js";import{g as T,o as I,a as f,h as C,c as N,b as D,d as g,e as p,i as y,j as E,k as X,l as B}from"./webgl.a929ddf3.js";import{c as U}from"./math.e4175633.js";import{C as V}from"./canvas.b4c9bbaa.js";import{c as G}from"./client.08e50d60.js";const v=`#version 300 es
+import"./modulepreload-polyfill.b7f2da20.js";import{a as n,b as c,j as a,F as z}from"./bootstrap.7b2ffd8b.js";import{S as w}from"./Section.a4164cd3.js";import{H as F}from"./HrefLink.b5a9e144.js";import{A as P}from"./ArticleLayout.c509d68a.js";import{A}from"./AsideCard.6a80ab11.js";import{g as T,o as I,a as f,h as C,c as N,b as D,d as g,e as p,i as y,j as E,k as X,l as B}from"./webgl.f33c1914.js";import{c as U}from"./math.e4175633.js";import{C as V}from"./canvas.b4c9bbaa.js";import{c as G}from"./client.c30317a1.js";const v=`#version 300 es
 in vec2 a_position;
 out vec2 v_texCoord;
 
