@@ -5,8 +5,7 @@ import HrefLink from '../components/HrefLink';
 
 import AsideCard from '../components/AsideCard';
 
-import IncompressibleTorusFluidDemo from '../components/IncompressibleTorusFluidDemo';
-import CoriolisTorusFluidDemo from '../components/CoriolisTorusFluidDemo';
+import IncompressibleSphereFluidDemo from '../components/IncompressibleSphereFluidDemo';
 
 const Fluid3 = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -15,34 +14,34 @@ const Fluid3 = () => <ArticleLayout>{
         Our goals are to:
       </p>
       <ul>
-        <li>Map the fluid simulation onto a torus.</li>
+        <li>Map the fluid simulation onto a sphere.</li>
         <li>Make the fluid simulation 3D.</li>
       </ul>
     </Section>
-    <Section id="Fluid3-unmapped-torus" name="Incompressible Fluid on a Torus">
+    <Section id="Fluid3-unmapped-sphere" name="Incompressible Fluid on a Sphere">
       <p>
         Incompressible
       </p>
 
       {/*
       <AsideCard title="Canvas Setup" id="canvas-setup-demo">
-        <IncompressibleTorusFluidDemo
+        <IncompressibleSphereFluidDemo
           className="mx-auto"
           style={{maxWidth: "40em"}}
           xsize={400}
           ysize={400}
-          torussize={400}
+          spheresize={400}
         />
       </AsideCard>
       */}
 
       <AsideCard title="Canvas Setup" id="canvas-setup-demo">
-        <CoriolisTorusFluidDemo
+        <IncompressibleSphereFluidDemo
           className="mx-auto"
           style={{maxWidth: "40em"}}
           xsize={400}
           ysize={400}
-          torussize={400}
+          spheresize={400}
         />
       </AsideCard>
     </Section>

@@ -23,7 +23,7 @@
     "react-dom": "^18",
     "react-responsive": "^9.0.0-beta.10",
     "react-syntax-highlighter": "^15.5.0",
-    "sass": "^1.54.0",
+    "sass": "^1.54.3",
     "typescript": "^4.7.4"
   },
   "scripts": {
