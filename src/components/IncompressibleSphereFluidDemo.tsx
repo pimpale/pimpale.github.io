@@ -32,6 +32,8 @@ void main() {
 
 // this fragment shader does the actual work of advect_scalarion
 const advect_scalar_fs = `#version 300 es
+#define PI 3.1415926538
+
 precision highp float;
 precision highp sampler2D;
 
@@ -47,7 +49,7 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
-const float r = 1.0;
+const float r = 10.0;
 
 float textureGood(sampler2D sam, vec2 uv) {
     vec2 res = vec2(textureSize(sam, 0));
@@ -76,20 +78,19 @@ float textureGood(sampler2D sam, vec2 uv) {
 }
 
 void main() {
-  // get the floatwise velocity in spherical coordinates
-  vec2 vel_sph = texture(u_vel_tex, v_texCoord).xy;
+  float theta = v_texCoord.y * PI;
+  float phi = v_texCoord.x * 2.0 * PI;
 
-  float theta = v_texCoord.x;
-  float phi = v_texCoord.y;
+  // get the floatwise velocity in spherical coordinates
+  vec2 vel_sph = texture(u_vel_tex, v_texCoord).yx;
 
   // get cartesian position
   vec3 pos_crt = vec3(
-        r * sin(theta)*cos(phi),
-        r * sin(theta)*sin(phi),
-        r * cos(theta)
+        r*sin(theta)*cos(phi),
+        r*sin(theta)*sin(phi),
+        r*cos(theta)
   );
   
-
   // calculate terms for matrix transformation
   // (this matrix converts a vector field from spherical coordinates to cartesian coordinates)
   mat3 sph_to_crt = mat3(
@@ -100,13 +101,17 @@ void main() {
   // get cartesian velocity
   vec3 vel_crt = sph_to_crt * vec3(0.0, vel_sph);
 
-  // we calculate the cartesian position the point would have been at a while back
+  // we extrapolate the cartesian position the point would have been at a while back
   // (semi lagrangian method)
-  vec3 old_vel_crt =
+  vec3 old_pos_crt = pos_crt - vel_crt;
+
+  // convert back to spherical coordinates
+  float extrapolated_old_theta = acos(old_pos_crt.z/length(old_pos_crt));
+  float extrapolated_old_phi = atan(old_pos_crt.y, old_pos_crt.x);
 
   // now we advect the scalar field:
   // we calculate the scalar value that will be at this location at the next timestep
-  float val = textureGood(u_scalar_tex, v_texCoord-vel);
+  float val = textureGood(u_scalar_tex, vec2(extrapolated_old_theta/PI, extrapolated_old_phi/(2.0*PI)).yx);
 
   value = vec4(val, 0.0, 0.0, 0.0);
 }
