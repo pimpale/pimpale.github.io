@@ -31,11 +31,12 @@ void main() {
 `;
 
 // this fragment shader does the actual work of advect_scalarion
-const advect_scalar_fs = `#version 300 es
-#define PI 3.1415926538
-
+const advect_scalar_fs = String.raw`#version 300 es
 precision highp float;
 precision highp sampler2D;
+
+const float PI = 3.1415926538;
+const float r = 100.0;
 
 // the scalar texture
 uniform sampler2D u_scalar_tex;
@@ -49,7 +50,6 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
-const float r = 10.0;
 
 float textureGood(sampler2D sam, vec2 uv) {
     vec2 res = vec2(textureSize(sam, 0));
@@ -78,40 +78,48 @@ float textureGood(sampler2D sam, vec2 uv) {
 }
 
 void main() {
-  float theta = v_texCoord.y * PI;
-  float phi = v_texCoord.x * 2.0 * PI;
+  float theta = v_texCoord.x * 2.0 * PI;
+  float phi = v_texCoord.y * PI;
 
   // get the floatwise velocity in spherical coordinates
-  vec2 vel_sph = texture(u_vel_tex, v_texCoord).yx;
+  vec2 vel_sph = texture(u_vel_tex, v_texCoord).xy;
 
   // get cartesian position
   vec3 pos_crt = vec3(
-        r*sin(theta)*cos(phi),
+        r*cos(theta)*sin(phi),
         r*sin(theta)*sin(phi),
-        r*cos(theta)
+        r*cos(phi)
   );
-  
-  // calculate terms for matrix transformation
-  // (this matrix converts a vector field from spherical coordinates to cartesian coordinates)
-  mat3 sph_to_crt = mat3(
-      sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta),
-      cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(phi),
-      -sin(theta), cos(phi), 0.0
+
+  // 2 basis vectors
+  vec3 e_theta_hat = vec3(
+      -sin(theta),
+      cos(theta),
+      0.0
   );
-  // get cartesian velocity
-  vec3 vel_crt = sph_to_crt * vec3(0.0, vel_sph);
+
+  vec3 e_phi_hat = vec3(
+      cos(theta)*cos(phi),
+      sin(theta)*cos(phi),
+      -sin(phi)
+  );
+
+  // https://dynref.engr.illinois.edu/rvs.html
+  // v = (dr/dt)*e_r_hat + r*(dtheta/dt)*sin(phi)*e_theta_hat + r*(dphi/dt)*e_phi_hat
+
+  vec3 vel_crt = r*vel_sph.x*sin(phi)*e_theta_hat + r*vel_sph.y*e_phi_hat;
 
   // we extrapolate the cartesian position the point would have been at a while back
   // (semi lagrangian method)
   vec3 old_pos_crt = pos_crt - vel_crt;
 
   // convert back to spherical coordinates
-  float extrapolated_old_theta = acos(old_pos_crt.z/length(old_pos_crt));
-  float extrapolated_old_phi = atan(old_pos_crt.y, old_pos_crt.x);
+  float extrapolated_old_phi = atan(length(old_pos_crt.xy), old_pos_crt.z);
+  float extrapolated_old_theta = atan(old_pos_crt.y, old_pos_crt.x);
 
   // now we advect the scalar field:
   // we calculate the scalar value that will be at this location at the next timestep
-  float val = textureGood(u_scalar_tex, vec2(extrapolated_old_theta/PI, extrapolated_old_phi/(2.0*PI)).yx);
+  float val = textureGood(u_scalar_tex, vec2(extrapolated_old_theta/(2.0*PI), extrapolated_old_phi/PI));
 
   value = vec4(val, 0.0, 0.0, 0.0);
 }
@@ -120,6 +128,10 @@ void main() {
 const advect_vel_fs = `#version 300 es
 precision highp float;
 precision highp sampler2D;
+
+const float PI = 3.1415926538;
+const float r = 100.0;
+
 
 // the velocity texture
 uniform sampler2D u_vel_tex;
@@ -157,12 +169,53 @@ vec2 textureGood(sampler2D sam, vec2 uv) {
 }
 
 void main() {
-  // get the floatwise velocity
-  vec2 vel = texture(u_vel_tex, v_texCoord).xy;
+
+  // // TODO: this makes it crash: why?
+  // value = texture(u_vel_tex, v_texCoord);
+  // return;
+
+  float theta = v_texCoord.x * 2.0 * PI;
+  float phi = v_texCoord.y * PI;
+
+  // get the floatwise velocity in spherical coordinates
+  vec2 vel_sph = texture(u_vel_tex, v_texCoord).xy;
+
+  // get cartesian position
+  vec3 pos_crt = vec3(
+        r*cos(theta)*sin(phi),
+        r*sin(theta)*sin(phi),
+        r*cos(phi)
+  );
+
+  // 2 basis vectors
+  vec3 e_theta_hat = vec3(
+      -sin(theta),
+      cos(theta),
+      0.0
+  );
+
+  vec3 e_phi_hat = vec3(
+      cos(theta)*cos(phi),
+      sin(theta)*cos(phi),
+      -sin(phi)
+  );
+
+  // https://dynref.engr.illinois.edu/rvs.html
+  // v = (dr/dt)*e_r_hat + r*(dtheta/dt)*sin(phi)*e_theta_hat + r*(dphi/dt)*e_phi_hat
+
+  vec3 vel_crt = r*vel_sph.x*sin(phi)*e_theta_hat + r*vel_sph.y*e_phi_hat;
+
+  // we extrapolate the cartesian position the point would have been at a while back
+  // (semi lagrangian method)
+  vec3 old_pos_crt = pos_crt - 0.0*vel_crt;
+
+  // convert back to spherical coordinates
+  float extrapolated_old_phi = atan(length(old_pos_crt.xy), old_pos_crt.z);
+  float extrapolated_old_theta = atan(old_pos_crt.y, old_pos_crt.x);
 
   // now we advect the scalar field:
   // we calculate the scalar value that will be at this location at the next timestep
-  vec2 val = textureGood(u_vel_tex, v_texCoord-vel);
+  vec2 val = textureGood(u_vel_tex, vec2(extrapolated_old_theta/(2.0*PI), extrapolated_old_phi/PI));
 
   value = vec4(val, 0, 0);
 }
@@ -172,6 +225,9 @@ void main() {
 const divergence_fs = `#version 300 es
 precision highp float;
 precision highp sampler2D;
+
+const float PI = 3.1415926538;
+const float r = 100.0;
 
 // the velocity texture
 uniform sampler2D u_vel_tex;
@@ -205,9 +261,11 @@ void main() {
   vec2 v21 = sampleVec2(u_vel_tex, res, v_px + vec2(+1.0,+0.0));
 
   // calculate divergence using finite differences
-  // remember, divergence is df/dx + df/dy
-  float divergence = (v01.x - v21.x)/(2.0*x_off)
-                   + (v10.y - v12.y)/(2.0*y_off);
+  float d_theta = (v01.x - v21.x)/(2.0*x_off);
+  float d_phi_sin_phi = (v01.y*sin(PI*(v_texCoord.y - y_off)) - v21.y*sin(PI*(v_texCoord.y + y_off)))/(2.0*y_off);
+
+  float r_sin_phi = r*sin(v_texCoord.y*PI);
+  float divergence = d_theta/r_sin_phi + d_phi_sin_phi/r_sin_phi;
 
   // return divergence
   value = vec4(divergence, 0.0, 0.0, 0.0);
@@ -217,6 +275,9 @@ void main() {
 const solve_pressure_fs = `#version 300 es
 precision highp float;
 precision highp sampler2D;
+
+const float PI = 3.1415926538;
+const float r = 100.0;
 
 // the divergence texture
 uniform sampler2D u_divergence_tex;
@@ -263,6 +324,9 @@ const apply_pressure_force_fs = `#version 300 es
 precision highp float;
 precision highp sampler2D;
 
+const float PI = 3.1415926538;
+const float r = 100.0;
+
 // the velocity texture
 uniform sampler2D u_vel_tex;
 
@@ -275,21 +339,34 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
+float sampleFloat(sampler2D sam, vec2 res, vec2 uv_px) {
+    uv_px.x = mod(uv_px.x, res.x);
+    if(uv_px.y < 0.0 || uv_px.y > res.y) {
+        return 0.0;
+    }
+    return texelFetch(sam, ivec2(uv_px), 0).x;
+}
+
 void main() {
   // get neighboring cell distances
-  vec2 resolution = vec2(textureSize(u_vel_tex, 0));
-  float x_off = 1.0/resolution.x;
-  float y_off = 1.0/resolution.y;
+  vec2 res = vec2(textureSize(u_pressure_tex, 0));
+  vec2 v_px = v_texCoord * res;
 
-  // get pressure data
-  float p01 = texture(u_pressure_tex, v_texCoord + vec2(-x_off,+0.000)).x;
-  float p10 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,-y_off)).x;
-  float p12 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,+y_off)).x;
-  float p21 = texture(u_pressure_tex, v_texCoord + vec2(+x_off,+0.000)).x;
+  // get previous iteration pressure data
+  float p01 = sampleFloat(u_pressure_tex, res, v_px + vec2(-1.0,+0.0));
+  float p10 = sampleFloat(u_pressure_tex, res, v_px + vec2(+0.0,-1.0));
+  float p12 = sampleFloat(u_pressure_tex, res, v_px + vec2(+0.0,+1.0));
+  float p21 = sampleFloat(u_pressure_tex, res, v_px + vec2(+1.0,+0.0));
 
   // calculate the gradient
-  // remember, the gradient is [df/dx, df/dy]
-  vec2 pGradient = vec2((p21 - p01)/resolution.x, (p12 - p10)/resolution.y);
+  // remember, the gradient in spherical coordinates is [(1/(r*sin(phi))) * (df/dtheta), (1/r) * (df/dphi)]
+
+  float phi= PI*v_texCoord.y;
+
+  vec2 pGradient = vec2(
+      (1.0/(r*sin(phi)))*(p21 - p01)/res.x,
+      (1.0/r)*(p12 - p10)/res.y
+  );
 
   // adjust the velocity by the pressure gradient
   vec2 vel = texture(u_vel_tex, v_texCoord).xy - pGradient;
