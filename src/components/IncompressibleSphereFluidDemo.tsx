@@ -78,7 +78,7 @@ float textureGood(sampler2D sam, vec2 uv) {
 }
 
 void main() {
-  float theta = v_texCoord.x * 2.0 * PI;
+  float theta = v_texCoord.x * 2.0 * PI - PI;
   float phi = v_texCoord.y * PI;
 
   // get the floatwise velocity in spherical coordinates
@@ -114,12 +114,17 @@ void main() {
   vec3 old_pos_crt = pos_crt - vel_crt;
 
   // convert back to spherical coordinates
-  float extrapolated_old_phi = atan(length(old_pos_crt.xy), old_pos_crt.z);
   float extrapolated_old_theta = atan(old_pos_crt.y, old_pos_crt.x);
+  float extrapolated_old_phi = atan(length(old_pos_crt.xy), old_pos_crt.z);
+
+  vec2 normalized_old_pos_sph = vec2(
+      (extrapolated_old_theta + PI)/(2.0*PI),
+      extrapolated_old_phi/PI
+  );
 
   // now we advect the scalar field:
   // we calculate the scalar value that will be at this location at the next timestep
-  float val = textureGood(u_scalar_tex, vec2(extrapolated_old_theta/(2.0*PI), extrapolated_old_phi/PI));
+  float val = textureGood(u_scalar_tex, normalized_old_pos_sph);
 
   value = vec4(val, 0.0, 0.0, 0.0);
 }
@@ -130,7 +135,7 @@ precision highp float;
 precision highp sampler2D;
 
 const float PI = 3.1415926538;
-const float r = 100.0;
+const float r = 1.0;
 
 
 // the velocity texture
@@ -174,7 +179,7 @@ void main() {
   // value = texture(u_vel_tex, v_texCoord);
   // return;
 
-  float theta = v_texCoord.x * 2.0 * PI;
+  float theta = v_texCoord.x * 2.0 * PI - PI;
   float phi = v_texCoord.y * PI;
 
   // get the floatwise velocity in spherical coordinates
@@ -207,15 +212,21 @@ void main() {
 
   // we extrapolate the cartesian position the point would have been at a while back
   // (semi lagrangian method)
-  vec3 old_pos_crt = pos_crt - 0.0*vel_crt;
+  vec3 old_pos_crt = pos_crt - vel_crt;
 
   // convert back to spherical coordinates
   float extrapolated_old_phi = atan(length(old_pos_crt.xy), old_pos_crt.z);
   float extrapolated_old_theta = atan(old_pos_crt.y, old_pos_crt.x);
 
+  // normalize from 0-1
+  vec2 normalized_old_pos_sph = vec2(
+      (extrapolated_old_theta+PI)/(2.0*PI),
+      extrapolated_old_phi/PI
+  );
+
   // now we advect the scalar field:
   // we calculate the scalar value that will be at this location at the next timestep
-  vec2 val = textureGood(u_vel_tex, vec2(extrapolated_old_theta/(2.0*PI), extrapolated_old_phi/PI));
+  vec2 val = textureGood(u_vel_tex, normalized_old_pos_sph);
 
   value = vec4(val, 0, 0);
 }
@@ -260,12 +271,13 @@ void main() {
   vec2 v12 = sampleVec2(u_vel_tex, res, v_px + vec2(+0.0,+1.0));
   vec2 v21 = sampleVec2(u_vel_tex, res, v_px + vec2(+1.0,+0.0));
 
-  // calculate divergence using finite differences
-  float d_theta = (v01.x - v21.x)/(2.0*x_off);
-  float d_phi_sin_phi = (v01.y*sin(PI*(v_texCoord.y - y_off)) - v21.y*sin(PI*(v_texCoord.y + y_off)))/(2.0*y_off);
+  // // calculate divergence using finite differences
+  // float d_theta = (v01.x - v21.x)/(2.0*x_off);
+  // float d_phi_sin_phi = (v10.y - v12.y)/(2.0*y_off);
+  // float r_sin_phi = r*sin(v_texCoord.y*PI) + 0.01;
+  // float divergence = d_theta/r_sin_phi + d_phi_sin_phi/r_sin_phi;
 
-  float r_sin_phi = r*sin(v_texCoord.y*PI);
-  float divergence = d_theta/r_sin_phi + d_phi_sin_phi/r_sin_phi;
+  float divergence = (v01.x - v21.x)/(2.0*x_off) + (v10.y - v12.y)/(2.0*y_off);
 
   // return divergence
   value = vec4(divergence, 0.0, 0.0, 0.0);
@@ -341,9 +353,10 @@ out vec4 value;
 
 float sampleFloat(sampler2D sam, vec2 res, vec2 uv_px) {
     uv_px.x = mod(uv_px.x, res.x);
-    if(uv_px.y < 0.0 || uv_px.y > res.y) {
-        return 0.0;
-    }
+    //if(uv_px.y < 0.0 || uv_px.y > res.y) {
+    //    return 0.0;
+    //}
+    uv_px.y = clamp(uv_px.y, 0.0, res.y);
     return texelFetch(sam, ivec2(uv_px), 0).x;
 }
 
@@ -363,10 +376,16 @@ void main() {
 
   float phi= PI*v_texCoord.y;
 
+  // vec2 pGradient = vec2(
+  //     (1.0/(r*sin(phi)))*(p21 - p01)/res.x,
+  //     (1.0/r)*(p12 - p10)/res.y
+  // );
+
   vec2 pGradient = vec2(
-      (1.0/(r*sin(phi)))*(p21 - p01)/res.x,
-      (1.0/r)*(p12 - p10)/res.y
+      (p21 - p01)/res.x,
+      (p12 - p10)/res.y
   );
+
 
   // adjust the velocity by the pressure gradient
   vec2 vel = texture(u_vel_tex, v_texCoord).xy - pGradient;
@@ -1325,7 +1344,7 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
         }
         case "DIVERGENCE": {
           this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
-          this.gl.uniform1f(this.renderMultiplier, 10);
+          this.gl.uniform1f(this.renderMultiplier, 100);
           this.gl.uniform1f(this.renderOffset, 0.5);
           break;
         }
