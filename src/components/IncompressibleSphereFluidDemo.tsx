@@ -47,28 +47,62 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
+const float r = 1.0;
+
 float textureGood(sampler2D sam, vec2 uv) {
     vec2 res = vec2(textureSize(sam, 0));
-    vec2 st = uv*res - 0.5;
+    // uv in pixels
+    vec2 uv_px_raw = uv*vec2(res) - 0.5;
 
-    vec2 iuv = floor( st );
-    vec2 fuv = fract( st );
+    vec2 uv_px_base = floor(uv_px_raw);
+    vec2 uv_px_fract = fract(uv_px_raw);
 
-    float a = texture( sam, (iuv+vec2(0.5,0.5))/res).r;
-    float b = texture( sam, (iuv+vec2(1.5,0.5))/res).r;
-    float c = texture( sam, (iuv+vec2(0.5,1.5))/res).r;
-    float d = texture( sam, (iuv+vec2(1.5,1.5))/res).r;
+    float uv_px_base_x_min = mod(uv_px_base.x, res.x);
+    float uv_px_base_x_max = mod(uv_px_base.x+1.0, res.x);
+    float uv_px_base_y_min = uv_px_base.y;
+    float uv_px_base_y_max = uv_px_base.y+1.0;
 
-    return mix( mix( a, b, fuv.x),
-                mix( c, d, fuv.x), fuv.y );
+    if(uv_px_base_y_min < 0.0 || uv_px_base_y_max > res.y) {
+        return 0.0;
+    }
+
+    float a = texelFetch(sam, ivec2(uv_px_base_x_min,uv_px_base_y_min), 0).r;
+    float b = texelFetch(sam, ivec2(uv_px_base_x_max,uv_px_base_y_min), 0).r;
+    float c = texelFetch(sam, ivec2(uv_px_base_x_min,uv_px_base_y_max), 0).r;
+    float d = texelFetch(sam, ivec2(uv_px_base_x_max,uv_px_base_y_max), 0).r;
+
+    return mix( mix( a, b, uv_px_fract.x),
+                mix( c, d, uv_px_fract.x), uv_px_fract.y );
 }
 
 void main() {
-  // get the floatwise velocity
-  vec2 vel = texture(u_vel_tex, v_texCoord).xy;
+  // get the floatwise velocity in spherical coordinates
+  vec2 vel_sph = texture(u_vel_tex, v_texCoord).xy;
 
-  // conver 
+  float theta = v_texCoord.x;
+  float phi = v_texCoord.y;
 
+  // get cartesian position
+  vec3 pos_crt = vec3(
+        r * sin(theta)*cos(phi),
+        r * sin(theta)*sin(phi),
+        r * cos(theta)
+  );
+  
+
+  // calculate terms for matrix transformation
+  // (this matrix converts a vector field from spherical coordinates to cartesian coordinates)
+  mat3 sph_to_crt = mat3(
+      sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta),
+      cos(theta)*cos(phi), cos(theta)*sin(phi), -sin(phi),
+      -sin(theta), cos(phi), 0.0
+  );
+  // get cartesian velocity
+  vec3 vel_crt = sph_to_crt * vec3(0.0, vel_sph);
+
+  // we calculate the cartesian position the point would have been at a while back
+  // (semi lagrangian method)
+  vec3 old_vel_crt =
 
   // now we advect the scalar field:
   // we calculate the scalar value that will be at this location at the next timestep
@@ -91,21 +125,30 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
-vec2 textureGood(sampler2D sam, vec2 uv)
-{
+vec2 textureGood(sampler2D sam, vec2 uv) {
     vec2 res = vec2(textureSize(sam, 0));
-    vec2 st = uv*res - 0.5;
+    // uv in pixels
+    vec2 uv_px_raw = uv*vec2(res) - 0.5;
 
-    vec2 iuv = floor( st );
-    vec2 fuv = fract( st );
+    vec2 uv_px_base = floor(uv_px_raw);
+    vec2 uv_px_fract = fract(uv_px_raw);
 
-    vec2 a = texture(sam, (iuv+vec2(0.5,0.5))/res).xy;
-    vec2 b = texture(sam, (iuv+vec2(1.5,0.5))/res).xy;
-    vec2 c = texture(sam, (iuv+vec2(0.5,1.5))/res).xy;
-    vec2 d = texture(sam, (iuv+vec2(1.5,1.5))/res).xy;
+    float uv_px_base_x_min = mod(uv_px_base.x, res.x);
+    float uv_px_base_x_max = mod(uv_px_base.x+1.0, res.x);
+    float uv_px_base_y_min = uv_px_base.y;
+    float uv_px_base_y_max = uv_px_base.y+1.0;
 
-    return mix( mix( a, b, fuv.x),
-                mix( c, d, fuv.x), fuv.y );
+    if(uv_px_base_y_min < 0.0 || uv_px_base_y_max > res.y) {
+        return vec2(0.0, 0.0);
+    }
+
+    vec2 a = texelFetch(sam, ivec2(uv_px_base_x_min,uv_px_base_y_min), 0).rg;
+    vec2 b = texelFetch(sam, ivec2(uv_px_base_x_max,uv_px_base_y_min), 0).rg;
+    vec2 c = texelFetch(sam, ivec2(uv_px_base_x_min,uv_px_base_y_max), 0).rg;
+    vec2 d = texelFetch(sam, ivec2(uv_px_base_x_max,uv_px_base_y_max), 0).rg;
+
+    return mix( mix( a, b, uv_px_fract.x),
+                mix( c, d, uv_px_fract.x), uv_px_fract.y );
 }
 
 void main() {
@@ -134,17 +177,27 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
+vec2 sampleVec2(sampler2D sam, vec2 res, vec2 uv_px) {
+    uv_px.x = mod(uv_px.x, res.x);
+    if(uv_px.y < 0.0 || uv_px.y > res.y) {
+        return vec2(0.0, 0.0);
+    }
+    return texelFetch(sam, ivec2(uv_px), 0).xy;
+}
+
+
 void main() {
   // get neighboring cell distances
-  vec2 resolution = vec2(textureSize(u_vel_tex, 0));
-  float x_off = 1.0/resolution.x;
-  float y_off = 1.0/resolution.y;
+  vec2 res = vec2(textureSize(u_vel_tex, 0));
+  vec2 v_px = v_texCoord * res;
+  float x_off = 1.0/res.x;
+  float y_off = 1.0/res.y;
 
   // get data
-  vec2 v01 = texture(u_vel_tex, v_texCoord + vec2(-x_off,+0.000)).xy;
-  vec2 v10 = texture(u_vel_tex, v_texCoord + vec2(+0.000,-y_off)).xy;
-  vec2 v12 = texture(u_vel_tex, v_texCoord + vec2(+0.000,+y_off)).xy;
-  vec2 v21 = texture(u_vel_tex, v_texCoord + vec2(+x_off,+0.000)).xy;
+  vec2 v01 = sampleVec2(u_vel_tex, res, v_px + vec2(-1.0,+0.0));
+  vec2 v10 = sampleVec2(u_vel_tex, res, v_px + vec2(+0.0,-1.0));
+  vec2 v12 = sampleVec2(u_vel_tex, res, v_px + vec2(+0.0,+1.0));
+  vec2 v21 = sampleVec2(u_vel_tex, res, v_px + vec2(+1.0,+0.0));
 
   // calculate divergence using finite differences
   // remember, divergence is df/dx + df/dy
@@ -172,17 +225,24 @@ in vec2 v_texCoord;
 // the output
 out vec4 value;
 
+float sampleFloat(sampler2D sam, vec2 res, vec2 uv_px) {
+    uv_px.x = mod(uv_px.x, res.x);
+    if(uv_px.y < 0.0 || uv_px.y > res.y) {
+        return 0.0;
+    }
+    return texelFetch(sam, ivec2(uv_px), 0).x;
+}
+
 void main() {
   // get neighboring cell distances
-  vec2 resolution = vec2(textureSize(u_divergence_tex, 0));
-  float x_off = 1.0/resolution.x;
-  float y_off = 1.0/resolution.y;
+  vec2 res = vec2(textureSize(u_divergence_tex, 0));
+  vec2 v_px = v_texCoord * res;
 
   // get previous iteration pressure data
-  float p01 = texture(u_pressure_tex, v_texCoord + vec2(-x_off,+0.000)).x;
-  float p10 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,-y_off)).x;
-  float p12 = texture(u_pressure_tex, v_texCoord + vec2(+0.000,+y_off)).x;
-  float p21 = texture(u_pressure_tex, v_texCoord + vec2(+x_off,+0.000)).x;
+  float p01 = sampleFloat(u_pressure_tex, res, v_px + vec2(-1.0,+0.0));
+  float p10 = sampleFloat(u_pressure_tex, res, v_px + vec2(+0.0,-1.0));
+  float p12 = sampleFloat(u_pressure_tex, res, v_px + vec2(+0.0,+1.0));
+  float p21 = sampleFloat(u_pressure_tex, res, v_px + vec2(+1.0,+0.0));
 
   // get divergence
   float d11 = texture(u_divergence_tex , v_texCoord).x;
@@ -239,6 +299,9 @@ precision highp sampler2D;
 
 // the scalar texture
 uniform sampler2D u_scalar_tex;
+
+// multipler
+uniform float u_multiplier;
 
 // offset to apply
 uniform float u_offset;
@@ -329,7 +392,7 @@ void main() {
   float arrow_dist = arrow(pxCoord, vel_vec * ARROW_TILE_SIZE);
   vec4 arrow_col = vec4(0, 1.0, 0, clamp(arrow_dist, 0.0, 1.0));
 
-  float scalar_val = clamp(texture(u_scalar_tex, v_texCoord).x + u_offset, 0.0, 1.0);
+  float scalar_val = clamp(texture(u_scalar_tex, v_texCoord).x*u_multiplier + u_offset, 0.0, 1.0);
   vec4 field_col = vec4(inferno(scalar_val), 1.0);
 
   outColor = mix(arrow_col, field_col, arrow_col.a);
@@ -397,8 +460,8 @@ uniform mat4 u_worldViewProjection;
 
 
 void main() {
-   float phi = a_position.x * u_phiAlpha * PI;
-   float theta = a_position.y * u_thetaAlpha * 2.0 * PI;
+   float theta = a_position.x * u_thetaAlpha * 2.0 * PI;
+   float phi = a_position.y * u_phiAlpha * PI;
 
    v_texCoord = a_position;
 
@@ -429,7 +492,7 @@ out vec4 v_outColor;
 void main() {
   // color: 0xEBDBB2,
   // v_outColor = vec4(0.922,0.859,0.698, 1.0);
-  v_outColor = texture(u_render_tex, v_texCoord.yx);
+  v_outColor = texture(u_render_tex, vec2(v_texCoord.x, -v_texCoord.y));
 }
 `;
 
@@ -449,6 +512,7 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
 
   // this is the ref we use to choose color background
   private scalarSelect = React.createRef<HTMLSelectElement>();
+  private viewSelect = React.createRef<HTMLSelectElement>();
   private velocitySelect = React.createRef<HTMLSelectElement>();
 
   private gl!: WebGL2RenderingContext;
@@ -475,6 +539,7 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
   private newMouseLoc!: WebGLUniformLocation;
   private oldMouseLoc!: WebGLUniformLocation;
 
+  private renderMultiplier!: WebGLUniformLocation;
   private renderOffset!: WebGLUniformLocation;
 
   private prog_advect_scalar!: WebGLProgram;
@@ -500,9 +565,6 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
 
   // mouse status
   private cmt!: CanvasMouseTracker;
-
-  // if we're viewing pressure
-  private viewPressure = false;
 
   private requestID!: number;
 
@@ -540,20 +602,18 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
     // setup a full canvas clip space quad
     const buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-      0, 0,
-      1, 0,
-      0, 1,
-      0, 1,
-      1, 0,
-      1, 1,
-    ]), this.gl.STATIC_DRAW);
+
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array(genPlane(1, 1).flatMap(v => [v[0], v[1]])),
+      this.gl.STATIC_DRAW
+    );
 
 
 
     // create pingpongable textures and framebuffers for the scalar field
     for (let i = 0; i < 2; i++) {
-      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize))!;
+      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize * this.props.ysize))!;
       this.scalarTextures.push(tex);
 
       const fbo = this.gl.createFramebuffer()!;
@@ -574,7 +634,7 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
     // create pingpongable textures and framebuffers for the velocity field
     for (let i = 0; i < 2; i++) {
       // create velocity texture
-      const tex = createRG32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize*2))!;
+      const tex = createRG32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize * this.props.ysize * 2))!;
 
       this.velTextures.push(tex);
 
@@ -595,7 +655,7 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
 
     // create pingpongable textures and framebuffers for the divergence field
     // create divergence texture
-    this.divTexture = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize))!;
+    this.divTexture = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize * this.props.ysize))!;
     this.divFramebuffer = this.gl.createFramebuffer()!;
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.divFramebuffer);
     // configure the currently active framebuffer to use te
@@ -610,7 +670,7 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
     // create pingpongable textures and framebuffers for the pressure field
     for (let i = 0; i < 2; i++) {
       // create pressure texture
-      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize))!;
+      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize * this.props.ysize))!;
 
       this.pressureTextures.push(tex);
 
@@ -810,6 +870,7 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
       const positionLoc = this.gl.getAttribLocation(this.prog_render, 'c_position');
       const scalarTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_scalar_tex');
       const velTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_vel_tex');
+      this.renderMultiplier = this.gl.getUniformLocation(this.prog_render, 'u_multiplier')!;
       this.renderOffset = this.gl.getUniformLocation(this.prog_render, 'u_offset')!;
 
       // setup our attributes to tell WebGL how to pull
@@ -1059,7 +1120,7 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
       let data;
       switch (this.velocitySelect.current?.value) {
         case 'curlnoise':
-          data = createCurlNoise(3,this.props.xsize, this.props.ysize, Math.random() * 500);
+          data = createCurlNoise(3, this.props.xsize, this.props.ysize, Math.random() * 500);
           break;
         default:
           data = new Float32Array(this.props.xsize * this.props.ysize * 2);
@@ -1172,16 +1233,27 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
       // now draw to canvas
       this.gl.useProgram(this.prog_render);
 
-      if (this.viewPressure) {
-        //bind the pressure texture to texture unit 0
-        this.gl.activeTexture(this.gl.TEXTURE0);
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
-        // this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
-        this.gl.uniform1f(this.renderOffset, 0.5);
-      } else {
-        this.gl.activeTexture(this.gl.TEXTURE0);
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
-        this.gl.uniform1f(this.renderOffset, 0);
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      switch (this.viewSelect.current?.value) {
+        case "PRESSURE": {
+          this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
+          this.gl.uniform1f(this.renderMultiplier, 1);
+          this.gl.uniform1f(this.renderOffset, 0.5);
+          break;
+        }
+        case "DIVERGENCE": {
+          this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
+          this.gl.uniform1f(this.renderMultiplier, 10);
+          this.gl.uniform1f(this.renderOffset, 0.5);
+          break;
+        }
+        case "SCALAR":
+        default: {
+          this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
+          this.gl.uniform1f(this.renderMultiplier, 1);
+          this.gl.uniform1f(this.renderOffset, 0);
+          break;
+        }
       }
 
       // set the canvas as the current framebuffer
@@ -1258,10 +1330,12 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
             </div>
 
             <div className="form-group mb-3">
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input" onClick={() => this.viewPressure = !this.viewPressure} />
-                <label className="form-check-label">View Pressure</label>
-              </div>
+              <label className="form-label">View Field</label>
+              <select className="form-select" defaultValue={"SCALAR"} ref={this.viewSelect}>
+                <option value="SCALAR">Scalar</option>
+                <option value="PRESSURE">Pressure</option>
+                <option value="DIVERGENCE">Divergence</option>
+              </select>
             </div>
           </div>
 
