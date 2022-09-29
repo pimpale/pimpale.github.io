@@ -19,13 +19,6 @@ const GravityPage = () => <ArticleLayout>{
       <p>
         <HrefLink href="https://github.com/pimpale/GravitySimulator" />
       </p>
-      <AsideCard title="Canvas Setup" id="canvas-setup-demo">
-        <WebGL2GravityDemo
-          className="mx-auto"
-          style={{maxWidth: "50em"}}
-          size={512}
-        />
-      </AsideCard>
 
       <AsideCard title="Canvas Setup" id="canvas-setup-demo">
         <LennardJonesDemo
