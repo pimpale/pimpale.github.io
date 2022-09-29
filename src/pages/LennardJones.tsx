@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 import Section from '../components/Section';
@@ -25,6 +26,16 @@ const GravityPage = () => <ArticleLayout>{
           size={512}
         />
       </AsideCard>
+
+      <AsideCard title="Canvas Setup" id="canvas-setup-demo">
+        <LennardJonesDemo
+          className="mx-auto"
+          style={{maxWidth: "50em"}}
+          xsize={512}
+          ysize={512}
+        />
+      </AsideCard>
+
     </Section>
   </>
 }</ArticleLayout>
