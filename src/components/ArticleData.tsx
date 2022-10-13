@@ -71,4 +71,10 @@ export const articleData:Map<string, Article> = new Map([
         published: parse("22 Jun 2022", "d MMM y", new Date()),
         listed: true,
     }],
+    ["timezonespace", {
+        name: "Time Zones and Space Colonization",
+        url: '../timezonespace.html',
+        published: parse("13 Oct 2022", "d MMM y", new Date()),
+        listed: true,
+    }]
 ]);

@@ -115,12 +115,12 @@ const WhyVoxelsPage = () => <ArticleLayout>{
         <ul>
           <li>The surface does not have to be Euclidean, we can tessellate hyperbolic space.</li>
           <li>We don't have to use polygons to tessellate, we can use curvy shapes.</li>
-          <li>We don't have to repeat our pattern, we can mamke a tessellation which is not periodic.</li>
+          <li>We don't have to repeat our pattern, we can make a tessellation which is not periodic.</li>
           <li>
             Tessellations can be in more than 2 dimensions, the cubic grid (also sometimes called the <b>cubic honeycomb</b>) is also an example of a tessellation.
             <ul>
               <li>
-                In general, any tessellation made of polyhedra in more than 2 dimensions is often called a <b>honeycomb</b>.
+                Terminology Note: In general, any tessellation made of polyhedra in more than 2 dimensions is often called a <b>honeycomb</b>.
               </li>
             </ul>
           </li>
