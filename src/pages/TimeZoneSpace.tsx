@@ -6,25 +6,42 @@ import ArticleLayout from '../components/ArticleLayout';
 
 import AsideCard from '../components/AsideCard';
 
-import WebGL2GravityDemo from '../components/WebGL2GravityDemo';
-import LennardJonesDemo from '../components/LennardJonesDemo';
-
 const TimeZoneSpacePage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
     <Section name="Overview" id="overview">
+
       <p>
-        <HrefLink href="https://github.com/pimpale/spacewar" />
+        In this article we'll discuss:
+      </p>
+      <ul>
+        <li>Why our current systems for timekeeping suck.</li>
+        <li>How space agencies currently deal with timezones in space.</li>
+        <li>What is likely to change as we colonize the solar system.</li>
+        <li>How relativity affects timekeeping</li>
+        <li>A proposal for a new system of timekeeping.</li>
+      </ul>
+    </Section>
+    <Section name="Current Systems" id="current_systems">
+      <p>
+      Our current system of keeping time is governed by various international organizations and countries.
       </p>
       <p>
-        <HrefLink href="https://github.com/pimpale/GravitySimulator" />
+        Here's the breakdown of responsibilities:
       </p>
-      <AsideCard title="Canvas Setup" id="canvas-setup-demo">
-        <WebGL2GravityDemo
-          className="mx-auto"
-          style={{ maxWidth: "50em" }}
-          size={512}
-        />
+
+
+      Here's the current system of time that we use:
+      <ul>
+
+
+      </ul>
+
+
+      <AsideCard title='Time' id='time' >
+        {Intl.DateTimeFormat().resolvedOptions().timeZone}
       </AsideCard>
+
+
     </Section>
   </>
 }</ArticleLayout>
