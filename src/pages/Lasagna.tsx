@@ -97,8 +97,8 @@ const LasagnaPage = () => <ArticleLayout>{
       </SyntaxHighligher>
       <p>
         This prints hello world. Instead of the <code>"</code> character, <code>(</code> and <code>)</code> are used to represent strings, and can be nested.
-        The string is pushed onto the stack character by character, with a leading and terminating null byte.
-        <code>printstr</code> is one of a few built in functions defined in src/functions.c
+        The string is pushed onto the stack character by character, with a leading and terminating null byte. 
+        The <code>printstr</code> function is one of only a few builtin functions defined in <a href="https://github.com/pimpale/lasagna/blob/master/src/function.c">src/function.c</a>.
       </p>
 
       <h4>Comments</h4>
