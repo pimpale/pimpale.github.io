@@ -50,7 +50,7 @@ function BrowserTimeSettings() {
         return false;
       case "chinese":
         return false;
-      case "islamicc":
+      case "islamic-civil":
         return false;
       case "buddhist":
         return false;
@@ -61,6 +61,10 @@ function BrowserTimeSettings() {
 
   const idtf = Intl.DateTimeFormat();
   const ro = idtf.resolvedOptions();
+
+
+  const out = idtf.formatToParts(new Date());
+  console.log(out)
 
   const check = <Check className='text-success d-block mx-auto display-5' />
   const x = <X className='text-danger d-block mx-auto display-5' />
@@ -93,7 +97,7 @@ function BrowserTimeSettings() {
               <a href="https://en.wikipedia.org/wiki/Chinese_calendar">Chinese Calendar</a>
               {ro.calendar === "chinese" ? check : x}
             </div>
-            <div className={ro.calendar === "islamicc" ? matchClassName : noMatchClassName} style={cellStyle}>
+            <div className={ro.calendar === "islamic-civil" ? matchClassName : noMatchClassName} style={cellStyle}>
               <a href="https://en.wikipedia.org/wiki/Islamic_calendar">Islamic Calendar</a>
               {ro.calendar === "islamicc" ? check : x}
             </div>
@@ -129,6 +133,51 @@ function BrowserTimeSettings() {
           </div>
         </td>
       </tr>
+      <tr>
+        <th>Date Formatting</th>
+        <td >
+          <table className='table table-bordered border-success table-hover' style={{ maxWidth: "25rem" }}>
+            <tbody>
+              <tr>
+                <th>Short Format</th>
+                <td>
+                  {Intl.DateTimeFormat(undefined, { dateStyle: 'short', }).formatToParts(new Date()).map(x => {
+                    if (x.type == "literal") {
+                      return x.value
+                    } else {
+                      return x.type.toUpperCase()
+                    }
+                  })}
+                </td>
+              </tr>
+              <tr>
+                <th>Medium Format</th>
+                <td>
+                  {Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).formatToParts(new Date()).map(x => {
+                    if (x.type == "literal") {
+                      return x.value
+                    } else {
+                      return x.type.toUpperCase()
+                    }
+                  })}
+                </td>
+              </tr>
+              <tr>
+                <th>Long Format</th>
+                <td>
+                  {Intl.DateTimeFormat(undefined, { dateStyle: 'full', }).formatToParts(new Date()).map(x => {
+                    if (x.type == "literal") {
+                      return x.value
+                    } else {
+                      return x.type.toUpperCase()
+                    }
+                  })}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
     </tbody>
   </table>
 
@@ -157,7 +206,7 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
         <LiveTimeDemo />
       </AsideCard>
       <p>
-        
+
       </p>
       <h4>What is UTC?</h4>
       <p>
@@ -282,6 +331,16 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
       </p>
       <p>
         Anyway, this is just a long way of saying that a variety of obstacles prevent us from changing our current system of timekeeping in all but the most minor ways.
+      </p>
+    </Section>
+    <Section name="Why the Current System Sucks" id="current_system">
+      <p>
+        Let's focus in on the UTC/Gregorian Calendar system for now, since it's what's used by most of the English speaking world.
+        However, many of the criticisms carry over to other systems as well.
+      </p>
+      <h4>Complexity</h4>
+      <p>
+        Th
       </p>
     </Section>
     <Section id="sources" name="Sources">
