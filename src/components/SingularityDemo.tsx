@@ -3,6 +3,7 @@ import { genPlane } from '../utils/uvplane';
 import { vec2 } from 'gl-matrix';
 import { TrackballCamera, } from '../utils/camera';
 import { createShader, createProgram, createTexture, overwriteTexture } from '../utils/webgl';
+import { codeStrToRGB, colorScheme } from "../utils/colorscheme";
 
 type SingularityDemoProps = {
   style?: React.CSSProperties,
@@ -78,14 +79,6 @@ type Point = {
   y: number
 }
 
-function convertColor(color: number) {
-  return [
-    (color >> 16) / 0xFF,
-    ((color >> 8) & 0xFF) / 0xFF,
-    (color & 0xFF) / 0xFF,
-  ];
-}
-
 class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
 
   // this is the ref that three js uses
@@ -138,12 +131,12 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
     this.torusLerpAlpha = this.gl.getUniformLocation(program, "u_lerpAlpha")!;
     this.torusWorldViewProjectionLoc = this.gl.getUniformLocation(program, "u_worldViewProjection")!;
 
-    const topcolor = convertColor(0x458588);
-    const bottomcolor = convertColor(0xdc3545);
-    const leftcolor = convertColor(0x98971a);
-    const rightcolor = convertColor(0xb16286);
-    const frontcolor = convertColor(0xd79921);
-    const backcolor = convertColor(0xEBDBB2);
+    const topcolor = codeStrToRGB(colorScheme.blue);
+    const bottomcolor = codeStrToRGB(colorScheme.red);
+    const leftcolor = codeStrToRGB(colorScheme.green);
+    const rightcolor = codeStrToRGB(colorScheme.purple);
+    const frontcolor = codeStrToRGB(colorScheme.yellow);
+    const backcolor = codeStrToRGB(colorScheme.teal);
 
 
     // map different buffers

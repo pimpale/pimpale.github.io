@@ -4,6 +4,7 @@ import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 import ArticleLayout from '../components/ArticleLayout';
 import { Check, X } from 'react-bootstrap-icons';
+import TimezoneDemo from '../components/TimezoneDemo';
 
 import AsideCard from '../components/AsideCard';
 
@@ -61,10 +62,6 @@ function BrowserTimeSettings() {
 
   const idtf = Intl.DateTimeFormat();
   const ro = idtf.resolvedOptions();
-
-
-  const out = idtf.formatToParts(new Date());
-  console.log(out)
 
   const check = <Check className='text-success d-block mx-auto display-5' />
   const x = <X className='text-danger d-block mx-auto display-5' />
@@ -282,16 +279,16 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
       <h4>FAQs</h4>
       <p>
         Is this system needlessly convoluted and complex?
-        <ul>
-          <li>Yes.</li>
-        </ul>
       </p>
+      <ul>
+        <li>Yes.</li>
+      </ul>
       <p>
         Is it possible to change the system?
-        <ul>
-          <li>No.</li>
-        </ul>
       </p>
+      <ul>
+        <li>No.</li>
+      </ul>
       <p>
         Like many other convoluted systems, the main reason that we can't clean it up is backward compatibility.
         If we changed the system, thousands of software maintainers would need to update their program's code.
@@ -338,9 +335,37 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
         Let's focus in on the UTC/Gregorian Calendar system for now, since it's what's used by most of the English speaking world.
         However, many of the criticisms carry over to other systems as well.
       </p>
-      <h4>Complexity</h4>
+      <h4>Needlessly Complicated</h4>
       <p>
-        Th
+        UTC makes a great effort to be within a second of UT1.
+        However, this property of UTC is almost never used.
+        Here's a map of the world's time zones:
+      </p>
+      <AsideCard id="time_zone_map" title='Time Zone Map'>
+        <TimezoneDemo
+          xsize={600}
+          ysize={400}
+          spheresize={400}
+        />
+      </AsideCard>
+      <h4>Can't Measure Intervals</h4>
+      <p>
+        Because of the presence of leap seconds, it's nontrivial to measure the duration between two dates.
+        If I want to find the duration between two dates in the past, I need to use a table of leap second insertion dates to help me.
+      </p>
+      <p>
+        Because the exact dates of leap seconds in the future haven't been defined, the exact time between two given UTC dates is <b>undefined</b>, if:
+      </p>
+      <ul>
+        <li>
+          at least one of those dates is in the future
+        </li>
+        <li>
+          the span between the two dates crosses a possible leap second insertion point.
+        </li>
+      </ul>
+      <h4>Not Long Term Sustainable</h4>
+      <p>
       </p>
     </Section>
     <Section id="sources" name="Sources">
@@ -354,7 +379,6 @@ import { createRoot } from 'react-dom/client';
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
-import { Calendar } from 'react-bootstrap-icons';
 
 const root = createRoot(document.getElementById('root')!);
 root.render(

@@ -561,12 +561,16 @@ uniform mat4 u_worldViewProjection;
 
 
 void main() {
-   float theta = a_position.x * u_thetaAlpha * 2.0 * PI;
+   float theta = (a_position.x-1.0) * u_thetaAlpha * 2.0 * PI;
    float phi = a_position.y * u_phiAlpha * PI;
 
    v_texCoord = a_position;
 
-   vec3 oldpos = vec3(a_position - 0.5, 0.0);
+   vec3 oldpos = vec3(
+       (a_position.x - 0.5), 
+       -(a_position.y - 0.5), 
+       0.0
+   );
    vec3 newpos = vec3(
        u_radius * cos(theta) * sin(phi),
        u_radius * sin(theta) * sin(phi),
@@ -593,7 +597,7 @@ out vec4 v_outColor;
 void main() {
   // color: 0xEBDBB2,
   // v_outColor = vec4(0.922,0.859,0.698, 1.0);
-  v_outColor = texture(u_render_tex, vec2(v_texCoord.x, -v_texCoord.y));
+  v_outColor = texture(u_render_tex, vec2(v_texCoord.x, v_texCoord.y));
 }
 `;
 

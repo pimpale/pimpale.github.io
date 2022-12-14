@@ -361,9 +361,9 @@ const TerrainGeneration = () => <ArticleLayout>{
             const txsize = 200;
             const tysize = 200;
             if (x === 0 || x === txsize - 1) {
-              return 0xdc3545;
+              return parseInt(colorScheme.red, 16);
             } else if (y === 0 || y === tysize - 1) {
-              return 0x6610f2;
+              return parseInt(colorScheme.indigo, 16);
             } else {
               const count = 10;
               const a = Math.floor(x / (txsize / count)) % 2;
@@ -983,6 +983,7 @@ import ReactDOM from 'react-dom';
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
+import { colorScheme } from '../utils/colorscheme';
 
 ReactDOM.render(
   <React.StrictMode>
