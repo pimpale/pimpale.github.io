@@ -343,8 +343,8 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
       </p>
       <AsideCard id="time_zone_map" title='Time Zone Map'>
         <TimezoneDemo
-          xsize={300}
-          ysize={200}
+          xsize={600}
+          ysize={400}
           spheresize={600}
         />
       </AsideCard>

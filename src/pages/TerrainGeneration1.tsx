@@ -45,6 +45,8 @@ const noise2D = makeNoise2D(Date.now());
 const noise3D = makeNoise3D(Date.now());
 const noise4D = makeNoise4D(Date.now());
 
+const gruvboxTheme = colorScheme();
+
 const TerrainGeneration = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
     <Section id="overview" name="Overview">
@@ -361,17 +363,17 @@ const TerrainGeneration = () => <ArticleLayout>{
             const txsize = 200;
             const tysize = 200;
             if (x === 0 || x === txsize - 1) {
-              return parseInt(colorScheme.red, 16);
+              return chroma(gruvboxTheme.red).rgb();
             } else if (y === 0 || y === tysize - 1) {
-              return parseInt(colorScheme.indigo, 16);
+              return chroma(gruvboxTheme.indigo).rgb();
             } else {
               const count = 10;
               const a = Math.floor(x / (txsize / count)) % 2;
               const b = Math.floor(y / (tysize / count)) % 2;
               if (a + b == 1) {
-                return 0xEBDBB2;
+                return chroma("0xEBDBB2").rgb();
               } else {
-                return 0x1d2021;
+                return chroma("0x1d2021").rgb();
               }
             }
           })}
@@ -984,6 +986,7 @@ import ReactDOM from 'react-dom';
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
 import { colorScheme } from '../utils/colorscheme';
+import chroma from 'chroma-js';
 
 ReactDOM.render(
   <React.StrictMode>

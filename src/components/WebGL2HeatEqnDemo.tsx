@@ -370,14 +370,14 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
       <div className="row">
         <div className="col-md-8 d-flex">
           <canvas
-            className="border border-dark"
+            className="border border-dark w-100 mb-3"
             ref={this.canvas}
             height={this.props.size}
             width={this.props.size}
           />
         </div>
         <div className="col-md-4">
-          <div className="border border-dark p-3 m-3">
+          <div className="border border-dark p-3">
             <h6>Controls</h6>
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>

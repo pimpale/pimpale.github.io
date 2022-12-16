@@ -192,15 +192,15 @@ export function boxBlur(img: ImageData, radius: number) {
   return newImg;
 }
 
-export function imageDataFromFn(xsize: number, ysize: number, fn: (x: number, y: number) => number) {
+export function imageDataFromFn(xsize: number, ysize: number, fn: (x: number, y: number) => [number, number, number]) {
   let img = new ImageData(xsize, ysize);
   for (let y = 0; y < img.height; y++) {
     for (let x = 0; x < img.width; x++) {
       const color = fn(x, y);
       const baseIdx = (x + y * ysize) * 4;
-      img.data[baseIdx + 0] = color >> 16;
-      img.data[baseIdx + 1] = (color >> 8) & 0xFF;
-      img.data[baseIdx + 2] = color & 0xFF;
+      img.data[baseIdx + 0] = color[0];
+      img.data[baseIdx + 1] = color[1];
+      img.data[baseIdx + 2] = color[2];
       img.data[baseIdx + 3] = 0xFF;
     }
   }

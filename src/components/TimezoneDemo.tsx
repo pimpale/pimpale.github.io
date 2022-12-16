@@ -6,7 +6,11 @@ import { TrackballCamera, } from '../utils/camera';
 import polmap from '../assets/timezonespace/polmap.geo.json';
 import tzmap from '../assets/timezonespace/tzmap.geo.json';
 import { colorScheme } from "../utils/colorscheme";
-import { FeatureCollection, Position } from "geojson";
+import { FeatureCollection, GeoJsonProperties, Position } from "geojson";
+import { getTimezoneOffset } from "date-fns-tz";
+import chroma from "chroma-js";
+
+const gruvboxTheme = colorScheme();
 
 type TimezoneDemoProps = {
   style?: React.CSSProperties,
@@ -22,7 +26,7 @@ const sphere_vs = `#version 300 es
 in vec2 a_position;
 out vec2 v_texCoord;
 
-const float u_radius = 0.5;
+const float u_radius = 0.75;
 
 uniform float u_phiAlpha;
 uniform float u_thetaAlpha;
@@ -41,7 +45,8 @@ void main() {
        (a_position.x - 0.5), 
        -(a_position.y - 0.5), 
        0.0
-   );
+   )*u_radius*2.0;
+
    vec3 newpos = vec3(
        u_radius * cos(theta) * sin(phi),
        u_radius * sin(theta) * sin(phi),
@@ -83,29 +88,7 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
   // this is the ref to the time zone canvas
   private canvas = React.createRef<HTMLCanvasElement>();
 
-  // this is the ref we use to select what kind of background we display
-  // political
-  // timezone
-  private viewSelect = React.createRef<HTMLSelectElement>();
-
-  private renderMultiplier!: WebGLUniformLocation;
-  private renderOffset!: WebGLUniformLocation;
-
-  // The index of the scalar texture we're using as a source
-  private scalarIndex = 0;
-
-  // the index of the vel texture we're using as a source
-  private velIndex = 0;
-
-  // the index of the pressure texture we're using as a source
-  private pressureIndex = 0;
-
-  // whether we need to reset on the next frame
-  private needsScalarReset = true;
-  private needsVelocityReset = true;
-
   private requestID!: number;
-
 
   // this is the ref we use to monitor circularization
   private spherenessRange = React.createRef<HTMLInputElement>();
@@ -196,7 +179,32 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     this.lerpRange.current!.addEventListener('input', this.handleCircularityChange);
 
     //this.updateCanvas(polmap as GeoJsonObject);
-    this.updateCanvas(tzmap as FeatureCollection);
+
+
+    const timezoneoffsets = tzmap.features.map(x => getTimezoneOffset(x.properties['tzid']));
+    const gruvboxscale = chroma
+      .scale([
+        gruvboxTheme.blue,
+        gruvboxTheme.indigo,
+        gruvboxTheme.purple,
+        gruvboxTheme.pink,
+        gruvboxTheme.red,
+        gruvboxTheme.orange,
+        gruvboxTheme.yellow,
+        gruvboxTheme.green,
+        gruvboxTheme.teal,
+        gruvboxTheme.cyan,
+        gruvboxTheme.blue,
+      ])
+      .domain([
+        Math.min(...timezoneoffsets),
+        Math.max(...timezoneoffsets)
+      ]);
+
+    this.updateCanvas(
+      tzmap as FeatureCollection,
+      x => gruvboxscale(getTimezoneOffset(x!['tzid'])).hex()
+    );
     // start animation loop
     this.animationLoop();
   }
@@ -248,19 +256,16 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     this.camera.cleanup();
   }
 
-  updateCanvas = (map: FeatureCollection) => {
+  updateCanvas = (map: FeatureCollection, colorPolicy: (properties: GeoJsonProperties) => string) => {
     const canvas = this.canvas.current!;
     const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = `#${colorScheme.blue}`;
+    ctx.fillStyle = gruvboxTheme.blue;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const lngToCanv = (lng: number) => (lng / 360 + 0.5) * this.props.xsize;
     const latToCanv = (lat: number) => (-lat / 180 + 0.5) * this.props.ysize;
 
     const colorVals = Object.values(colorScheme);
-
-    ctx.fillStyle = `#${colorScheme.green}`;
-    ctx.strokeStyle = "white";
 
     const drawPath = (coords: Position[]) => {
       const region = new Path2D();
@@ -269,19 +274,20 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
         region.lineTo(lngToCanv(lng), latToCanv(lat));
       }
       region.closePath();
-      ctx.stroke(region);
       ctx.fill(region, "evenodd");
     }
 
-    for (const country of map.features) {
-      if (country.geometry === null) {
+    for (const feature of map.features) {
+      if (feature.geometry === null) {
         continue;
       }
-      if (country.geometry.type === 'Polygon') {
-        const coords = country.geometry.coordinates;
+      ctx.strokeStyle = "white";
+      ctx.fillStyle = colorPolicy(feature.properties);
+      if (feature.geometry.type === 'Polygon') {
+        const coords = feature.geometry.coordinates;
         drawPath(coords[0]);
-      } else if (country.geometry.type === 'MultiPolygon') {
-        for (const coords of country.geometry.coordinates) {
+      } else if (feature.geometry.type === 'MultiPolygon') {
+        for (const coords of feature.geometry.coordinates) {
           drawPath(coords[0]);
         }
       }
@@ -319,33 +325,14 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     return <div style={this.props.style} className={this.props.className}>
       <div className="row">
         <div className="col-md-8 d-flex">
-          <div>
-            <canvas
-              className="border border-dark mx-3 my-3"
-              ref={this.canvas}
-              width={this.props.xsize}
-              height={this.props.ysize}
-            />
-            <canvas
-              className="border border-dark mx-3 my-3"
-              ref={this.sphereCanvas}
-              width={this.props.spheresize}
-              height={this.props.spheresize}
-            />
-          </div>
+          <canvas
+            className="border border-dark mb-3 w-100"
+            ref={this.canvas}
+            width={this.props.xsize}
+            height={this.props.ysize}
+          />
         </div>
         <div className="col-md-4">
-          <div className="border border-dark p-3 m-3">
-            <div className="form-group mb-3">
-              <label className="form-label">View Data</label>
-              <select className="form-select" defaultValue={"SCALAR"} ref={this.viewSelect}>
-                <option value="SCALAR">Time Zones</option>
-                <option value="PRESSURE">Political Map</option>
-                <option value="DIVERGENCE">Continents</option>
-              </select>
-            </div>
-          </div>
-
           <div className="border border-dark p-3 m-3">
             <div className="form-group mb-3">
               <label className="form-label">Sphereness</label>
@@ -371,6 +358,14 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <canvas
+          className="border border-dark"
+          ref={this.sphereCanvas}
+          width={this.props.spheresize}
+          height={this.props.spheresize}
+        />
       </div>
     </div>
   }

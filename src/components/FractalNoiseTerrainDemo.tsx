@@ -214,13 +214,13 @@ class FractalNoiseTerrainDemo extends React.Component<FractalNoiseTerrainDemoPro
   render() {
     return <div style={this.props.style} className={this.props.className}>
       <div className="row">
-        <div className="col-8 d-flex">
+        <div className="col-md-8 d-flex">
           <ImageDataDisplay
             data={this.state.img}
-            className="border border-dark align-self-center w-100"
+            className="border border-dark align-self-center w-100 mb-3"
           />
         </div >
-        <div className="col-md-3">
+        <div className="col-md-4">
           <div className="border border-dark p-3 mb-3">
             <h6>Parameters</h6>
             <div className="form-group">

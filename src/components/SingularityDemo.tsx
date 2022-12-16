@@ -3,7 +3,8 @@ import { genPlane } from '../utils/uvplane';
 import { vec2 } from 'gl-matrix';
 import { TrackballCamera, } from '../utils/camera';
 import { createShader, createProgram, createTexture, overwriteTexture } from '../utils/webgl';
-import { codeStrToRGB, colorScheme } from "../utils/colorscheme";
+import { colorScheme } from "../utils/colorscheme";
+import chroma from "chroma-js";
 
 type SingularityDemoProps = {
   style?: React.CSSProperties,
@@ -11,6 +12,7 @@ type SingularityDemoProps = {
   size: number,
 }
 
+const gruvboxTheme = colorScheme();
 
 const torus_vs = `#version 300 es
 layout(location=0) in vec3 a_position;
@@ -131,12 +133,12 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
     this.torusLerpAlpha = this.gl.getUniformLocation(program, "u_lerpAlpha")!;
     this.torusWorldViewProjectionLoc = this.gl.getUniformLocation(program, "u_worldViewProjection")!;
 
-    const topcolor = codeStrToRGB(colorScheme.blue);
-    const bottomcolor = codeStrToRGB(colorScheme.red);
-    const leftcolor = codeStrToRGB(colorScheme.green);
-    const rightcolor = codeStrToRGB(colorScheme.purple);
-    const frontcolor = codeStrToRGB(colorScheme.yellow);
-    const backcolor = codeStrToRGB(colorScheme.teal);
+    const topcolor = chroma(gruvboxTheme.blue).rgb();
+    const bottomcolor = chroma(gruvboxTheme.red).rgb();
+    const leftcolor = chroma(gruvboxTheme.green).rgb();
+    const rightcolor = chroma(gruvboxTheme.purple).rgb();
+    const frontcolor = chroma(gruvboxTheme.yellow).rgb();
+    const backcolor = chroma(gruvboxTheme.teal).rgb();
 
 
     // map different buffers
