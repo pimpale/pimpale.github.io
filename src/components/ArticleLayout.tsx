@@ -9,7 +9,7 @@ export interface ArticleLayoutProps {
 }
 
 const ArticleLayout = (props: ArticleLayoutProps) => <Layout>
-  <div className="container mt-5">
+  <div className="container-xxl mt-5">
     <CitationManager prefix="source-">{
       c => props.children(c)
     }</CitationManager>

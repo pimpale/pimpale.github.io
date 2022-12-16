@@ -343,9 +343,9 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
       </p>
       <AsideCard id="time_zone_map" title='Time Zone Map'>
         <TimezoneDemo
-          xsize={600}
-          ysize={400}
-          spheresize={400}
+          xsize={300}
+          ysize={200}
+          spheresize={600}
         />
       </AsideCard>
       <h4>Can't Measure Intervals</h4>

@@ -30,6 +30,15 @@ $cyan:    #8ec07c;
 
 $link-hover-color: lighten($blue, 10);
 
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1200px
+);
+
+
 @import "@fontsource/literata/latin";
 
 $font-family-base: "Literata";
