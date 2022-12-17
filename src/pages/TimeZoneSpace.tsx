@@ -342,11 +342,7 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
         Here's a map of the world's time zones:
       </p>
       <AsideCard id="time_zone_map" title='Time Zone Map'>
-        <TimezoneDemo
-          xsize={600}
-          ysize={400}
-          spheresize={600}
-        />
+        <TimezoneDemo />
       </AsideCard>
       <h4>Can't Measure Intervals</h4>
       <p>

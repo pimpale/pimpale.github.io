@@ -1115,7 +1115,6 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
     this.handleCircularityChange();
   }
 
-
   handleCircularityChange = () => {
     // how much to lerp towards circle
     const thetaAlpha = this.thetaRange.current!.valueAsNumber;
@@ -1125,17 +1124,6 @@ class IncompressibleSphereFluidDemo extends React.Component<IncompressibleSphere
     this.sphereGl.uniform1f(this.sphereThetaAlpha, thetaAlpha);
     this.sphereGl.uniform1f(this.spherePhiAlpha, phiAlpha);
     this.sphereGl.uniform1f(this.sphereLerpAlpha, lerpAlpha);
-  }
-
-  getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
-    const rect = canvas.getBoundingClientRect(); // abs. size of element
-    const scaleX = canvas.width / rect.width;    // relationship bitmap vs. element for X
-    const scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
-
-    return {
-      x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
-      y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
-    }
   }
 
   componentWillUnmount() {

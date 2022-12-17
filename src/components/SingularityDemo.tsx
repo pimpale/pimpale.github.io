@@ -133,12 +133,12 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
     this.torusLerpAlpha = this.gl.getUniformLocation(program, "u_lerpAlpha")!;
     this.torusWorldViewProjectionLoc = this.gl.getUniformLocation(program, "u_worldViewProjection")!;
 
-    const topcolor = chroma(gruvboxTheme.blue).rgb();
-    const bottomcolor = chroma(gruvboxTheme.red).rgb();
-    const leftcolor = chroma(gruvboxTheme.green).rgb();
-    const rightcolor = chroma(gruvboxTheme.purple).rgb();
-    const frontcolor = chroma(gruvboxTheme.yellow).rgb();
-    const backcolor = chroma(gruvboxTheme.teal).rgb();
+    const topcolor = chroma(gruvboxTheme.blue).gl().slice(0,3);
+    const bottomcolor = chroma(gruvboxTheme.red).gl().slice(0,3);
+    const leftcolor = chroma(gruvboxTheme.green).gl().slice(0,3);
+    const rightcolor = chroma(gruvboxTheme.purple).gl().slice(0,3);
+    const frontcolor = chroma(gruvboxTheme.yellow).gl().slice(0,3);
+    const backcolor = chroma(gruvboxTheme.teal).gl().slice(0,3);
 
 
     // map different buffers

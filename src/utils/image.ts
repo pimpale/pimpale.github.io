@@ -1,5 +1,5 @@
 import assert from '../utils/assert';
-import {mod} from '../utils/math';
+import { mod } from '../utils/math';
 
 export async function loadImage(imageUrl: string) {
   const response = await fetch(imageUrl);

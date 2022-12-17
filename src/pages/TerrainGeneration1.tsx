@@ -371,9 +371,9 @@ const TerrainGeneration = () => <ArticleLayout>{
               const a = Math.floor(x / (txsize / count)) % 2;
               const b = Math.floor(y / (tysize / count)) % 2;
               if (a + b == 1) {
-                return chroma("0xEBDBB2").rgb();
+                return chroma("#EBDBB2").rgb();
               } else {
-                return chroma("0x1d2021").rgb();
+                return chroma("#1d2021").rgb();
               }
             }
           })}

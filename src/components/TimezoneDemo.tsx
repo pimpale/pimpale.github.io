@@ -9,15 +9,14 @@ import { colorScheme } from "../utils/colorscheme";
 import { FeatureCollection, GeoJsonProperties, Position } from "geojson";
 import { getTimezoneOffset } from "date-fns-tz";
 import chroma from "chroma-js";
+import { CanvasMouseTracker, Point } from "../utils/canvas";
+import { format } from "date-fns";
 
 const gruvboxTheme = colorScheme();
 
 type TimezoneDemoProps = {
   style?: React.CSSProperties,
   className?: string
-  xsize: number
-  ysize: number
-  spheresize: number
 }
 
 const sphere_vs = `#version 300 es
@@ -81,12 +80,24 @@ const xn = 30;
 const yn = 30
 const sphereVertexes = genPlane(xn, yn);
 
+
 type TimezoneDemoState = {}
 
 class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState> {
 
+  private xsize = 1200;
+  private ysize = 800;
+  private spheresize = 600;
+
   // this is the ref to the time zone canvas
   private canvas = React.createRef<HTMLCanvasElement>();
+
+  // this is the ref to the tzid
+  private tzidRef = React.createRef<HTMLSpanElement>();
+  private gmtOffsetRef = React.createRef<HTMLSpanElement>();
+
+  // mouse status
+  private cmt!: CanvasMouseTracker;
 
   private requestID!: number;
 
@@ -125,7 +136,7 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
       this.sphereGl.enable(this.sphereGl.DEPTH_TEST);
 
       // create texture
-      this.sphereTexture = createTexture(this.sphereGl, this.props.spheresize, this.props.spheresize)!;
+      this.sphereTexture = createTexture(this.sphereGl, this.spheresize, this.spheresize)!;
 
       const program = createProgram(
         this.sphereGl,
@@ -178,37 +189,23 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     this.phiRange.current!.addEventListener('input', this.handleCircularityChange);
     this.lerpRange.current!.addEventListener('input', this.handleCircularityChange);
 
-    //this.updateCanvas(polmap as GeoJsonObject);
+    // enable canvas mouse tracker
+    this.cmt = new CanvasMouseTracker(this.canvas.current!);
+    this.cmt.addMouseDownListener(x => {
+      const tzid = this.getTzId(x);
+      const gmtOffset = getTimezoneOffset(tzid);
+      this.tzidRef.current!.textContent = tzid;
+      const sign = gmtOffset < 0 ? '-' : '+';
+      const minutes = `00${(Math.abs(gmtOffset) / (60 * 1000)) % 60}`.slice(-2);
+      const hours = `00${Math.floor(Math.abs(gmtOffset) / (60 * 60 * 1000))}`.slice(-2);
+      this.gmtOffsetRef.current!.textContent = `GMT${sign}${hours}:${minutes}`;
+      this.updateCanvasTZ(tzid);
+    });
 
-
-    const timezoneoffsets = tzmap.features.map(x => getTimezoneOffset(x.properties['tzid']));
-    const gruvboxscale = chroma
-      .scale([
-        gruvboxTheme.blue,
-        gruvboxTheme.indigo,
-        gruvboxTheme.purple,
-        gruvboxTheme.pink,
-        gruvboxTheme.red,
-        gruvboxTheme.orange,
-        gruvboxTheme.yellow,
-        gruvboxTheme.green,
-        gruvboxTheme.teal,
-        gruvboxTheme.cyan,
-        gruvboxTheme.blue,
-      ])
-      .domain([
-        Math.min(...timezoneoffsets),
-        Math.max(...timezoneoffsets)
-      ]);
-
-    this.updateCanvas(
-      tzmap as FeatureCollection,
-      x => gruvboxscale(getTimezoneOffset(x!['tzid'])).hex()
-    );
     // start animation loop
+    this.updateCanvasTZ();
     this.animationLoop();
   }
-
 
   handleSphereChange = () => {
     const spherenessAlpha = this.spherenessRange.current!.valueAsNumber;
@@ -232,17 +229,6 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     this.sphereGl.uniform1f(this.sphereLerpAlpha, lerpAlpha);
   }
 
-  getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
-    const rect = canvas.getBoundingClientRect(); // abs. size of element
-    const scaleX = canvas.width / rect.width;    // relationship bitmap vs. element for X
-    const scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
-
-    return {
-      x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
-      y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
-    }
-  }
-
   componentWillUnmount() {
     // remove listeners on thing
     this.spherenessRange.current!.removeEventListener('input', this.handleSphereChange);
@@ -256,51 +242,141 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     this.camera.cleanup();
   }
 
-  updateCanvas = (map: FeatureCollection, colorPolicy: (properties: GeoJsonProperties) => string) => {
+
+  // utilities for drawing geojson
+  lngToCanv = (lng: number) => (lng / 360 + 0.5) * this.xsize;
+  latToCanv = (lat: number) => (-lat / 180 + 0.5) * this.ysize;
+  createRegion = (coords: Position[]) => {
+    const region = new Path2D();
+    region.moveTo(this.lngToCanv(coords[0][0]), this.latToCanv(coords[0][1]));
+    for (const [lng, lat] of coords) {
+      region.lineTo(this.lngToCanv(lng), this.latToCanv(lat));
+    }
+    region.closePath();
+    return region;
+  }
+
+  updateCanvasTZ = (tzid?: string) => {
+    const gruvboxscale = chroma
+      .scale([
+        gruvboxTheme.blue,
+        gruvboxTheme.indigo,
+        gruvboxTheme.purple,
+        gruvboxTheme.pink,
+        gruvboxTheme.red,
+        gruvboxTheme.orange,
+        gruvboxTheme.yellow,
+        gruvboxTheme.green,
+        gruvboxTheme.teal,
+        gruvboxTheme.cyan,
+        gruvboxTheme.blue,
+      ])
+      .domain([
+        -12 * 60 * 60 * 1000,
+        12 * 60 * 60 * 1000
+      ]);
+    this.updateCanvas(
+      tzmap as FeatureCollection,
+      x => gruvboxscale(getTimezoneOffset(x!['tzid'])).hex(),
+      x => x!['tzid'] === tzid
+    );
+
+  }
+
+  getTzId = (p: Point) => {
+    const canvas = this.canvas.current!;
+    const ctx = canvas.getContext('2d')!;
+
+    // returns if the point is in the region denoted by the coords
+    const isInRegion = (coords: Position[]) =>
+      ctx.isPointInPath(this.createRegion(coords), p.x, p.y, "evenodd");
+
+    for (const feature of (tzmap as FeatureCollection).features) {
+      if (feature.geometry === null) {
+        continue;
+      }
+      let inFeature = false;
+      if (feature.geometry.type === 'Polygon') {
+        const coords = feature.geometry.coordinates;
+        inFeature = isInRegion(coords[0]);
+      } else if (feature.geometry.type === 'MultiPolygon') {
+        inFeature = feature.geometry.coordinates.some(coords => isInRegion(coords[0]));
+      }
+      if (inFeature) {
+        return feature.properties!['tzid'];
+      }
+    }
+    return undefined;
+  }
+
+  updateCanvas = (
+    map: FeatureCollection,
+    colorPolicy: (properties: GeoJsonProperties) => string,
+    selectedPolicy: (properties: GeoJsonProperties) => boolean,
+  ) => {
     const canvas = this.canvas.current!;
     const ctx = canvas.getContext('2d')!;
     ctx.fillStyle = gruvboxTheme.blue;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = gruvboxTheme.bg0;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const lngToCanv = (lng: number) => (lng / 360 + 0.5) * this.props.xsize;
-    const latToCanv = (lat: number) => (-lat / 180 + 0.5) * this.props.ysize;
 
     const colorVals = Object.values(colorScheme);
 
-    const drawPath = (coords: Position[]) => {
-      const region = new Path2D();
-      region.moveTo(lngToCanv(coords[0][0]), latToCanv(coords[0][1]));
-      for (const [lng, lat] of coords) {
-        region.lineTo(lngToCanv(lng), latToCanv(lat));
-      }
-      region.closePath();
+    const drawRegion = (coords: Position[]) => {
+      const region = this.createRegion(coords);
       ctx.fill(region, "evenodd");
+      ctx.stroke(region);
     }
 
     for (const feature of map.features) {
       if (feature.geometry === null) {
         continue;
       }
-      ctx.strokeStyle = "white";
       ctx.fillStyle = colorPolicy(feature.properties);
       if (feature.geometry.type === 'Polygon') {
         const coords = feature.geometry.coordinates;
-        drawPath(coords[0]);
+        drawRegion(coords[0]);
       } else if (feature.geometry.type === 'MultiPolygon') {
         for (const coords of feature.geometry.coordinates) {
-          drawPath(coords[0]);
+          drawRegion(coords[0]);
         }
       }
     }
+
+    ctx.strokeStyle = gruvboxTheme.fg0;
+    ctx.lineWidth = 3;
+
+    const drawSelectedRegion = (coords: Position[]) => {
+      const region = this.createRegion(coords);
+      ctx.stroke(region);
+    }
+
+    for (const feature of map.features) {
+      if (feature.geometry === null) {
+        continue;
+      }
+      if (!selectedPolicy(feature.properties)) {
+        continue;
+      }
+      if (feature.geometry.type === 'Polygon') {
+        const coords = feature.geometry.coordinates;
+        drawSelectedRegion(coords[0]);
+      } else if (feature.geometry.type === 'MultiPolygon') {
+        for (const coords of feature.geometry.coordinates) {
+          drawSelectedRegion(coords[0]);
+        }
+      }
+    }
+
   }
 
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
     this.camera.update();
-
     {
       // set uniform
-      const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.spheresize, this.props.spheresize);
+      const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.spheresize, this.spheresize);
       this.sphereGl.uniformMatrix4fv(this.sphereWorldViewProjectionLoc, false, worldViewProjectionMat);
 
       // update the texture
@@ -324,16 +400,41 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
   render() {
     return <div style={this.props.style} className={this.props.className}>
       <div className="row">
-        <div className="col-md-8 d-flex">
+        <div className="col-md-8">
           <canvas
             className="border border-dark mb-3 w-100"
             ref={this.canvas}
-            width={this.props.xsize}
-            height={this.props.ysize}
+            width={this.xsize}
+            height={this.ysize}
           />
         </div>
         <div className="col-md-4">
-          <div className="border border-dark p-3 m-3">
+          <table className='table table-bordered border-dark table-hover' style={{ maxWidth: "25rem" }}>
+            <tbody>
+              <tr>
+                <th>Timezone ID (tzid)</th>
+                <td><span ref={this.tzidRef} children="N/A" /></td>
+              </tr>
+              <tr>
+                <th>GMT Offset</th>
+                <td><span ref={this.gmtOffsetRef} children="N/A" /></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="row mt-3">
+        <div className="col-md-8">
+          <canvas
+            className="border border-dark mb-3 w-100"
+            ref={this.sphereCanvas}
+            width={this.spheresize}
+            height={this.spheresize}
+          />
+        </div>
+
+        <div className="col-md-4">
+          <div className="border border-dark p-3">
             <div className="form-group mb-3">
               <label className="form-label">Sphereness</label>
               <input type="range" className="form-range" min="0" max="1" step="0.05" defaultValue="0" ref={this.spherenessRange} />
@@ -358,14 +459,7 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
             </div>
           </div>
         </div>
-      </div>
-      <div>
-        <canvas
-          className="border border-dark"
-          ref={this.sphereCanvas}
-          width={this.props.spheresize}
-          height={this.props.spheresize}
-        />
+
       </div>
     </div>
   }
