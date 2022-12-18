@@ -344,10 +344,19 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
       <AsideCard id="time_zone_map" title='Time Zone Map'>
         <TimezoneDemo />
       </AsideCard>
+      <p>
+        Notice that the vast majority of people don't live exactly at the center of their time zone.
+        So, for them, the fact that UTC stays within a second of true solar time is irrelevant, since their timezone offset is not accurate enough.
+        And in practice, people who need to know the exact solar time (like astronomers) need to use lookup tables and equations
+        in order to calculate the angle of the sun and other celestial objects based on the time even with UTC.
+      </p>
       <h4>Can't Measure Intervals</h4>
       <p>
         Because of the presence of leap seconds, it's nontrivial to measure the duration between two dates.
         If I want to find the duration between two dates in the past, I need to use a table of leap second insertion dates to help me.
+      </p>
+      <p>
+        It's even worse if I want to calculate the interval between a date in the past and a date in the future, or between two dates in the future.
       </p>
       <p>
         Because the exact dates of leap seconds in the future haven't been defined, the exact time between two given UTC dates is <b>undefined</b>, if:
@@ -357,10 +366,11 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
           at least one of those dates is in the future
         </li>
         <li>
-          the span between the two dates crosses a possible leap second insertion point.
+          the span between the two dates crosses a possible leap second insertion point (midnight on the last day of any month).
         </li>
       </ul>
       <h4>Not Long Term Sustainable</h4>
+        While theoretically a leap second may be inserted 
       <p>
       </p>
     </Section>
