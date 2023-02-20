@@ -4,6 +4,7 @@ import { vec2 } from 'gl-matrix';
 import { TrackballCamera, } from '../utils/camera';
 import { createShader, createProgram, createTexture, overwriteTexture } from '../utils/webgl';
 import { colorScheme } from "../utils/colorscheme";
+import { checkVisible } from "../utils/visibility";
 import chroma from "chroma-js";
 
 import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
@@ -12,7 +13,8 @@ type SingularityDemoProps = {
   style?: React.CSSProperties,
   className?: string,
   size: number,
-  showInstructions: boolean
+  showInstructions?: boolean
+  runInBackground?: boolean
 }
 
 const gruvboxTheme = colorScheme();
@@ -225,6 +227,11 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
 
   animationLoop = () => {
     this.camera.update();
+
+    // exit early if not on screen (don't lag the computer)
+    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+      return;
+    }
 
     {
       // set uniform

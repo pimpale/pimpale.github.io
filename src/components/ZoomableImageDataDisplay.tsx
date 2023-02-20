@@ -13,7 +13,7 @@ interface ImageDataDisplayProps {
   displayHeight: number,
   className?: string,
   style?: React.CSSProperties,
-  showInstructions: boolean
+  showInstructions?: boolean
 }
 
 class ImageDataDisplay extends React.Component<ImageDataDisplayProps> {

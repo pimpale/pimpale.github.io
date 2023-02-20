@@ -1,9 +1,9 @@
 import React from "react";
 import { createShader, createProgram, createR32FTexture, overwriteR32FTexture, createRG32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
+import { checkVisible } from "../utils/visibility";
 import { createCurlNoise } from '../utils/noise';
 import { CanvasMouseTracker } from '../utils/canvas';
-import { checkVisible } from "../utils/visibility";
 import { Arrow90degDown } from "react-bootstrap-icons";
 
 type WebGL2FluidAdvectionDemoProps = {

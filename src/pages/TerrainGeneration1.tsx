@@ -459,7 +459,6 @@ const TerrainGeneration = () => <ArticleLayout>{
           zoomRadius={5}
           displayHeight={240}
           data={grayscaleMap(new ScalarMap(240, 240, (x, y) => noise2D(x / 20, y / 20) / 2 + 0.5))}
-          showInstructions={false}
         />
         <p>
           You can see that every pixel has a neighboring pixel that is similarly colored.
@@ -497,7 +496,6 @@ const TerrainGeneration = () => <ArticleLayout>{
           texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => noise2D(x / 20, y / 20) / 2 + 0.5))}
           aspectRatio={2}
           detailLevel={20}
-          showInstructions={false}
         />
       </AsideCard>
       <p>
@@ -671,7 +669,6 @@ const TerrainGeneration = () => <ArticleLayout>{
           }
           ))}
           detailLevel={20}
-          showInstructions={false}
         />
       </AsideCard>
       <h4>Overcoming Distortion</h4>

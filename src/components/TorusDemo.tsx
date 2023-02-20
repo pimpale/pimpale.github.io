@@ -2,6 +2,7 @@ import React from "react";
 import { genPlane } from '../utils/uvplane';
 import { vec2 } from 'gl-matrix';
 import { TrackballCamera, } from '../utils/camera';
+import { checkVisible } from "../utils/visibility";
 import { createShader, createProgram, createTexture, overwriteTexture } from '../utils/webgl';
 
 import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
@@ -13,7 +14,8 @@ type TorusDemoProps = {
   size: number,
   aspectRatio: number,
   detailLevel: number,
-  showInstructions: boolean
+  showInstructions?: boolean
+  runInBackground?: boolean
 }
 
 
@@ -210,6 +212,11 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
   animationLoop = () => {
     this.camera.update();
 
+    // exit early if not on screen (don't lag the computer)
+    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+      return;
+    }
+
     {
       // set uniform
       const worldViewProjectionMat = this.camera.getTrackballCameraMatrix(this.props.size, this.props.size);
@@ -249,7 +256,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
           onInput={this.handleTorusChange}
         />
       </div>
-      <div className='text-center pb-3'  hidden={!this.props.showInstructions}>
+      <div className='text-center pb-3' hidden={!this.props.showInstructions}>
         <Arrow90degUp className='fs-3' style={{ transform: "translateY(-1.4rem)" }} />
         <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Slide To Turn Square Into Torus!</span>
       </div>
