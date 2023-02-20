@@ -1,14 +1,19 @@
 import React from "react";
 import { createShader, createProgram, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
+import { checkVisible } from '../utils/visibility';
 import { createCurlNoise } from '../utils/noise';
 import { CanvasMouseTracker } from '../utils/canvas';
+
+import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
 
 type WebGL2IncompressibleFluidDemoProps = {
   style?: React.CSSProperties,
   className?: string
   xsize: number
   ysize: number
+  showInstructions?: boolean
+  runInBackground?: boolean
 }
 
 // the vertex shader is used in 2 different programs, it basically is just for translating clip space
@@ -235,6 +240,9 @@ precision highp sampler2D;
 // the scalar texture
 uniform sampler2D u_scalar_tex;
 
+// multipler to apply to the scalar texture before drawing
+uniform float u_multiplier;
+
 // offset to apply
 uniform float u_offset;
 
@@ -324,7 +332,7 @@ void main() {
   float arrow_dist = arrow(pxCoord, vel_vec * ARROW_TILE_SIZE);
   vec4 arrow_col = vec4(0, 1.0, 0, clamp(arrow_dist, 0.0, 1.0));
 
-  float scalar_val = clamp(texture(u_scalar_tex, v_texCoord).x + u_offset, 0.0, 1.0);
+  float scalar_val = clamp(texture(u_scalar_tex, v_texCoord).x*u_multiplier + u_offset, 0.0, 1.0);
   vec4 field_col = vec4(inferno(scalar_val), 1.0);
 
   outColor = mix(arrow_col, field_col, arrow_col.a);
@@ -376,7 +384,10 @@ void main() {
 }
 `
 
-type WebGL2IncompressibleFluidDemoState = {}
+type WebGL2IncompressibleFluidDemoState = {
+  // if we're viewing pressure
+  displayField: "SCALAR" | "PRESSURE" | "DIVERGENCE";
+}
 
 class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2IncompressibleFluidDemoProps, WebGL2IncompressibleFluidDemoState> {
 
@@ -414,6 +425,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
   private newMouseLoc!: WebGLUniformLocation;
   private oldMouseLoc!: WebGLUniformLocation;
 
+  private renderMultiplier!: WebGLUniformLocation;
   private renderOffset!: WebGLUniformLocation;
 
   private prog_advect_scalar!: WebGLProgram;
@@ -440,13 +452,13 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
   // mouse status
   private cmt!: CanvasMouseTracker;
 
-  // if we're viewing pressure
-  private viewPressure = false;
-
   private requestID!: number;
 
   constructor(props: WebGL2IncompressibleFluidDemoProps) {
     super(props);
+    this.state = {
+      displayField: "SCALAR"
+    }
   }
 
   componentDidMount() {
@@ -470,7 +482,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
     // create pingpongable textures and framebuffers for the scalar field
     for (let i = 0; i < 2; i++) {
-      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize))!;
+      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize * this.props.ysize))!;
       this.scalarTextures.push(tex);
 
       const fbo = this.gl.createFramebuffer()!;
@@ -491,7 +503,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     // create pingpongable textures and framebuffers for the velocity field
     for (let i = 0; i < 2; i++) {
       // create velocity texture
-      const tex = createRG32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize*2))!;
+      const tex = createRG32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize * this.props.ysize * 2))!;
       this.velTextures.push(tex);
 
       const fbo = this.gl.createFramebuffer()!;
@@ -511,7 +523,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
     // create pingpongable textures and framebuffers for the divergence field
     // create divergence texture
-    this.divTexture = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize))!;
+    this.divTexture = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize * this.props.ysize))!;
     this.divFramebuffer = this.gl.createFramebuffer()!;
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.divFramebuffer);
     // configure the currently active framebuffer to use te
@@ -526,7 +538,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     // create pingpongable textures and framebuffers for the pressure field
     for (let i = 0; i < 2; i++) {
       // create pressure texture
-      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize*this.props.ysize))!;
+      const tex = createR32FTexture(this.gl, this.props.xsize, this.props.ysize, new Float32Array(this.props.xsize * this.props.ysize))!;
 
       this.pressureTextures.push(tex);
 
@@ -726,6 +738,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
       const positionLoc = this.gl.getAttribLocation(this.prog_render, 'c_position');
       const scalarTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_scalar_tex');
       const velTexLoc = this.gl.getUniformLocation(this.prog_render, 'u_vel_tex');
+      this.renderMultiplier = this.gl.getUniformLocation(this.prog_render, 'u_multiplier')!;
       this.renderOffset = this.gl.getUniformLocation(this.prog_render, 'u_offset')!;
 
       // setup our attributes to tell WebGL how to pull
@@ -802,6 +815,11 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
+    // exit early if not on screen (don't lag the computer)
+    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+      return;
+    }
+
 
     // handle drawing
     const mousePos = this.cmt.mousePos;
@@ -870,7 +888,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
       let data;
       switch (this.velocitySelect.current?.value) {
         case 'curlnoise':
-          data = createCurlNoise(3,this.props.xsize, this.props.ysize, Math.random() * 500);
+          data = createCurlNoise(3, this.props.xsize, this.props.ysize, Math.random() * 500);
           break;
         default:
           data = new Float32Array(this.props.xsize * this.props.ysize * 2);
@@ -984,17 +1002,30 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     // now draw to canvas
     this.gl.useProgram(this.prog_render);
 
-    if (this.viewPressure) {
-      //bind the pressure texture to texture unit 0
-      this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
-      // this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
-      this.gl.uniform1f(this.renderOffset, 0.5);
-    } else {
-      this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
-      this.gl.uniform1f(this.renderOffset, 0);
+    //bind the texture we're rendering to texture unit 0
+    this.gl.activeTexture(this.gl.TEXTURE0);
+    switch (this.state.displayField) {
+      case "PRESSURE": {
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.pressureTextures[this.pressureIndex]);
+        this.gl.uniform1f(this.renderMultiplier, 1);
+        this.gl.uniform1f(this.renderOffset, 0.5);
+        break;
+      }
+      case "DIVERGENCE": {
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.divTexture);
+        this.gl.uniform1f(this.renderMultiplier, 100);
+        this.gl.uniform1f(this.renderOffset, 0.5);
+        break;
+      }
+      case "SCALAR":
+      default: {
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.scalarTextures[this.scalarIndex]);
+        this.gl.uniform1f(this.renderMultiplier, 1);
+        this.gl.uniform1f(this.renderOffset, 0);
+        break;
+      }
     }
+
 
     // set the canvas as the current framebuffer
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
@@ -1006,17 +1037,21 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     return <div style={this.props.style} className={this.props.className}>
       <div className="row">
         <div className="col-md-8 d-flex">
-        <div>
-          <canvas
-            className="border border-dark mx-auto my-3"
-            ref={this.canvas}
-            height={this.props.ysize}
-            width={this.props.xsize}
-          />
+          <div>
+            <div className='text-center pb-3' hidden={!this.props.showInstructions}>
+              <Arrow90degDown className='fs-3' style={{ transform: "translateY(0.5rem)" }} />
+              <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Drag to Stir!</span>
+            </div>
+            <canvas
+              className="border border-dark mx-auto"
+              ref={this.canvas}
+              height={this.props.ysize}
+              width={this.props.xsize}
+            />
           </div>
         </div>
         <div className="col-md-4">
-          <div className="border border-dark p-3 m-3">
+          <div className="border border-dark p-3">
             <h6>Controls</h6>
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>
@@ -1040,10 +1075,34 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
               </select>
               <button className="btn btn-primary btn-sm" onClick={() => this.needsVelocityReset = true}>Reset Velocity</button>
             </div>
+
             <div className="form-group">
-              <div className="custom-control custom-checkbox">
-                <input type="checkbox" className="custom-control-input" onClick={() => this.viewPressure = !this.viewPressure}/>
-                <label className="custom-control-label">View Pressure</label>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  checked={this.state.displayField === "SCALAR"}
+                  onChange={() => this.setState({ displayField: "SCALAR" })}
+                />
+                <label className="form-check-label">View Scalar</label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  checked={this.state.displayField === "PRESSURE"}
+                  onChange={() => this.setState({ displayField: "PRESSURE" })}
+                />
+                <label className="form-check-label">View Pressure</label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  checked={this.state.displayField === "DIVERGENCE"}
+                  onChange={() => this.setState({ displayField: "DIVERGENCE" })}
+                />
+                <label className="form-check-label">View Divergence</label>
               </div>
             </div>
           </div>

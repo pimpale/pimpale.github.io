@@ -14,7 +14,6 @@ import ScalarMap from '../utils/ScalarMap';
 import { grayscaleMap, thresholdHeightMap } from '../utils/map';
 
 
-
 import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -205,7 +204,14 @@ const TerrainGeneration = () => <ArticleLayout>{
           The most common use of the word <strong>singularity</strong> is in reference to the center of a black hole, where gravity is infinitely strong.
           However, a singularity can refer to any point where a mathematical function is undefined or has a undefined derivative.
         </p>
-        <SingularityDemo className="mx-auto" style={{ width: "20em" }} size={400} />
+
+        <SingularityDemo 
+          className="mx-auto" 
+          style={{ width: "25em" }} 
+          size={400} 
+          showInstructions
+        />
+
         <p>
           The demo above shows a simple way to tile a sphere using squares.
           In the context of using a square grid to title over a sphere, singularties are points where our regular grid breaks down.
@@ -379,6 +385,7 @@ const TerrainGeneration = () => <ArticleLayout>{
           })}
           aspectRatio={2}
           detailLevel={40}
+          showInstructions
         />
       </AsideCard>
       <h4>Real World Implications</h4>
@@ -416,6 +423,7 @@ const TerrainGeneration = () => <ArticleLayout>{
           zoomRadius={5}
           displayHeight={240}
           data={grayscaleMap(new ScalarMap(240, 240, Math.random))}
+          showInstructions
         />
         <p>
           Let's use math to describe the signature of <code className="ms-1 me-1">Math.random</code>:
@@ -451,6 +459,7 @@ const TerrainGeneration = () => <ArticleLayout>{
           zoomRadius={5}
           displayHeight={240}
           data={grayscaleMap(new ScalarMap(240, 240, (x, y) => noise2D(x / 20, y / 20) / 2 + 0.5))}
+          showInstructions={false}
         />
         <p>
           You can see that every pixel has a neighboring pixel that is similarly colored.
@@ -488,6 +497,7 @@ const TerrainGeneration = () => <ArticleLayout>{
           texture={grayscaleMap(new ScalarMap(400, 400, (x, y) => noise2D(x / 20, y / 20) / 2 + 0.5))}
           aspectRatio={2}
           detailLevel={20}
+          showInstructions={false}
         />
       </AsideCard>
       <p>
@@ -661,6 +671,7 @@ const TerrainGeneration = () => <ArticleLayout>{
           }
           ))}
           detailLevel={20}
+          showInstructions={false}
         />
       </AsideCard>
       <h4>Overcoming Distortion</h4>

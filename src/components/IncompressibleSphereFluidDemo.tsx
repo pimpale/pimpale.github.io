@@ -401,7 +401,7 @@ precision highp sampler2D;
 // the scalar texture
 uniform sampler2D u_scalar_tex;
 
-// multipler
+// multipler to apply
 uniform float u_multiplier;
 
 // offset to apply

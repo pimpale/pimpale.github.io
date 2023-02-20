@@ -4,6 +4,8 @@ import { vec2 } from 'gl-matrix';
 import { TrackballCamera, } from '../utils/camera';
 import { createShader, createProgram, createTexture, overwriteTexture } from '../utils/webgl';
 
+import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
+
 type TorusDemoProps = {
   style?: React.CSSProperties,
   className?: string,
@@ -11,6 +13,7 @@ type TorusDemoProps = {
   size: number,
   aspectRatio: number,
   detailLevel: number,
+  showInstructions: boolean
 }
 
 
@@ -225,6 +228,12 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
 
   render() {
     return <div style={this.props.style} className={this.props.className}>
+
+      <div className='text-center pb-3' hidden={!this.props.showInstructions}>
+        <Arrow90degDown className='fs-3' style={{ transform: "translateY(0.5rem)" }} />
+        <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Drag to Rotate!</span>
+      </div>
+
       <canvas
         ref={this.canvas}
         height={this.props.size}
@@ -239,6 +248,14 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
           ref={this.torusnessRange}
           onInput={this.handleTorusChange}
         />
+      </div>
+      <div className='text-center pb-3'  hidden={!this.props.showInstructions}>
+        <Arrow90degUp className='fs-3' style={{ transform: "translateY(-1.4rem)" }} />
+        <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Slide To Turn Square Into Torus!</span>
+      </div>
+      <div className='text-center pb-3' hidden={!this.props.showInstructions}>
+        <Arrow90degDown className='fs-3' style={{ transform: "translateY(0.5rem)" }} />
+        <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Click to Adjust Torus Parameters!</span>
       </div>
       <details>
         <summary>Advanced Torus Controls</summary>

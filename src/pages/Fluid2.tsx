@@ -64,6 +64,16 @@ const Fluid2 = () => <ArticleLayout>{
       <ul>
         <li><ArticleLink a={articleData.get("fluid1")!} /></li>
       </ul>
+      <h4 className='mt-5 mb-3'>A Sneak Preview of What We're Building Towards...</h4>
+      <AsideCard title="" id="">
+        <WebGL2IncompressibleFluidDemo
+          className="mx-auto"
+          style={{ maxWidth: "40em" }}
+          xsize={400}
+          ysize={400}
+          showInstructions
+        />
+      </AsideCard>
     </Section>
     <Section id="math-fluid-simulation" name="Math of Fluid Simulation">
       <h4>Prerequisites</h4>
@@ -320,6 +330,7 @@ const Fluid2 = () => <ArticleLayout>{
           style={{ maxWidth: "40em" }}
           xsize={400}
           ysize={800}
+          showInstructions={false}
         />
       </AsideCard>
     </Section>

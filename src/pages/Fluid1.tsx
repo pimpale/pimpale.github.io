@@ -71,7 +71,17 @@ const Fluid1 = () => <ArticleLayout>{
         <li>demonstrate how use WebGL to accelerate computations</li>
         <li>provide working code to simulate 2D heat transfer</li>
       </ul>
+      <h4 className='mt-5 mb-3'>A Sneak Preview of What We're Building Towards...</h4>
+      <AsideCard title="">
+        <WebGL2HeatEqnDemo
+          className="mx-auto"
+          style={{ maxWidth: "40em" }}
+          size={400}
+          showInstructions
+        />
+      </AsideCard>
     </Section>
+
     <Section id="webgl-intro" name="WebGL Intro">
       <h4>What is WebGL2?</h4>
       <p>
@@ -349,6 +359,7 @@ const Fluid1 = () => <ArticleLayout>{
           className="mx-auto"
           style={{ maxWidth: "40em" }}
           size={400}
+          showInstructions
         />
 
       </AsideCard>
@@ -381,7 +392,7 @@ const Fluid1 = () => <ArticleLayout>{
       <CitationBank />
     </Section>
   </>
-}</ArticleLayout>
+}</ArticleLayout >
 
 
 // Bootstrap CSS & JS

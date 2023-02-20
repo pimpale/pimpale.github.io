@@ -11,7 +11,7 @@ const ResumeUrl = '/resume.html';
 const AchernarUrl = '/achernar.html';
 const TerrainGenerationUrl = '/terraingeneration1.html';
 
-import { CaretDownFill } from 'react-bootstrap-icons';
+import { Arrow90degDown, CaretDownFill } from 'react-bootstrap-icons';
 
 type RotatedProps = {
   rotation: number,
@@ -24,7 +24,7 @@ type RotatedProps = {
 function Rotated(props: RotatedProps) {
   if (!useMediaQuery({ minWidth: 992 })) {
     const mx = `${props.ownRow ? 20 : 1}em`;
-    return <div style={{ marginLeft: mx, marginRight: mx }} className="my-3" >
+    return <div style={{ marginLeft: mx, marginRight: mx }}>
       {props.children}
     </div>
   } else {
@@ -70,7 +70,7 @@ type IntroCardProps = {
 }
 
 const IntroCard: React.FunctionComponent<IntroCardProps> = props =>
-  <div className="card" style={{ width: "15rem" }}>
+  <div className="card my-3" style={{ width: "15rem" }}>
     <div className="card-body">
       <h5 className="card-title">{props.title}</h5>
       <div className="card-text">{props.children}</div>
@@ -80,10 +80,20 @@ const IntroCard: React.FunctionComponent<IntroCardProps> = props =>
 
 const Home = () =>
   <Layout>
-    <div className="min-vh-100 d-flex justify-content-center flex-wrap">
+    <div className="min-vh-100 d-flex justify-content-center flex-wrap mt-5">
+      {/* Interactive Label */}
+      <Rotated distance={12} rotation={-85} >
+        <span data-nosnippet>
+          <Arrow90degDown className='fs-1' style={{transform: "translateY(0.5rem)"}}/><span className='fs-3' style={{fontFamily: "Permanent Marker" }}> Spin Me!</span>
+        </span>
+      </Rotated>
+
+      {/* The Demo itself  */}
       <Rotated distance={0} rotation={90} ownRow>
         <HomepageDemo width={400} height={400} style={{ width: "20em", height: "20em" }} />
       </Rotated>
+
+
       {/* Data */}
       <Rotated distance={15} rotation={-45} >
         <IntroCard title="About">
@@ -204,6 +214,7 @@ import ReactDOM from 'react-dom';
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
+import { transform } from 'typescript';
 
 const root = createRoot(document.getElementById('root')!);
 root.render(

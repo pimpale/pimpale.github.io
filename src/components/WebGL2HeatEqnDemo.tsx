@@ -1,12 +1,17 @@
 import React from "react";
 import { createShader, createProgram, createR32UITexture, overwriteR32UITexture, createR32FTexture, overwriteR32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
+import { checkVisible } from "../utils/visibility";
 import { CanvasMouseTracker } from '../utils/canvas';
+
+import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
 
 type WebGL2HeatEqnDemoProps = {
   style?: React.CSSProperties,
-  className?: string
-  size: number
+  className?: string,
+  size: number,
+  showInstructions?: boolean
+  runInBackground?: boolean
 }
 
 // the vertex shader is used in 2 different programs, it basically is just for translating clip space
@@ -292,6 +297,13 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
+    // exit early if not on screen (don't lag the computer)
+    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+      return;
+    }
+
+
+
     this.gl.useProgram(this.prog_diffuse);
 
     // handle drawing on the canvas
@@ -369,12 +381,18 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
     return <div style={this.props.style} className={this.props.className}>
       <div className="row">
         <div className="col-md-8 d-flex">
-          <canvas
-            className="border border-dark w-100 mb-3"
-            ref={this.canvas}
-            height={this.props.size}
-            width={this.props.size}
-          />
+          <div>
+            <div className='text-center pb-3' hidden={!this.props.showInstructions}>
+              <Arrow90degDown className='fs-3' style={{ transform: "translateY(0.5rem)" }} />
+              <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Click to Draw!</span>
+            </div>
+            <canvas
+              className="border border-dark w-100 mb-3"
+              ref={this.canvas}
+              height={this.props.size}
+              width={this.props.size}
+            />
+          </div>
         </div>
         <div className="col-md-4">
           <div className="border border-dark p-3">

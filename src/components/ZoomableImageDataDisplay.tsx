@@ -2,6 +2,8 @@ import React from 'react';
 import { crop } from '../utils/image';
 import { clamp } from '../utils/math';
 
+import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
+
 // Object displaying some image data
 
 
@@ -10,7 +12,8 @@ interface ImageDataDisplayProps {
   zoomRadius: number,
   displayHeight: number,
   className?: string,
-  style?: React.CSSProperties
+  style?: React.CSSProperties,
+  showInstructions: boolean
 }
 
 class ImageDataDisplay extends React.Component<ImageDataDisplayProps> {
@@ -98,6 +101,10 @@ class ImageDataDisplay extends React.Component<ImageDataDisplayProps> {
   render() {
     const { width, height } = this.props.data;
     return <div style={this.props.style} className={this.props.className}>
+      <div className='text-center pb-3' hidden={!this.props.showInstructions}>
+        <Arrow90degDown className='fs-3' style={{ transform: "translateY(0.5rem)" }} />
+        <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Hover over me!</span>
+      </div>
       <div className="d-flex align-items-center justify-content-center">
         <canvas
           className="border border-dark mx-2"

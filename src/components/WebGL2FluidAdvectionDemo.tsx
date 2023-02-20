@@ -3,11 +3,15 @@ import { createShader, createProgram, createR32FTexture, overwriteR32FTexture, c
 import { clamp } from '../utils/math';
 import { createCurlNoise } from '../utils/noise';
 import { CanvasMouseTracker } from '../utils/canvas';
+import { checkVisible } from "../utils/visibility";
+import { Arrow90degDown } from "react-bootstrap-icons";
 
 type WebGL2FluidAdvectionDemoProps = {
   style?: React.CSSProperties,
   className?: string
   size: number
+  runInBackground?: boolean
+  showInstructions?: boolean
 }
 
 // the vertex shader is used in 2 different programs, it basically is just for translating clip space
@@ -450,6 +454,11 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
+    // exit early if not on screen (don't lag the computer)
+    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+      return;
+    }
+
     // handle drawing
     const mousePos = this.cmt.mousePos;
     if (mousePos) {
@@ -556,6 +565,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     return <div style={this.props.style} className={this.props.className}>
       <div className="row">
         <div className="col-md-8 d-flex">
+            <div className='text-center pb-3' hidden={!this.props.showInstructions}>
+              <Arrow90degDown className='fs-3' style={{ transform: "translateY(0.5rem)" }} />
+              <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Drag to Stir!</span>
+            </div>
           <canvas
             className="border border-dark"
             ref={this.canvas}

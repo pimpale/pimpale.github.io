@@ -6,10 +6,13 @@ import { createShader, createProgram, createTexture, overwriteTexture } from '..
 import { colorScheme } from "../utils/colorscheme";
 import chroma from "chroma-js";
 
+import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
+
 type SingularityDemoProps = {
   style?: React.CSSProperties,
   className?: string,
   size: number,
+  showInstructions: boolean
 }
 
 const gruvboxTheme = colorScheme();
@@ -133,12 +136,12 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
     this.torusLerpAlpha = this.gl.getUniformLocation(program, "u_lerpAlpha")!;
     this.torusWorldViewProjectionLoc = this.gl.getUniformLocation(program, "u_worldViewProjection")!;
 
-    const topcolor = chroma(gruvboxTheme.blue).gl().slice(0,3);
-    const bottomcolor = chroma(gruvboxTheme.red).gl().slice(0,3);
-    const leftcolor = chroma(gruvboxTheme.green).gl().slice(0,3);
-    const rightcolor = chroma(gruvboxTheme.purple).gl().slice(0,3);
-    const frontcolor = chroma(gruvboxTheme.yellow).gl().slice(0,3);
-    const backcolor = chroma(gruvboxTheme.teal).gl().slice(0,3);
+    const topcolor = chroma(gruvboxTheme.blue).gl().slice(0, 3);
+    const bottomcolor = chroma(gruvboxTheme.red).gl().slice(0, 3);
+    const leftcolor = chroma(gruvboxTheme.green).gl().slice(0, 3);
+    const rightcolor = chroma(gruvboxTheme.purple).gl().slice(0, 3);
+    const frontcolor = chroma(gruvboxTheme.yellow).gl().slice(0, 3);
+    const backcolor = chroma(gruvboxTheme.teal).gl().slice(0, 3);
 
 
     // map different buffers
@@ -238,6 +241,10 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
 
   render() {
     return <div style={this.props.style} className={this.props.className}>
+      <div className='text-center pb-3' hidden={!this.props.showInstructions}>
+        <Arrow90degDown className='fs-3' style={{ transform: "translateY(0.5rem)" }} />
+        <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Drag to Rotate!</span>
+      </div>
       <canvas
         ref={this.canvas}
         height={this.props.size}
@@ -253,6 +260,11 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
           ref={this.lerpRange}
         />
       </div>
+      <div className='text-center pb-3'  hidden={!this.props.showInstructions}>
+        <Arrow90degUp className='fs-3' style={{ transform: "translateY(-1.4rem)" }} />
+        <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Slide to Morph Cube Into Sphere!</span>
+      </div>
+
     </div>;
   }
 }
