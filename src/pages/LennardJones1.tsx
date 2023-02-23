@@ -10,6 +10,9 @@ import AsideCard from '../components/AsideCard';
 import WebGL2GravityDemo from '../components/WebGL2GravityDemo';
 import LennardJonesDemo from '../components/LennardJonesDemo';
 
+import Plot from 'react-plotly.js'
+
+
 const GravityPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
     <Section name="Spacewar" id="spacewar">

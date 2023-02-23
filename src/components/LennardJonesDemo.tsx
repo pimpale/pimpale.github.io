@@ -11,6 +11,8 @@ import { clamp } from '../utils/math';
 import { createCurlNoise } from '../utils/noise';
 import { CanvasMouseTracker, Point } from "../utils/canvas";
 
+import Plot from 'react-plotly.js'
+
 type WebGL2FluidAdvectionDemoProps = {
   style?: React.CSSProperties,
   className?: string
@@ -152,6 +154,13 @@ out vec4 value;
 // new mouse position
 uniform vec2 u_mouse;
 
+// the radius of the effect
+uniform float u_radius;
+// the force (signed) of the effect
+uniform float u_force;
+// the viscosity of the effect
+uniform float u_viscosity;
+
 void main() {
   // our current position and velocity
   vec2 p1 = texture(u_particle_position_velocity_tex, v_texCoord).xy;
@@ -163,9 +172,9 @@ void main() {
   if(state1 == 0) {
       vec2 p_to_mouse = u_mouse - p1;
       float d = length(p_to_mouse);
-      if(d < 50.0) {
-          v1 += 0.01*(p_to_mouse/(d));
-          v1 *= 0.9;
+      if(d < u_radius) {
+          v1 += u_force*(p_to_mouse/(d));
+          v1 *= u_viscosity;
       }
   }
 
@@ -212,7 +221,10 @@ void main() {
 `;
 
 
-type WebGL2FluidAdvectionDemoState = {}
+type WebGL2FluidAdvectionDemoState = {
+  pointerType: "ATTRACT" | "REPEL" | "PICK",
+  cachedParticleKineticEnergies: number[],
+}
 
 class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoProps, WebGL2FluidAdvectionDemoState> {
 
@@ -273,7 +285,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
   private particlePositionVelocityFramebuffers: WebGLFramebuffer[] = [];
 
   // Mouse loc
-  private mouseLoc!: WebGLUniformLocation;
+  private mouseMoveMouseLoc!: WebGLUniformLocation;
+  private mouseMoveRadiusLoc!: WebGLUniformLocation;
+  private mouseMoveForceLoc!: WebGLUniformLocation;
+  private mouseMoveViscosityLoc!: WebGLUniformLocation;
 
   private prog_apply_gravity!: WebGLProgram;
   private prog_handle_state!: WebGLProgram;
@@ -294,6 +309,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   constructor(props: WebGL2FluidAdvectionDemoProps) {
     super(props);
+    this.state = {
+      pointerType: "ATTRACT",
+      cachedParticleKineticEnergies: [],
+    }
   }
 
   componentDidMount() {
@@ -475,7 +494,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
       const positionLoc = this.gl.getAttribLocation(this.prog_apply_mouse, 'a_position');
       const particleStateTexLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_particle_state_tex');
       const particlePositionVelocityTexLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_particle_position_velocity_tex');
-      this.mouseLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_mouse')!;
+      this.mouseMoveMouseLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_mouse')!;
+      this.mouseMoveRadiusLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_radius')!;
+      this.mouseMoveForceLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_force')!;
+      this.mouseMoveViscosityLoc = this.gl.getUniformLocation(this.prog_apply_mouse, 'u_viscosity')!;
 
       // setup our attributes to tell WebGL how to pull
       // the data from the buffer above to the position attribute
@@ -498,9 +520,9 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     }
 
     this.cmt = new CanvasMouseTracker(this.render_canvas.current!);
-    //this.cmt.addMouseDownListener(this.handleMouseDown);
-    //this.cmt.addMouseMoveListener(this.handleMouseMove);
-    //this.cmt.addMouseUpListener(this.handleMouseUp);
+    this.cmt.addMouseDownListener(this.handleMouseDown);
+    this.cmt.addMouseMoveListener(this.handleMouseMove);
+    this.cmt.addMouseUpListener(this.handleMouseUp);
 
     // start animation loop
     this.animationLoop();
@@ -525,7 +547,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         for (let x = 0; x < this.particle_tex_xsize; x++) {
           const i = y * this.particle_tex_xsize + x;
           state_data[i * 2] = 0;
-          if (x < this.particle_tex_xsize - 0) {
+          if (x < this.particle_tex_xsize - 20) {
             state_data[i * 2 + 1] = 1;
             position_velocity_data[i * 4 + 0] = x * 4 + 20;
             position_velocity_data[i * 4 + 1] = y * 4 + 20;
@@ -552,7 +574,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     for (let i = 0; i < iterations; i++) {
       // handle drawing
       const mousePos = this.cmt.mousePos;
-      if (mousePos) {
+      if (mousePos && (this.state.pointerType === "ATTRACT" || this.state.pointerType === "REPEL")) {
         // in order to draw the velocity texture we will execute a program
         this.gl.useProgram(this.prog_apply_mouse);
 
@@ -563,10 +585,20 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.particlePositionVelocityFramebuffers[(this.particlePositionVelocityIndex + 1) % 2]);
 
         // set old and new mouse positions
-        this.gl.uniform2f(this.mouseLoc,
+        this.gl.uniform2f(this.mouseMoveMouseLoc,
           clamp(mousePos.current.x, 0, this.props.xsize),
           clamp(mousePos.current.y, 0, this.props.ysize),
         );
+
+        // set radius strength, and viscosity
+        this.gl.uniform1f(this.mouseMoveRadiusLoc, 50)
+        if (this.state.pointerType === "ATTRACT") {
+          this.gl.uniform1f(this.mouseMoveForceLoc, 0.01)
+          this.gl.uniform1f(this.mouseMoveViscosityLoc, 0.9)
+        } else {
+          this.gl.uniform1f(this.mouseMoveForceLoc, -0.001)
+          this.gl.uniform1f(this.mouseMoveViscosityLoc, 0.99)
+        }
 
         // execute program, doing paint
         this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
@@ -658,6 +690,9 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   handleMouseDown = (v: Point) => {
     if (this.editData?.dragging !== undefined) {
+      return;
+    }
+    if (this.state.pointerType !== "PICK") {
       return;
     }
 
@@ -763,15 +798,34 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     this.gl.uniform1f(this.wallSpringDampingLoc, wallSpringDamping);
   }
 
+  getKineticEnergy = (state: Int32Array, position_velocity: Float32Array) => {
+    let arr: number[] = [];
+    for (let i = 0; i < position_velocity.length / 4; i++) {
+      let s = state[i * 4];
+      let m = state[i * 4 + 1]
+      let xv = position_velocity[i * 4 + 2];
+      let yv = position_velocity[i * 4 + 3];
+      if (s == 0) {
+        arr.push(0.5 * m * (xv * xv + yv * yv));
+      }
+    }
+    return arr;
+  }
+
+
   calcRadius = (m: number) => 1.5 * Math.sqrt(Math.abs(m)) + 5;
 
   tick = 0;
 
   draw = (state: Int32Array, position_velocity: Float32Array) => {
     if (this.tick == 0) {
-      this.tick = 100;
+      this.tick = 10;
     } else {
       this.tick--;
+    }
+
+    if (this.tick == 0) {
+      this.setState({ cachedParticleKineticEnergies: this.getKineticEnergy(state, position_velocity) })
     }
 
     const render_canvas = this.render_canvas.current!
@@ -837,31 +891,38 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
             width={this.props.xsize}
             height={this.props.ysize}
           />
+          <Plot
+            className=""
+            data={[
+              {
+                type: 'histogram',
+                x: this.state.cachedParticleKineticEnergies,
+              },
+            ]}
+            layout={{
+              xaxis: {
+                title: { text: 'ParticleKineticEnergy', },
+              },
+              yaxis: { title: { text: 'Count', } },
+              width: this.props.xsize,
+              height: 100,
+              margin: { b: 30, l: 40, r: 10, t: 10 },
+            }}
+            config={{ staticPlot: true }}
+          />
+
+          <div className="form-group mb-3">
+            <button className="btn btn-primary btn-sm" onClick={() => this.needsReset = true}>Reset</button>
+          </div>
+
+
         </div>
         <div className="col-md-4">
-          <div className="border border-dark p-3 m-3">
+          <div className="border border-dark p-3">
             <h6>Controls</h6>
             <div className="form-group mb-3">
               <label className="form-label">Simulation Speed</label>
               <input type="range" className="form-range" min="0" max="15" step={1} defaultValue={1} ref={this.range} />
-            </div>
-            <div className="form-group mb-3">
-              <label className="form-label">X Gravity</label>
-              <input type="range" className="form-range"
-                min="-0.00001" max="0.00001"
-                step="0.000005"
-                defaultValue={this.gravityDefault}
-                ref={this.xGravityRange} onInput={this.handleChange}
-              />
-            </div>
-            <div className="form-group mb-3">
-              <label className="form-label">Y Gravity</label>
-              <input type="range" className="form-range"
-                min="-0.00001" max="0.00001"
-                step="0.000005"
-                defaultValue={this.gravityDefault}
-                ref={this.yGravityRange} onInput={this.handleChange}
-              />
             </div>
             <div className="form-group mb-3">
               <label className="form-label">Viscosity</label>
@@ -889,22 +950,76 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
               />
             </div>
             <div className="form-group mb-3">
-              <label className="form-label">Wall Spring Constant</label>
-              <input type="range" className="form-range" min="0.00001" max="0.001" step="0.00001"
-                defaultValue={this.wallSpringConstantDefault}
-                ref={this.wallSpringConstantRange} onInput={this.handleChange}
-              />
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  checked={this.state.pointerType === "ATTRACT"}
+                  onChange={() => this.setState({ pointerType: "ATTRACT" })}
+                />
+                <label className="form-check-label">Pointer Attract</label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  checked={this.state.pointerType === "REPEL"}
+                  onChange={() => this.setState({ pointerType: "REPEL" })}
+                />
+                <label className="form-check-label">Pointer Repel</label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  checked={this.state.pointerType === "PICK"}
+                  onChange={() => this.setState({ pointerType: "PICK" })}
+                />
+                <label className="form-check-label">Pointer Pick</label>
+              </div>
             </div>
-            <div className="form-group mb-3">
-              <label className="form-label">Wall Bounciness</label>
-              <input type="range" className="form-range" min="0.9" max="0.999" step="0.001"
-                defaultValue={this.wallSpringDampingDefault}
-                ref={this.wallSpringDampingRange} onInput={this.handleChange}
-              />
-            </div>
-            <div className="form-group mb-3">
-              <button className="btn btn-primary btn-sm" onClick={() => this.needsReset = true}>Reset</button>
-            </div>
+
+            <details className="border border-dark p-1 mb-3">
+              <summary>Wall Details</summary>
+
+              <div className="form-group mb-3">
+                <label className="form-label">Wall Spring Constant</label>
+                <input type="range" className="form-range" min="0.00001" max="0.001" step="0.00001"
+                  defaultValue={this.wallSpringConstantDefault}
+                  ref={this.wallSpringConstantRange} onInput={this.handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Wall Bounciness</label>
+                <input type="range" className="form-range" min="0.9" max="0.999" step="0.001"
+                  defaultValue={this.wallSpringDampingDefault}
+                  ref={this.wallSpringDampingRange} onInput={this.handleChange}
+                />
+              </div>
+            </details>
+
+            <details className="border border-dark p-1 mb-3">
+              <summary>Gravity</summary>
+              <div className="form-group mb-3">
+                <label className="form-label">X Gravity</label>
+                <input type="range" className="form-range"
+                  min="-0.00001" max="0.00001"
+                  step="0.000005"
+                  defaultValue={this.gravityDefault}
+                  ref={this.xGravityRange} onInput={this.handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Y Gravity</label>
+                <input type="range" className="form-range"
+                  min="-0.00001" max="0.00001"
+                  step="0.000005"
+                  defaultValue={this.gravityDefault}
+                  ref={this.yGravityRange} onInput={this.handleChange}
+                />
+              </div>
+            </details>
+
           </div>
         </div>
       </div>
