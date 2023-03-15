@@ -221,12 +221,12 @@ const Fluid2 = () => <ArticleLayout>{
         <li><Tex math="\rho" /> is the density of the fluid</li>
         <li><Tex math="\frac {\partial \vec{u}} {\partial t}" /> is the derivative of the velocity vector field with respect to time</li>
       </ul>
-      <p>
-        In our case, since we're neglecting friction, we've technically listed the Euler equations,
+      <AsideCard title="Clarification on Simplified Equation">
+        In our case, since we're neglecting friction, we've technically listed the <a href="https://en.wikipedia.org/wiki/Euler_equations_(fluid_dynamics)">Euler equations</a>,
         which are a special case of the Navier-Stokes equations when the viscosity of the fluid is zero throughout.
         <Citation source="https://en.wikipedia.org/wiki/Euler_equations_(fluid_dynamics)" />.
         However, most what we're saying applies equally to the Navier-Stokes equations.
-      </p>
+      </AsideCard>
       <p>
         If you're interested, a derivation of Navier Stokes can be found on Wikipedia here: <HrefLink href="https://en.wikipedia.org/wiki/Derivation_of_the_Navier%E2%80%93Stokes_equations" />,
         but it's not necessary to understand in order to implement a simulation of it.
@@ -340,7 +340,7 @@ const Fluid2 = () => <ArticleLayout>{
     </Section>
   </>
 }</ArticleLayout>
-
+///
 
 // Bootstrap CSS & JS
 import '../styles/style.scss';
