@@ -1,5 +1,6 @@
 import React from "react";
 import { createShader, createProgram, createTexture, updateTextureFromCanvas, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
+import { checkVisible } from "../utils/visibility";
 import { clamp } from '../utils/math';
 import { genPlane } from '../utils/uvplane';
 import { TrackballCamera, } from '../utils/camera';
@@ -77,7 +78,7 @@ void main() {
 `;
 
 const xn = 30;
-const yn = 30
+const yn = 30;
 const sphereVertexes = genPlane(xn, yn);
 
 
@@ -317,7 +318,7 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     const canvas = this.canvas.current!;
     const ctx = canvas.getContext('2d')!;
     ctx.fillStyle = gruvboxTheme.blue;
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2;
     ctx.strokeStyle = gruvboxTheme.bg0;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -373,6 +374,13 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
 
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
+
+    // exit early if not on screen (don't lag the computer)
+    if (!checkVisible(this.canvas.current!)) {
+      return;
+    }
+
+
     this.camera.update();
     {
       // set uniform

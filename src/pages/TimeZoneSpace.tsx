@@ -330,7 +330,7 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
         Anyway, this is just a long way of saying that a variety of obstacles prevent us from changing our current system of timekeeping in all but the most minor ways.
       </p>
     </Section>
-    <Section name="Why the Current System Sucks" id="current_system">
+    <Section name="Disadvantages of UTC" id="current_system">
       <p>
         Let's focus in on the UTC/Gregorian Calendar system for now, since it's what's used by most of the English speaking world.
         However, many of the criticisms carry over to other systems as well.
@@ -359,20 +359,26 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
         It's even worse if I want to calculate the interval between a date in the past and a date in the future, or between two dates in the future.
       </p>
       <p>
-        Because the exact dates of leap seconds in the future haven't been defined, the exact time between two given UTC dates is <b>undefined</b>, if:
+        Because the exact dates of leap seconds in the future haven't been defined, the exact interval between two given UTC dates is <b>undefined</b>, if:
       </p>
       <ul>
         <li>
           at least one of those dates is in the future
         </li>
         <li>
-          the span between the two dates crosses a possible leap second insertion point (midnight on the last day of any month).
+          the span between the two dates crosses a possible leap second insertion point (midnight on the last day of either June or September).
         </li>
       </ul>
       <h4>Not Long Term Sustainable</h4>
-        While theoretically a leap second may be inserted 
+      <p>
+        Solar time is fundamentally linked to the rotation of the Earth. The Earth's rotation is slowly slowing down due to tidal deacceleration.
+        This means that in the future, we'll need more and more leap seconds to keep UTC in sync with UT1.
+      </p>
       <p>
       </p>
+    </Section>
+    <Section name='Timekeeping in Space' id='timekeeping_in_space'>
+
     </Section>
     <Section id="sources" name="Sources">
       <CitationBank />
