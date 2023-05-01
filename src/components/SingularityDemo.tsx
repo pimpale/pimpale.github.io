@@ -230,6 +230,7 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
 
     // exit early if not on screen (don't lag the computer)
     if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+      this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }
 
@@ -267,7 +268,7 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
           ref={this.lerpRange}
         />
       </div>
-      <div className='text-center pb-3'  hidden={!this.props.showInstructions}>
+      <div className='text-center pb-3' hidden={!this.props.showInstructions}>
         <Arrow90degUp className='fs-3' style={{ transform: "translateY(-1.4rem)" }} />
         <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Slide to Morph Cube Into Sphere!</span>
       </div>

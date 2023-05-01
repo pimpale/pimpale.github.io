@@ -817,6 +817,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
     // exit early if not on screen (don't lag the computer)
     if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+      this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }
 

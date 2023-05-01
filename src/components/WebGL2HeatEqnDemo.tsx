@@ -299,6 +299,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
     // exit early if not on screen (don't lag the computer)
     if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+      this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }
 

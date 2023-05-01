@@ -456,6 +456,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
     // exit early if not on screen (don't lag the computer)
     if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+      this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }
 
@@ -565,10 +566,10 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     return <div style={this.props.style} className={this.props.className}>
       <div className="row">
         <div className="col-md-8 d-flex">
-            <div className='text-center pb-3' hidden={!this.props.showInstructions}>
-              <Arrow90degDown className='fs-3' style={{ transform: "translateY(0.5rem)" }} />
-              <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Drag to Stir!</span>
-            </div>
+          <div className='text-center pb-3' hidden={!this.props.showInstructions}>
+            <Arrow90degDown className='fs-3' style={{ transform: "translateY(0.5rem)" }} />
+            <span className='fs-5' style={{ fontFamily: "Permanent Marker" }}> Drag to Stir!</span>
+          </div>
           <canvas
             className="border border-dark"
             ref={this.canvas}
