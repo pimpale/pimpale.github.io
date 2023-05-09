@@ -90,11 +90,12 @@ void main() {
           vec2 r_hat = r_vec/r;
 
           float force_strength = u_attraction*pow(r, -7.0) - u_repulsion*pow(r, -13.0);
+          vec2 accel = r_hat*clamp(force_strength/abs(m1), -0.1, 0.1);
+
           if (m1 < 0.0 && m2 > 0.0) {
-              force_strength = -force_strength;
+              accel = -accel;
           }
 
-          vec2 accel = r_hat*clamp(force_strength/abs(m1), -0.1, 0.1);
 
           if(!isnan(accel.x) && !isnan(accel.y)) {
             v1 += accel;
@@ -552,11 +553,11 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
           const i = y * this.particle_tex_xsize + x;
           state_data[i * 2] = 0;
           if (x < this.particle_tex_xsize - 20) {
-            state_data[i * 2 + 1] = 1;
+            state_data[i * 2 + 1] = 10;
             position_velocity_data[i * 4 + 0] = x * 4 + 20;
             position_velocity_data[i * 4 + 1] = y * 4 + 20;
           } else {
-            state_data[i * 2 + 1] = -10;
+            state_data[i * 2 + 1] = -1;
             position_velocity_data[i * 4 + 0] = x * 4 + 200;
             position_velocity_data[i * 4 + 1] = y * 4 + 10;
           }
