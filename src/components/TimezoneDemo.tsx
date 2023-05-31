@@ -1,6 +1,6 @@
 import React from "react";
 import { createShader, createProgram, createTexture, updateTextureFromCanvas, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
-import { checkVisible } from "../utils/visibility";
+import { VisibilityChecker } from "../utils/visibility";
 import { clamp } from '../utils/math';
 import { genPlane } from '../utils/uvplane';
 import { TrackballCamera, } from '../utils/camera';
@@ -90,6 +90,9 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
   private ysize = 800;
   private spheresize = 600;
 
+  // this is the ref to the whole container
+  private container = React.createRef<HTMLDivElement>();
+
   // this is the ref to the time zone canvas
   private canvas = React.createRef<HTMLCanvasElement>();
 
@@ -99,6 +102,8 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
 
   // mouse status
   private cmt!: CanvasMouseTracker;
+  // canvas visibility 
+  private vis!: VisibilityChecker;
 
   private requestID!: number;
 
@@ -190,8 +195,13 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     this.phiRange.current!.addEventListener('input', this.handleCircularityChange);
     this.lerpRange.current!.addEventListener('input', this.handleCircularityChange);
 
+    // enable visibility checker
+    this.vis = new VisibilityChecker(this.container.current!);
+
     // enable canvas mouse tracker
     this.cmt = new CanvasMouseTracker(this.canvas.current!);
+
+
     this.cmt.addMouseDownListener(x => {
       const tzid = this.getTzId(x);
       const gmtOffset = getTimezoneOffset(tzid);
@@ -241,6 +251,11 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     window.cancelAnimationFrame(this.requestID!);
 
     this.camera.cleanup();
+
+    // stop canvas mouse checker
+    this.cmt.cleanup();
+    // stop canvas reader
+    this.vis.cleanup();
   }
 
 
@@ -376,7 +391,7 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
     // exit early if not on screen (don't lag the computer)
-    if (!checkVisible(this.canvas.current!)) {
+    if (!this.vis.isVisible()) {
       this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }
@@ -407,7 +422,7 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
   }
 
   render() {
-    return <div style={this.props.style} className={this.props.className}>
+    return <div style={this.props.style} className={this.props.className} ref={this.container}>
       <div className="row">
         <div className="col-md-8">
           <canvas

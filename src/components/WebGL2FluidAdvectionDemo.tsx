@@ -1,7 +1,7 @@
 import React from "react";
 import { createShader, createProgram, createR32FTexture, overwriteR32FTexture, createRG32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
-import { checkVisible } from "../utils/visibility";
+import { VisibilityChecker } from "../utils/visibility";
 import { createCurlNoise } from '../utils/noise';
 import { CanvasMouseTracker } from '../utils/canvas';
 import { Arrow90degDown } from "react-bootstrap-icons";
@@ -260,6 +260,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
   // mouse status
   private cmt!: CanvasMouseTracker;
+  private vis!: VisibilityChecker;
 
   private requestID!: number;
 
@@ -439,6 +440,7 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
     // add canvas handler
     this.cmt = new CanvasMouseTracker(this.canvas.current!);
+    this.vis = new VisibilityChecker(this.canvas.current!);
 
     // start animation loop
     this.animationLoop();
@@ -449,13 +451,14 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
     window.cancelAnimationFrame(this.requestID!);
     // disable canvas mouse tracker
     this.cmt.cleanup();
+    this.vis.cleanup();
   }
 
   animationLoop = () => {
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
     // exit early if not on screen (don't lag the computer)
-    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+    if (!this.vis.isVisible()  && this.props.runInBackground !== true) {
       this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }

@@ -1,7 +1,7 @@
 import React from "react";
 import { createShader, createProgram, createR32UITexture, overwriteR32UITexture, createR32FTexture, overwriteR32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
-import { checkVisible } from "../utils/visibility";
+import { VisibilityChecker } from "../utils/visibility";
 import { CanvasMouseTracker } from '../utils/canvas';
 
 import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
@@ -153,6 +153,9 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   // mouse status
   private cmt!: CanvasMouseTracker;
 
+  // visibility status
+  private vis!: VisibilityChecker;
+
   private requestID!: number;
 
   constructor(props: WebGL2HeatEqnDemoProps) {
@@ -281,6 +284,7 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
 
     // track mouse
     this.cmt = new CanvasMouseTracker(this.canvas.current!);
+    this.vis = new VisibilityChecker(this.canvas.current!);
 
     // start animation loop
     this.animationLoop();
@@ -289,21 +293,18 @@ class WebGL2HeatEqnDemo extends React.Component<WebGL2HeatEqnDemoProps, WebGL2He
   componentWillUnmount() {
     // clean up mouse tracker
     this.cmt.cleanup();
+    this.vis.cleanup();
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
   }
 
   animationLoop = () => {
-
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
     // exit early if not on screen (don't lag the computer)
-    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
-      this.requestID = window.requestAnimationFrame(this.animationLoop);
+    if (!this.vis.isVisible() && this.props.runInBackground !== true) {
       return;
     }
-
-
 
     this.gl.useProgram(this.prog_diffuse);
 

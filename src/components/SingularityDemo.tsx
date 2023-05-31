@@ -4,7 +4,7 @@ import { vec2 } from 'gl-matrix';
 import { TrackballCamera, } from '../utils/camera';
 import { createShader, createProgram, createTexture, overwriteTexture } from '../utils/webgl';
 import { colorScheme } from "../utils/colorscheme";
-import { checkVisible } from "../utils/visibility";
+import { VisibilityChecker } from "../utils/visibility";
 import chroma from "chroma-js";
 
 import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
@@ -101,6 +101,7 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
   private gl!: WebGL2RenderingContext;
 
   private camera!: TrackballCamera;
+  private vis!: VisibilityChecker;
 
   private torusWorldViewProjectionLoc!: WebGLUniformLocation;
   private torusLerpAlpha!: WebGLUniformLocation;
@@ -118,6 +119,7 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
   componentDidMount() {
     // init camera
     this.camera = new TrackballCamera(this.canvas.current!, {});
+    this.vis = new VisibilityChecker(this.canvas.current!);
 
     // get webgl
     this.gl = this.canvas.current!.getContext('webgl2')!;
@@ -215,6 +217,7 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
   componentWillUnmount() {
     window.cancelAnimationFrame(this.requestID!);
     this.camera.cleanup();
+    this.vis.cleanup();
   }
 
   handleCircularityChange = () => {
@@ -229,7 +232,7 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
     this.camera.update();
 
     // exit early if not on screen (don't lag the computer)
-    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+    if (!this.vis.isVisible() && this.props.runInBackground !== true) {
       this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }

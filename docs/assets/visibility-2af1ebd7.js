@@ -1,0 +1,1 @@
+class r{constructor(i){this.visiblilityCache=!1,this.observer=new IntersectionObserver((s,t)=>this.callback(s[0].isIntersecting),{}),this.observer.observe(i)}callback(i){this.visiblilityCache=i}isVisible(){return this.visiblilityCache}cleanup(){this.observer.disconnect()}}export{r as V};

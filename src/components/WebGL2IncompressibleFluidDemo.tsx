@@ -1,7 +1,7 @@
 import React from "react";
 import { createShader, createProgram, createR32FTexture, createRG32FTexture, overwriteR32FTexture, overwriteRG32FTexture } from '../utils/webgl';
 import { clamp } from '../utils/math';
-import { checkVisible } from '../utils/visibility';
+import { VisibilityChecker } from '../utils/visibility';
 import { createCurlNoise } from '../utils/noise';
 import { CanvasMouseTracker } from '../utils/canvas';
 
@@ -452,6 +452,9 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
   // mouse status
   private cmt!: CanvasMouseTracker;
 
+  // canvas visibility
+  private vis!: VisibilityChecker;
+
   private requestID!: number;
 
   constructor(props: WebGL2IncompressibleFluidDemoProps) {
@@ -800,6 +803,8 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
 
     // add mouse tracker
     this.cmt = new CanvasMouseTracker(this.canvas.current!);
+    // visibility tracker
+    this.vis = new VisibilityChecker(this.canvas.current!);
 
     // start animation loop
     this.animationLoop();
@@ -808,6 +813,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
   componentWillUnmount() {
     // remove canvas mouse tracker
     this.cmt.cleanup();
+    this.vis.cleanup();
     // stop animation loop
     window.cancelAnimationFrame(this.requestID!);
   }
@@ -816,7 +822,7 @@ class WebGL2IncompressibleFluidDemo extends React.Component<WebGL2Incompressible
     this.requestID = window.requestAnimationFrame(this.animationLoop);
 
     // exit early if not on screen (don't lag the computer)
-    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+    if (!this.vis.isVisible() && this.props.runInBackground !== true) {
       this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }

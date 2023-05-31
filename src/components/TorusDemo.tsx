@@ -2,7 +2,7 @@ import React from "react";
 import { genPlane } from '../utils/uvplane';
 import { vec2 } from 'gl-matrix';
 import { TrackballCamera, } from '../utils/camera';
-import { checkVisible } from "../utils/visibility";
+import { VisibilityChecker } from "../utils/visibility";
 import { createShader, createProgram, createTexture, overwriteTexture } from '../utils/webgl';
 
 import { Arrow90degDown, Arrow90degUp } from 'react-bootstrap-icons';
@@ -100,6 +100,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
   private gl!: WebGL2RenderingContext;
 
   private camera!: TrackballCamera;
+  private vis!: VisibilityChecker;
 
   private torusTexture!: WebGLTexture;
   private torusWorldViewProjectionLoc!: WebGLUniformLocation;
@@ -119,6 +120,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
   componentDidMount() {
     // init camera
     this.camera = new TrackballCamera(this.canvas.current!, {});
+    this.vis = new VisibilityChecker(this.canvas.current!);
 
     // get webgl
     this.gl = this.canvas.current!.getContext('webgl2')!;
@@ -183,6 +185,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
   componentWillUnmount() {
     window.cancelAnimationFrame(this.requestID!);
     this.camera.cleanup();
+    this.vis.cleanup();
   }
 
   handleTorusChange = () => {
@@ -213,7 +216,7 @@ class TorusDemo extends React.Component<TorusDemoProps, TorusDemoState> {
     this.camera.update();
 
     // exit early if not on screen (don't lag the computer)
-    if (!checkVisible(this.canvas.current!) && this.props.runInBackground !== true) {
+    if (!this.vis.isVisible() && this.props.runInBackground !== true) {
       this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }
