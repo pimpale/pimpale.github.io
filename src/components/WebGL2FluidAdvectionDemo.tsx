@@ -459,7 +459,6 @@ class WebGL2FluidAdvectionDemo extends React.Component<WebGL2FluidAdvectionDemoP
 
     // exit early if not on screen (don't lag the computer)
     if (!this.vis.isVisible()  && this.props.runInBackground !== true) {
-      this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }
 

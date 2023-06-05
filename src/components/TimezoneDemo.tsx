@@ -392,7 +392,6 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
 
     // exit early if not on screen (don't lag the computer)
     if (!this.vis.isVisible()) {
-      this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }
 
