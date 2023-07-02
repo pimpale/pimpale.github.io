@@ -4,6 +4,8 @@ import Layout from '../components/Layout';
 import Section from '../components/Section';
 import Articles from '../components/Articles';
 import { useMediaQuery } from 'react-responsive'
+import MnistOnnxDemo from '../components/MnistOnnxDemo';
+import AsideCard from '../components/AsideCard';
 
 import ResumePdfUrl from '../assets/govind_pimpale_resume.pdf?url';
 
@@ -84,7 +86,7 @@ const Home = () =>
       {/* Interactive Label */}
       <Rotated distance={12} rotation={-85} >
         <span data-nosnippet>
-          <Arrow90degDown className='fs-1' style={{transform: "translateY(0.5rem)"}}/><span className='fs-3' style={{fontFamily: "Permanent Marker" }}> Spin Me!</span>
+          <Arrow90degDown className='fs-1' style={{ transform: "translateY(0.5rem)" }} /><span className='fs-3' style={{ fontFamily: "Permanent Marker" }}> Spin Me!</span>
         </span>
       </Rotated>
 
@@ -101,8 +103,8 @@ const Home = () =>
         </IntroCard>
       </Rotated>
       <Rotated distance={15} rotation={0} >
-        <IntroCard title="Innexgo">
-          <a href="#innexgo">Open source education systems</a>
+        <IntroCard title="Demo of the Day">
+          <a href="#dotd">Randomly Selected Javascript Widget</a>
         </IntroCard>
       </Rotated>
       <Rotated distance={15} rotation={45} >
@@ -140,7 +142,6 @@ const Home = () =>
             Strong Longtermism
           </a> and the <a href="https://suckless.org/philosophy/">Suckless philosophy</a>.
           In my free time, I enjoy recreational programming (especially in C).
-          I currently work at <a href="https://innexgo.com">Innexgo</a>, making educational software.
         </p>
         <ul>
           <li><a href="https://github.com/pimpale/">Github</a></li>
@@ -159,18 +160,6 @@ const Home = () =>
           with the animations in <a href="https://threejs.org/">three.js</a>.
           All content on this site is licensed under the MIT license unless otherwise specified.
           The source of this website can be found <a href="https://github.com/pimpale/pimpale.github.io">here</a>.
-        </p>
-      </Section>
-      <Section id="innexgo" name="Innexgo">
-        <p>
-          In 2018 I helped create Innexgo, an open source student attendance system. Innexgo uses RFID stickers to automatically take
-          attendance without wasting student or teacher time and provides data analysis tools for converting raw attendance data to useful
-          graphs and statistics.
-        </p>
-        <p>
-          <a href="https://innexgo.com">Company Website</a>
-          <br />
-          <a href="https://github.com/innexgo">Source Code</a>
         </p>
       </Section>
       <Section id="achernar" name="Achernar">
@@ -201,6 +190,14 @@ const Home = () =>
           <a href={AchernarUrl}>More Info</a>
         </p>
       </Section>
+      <Section id="dotd" name="Demo of the Day">
+        <AsideCard title="Classify Numbers Client Side!">
+          <p className='card-text'>
+            This is a demo of running an MNIST model entirely client side with onnxruntime-web.
+          </p>
+          <MnistOnnxDemo />
+        </AsideCard>
+      </Section>
       <Articles />
     </div>
   </Layout>
@@ -214,7 +211,6 @@ import ReactDOM from 'react-dom';
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
-import { transform } from 'typescript';
 
 const root = createRoot(document.getElementById('root')!);
 root.render(
@@ -222,5 +218,3 @@ root.render(
     <Home />
   </React.StrictMode>,
 );
-
-

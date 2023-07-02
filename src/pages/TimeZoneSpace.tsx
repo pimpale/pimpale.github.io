@@ -26,7 +26,7 @@ class LiveTimeDemo extends React.Component<{}, LiveTimeDemoState> {
   componentDidMount(): void {
     this.setState({
       time: new Date(),
-      timerId: setInterval(this.tick, 1000)
+      timerId: window.setInterval(this.tick, 1000)
     });
   }
 
