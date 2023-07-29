@@ -22,7 +22,10 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
   // this is the ref to the file picker
   private filepicker = React.createRef<HTMLInputElement>();
 
-  // canvas element
+  private drawCanvas = React.createRef<HTMLCanvasElement>();
+  private mnistCanvas = React.createRef<HTMLCanvasElement>();
+
+  // final canvas element
   private canvas = React.createRef<HTMLCanvasElement>();
 
   constructor(props: MnistOnnxDemoProps) {
@@ -34,7 +37,7 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
     };
   }
 
-  doDraw = async () => {
+  doPickImage = async () => {
     this.setState({ pickerState: "loading" });
     // retrieve image file from file picker
     const file = this.filepicker.current!.files![0];
@@ -106,36 +109,28 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
     });
     const output = this.state.modelOutput;
     return <>
-      <form
-        className='mb-3'
-        onSubmit={(event) => {
-          event.preventDefault();
-          this.doInference();
-        }}>
         <div className='mb-3'>
-          <label htmlFor='input' className='form-label'>Pick a file to classify</label>
-          <input className={['form-control', this.state.error === null ? '' : 'is-invalid'].join(' ')} type='file' ref={this.filepicker} onChange={() => this.doDraw()} />
+          <p className='text-center'>
+            Draw Here <Arrow90degDown className='fs-4' style={{ transform: "translateY(0.5rem) scale(-1, 1)" }} />
+          </p>
+          <canvas ref={this.canvas} className="border border-dark mx-auto d-block" style={{ 'width': '15rem', 'height': '15rem' }} width={28} height={28} />
+        </div>
+        <h2>OR</h2>
+        <div className='mb-3 mx-auto' style={{ maxWidth: "20rem" }}>
+          <label htmlFor='input' className='form-label'>Load file</label>
+          <input className={['form-control', this.state.error === null ? '' : 'is-invalid'].join(' ')} type='file' ref={this.filepicker} onChange={() => this.doPickImage()} />
           <div className='invalid-feedback'>
             {this.state.error}
           </div>
         </div>
-        <div className='mb-3'>
-          <p className='text-center'>
-            Selected Image Visualization: <Arrow90degDown className='fs-4' style={{ transform: "translateY(0.5rem) scale(-1, 1)" }} />
-          </p>
-          <canvas ref={this.canvas} className="border border-dark mx-auto d-block" style={{ 'width': '15rem', 'height': '15rem' }} width={28} height={28} />
-        </div>
-        <button type='submit' className='btn btn-primary' disabled={!(this.state.pickerState === 'drawn' || this.state.pickerState === 'empty')}>
-          Submit
-        </button>
-      </form>
+      <canvas ref={this.canvas} className="d-hidden" width={28} height={28} />
       {output !== null
         ? <div className='alert alert-dark' role='alert'>
           <h4 className='alert-heading'>Model's Guess:</h4>
           <hr />
           {
             output.probs.map((p, i) => <div className='d-flex flex-row'>
-              <div className={[i === output.pick ? 'bg-success text-light' : '', 'text-center fs-2 me-1 rounded'].join(' ')} style={{width: "2rem"}}>
+              <div className={[i === output.pick ? 'bg-success text-light' : '', 'text-center fs-2 me-1 rounded'].join(' ')} style={{ width: "2rem" }}>
                 {i}
               </div>
               <div className="flex-grow-1 d-flex flex-column">

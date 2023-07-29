@@ -68,7 +68,7 @@ function Rotated(props: RotatedProps) {
 
 type IntroCardProps = {
   title: string,
-  children: React.ReactChild
+  children: React.ReactNode
 }
 
 const IntroCard: React.FunctionComponent<IntroCardProps> = props =>
