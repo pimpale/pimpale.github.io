@@ -9,9 +9,9 @@ export class CanvasMouseTracker {
   // mouse status
   public mousePos: { current: Point, previous: Point } | null = null;
 
-  mouseDownListeners:Array<(p:Point) => void> = [];
-  mouseMoveListeners:Array<(p:Point) => void> = [];
-  mouseUpListeners:Array<(p:Point) => void> = [];
+  mouseDownListeners: Array<(p: Point) => void> = [];
+  mouseMoveListeners: Array<(p: Point) => void> = [];
+  mouseUpListeners: Array<(p: Point) => void> = [];
 
   constructor(ctx: HTMLCanvasElement) {
     this.canvas = ctx;
@@ -27,12 +27,12 @@ export class CanvasMouseTracker {
     this.canvas.addEventListener("touchcancel", this.discardTouchEvent)
   }
 
-  addMouseDownListener = (f:(p:Point) => void) => this.mouseDownListeners.push(f);
-  removeMouseDownListener = (f:(p:Point) => void) => this.mouseDownListeners = this.mouseDownListeners.filter(x => x !== f);
-  addMouseMoveListener = (f:(p:Point) => void) => this.mouseMoveListeners.push(f);
-  removeMouseMoveListener = (f:(p:Point) => void) => this.mouseMoveListeners = this.mouseMoveListeners.filter(x => x !== f);
-  addMouseUpListener = (f:(p:Point) => void) => this.mouseUpListeners.push(f);
-  reupMouseUpListener = (f:(p:Point) => void) => this.mouseUpListeners = this.mouseUpListeners.filter(x => x !== f);
+  addMouseDownListener = (f: (p: Point) => void) => { this.mouseDownListeners.push(f) };
+  removeMouseDownListener = (f: (p: Point) => void) => { this.mouseDownListeners = this.mouseDownListeners.filter(x => x !== f) };
+  addMouseMoveListener = (f: (p: Point) => void) => { this.mouseMoveListeners.push(f) };
+  removeMouseMoveListener = (f: (p: Point) => void) => { this.mouseMoveListeners = this.mouseMoveListeners.filter(x => x !== f) };
+  addMouseUpListener = (f: (p: Point) => void) => { this.mouseUpListeners.push(f) };
+  reupMouseUpListener = (f: (p: Point) => void) => { this.mouseUpListeners = this.mouseUpListeners.filter(x => x !== f) };
 
   private getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
     const rect = canvas.getBoundingClientRect(); // abs. size of element
@@ -51,15 +51,15 @@ export class CanvasMouseTracker {
       current: v,
       previous: v
     };
-    for(const f of this.mouseDownListeners) {
-        f(v);
+    for (const f of this.mouseDownListeners) {
+      f(v);
     }
   }
   handleMouseUp = (e: MouseEvent) => {
     this.mousePos = null;
     const v = this.getMousePos(this.canvas, e);
-    for(const f of this.mouseUpListeners) {
-        f(v);
+    for (const f of this.mouseUpListeners) {
+      f(v);
     }
   }
 
@@ -72,8 +72,8 @@ export class CanvasMouseTracker {
       current: v,
       previous: this.mousePos.current
     };
-    for(const f of this.mouseMoveListeners) {
-        f(v);
+    for (const f of this.mouseMoveListeners) {
+      f(v);
     }
   }
 

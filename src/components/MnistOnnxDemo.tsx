@@ -17,6 +17,7 @@ import MnistDigit6 from '../assets/mnist_onnx/mnist_digits/6.png';
 import MnistDigit7 from '../assets/mnist_onnx/mnist_digits/7.png';
 import MnistDigit8 from '../assets/mnist_onnx/mnist_digits/8.png';
 import MnistDigit9 from '../assets/mnist_onnx/mnist_digits/9.png';
+import { CanvasMouseTracker, Point } from '../utils/canvas';
 
 const MnistDigits = [MnistDigit0, MnistDigit1, MnistDigit2, MnistDigit3, MnistDigit4, MnistDigit5, MnistDigit6, MnistDigit7, MnistDigit8, MnistDigit9];
 
@@ -25,11 +26,18 @@ type MnistOnnxDemoProps = {
   model: ort.InferenceSession
 }
 
+type BrushState = {
+  isDrawing: boolean;
+  lastX: number;
+  lastY: number;
+}
+
 type MnistOnnxDemoState = {
   selectedImage: number | "custom" | null;
   pickerState: "empty" | "loading" | "error" | "loaded";
   modelOutput: { probs: number[], pick: number } | null;
   error: string | null;
+  brushState: BrushState;
 }
 
 class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDemoState> {
@@ -46,6 +54,8 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
   // this is the canvas which will be drawn on
   private canvas = React.createRef<HTMLCanvasElement>();
 
+  // mouse status
+  private cmt!: CanvasMouseTracker;
 
   constructor(props: MnistOnnxDemoProps) {
     super(props);
@@ -53,15 +63,76 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
       selectedImage: null,
       pickerState: "empty",
       modelOutput: null,
-      error: null
+      error: null,
+      brushState: {
+        isDrawing: false,
+        lastX: 0,
+        lastY: 0
+      }
     };
   }
 
   componentDidMount() {
+    this.cmt = new CanvasMouseTracker(this.canvas.current!);
+    this.cmt.addMouseDownListener(this.handleMouseDown);
+    this.cmt.addMouseMoveListener(this.handleMouseMove);
+    this.cmt.addMouseUpListener(this.handleMouseUp);
+
+    this.clearCanvas();
+  }
+
+  componentWillUnmount(): void {
+    // remove canvas mouse tracker
+    this.cmt.cleanup();
+  }
+
+  clearCanvas = () => {
     const ctx = this.canvas.current!.getContext('2d')!;
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, 28, 28);
+    this.setState({ modelOutput: null });
   }
+
+  handleMouseDown = ({ x, y }: Point) =>
+    this.setState({
+      brushState: {
+        isDrawing: true,
+        lastX: x,
+        lastY: y
+      }
+    });
+
+  handleMouseMove = ({ x, y }: Point) => {
+    if (this.state.brushState.isDrawing) {
+      const ctx = this.canvas.current!.getContext('2d')!;
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(this.state.brushState.lastX, this.state.brushState.lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      this.setState({
+        brushState: {
+          isDrawing: true,
+          lastX: x,
+          lastY: y
+        }
+      });
+      this.doInference();
+    }
+  }
+
+  handleMouseUp = () =>
+    this.setState({
+      brushState: {
+        isDrawing: false,
+        lastX: 0,
+        lastY: 0
+      }
+    });
+
 
   doInference = async () => {
     const ctx = this.canvas.current!.getContext('2d')!;
@@ -149,7 +220,7 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
     return <>
       <div className='d-flex justify-content-evenly mb-3'>
         <div style={{ maxWidth: "17rem" }}>
-          <h3>Load an image</h3>
+          <h3 className='mb-3' >Load an image</h3>
           {/*map each integer from 0 to 9*/}
           {[...Array(10).keys()].map((i) =>
             <div key={i} className="form-check form-check-inline">
@@ -190,6 +261,7 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
             Draw Here <Arrow90degDown className='fs-4' style={{ transform: "translateY(0.5rem) scale(-1, 1)" }} />
           </p>
           <canvas ref={this.canvas} className="border border-dark mx-auto d-block" style={{ 'width': '15rem', 'height': '15rem' }} width={28} height={28} />
+          <button className='btn btn-outline-dark mt-3' onClick={this.clearCanvas}>Clear</button>
         </div>
       </div>
       {output !== null
@@ -202,7 +274,7 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
                 {i}
               </div>
               <div className="flex-grow-1 d-flex flex-column">
-                <div style={{fontSize: "0.8rem"}}>
+                <div style={{ fontSize: "0.8rem" }}>
                   {num_format.format(p)}
                 </div>
                 <div className='progress'>
