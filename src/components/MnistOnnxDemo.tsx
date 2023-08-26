@@ -93,7 +93,20 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
     this.setState({ modelOutput: null });
   }
 
-  handleMouseDown = ({ x, y }: Point) =>
+  drawStroke = (x1: number, y1: number, x2: number, y2: number) => {
+    const ctx = this.canvas.current!.getContext('2d')!;
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 3;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+
+  handleMouseDown = ({ x, y }: Point) => {
+    this.drawStroke(x, y, x, y);
     this.setState({
       brushState: {
         isDrawing: true,
@@ -101,27 +114,20 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
         lastY: y
       }
     });
+  }
 
   handleMouseMove = ({ x, y }: Point) => {
     if (this.state.brushState.isDrawing) {
-      const ctx = this.canvas.current!.getContext('2d')!;
-      ctx.strokeStyle = 'white';
-      ctx.lineWidth = 3;
-      ctx.lineJoin = 'round';
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(this.state.brushState.lastX, this.state.brushState.lastY);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      this.setState({
-        brushState: {
-          isDrawing: true,
-          lastX: x,
-          lastY: y
-        }
-      });
+      this.drawStroke(this.state.brushState.lastX, this.state.brushState.lastY, x, y);
       this.doInference();
     }
+    this.setState({
+      brushState: {
+        isDrawing: this.state.brushState.isDrawing,
+        lastX: x,
+        lastY: y
+      }
+    });
   }
 
   handleMouseUp = () =>
