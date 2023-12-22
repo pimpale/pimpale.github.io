@@ -205,6 +205,7 @@ class TimezoneDemo extends React.Component<TimezoneDemoProps, TimezoneDemoState>
     this.cmt.addMouseDownListener(x => {
       const tzid = this.getTzId(x);
       const gmtOffset = getTimezoneOffset(tzid);
+      console.log(gmtOffset);
       this.tzidRef.current!.textContent = tzid;
       const sign = gmtOffset < 0 ? '-' : '+';
       const minutes = `00${(Math.abs(gmtOffset) / (60 * 1000)) % 60}`.slice(-2);
