@@ -11,8 +11,8 @@ import { Async } from 'react-async';
 import { fetchText } from '../utils/load';
 import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import format from 'date-fns/format'
-import parse from 'date-fns/parse'
+import { format } from 'date-fns'
+import { parse } from 'date-fns/parse'
 
 import TorusWeatherScreenshot from "../assets/projects/torus_weather_screenshot.png";
 

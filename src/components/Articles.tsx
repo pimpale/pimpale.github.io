@@ -1,7 +1,7 @@
 import ArticleLayout from '../components/ArticleLayout';
 import Section from '../components/Section';
 
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 
 import { Article, articleData } from '../components/ArticleData';
 

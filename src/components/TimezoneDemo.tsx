@@ -8,7 +8,7 @@ import polmap from '../assets/timezonespace/polmap.geo.json';
 import tzmap from '../assets/timezonespace/tzmap.geo.json';
 import { colorScheme } from "../utils/colorscheme";
 import { FeatureCollection, GeoJsonProperties, Position } from "geojson";
-import { getTimezoneOffset } from "date-fns-tz";
+import { getTimezoneOffset } from "../utils/timezone";
 import chroma from "chroma-js";
 import { CanvasMouseTracker, Point } from "../utils/canvas";
 import { format } from "date-fns";

@@ -377,9 +377,11 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
       <p>
       </p>
     </Section>
+    {/*
     <Section name='Timekeeping in Space' id='timekeeping_in_space'>
 
     </Section>
+    */}
     <Section id="sources" name="Sources">
       <CitationBank />
     </Section>
