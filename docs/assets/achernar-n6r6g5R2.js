@@ -1,0 +1,1 @@
+import"./modulepreload-polyfill-9p4a8sJU.js";import{R as o,j as t,a as r}from"./bootstrap-E42M73Qn.js";import{L as e}from"./Layout-qOTRLYLo.js";import{S as i}from"./Section-_7EI6j-o.js";function n(){return t.jsx(e,{children:t.jsx(i,{id:"motivation",name:"Motivation",children:"Todo..."})})}o.render(t.jsx(r.StrictMode,{children:t.jsx(n,{})}),document.getElementById("root"));
