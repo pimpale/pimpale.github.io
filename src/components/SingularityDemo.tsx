@@ -107,8 +107,6 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
   private torusLerpAlpha!: WebGLUniformLocation;
 
   private filledbuffer!: WebGLBuffer;
-  private wireframebuffer!: WebGLBuffer;
-
 
   private requestID!: number;
 
@@ -163,7 +161,6 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
       // back level
       ...genPlane(detailLevel, detailLevel).flatMap((v, i) => [v[0], v[1], 1, ...backcolor, ...getBarycenter(i % 3)]),
     ];
-
 
     this.filledbuffer = this.gl.createBuffer()!;
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.filledbuffer);
@@ -226,13 +223,12 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
     this.gl.uniform1f(this.torusLerpAlpha, lerpAlpha);
   }
 
-
-
   animationLoop = () => {
     this.camera.update();
 
     // exit early if not on screen (don't lag the computer)
     if (!this.vis.isVisible() && this.props.runInBackground !== true) {
+      this.requestID = window.requestAnimationFrame(this.animationLoop);
       return;
     }
 
@@ -280,4 +276,3 @@ class SingularityDemo extends React.Component<SingularityDemoProps, {}> {
 }
 
 export default SingularityDemo;
-
