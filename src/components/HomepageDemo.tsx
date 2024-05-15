@@ -124,7 +124,7 @@ class HomepageDemo extends React.Component<HomepageDemoProps, HomepageDemoState>
       3,              // size (num components)
       this.gl.FLOAT,  // type of data in buffer
       false,          // normalize
-      5 * 4,              // stride (0 = auto)
+      5 * 4,          // stride (0 = auto)
       0,              // offset
     );
     this.gl.enableVertexAttribArray(barycenterLoc);
@@ -133,8 +133,8 @@ class HomepageDemo extends React.Component<HomepageDemoProps, HomepageDemoState>
       2,              // size (num components)
       this.gl.FLOAT,  // type of data in buffer
       false,          // normalize
-      5 * 4,              // stride (0 = auto)
-      3 * 4,              // offset
+      5 * 4,          // stride (0 = auto)
+      3 * 4,          // offset
     );
 
     this.gl.useProgram(program);
