@@ -11,7 +11,7 @@
     "@types/chroma-js": "^2.4.4",
     "@types/color-convert": "^2.0.3",
     "@types/geojson": "^7946.0.14",
-    "@types/react": "^18.3.2",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-plotly.js": "^2.6.3",
     "@types/react-syntax-highlighter": "^15.5.13",
@@ -20,7 +20,7 @@
     "date-fns": "^3.6.0",
     "gl-matrix": "^3.4.3",
     "katex": "^0.16.10",
-    "onnxruntime-web": "^1.17.3",
+    "onnxruntime-web": "^1.18.0",
     "open-simplex-noise": "^2.5.0",
     "outdent": "^0.8.0",
     "react": "^18",
@@ -30,7 +30,7 @@
     "react-plotly.js": "^2.6.0",
     "react-responsive": "^10.0.0",
     "react-syntax-highlighter": "^15.5.0",
-    "sass": "^1.77.1",
+    "sass": "^1.77.3",
     "typescript": "^5.4.5"
   },
   "scripts": {
@@ -54,11 +54,11 @@
     ]
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^4.3.0",
     "path": "^0.12.7",
     "rollup-plugin-multi-input": "^1.4.1",
-    "vite": "^5.2.11",
-    "vite-plugin-static-copy": "^1.0.4",
+    "vite": "^5.2.12",
+    "vite-plugin-static-copy": "^1.0.5",
     "vite-react-jsx": "^1.1.2"
   }
 }
