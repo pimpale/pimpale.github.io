@@ -83,8 +83,8 @@ export class TrackballCamera implements Camera {
 
     // get normalized mouse x and y
     const q = {
-      x: -2 * (e.clientX - client_cx) / trackballRadius,
-      y: -2 * (e.clientY - client_cy) / trackballRadius
+      x: 2 * (e.clientX - client_cx) / trackballRadius,
+      y: 2 * (e.clientY - client_cy) / trackballRadius
     }
     return q;
   }
@@ -205,8 +205,13 @@ export class TrackballCamera implements Camera {
   viewMatrix = () => {
     const tmp = quat.mul(quat.create(), this.currQ, this.baseQ);
 
+    // the way the world needs to be transformed to get into camera space
+    // 1. rotate the entire world by the rotation quaternion
+    // 2. move the world near the camera by the offsetRadius
+
     const view = mat4.fromRotationTranslation(mat4.create(), tmp, [0, 0, -this.offsetRadius]);
-   
+    
+
     return view;
   }
 

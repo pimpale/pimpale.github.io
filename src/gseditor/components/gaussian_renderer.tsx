@@ -1,15 +1,16 @@
 import React from "react";
 import { createShader, createProgram, createTexture, createRGBA32FTexture, createDepth32FTexture, createR32UITexture, } from '../utils/webgl';
 import { Camera, TrackballCamera, } from '../utils/camera';
-import { mat4, quat, vec2, vec3 } from 'gl-matrix';
+import { mat3, mat4, quat, vec2, vec3 } from 'gl-matrix';
 import { arrayMax, deg2rad } from "../utils/math";
 import { GaussianObjectInput, loadPly } from "./gaussian_renderer_utils/sceneLoader";
 import { genPlane } from "../utils/uvplane";
 import { Vertex } from "../utils/vertex";
-import { polyline, polyline_facing_point } from "../utils/polyline";
+import { arrowAroundPoint, polyline, polyline_facing_point } from "../utils/polyline";
 import { ProcessedGaussianScene } from "./gaussian_renderer_utils/sortWorker";
 import assert from "../utils/assert";
 import { CanvasMouseTracker } from "../utils/canvas";
+import { axesLines } from "../utils/axes";
 
 const QUAD_BUFFER = new Float32Array(genPlane(1, 1).flatMap(v => [v[0], v[1]]));
 
@@ -207,7 +208,7 @@ void main() {
     // highlight selected object
     vec3 color = splat_color;
     if (selectedObjectRenderMode == 2u && objId == selectedObjectId) {
-      color = mix(splat_color, vec3(1.0, 0.0, 0.0), mod(time + gl_FragCoord.x/10.0 + gl_FragCoord.y/10.0, 1.0));
+      color = mix(splat_color, vec3(1.0, 0.0, 0.0), 0.1*mod(time + gl_FragCoord.x/10.0 + gl_FragCoord.y/10.0, 1.0));
     }
 
     // Resample using conic matrix (cf. "Surface 
@@ -241,7 +242,7 @@ void main() {
 }`;
 
 
-const invertRow = (mat: mat4, row: number) => {
+const invertRowMat4 = (mat: mat4, row: number) => {
   mat[row + 0] = -mat[row + 0]
   mat[row + 4] = -mat[row + 4]
   mat[row + 8] = -mat[row + 8]
@@ -252,27 +253,21 @@ const invertRow = (mat: mat4, row: number) => {
 const convertViewMatrixTargetCoordinateSystem = (vm: Readonly<mat4>) => {
   // copy the view matrix
   const viewMatrix = mat4.clone(vm)
-
-  invertRow(viewMatrix, 0) // NOTE: inverting the x axis is webgl specific
-  invertRow(viewMatrix, 1)
-  invertRow(viewMatrix, 2)
-
+  invertRowMat4(viewMatrix, 2)
   return viewMatrix;
 }
 
 const convertViewProjectionMatrixTargetCoordinateSystem = (vpm: Readonly<mat4>) => {
   // copy the viewProjMatrix
   const viewProjMatrix = mat4.clone(vpm)
-
-  invertRow(viewProjMatrix, 0) // NOTE: inverting the x axis is webgl specific
-  invertRow(viewProjMatrix, 1)
-
   return viewProjMatrix;
 }
+
 
 type GaussianRendererEngineSceneObject = {
   translation: vec3,
   rotation: quat,
+  scale: number,
   object: GaussianObjectInput,
 }
 
@@ -427,8 +422,8 @@ class GaussianRendererEngine {
     return this.sceneGraph.get(id);
   }
 
-  addObject = (id: number, translate: vec3, rotate: quat, object: GaussianObjectInput) => {
-    this.sceneGraph.set(id, { translation: translate, rotation: rotate, object });
+  addObject = (id: number, translate: vec3, rotate: quat, scale:number, object: GaussianObjectInput) => {
+    this.sceneGraph.set(id, { translation: translate, rotation: rotate, object, scale });
     this.needs_rebuild = true;
   }
 
@@ -450,6 +445,15 @@ class GaussianRendererEngine {
     this.needs_rebuild = true;
   }
 
+  setScaleObject = (id: number, scale: number) => {
+    const obj = this.sceneGraph.get(id);
+    if (obj === undefined) {
+      throw Error(`Object with id ${id} does not exist`)
+    }
+    obj.scale = scale;
+    this.needs_rebuild = true;
+  }
+
   removeObject = (id: number) => {
     this.sceneGraph.delete(id);
     this.needs_rebuild = true;
@@ -462,7 +466,7 @@ class GaussianRendererEngine {
     this.sortWorker.postMessage({
       viewMatrix: this.lastSortedViewProjMatrix,
       sortingAlgorithm: 'count sort',
-      sceneGraph: this.sceneGraph
+      sceneGraph: this.sceneGraph,
     });
   }
 
@@ -673,6 +677,7 @@ type DrawableObject = {
   kind: "line" | "triangle",
   translation: vec3,
   rotation: quat,
+  scale: number,
   vertexes: Vertex[]
 }
 
@@ -793,8 +798,9 @@ class OverlayEngine {
 
     let offset = 0;
     for (const obj of drawables) {
+      const transform = mat4.fromRotationTranslationScale(mat4.create(), obj.rotation, obj.translation, vec3.fromValues(obj.scale, obj.scale, obj.scale));
       for (const vertex of obj.vertexes) {
-        positions.set(vertex.position, offset * 3);
+        positions.set(vec3.transformMat4(vec3.create(), vertex.position, transform), offset * 3);
         colors.set(vertex.color, offset * 3);
         offset += 1;
       }
@@ -858,6 +864,15 @@ class OverlayEngine {
       throw Error(`Object with id ${id} does not exist`)
     }
     obj.rotation = rotate;
+    this.needs_rebuild = true;
+  }
+
+  setScaleObject = (id: number, scale: number) => {
+    const obj = this.objects.get(id);
+    if (obj === undefined) {
+      throw Error(`Object with id ${id} does not exist`)
+    }
+    obj.scale = scale;
     this.needs_rebuild = true;
   }
 
@@ -1078,6 +1093,12 @@ type RotateSelectedObjectState = {
   kind: "rotate",
 }
 
+type ScaleSelectedObjectState = {
+  kind: "scale",
+  mouse_start: vec2,
+  scale_start: number
+}
+
 type TranslateWithAxisSelectedObjectState = {
   kind: "translate_with_axis",
   axis: "x" | "y" | "z",
@@ -1096,7 +1117,10 @@ type SelectedObjectInterfaceState = {
   kind: "selected_object_interface",
   selected_object_id: number,
   last_mouse_pos: vec2,
-  selected_object_state: RotateSelectedObjectState | RotateWithAxisSelectedObjectState | TranslateSelectedObjectState | TranslateWithAxisSelectedObjectState | IdleSelectedObjectState;
+  selected_object_state: ScaleSelectedObjectState
+  | RotateSelectedObjectState | RotateWithAxisSelectedObjectState
+  | TranslateSelectedObjectState | TranslateWithAxisSelectedObjectState
+  | IdleSelectedObjectState;
 }
 
 type IdleInterfaceState = {
@@ -1297,6 +1321,7 @@ class GaussianEditor extends React.Component<GaussianRendererProps, GaussianEdit
         Math.floor(Math.random() * 0xFFFFFFFF),
         vec3.fromValues(0, 0, 0),
         quat.create(),
+        1,
         loadPly(await ply_file.arrayBuffer()),
       );
     }
@@ -1317,15 +1342,13 @@ class GaussianEditor extends React.Component<GaussianRendererProps, GaussianEdit
     return nearest_depth_obj;
   }
 
-
   animationLoop = () => {
     this.camera.update();
     this.gsRendererEngine.update(this.camera);
+    this.overlayEngine.update();
 
     // process inputs
     for (const input of this.interface_inputs) {
-      console.log(this.interface_state)
-      console.log(input);
       switch (input.kind) {
         case "mouseclick": {
           switch (this.interface_state.kind) {
@@ -1364,10 +1387,51 @@ class GaussianEditor extends React.Component<GaussianRendererProps, GaussianEdit
               switch (input.key) {
                 case "r": {
                   this.interface_state.selected_object_state = { kind: "rotate", };
+                  this.overlayEngine.removeObject(this.interface_state.selected_object_id);
+
+                  let srcObj = this.gsRendererEngine.getObject(this.interface_state.selected_object_id)!;
+
+                  this.overlayEngine.addObject(this.interface_state.selected_object_id, {
+                    kind: "line",
+                    translation: srcObj.translation,
+                    rotation: srcObj.rotation,
+                    scale: srcObj.scale,
+                    vertexes: axesLines(4)
+                  })
                   break;
                 }
                 case "g": {
                   this.interface_state.selected_object_state = { kind: "translate", };
+                  this.overlayEngine.removeObject(this.interface_state.selected_object_id);
+
+                  let srcObj = this.gsRendererEngine.getObject(this.interface_state.selected_object_id)!;
+
+                  this.overlayEngine.addObject(this.interface_state.selected_object_id, {
+                    kind: "line",
+                    translation: srcObj.translation,
+                    rotation: quat.create(),
+                    scale: srcObj.scale,
+                    vertexes: axesLines(4)
+                  })
+                  break;
+                }
+                case "s": {
+                  this.interface_state.selected_object_state = {
+                    kind: "scale",
+                    mouse_start: this.interface_state.last_mouse_pos,
+                    scale_start: 1.0
+                  };
+                  this.overlayEngine.removeObject(this.interface_state.selected_object_id);
+
+                  let srcObj = this.gsRendererEngine.getObject(this.interface_state.selected_object_id)!;
+
+                  this.overlayEngine.addObject(this.interface_state.selected_object_id, {
+                    kind: "line",
+                    translation: srcObj.translation,
+                    rotation: quat.create(),
+                    scale: srcObj.scale,
+                    vertexes: axesLines(4)
+                  })
                   break;
                 }
                 case "x":
@@ -1393,11 +1457,13 @@ class GaussianEditor extends React.Component<GaussianRendererProps, GaussianEdit
                 }
                 case 'Escape': {
                   switch (this.interface_state.selected_object_state.kind) {
+                    case "scale":
                     case "rotate_with_axis":
                     case "translate_with_axis":
                     case "rotate":
                     case "translate": {
                       this.interface_state.selected_object_state = { kind: "idle" };
+                      this.overlayEngine.removeObject(this.interface_state.selected_object_id);
                       break;
                     }
                     case "idle": {
@@ -1428,8 +1494,9 @@ class GaussianEditor extends React.Component<GaussianRendererProps, GaussianEdit
                 case "rotate_with_axis": {
                   if (this.interface_state.selected_object_state.axis !== null) {
                     const mouse_delta = vec2.sub(vec2.create(), input.location, this.interface_state.selected_object_state.mouse_start);
-                    const rotation = quat.setAxisAngle(quat.create(), axisNameToVec3(this.interface_state.selected_object_state.axis), mouse_delta[0] * 0.01);
+                    const rotation = quat.setAxisAngle(quat.create(), axisNameToVec3(this.interface_state.selected_object_state.axis), mouse_delta[0] * 0.02);
                     this.gsRendererEngine.setRotationObject(this.interface_state.selected_object_id, quat.mul(quat.create(), this.interface_state.selected_object_state.quat_start, rotation));
+                    this.overlayEngine.setRotationObject(this.interface_state.selected_object_id, quat.mul(quat.create(), this.interface_state.selected_object_state.quat_start, rotation));
                   }
                   break;
                 }
@@ -1439,7 +1506,15 @@ class GaussianEditor extends React.Component<GaussianRendererProps, GaussianEdit
                     const translation = vec3.clone(this.interface_state.selected_object_state.pos_start);
                     translation[axisNameToIdx(this.interface_state.selected_object_state.axis)] += mouse_delta[0] * 0.01;
                     this.gsRendererEngine.setPositionObject(this.interface_state.selected_object_id, translation);
+                    this.overlayEngine.setPositionObject(this.interface_state.selected_object_id, translation);
                   }
+                  break;
+                }
+                case "scale": {
+                  const mouse_delta = vec2.sub(vec2.create(), input.location, this.interface_state.selected_object_state.mouse_start);
+                  const scale = this.interface_state.selected_object_state.scale_start + mouse_delta[0] * 0.01;
+                  this.gsRendererEngine.setScaleObject(this.interface_state.selected_object_id, scale);
+                  this.overlayEngine.setScaleObject(this.interface_state.selected_object_id, scale);
                   break;
                 }
                 default: {
@@ -1458,6 +1533,7 @@ class GaussianEditor extends React.Component<GaussianRendererProps, GaussianEdit
     }
     this.interface_inputs = [];
 
+
     // render gaussians to texture
     const selected_object_id = this.interface_state.kind === "selected_object_interface"
       ? this.interface_state.selected_object_id
@@ -1471,14 +1547,14 @@ class GaussianEditor extends React.Component<GaussianRendererProps, GaussianEdit
     this.gl.readPixels(0, 0, this.gsRendererEngine.get_xsize(), this.gsRendererEngine.get_ysize(), this.gl.RGBA, this.gl.UNSIGNED_BYTE, color_tex_data);
 
     //// copy depth texture
-    //const depth_tex_data = new Float32Array(this.gsRendererEngine.get_xsize() * this.gsRendererEngine.get_ysize() * 4);
-    //this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.gsRendererEngine.fbo);
-    //this.gl.readBuffer(this.gl.COLOR_ATTACHMENT1);
-    //this.gl.readPixels(0, 0, this.gsRendererEngine.get_xsize(), this.gsRendererEngine.get_ysize(), this.gl.RGBA, this.gl.FLOAT, depth_tex_data);
+    const depth_tex_data = new Float32Array(this.gsRendererEngine.get_xsize() * this.gsRendererEngine.get_ysize() * 4);
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.gsRendererEngine.fbo);
+    this.gl.readBuffer(this.gl.COLOR_ATTACHMENT1);
+    this.gl.readPixels(0, 0, this.gsRendererEngine.get_xsize(), this.gsRendererEngine.get_ysize(), this.gl.RGBA, this.gl.FLOAT, depth_tex_data);
 
     // visualize textures
     this.visualizeTexture(this.gsColorVizData, color_tex_data);
-    // this.visualizeTexture(this.gsDepthVizData, this.convertRGBA32Tex(depth_tex_data));
+    this.visualizeTexture(this.gsDepthVizData, this.convertRGBA32Tex(depth_tex_data));
 
     // render overlay to texture
     this.overlayEngine.render(this.camera);
@@ -1512,7 +1588,7 @@ class GaussianEditor extends React.Component<GaussianRendererProps, GaussianEdit
 
   render() {
     return <>
-      <canvas
+      < canvas
         tabIndex={0}
         style={this.props.style}
         className={this.props.className}
