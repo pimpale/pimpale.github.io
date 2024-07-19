@@ -11,7 +11,7 @@ export default defineConfig({
   root: path.resolve(__dirname, "src"),
   plugins: [
     react(),
-    multiInput.default(),
+    multiInput(),
     viteStaticCopy({
       targets: [
         {

@@ -19,7 +19,7 @@
     "chroma-js": "^2.4.2",
     "date-fns": "^3.6.0",
     "gl-matrix": "^3.4.3",
-    "katex": "^0.16.10",
+    "katex": "^0.16.11",
     "onnxruntime-web": "^1.18.0",
     "open-simplex-noise": "^2.5.0",
     "outdent": "^0.8.0",
@@ -30,8 +30,8 @@
     "react-plotly.js": "^2.6.0",
     "react-responsive": "^10.0.0",
     "react-syntax-highlighter": "^15.5.0",
-    "sass": "^1.77.6",
-    "typescript": "^5.4.5"
+    "sass": "^1.77.8",
+    "typescript": "^5.5.3"
   },
   "scripts": {
     "start": "vite",
@@ -56,9 +56,9 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
     "path": "^0.12.7",
-    "rollup-plugin-multi-input": "^1.4.1",
-    "vite": "^5.3.1",
-    "vite-plugin-static-copy": "^1.0.5",
+    "rollup-plugin-multi-input": "^1.4.2",
+    "vite": "^5.3.3",
+    "vite-plugin-static-copy": "^1.0.6",
     "vite-react-jsx": "^1.1.2"
   }
 }
