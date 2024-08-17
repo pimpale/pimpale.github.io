@@ -26,7 +26,7 @@ export default defineConfig({
     outDir: "../docs",
     emptyOutDir: true,
     rollupOptions: {
-      input: path.resolve(__dirname, "src/**/*.html")
+      input: path.resolve(__dirname, "src/**/*.html"),
     }
   }
 })
