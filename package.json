@@ -20,6 +20,7 @@
     "date-fns": "^3.6.0",
     "gl-matrix": "^3.4.3",
     "katex": "^0.16.11",
+    "nearley": "^2.20.1",
     "onnxruntime-web": "^1.19.0",
     "open-simplex-noise": "^2.5.0",
     "outdent": "^0.8.0",
@@ -54,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@types/nearley": "^2.11.5",
     "@vitejs/plugin-react": "^4.3.1",
     "path": "^0.12.7",
     "rollup-plugin-multi-input": "^1.5.0",

@@ -82,5 +82,11 @@ export const articleData: Map<string, Article> = new Map([
     url: '../metadrive_rl.html',
     published: parse("14 Jul 2023", "d MMM y", new Date()),
     listed: true,
+  }],
+  ["english-parser", {
+    name: "Constituency Parsing English",
+    url: '../parse_english.html',
+    published: parse("14 Jul 2023", "d MMM y", new Date()),
+    listed: true,
   }]
 ]);

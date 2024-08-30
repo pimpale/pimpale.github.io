@@ -1,0 +1,23 @@
+{
+    "alice": {
+        "pos": ["proper-noun"]
+    },
+    "bob": {
+        "pos": ["proper-noun"]
+    },
+    "dog": {
+        "pos": ["noun"]
+    },
+    "the": {
+        "pos": ["determiner"]
+    },
+    "a": {
+        "pos": ["determiner"]
+    },
+    "is": {
+        "pos": ["verb-sva", "verb-svo"]
+    },
+    "gives": {
+        "pos": ["verb-svo"]
+    }
+}
