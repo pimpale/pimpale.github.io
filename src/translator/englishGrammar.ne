@@ -1,4 +1,4 @@
-@preprocessor module
+@preprocessor typescript
 
 @{%
 import english from './english.json';
@@ -25,6 +25,7 @@ const v_ap = {test: x => x in english.v_ap};
 const v_to_inf_cl = {test: x => x in english.v_to_inf_cl};
 const v_bare_inf_cl = {test: x => x in english.v_bare_inf_cl};
 const v_declarative_cl = {test: x => x in english.v_declarative_cl};
+const v_exclamative_cl = {test: x => x in english.v_exclamative_cl};
 const v_interrogative_cl = {test: x => x in english.v_interrogative_cl};
 const v_np = {test: x => x in english.v_np};
 const v_np_pp = {test: x => x in english.v_np_pp};
@@ -34,6 +35,7 @@ const v_np_bare_inf_cl = {test: x => x in english.v_np_bare_inf_cl};
 const v_np_declarative_cl = {test: x => x in english.v_np_declarative_cl};
 const v_np_exclamative_cl = {test: x => x in english.v_np_exclamative_cl};
 const v_np_interrogative_cl = {test: x => x in english.v_np_interrogative_cl};
+const v_np_np = {test: x => x in english.v_np_np};
 
 // adjectives
 const adj = {test: x => x in english.adj}; // adjectives that don't take any arguments (ex: "happy")
@@ -41,10 +43,11 @@ const adj_pp = {test: x => x in english.adj_pp}; // adjectives that take a prepo
 
 // adverbs
 const adv = {test: x => x in english.adv}; // adverbs that don't take any arguments (ex: "quickly")
+const periph_mod = {test: x => x in english.periph_mod}; // peripheral modifiers (ex: "even", "too")
 
+// wh-words
+const wh = {test: x => x in english.wh}; // wh-words (ex: "who", "what", "where", "when", "why", "how")
 %}
-
-@lexer lexer
 
 # a declarative finite clause
 decl_fin_cl -> pp:* fin_vp pp:*
@@ -58,12 +61,12 @@ fin_vp ->
     | np vp_declarative_cl      declarative_cl                        # intransitive verb with declarative content clause argument (ex: "I know that you eat")
     | np vp_exclamative_cl      exclamative_cl                        # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
     | np vp_interrogative_cl    interrogative_cl                      # intransitive verb with interrogative clause argument (ex: "I know what you eat")
-    | np vp_np                  np                                    # transitive verb (ex: "I eat food")
+    | np vp_np                  np                                    # transitive verb (ex: "I eat the apple")
     | np vp_np_pp               np              pp                    # transitive verb with prepositional phrase argument (ex: "I put the book on the table")
     | np vp_np_ap               np              ap                    # transitive verb with adjective phrase argument (ex: "I find you happy")
-    | np vp_np_to_inf_cl        np              to_inf_cl             # transitive verb with infinitive verb argument (ex: "I ask you to eat")
-    | np vp_np_bare_inf_cl      np              bare_inf_cl           # transitive verb with bare infinitive verb argument (ex: "I make you eat")
-    | np vp_np_declarative_cl   np              declarative_cl        # transitive verb with declarative content clause argument (ex: "I tell you that you eat")
+    | np vp_np_to_inf_cl        np              to_inf_cl             # transitive verb with infinitive verb argument (ex: "I ask you to eat the apple")
+    | np vp_np_bare_inf_cl      np              bare_inf_cl           # transitive verb with bare infinitive verb argument (ex: "I make you eat the apple")
+    | np vp_np_declarative_cl   np              declarative_cl        # transitive verb with declarative content clause argument (ex: "I tell you that you eat the apple")
     | np vp_np_exclamative_cl   np              exclamative_cl        # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
     | np vp_np_interrogative_cl np              interrogative_cl      # transitive verb with interrogative clause argument (ex: "I ask you what you eat")
     | np vp_np_np               np              np                    # ditransitive verb (ex: "I give you food")

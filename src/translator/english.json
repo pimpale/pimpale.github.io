@@ -238,10 +238,65 @@
         "tell": null,
         "show": null,
         "convince": null,
+        "persuade": null
+    },
+    "v_np_exclamative_cl": {
+        "tell": null,
+        "show": null
+    },
+    "v_np_interrogative_cl": {
+        "ask": null
+    },
+    "v_np_np": {
+        "give": null,
+        "send": null,
+        "show": null,
+        "offer": null,
+        "bring": null,
+        "lend": null,
+        "pass": null,
+        "hand": null,
+        "sell": null,
+        "buy": null,
+        "pay": null,
+        "promise": null,
+        "teach": null,
+        "tell": null,
+        "ask": null,
+        "order": null,
+        "invite": null,
+        "advise": null,
         "persuade": null,
-
-
-
-
-    
+        "remind": null,
+        "help": null
+    },
+    "adj": {
+        "big": null,
+        "small": null,
+        "happy": null
+    },
+    "adj_pp": {
+        "interested": null,
+        "glad": null,
+        "sorry": null
+    },
+    "adv": {
+        "quickly": null,
+        "slowly": null,
+        "happily": null
+    },
+    "periph_mod": {
+        "even": null,
+        "also": null,
+        "too": null
+    },
+    "wh": {
+        "who": null,
+        "what": null,
+        "which": null,
+        "where": null,
+        "when": null,
+        "why": null,
+        "how": null
+    }
 }

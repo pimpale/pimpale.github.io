@@ -1,6 +1,8 @@
 // Generated automatically by nearley, version 2.20.1
 // http://github.com/Hardmath123/nearley
-function id(x) { return x[0]; }
+// Bypasses TS6133. Allow declared but unused functions.
+// @ts-ignore
+function id(d: any[]): any { return d[0]; }
 
 import english from './english.json';
 
@@ -17,6 +19,7 @@ const preposition = {test: x => x in english.preposition};
 const to = {test: x => x in english.to};
 const s = {test: x => x in english.s};
 const that = {test: x => x in english.that};
+const interrogative_subordinator = {test: x => x in english.interrogative_subordinator};
 
 // verbs
 const v = {test: x => x in english.v};
@@ -25,6 +28,7 @@ const v_ap = {test: x => x in english.v_ap};
 const v_to_inf_cl = {test: x => x in english.v_to_inf_cl};
 const v_bare_inf_cl = {test: x => x in english.v_bare_inf_cl};
 const v_declarative_cl = {test: x => x in english.v_declarative_cl};
+const v_exclamative_cl = {test: x => x in english.v_exclamative_cl};
 const v_interrogative_cl = {test: x => x in english.v_interrogative_cl};
 const v_np = {test: x => x in english.v_np};
 const v_np_pp = {test: x => x in english.v_np_pp};
@@ -34,17 +38,53 @@ const v_np_bare_inf_cl = {test: x => x in english.v_np_bare_inf_cl};
 const v_np_declarative_cl = {test: x => x in english.v_np_declarative_cl};
 const v_np_exclamative_cl = {test: x => x in english.v_np_exclamative_cl};
 const v_np_interrogative_cl = {test: x => x in english.v_np_interrogative_cl};
+const v_np_np = {test: x => x in english.v_np_np};
 
 // adjectives
 const adj = {test: x => x in english.adj}; // adjectives that don't take any arguments (ex: "happy")
 const adj_pp = {test: x => x in english.adj_pp}; // adjectives that take a prepositional phrase argument (ex: "fond of cheese")
 
-let Lexer = lexer;
-let ParserRules = [
+// adverbs
+const adv = {test: x => x in english.adv}; // adverbs that don't take any arguments (ex: "quickly")
+const periph_mod = {test: x => x in english.periph_mod}; // peripheral modifiers (ex: "even", "too")
+
+// wh-words
+const wh = {test: x => x in english.wh}; // wh-words (ex: "who", "what", "where", "when", "why", "how")
+
+interface NearleyToken {
+  value: any;
+  [key: string]: any;
+};
+
+interface NearleyLexer {
+  reset: (chunk: string, info: any) => void;
+  next: () => NearleyToken | undefined;
+  save: () => any;
+  formatError: (token: never) => string;
+  has: (tokenType: string) => boolean;
+};
+
+interface NearleyRule {
+  name: string;
+  symbols: NearleySymbol[];
+  postprocess?: (d: any[], loc?: number, reject?: {}) => any;
+};
+
+type NearleySymbol = string | { literal: any } | { test: (token: any) => boolean };
+
+interface Grammar {
+  Lexer: NearleyLexer | undefined;
+  ParserRules: NearleyRule[];
+  ParserStart: string;
+};
+
+const grammar: Grammar = {
+  Lexer: undefined,
+  ParserRules: [
     {"name": "decl_fin_cl$ebnf$1", "symbols": []},
-    {"name": "decl_fin_cl$ebnf$1", "symbols": ["decl_fin_cl$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "decl_fin_cl$ebnf$1", "symbols": ["decl_fin_cl$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "decl_fin_cl$ebnf$2", "symbols": []},
-    {"name": "decl_fin_cl$ebnf$2", "symbols": ["decl_fin_cl$ebnf$2", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "decl_fin_cl$ebnf$2", "symbols": ["decl_fin_cl$ebnf$2", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "decl_fin_cl", "symbols": ["decl_fin_cl$ebnf$1", "fin_vp", "decl_fin_cl$ebnf$2"]},
     {"name": "fin_vp", "symbols": ["np", "vp"]},
     {"name": "fin_vp", "symbols": ["np", "vp_pp", "pp"]},
@@ -63,22 +103,22 @@ let ParserRules = [
     {"name": "fin_vp", "symbols": ["np", "vp_np_exclamative_cl", "np", "exclamative_cl"]},
     {"name": "fin_vp", "symbols": ["np", "vp_np_interrogative_cl", "np", "interrogative_cl"]},
     {"name": "fin_vp", "symbols": ["np", "vp_np_np", "np", "np"]},
-    {"name": "fin_vp", "symbols": ["np", "vp_np_np", "np", (lexer.has("to") ? {type: "to"} : to), "np"]},
-    {"name": "to_inf_cl", "symbols": [(lexer.has("to") ? {type: "to"} : to), "bare_inf_cl"]},
-    {"name": "to_inf_cl_some_np_moved", "symbols": [(lexer.has("to") ? {type: "to"} : to), "bare_inf_cl_some_np_moved"]},
-    {"name": "to_inf_cl_pp_moved", "symbols": [(lexer.has("to") ? {type: "to"} : to), "bare_inf_cl_pp_moved"]},
-    {"name": "to_inf_cl_pp_stranded", "symbols": [(lexer.has("to") ? {type: "to"} : to), "bare_inf_cl_pp_stranded"]},
+    {"name": "fin_vp", "symbols": ["np", "vp_np_np", "np", to, "np"]},
+    {"name": "to_inf_cl", "symbols": [to, "bare_inf_cl"]},
+    {"name": "to_inf_cl_some_np_moved", "symbols": [to, "bare_inf_cl_some_np_moved"]},
+    {"name": "to_inf_cl_pp_moved", "symbols": [to, "bare_inf_cl_pp_moved"]},
+    {"name": "to_inf_cl_pp_stranded", "symbols": [to, "bare_inf_cl_pp_stranded"]},
     {"name": "bare_inf_cl$ebnf$1", "symbols": []},
-    {"name": "bare_inf_cl$ebnf$1", "symbols": ["bare_inf_cl$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "bare_inf_cl$ebnf$1", "symbols": ["bare_inf_cl$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "bare_inf_cl", "symbols": ["inf_vp", "bare_inf_cl$ebnf$1"]},
     {"name": "bare_inf_cl_some_np_moved$ebnf$1", "symbols": []},
-    {"name": "bare_inf_cl_some_np_moved$ebnf$1", "symbols": ["bare_inf_cl_some_np_moved$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "bare_inf_cl_some_np_moved$ebnf$1", "symbols": ["bare_inf_cl_some_np_moved$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "bare_inf_cl_some_np_moved", "symbols": ["inf_vp_some_np_moved", "bare_inf_cl_some_np_moved$ebnf$1"]},
     {"name": "bare_inf_cl_pp_moved$ebnf$1", "symbols": []},
-    {"name": "bare_inf_cl_pp_moved$ebnf$1", "symbols": ["bare_inf_cl_pp_moved$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "bare_inf_cl_pp_moved$ebnf$1", "symbols": ["bare_inf_cl_pp_moved$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "bare_inf_cl_pp_moved", "symbols": ["inf_vp_pp_moved", "bare_inf_cl_pp_moved$ebnf$1"]},
     {"name": "bare_inf_cl_pp_stranded$ebnf$1", "symbols": []},
-    {"name": "bare_inf_cl_pp_stranded$ebnf$1", "symbols": ["bare_inf_cl_pp_stranded$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "bare_inf_cl_pp_stranded$ebnf$1", "symbols": ["bare_inf_cl_pp_stranded$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "bare_inf_cl_pp_stranded", "symbols": ["inf_vp_pp_stranded", "bare_inf_cl_pp_stranded$ebnf$1"]},
     {"name": "inf_vp", "symbols": ["vp"]},
     {"name": "inf_vp", "symbols": ["vp_pp", "pp"]},
@@ -107,22 +147,22 @@ let ParserRules = [
     {"name": "inf_vp_some_np_moved", "symbols": ["vp_np_np", "np"]},
     {"name": "inf_vp_pp_moved", "symbols": ["vp_pp"]},
     {"name": "inf_vp_pp_moved", "symbols": ["vp_np_pp", "np"]},
-    {"name": "inf_vp_pp_stranded", "symbols": ["vp_pp", (lexer.has("preposition") ? {type: "preposition"} : preposition)]},
-    {"name": "inf_vp_pp_stranded", "symbols": ["vp_np_pp", "np", (lexer.has("preposition") ? {type: "preposition"} : preposition)]},
-    {"name": "declarative_cl", "symbols": [(lexer.has("that") ? {type: "that"} : that), "decl_fin_cl"]},
+    {"name": "inf_vp_pp_stranded", "symbols": ["vp_pp", preposition]},
+    {"name": "inf_vp_pp_stranded", "symbols": ["vp_np_pp", "np", preposition]},
+    {"name": "declarative_cl", "symbols": [that, "decl_fin_cl"]},
     {"name": "exclamative_cl", "symbols": ["interrogative_cl"]},
     {"name": "interrogative_cl", "symbols": ["open_interrogative_cl"]},
     {"name": "interrogative_cl", "symbols": ["closed_interrogative_cl"]},
     {"name": "open_interrogative_cl$ebnf$1", "symbols": []},
-    {"name": "open_interrogative_cl$ebnf$1", "symbols": ["open_interrogative_cl$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "open_interrogative_cl$ebnf$1", "symbols": ["open_interrogative_cl$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "open_interrogative_cl", "symbols": ["fin_vp_wh_moved", "open_interrogative_cl$ebnf$1"]},
     {"name": "open_interrogative_cl$ebnf$2", "symbols": []},
-    {"name": "open_interrogative_cl$ebnf$2", "symbols": ["open_interrogative_cl$ebnf$2", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "open_interrogative_cl$ebnf$2", "symbols": ["open_interrogative_cl$ebnf$2", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "open_interrogative_cl", "symbols": ["wh_pp", "fin_vp", "open_interrogative_cl$ebnf$2"]},
     {"name": "open_interrogative_cl$ebnf$3", "symbols": []},
-    {"name": "open_interrogative_cl$ebnf$3", "symbols": ["open_interrogative_cl$ebnf$3", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "open_interrogative_cl", "symbols": ["wh_np", "fin_vp", (lexer.has("preposition") ? {type: "preposition"} : preposition), "open_interrogative_cl$ebnf$3"]},
-    {"name": "closed_interrogative_cl", "symbols": [(lexer.has("interrogative_subordinator") ? {type: "interrogative_subordinator"} : interrogative_subordinator), "decl_fin_cl"]},
+    {"name": "open_interrogative_cl$ebnf$3", "symbols": ["open_interrogative_cl$ebnf$3", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "open_interrogative_cl", "symbols": ["wh_np", "fin_vp", preposition, "open_interrogative_cl$ebnf$3"]},
+    {"name": "closed_interrogative_cl", "symbols": [interrogative_subordinator, "decl_fin_cl"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_pp", "pp"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_ap", "ap"]},
@@ -140,7 +180,7 @@ let ParserRules = [
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_np_declarative_cl", "np", "exclamative_cl"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_np_interrogative_cl", "np", "interrogative_cl"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_np_np", "np", "np"]},
-    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_np_np", "np", (lexer.has("to") ? {type: "to"} : to), "np"]},
+    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_np_np", "np", to, "np"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_pp", "pp"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_ap", "ap"]},
@@ -150,13 +190,13 @@ let ParserRules = [
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_exclamative_cl", "exclamative_cl"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_interrogative_cl", "interrogative_cl"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_np", "np"]},
-    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_np", (lexer.has("to") ? {type: "to"} : to), "np"]},
-    {"name": "fin_vp_wh_moved", "symbols": [(lexer.has("to") ? {type: "to"} : to), "wh_np", "np", "vp_np_np", "np"]},
-    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_np", "np", (lexer.has("to") ? {type: "to"} : to)]},
+    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_np", to, "np"]},
+    {"name": "fin_vp_wh_moved", "symbols": [to, "wh_np", "np", "vp_np_np", "np"]},
+    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_np", "np", to]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_pp", "vp_pp"]},
-    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_pp", (lexer.has("preposition") ? {type: "preposition"} : preposition)]},
+    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_pp", preposition]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_pp", "np", "vp_np_pp", "pp"]},
-    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_pp", (lexer.has("preposition") ? {type: "preposition"} : preposition)]},
+    {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_pp", preposition]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_to_inf_cl", "to_inf_cl_some_np_moved"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_pp", "vp_to_inf_cl", "to_inf_cl_pp_moved"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "vp_to_inf_cl", "to_inf_cl_pp_stranded"]},
@@ -176,14 +216,14 @@ let ParserRules = [
     {"name": "fin_vp_wh_moved", "symbols": ["wh_pp", "np", "vp_np_declarative_cl", "declarative_cl_pp_moved"]},
     {"name": "fin_vp_wh_moved", "symbols": ["wh_np", "np", "vp_np_declarative_cl", "declarative_cl_pp_stranded"]},
     {"name": "declarative_cl_some_np_moved$ebnf$1", "symbols": []},
-    {"name": "declarative_cl_some_np_moved$ebnf$1", "symbols": ["declarative_cl_some_np_moved$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "declarative_cl_some_np_moved", "symbols": [(lexer.has("that") ? {type: "that"} : that), "fin_vp_np_moved", "declarative_cl_some_np_moved$ebnf$1"]},
+    {"name": "declarative_cl_some_np_moved$ebnf$1", "symbols": ["declarative_cl_some_np_moved$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "declarative_cl_some_np_moved", "symbols": [that, "fin_vp_np_moved", "declarative_cl_some_np_moved$ebnf$1"]},
     {"name": "declarative_cl_pp_moved$ebnf$1", "symbols": []},
-    {"name": "declarative_cl_pp_moved$ebnf$1", "symbols": ["declarative_cl_pp_moved$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "declarative_cl_pp_moved", "symbols": [(lexer.has("that") ? {type: "that"} : that), "fin_vp_pp_moved", "declarative_cl_pp_moved$ebnf$1"]},
+    {"name": "declarative_cl_pp_moved$ebnf$1", "symbols": ["declarative_cl_pp_moved$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "declarative_cl_pp_moved", "symbols": [that, "fin_vp_pp_moved", "declarative_cl_pp_moved$ebnf$1"]},
     {"name": "declarative_cl_pp_stranded$ebnf$1", "symbols": []},
-    {"name": "declarative_cl_pp_stranded$ebnf$1", "symbols": ["declarative_cl_pp_stranded$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "declarative_cl_pp_stranded", "symbols": [(lexer.has("that") ? {type: "that"} : that), "fin_vp_pp_stranded", "declarative_cl_pp_stranded$ebnf$1"]},
+    {"name": "declarative_cl_pp_stranded$ebnf$1", "symbols": ["declarative_cl_pp_stranded$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "declarative_cl_pp_stranded", "symbols": [that, "fin_vp_pp_stranded", "declarative_cl_pp_stranded$ebnf$1"]},
     {"name": "fin_vp_np_moved", "symbols": ["np", "vp_np"]},
     {"name": "fin_vp_np_moved", "symbols": ["np", "vp_np_pp", "pp"]},
     {"name": "fin_vp_np_moved", "symbols": ["np", "vp_np_ap", "ap"]},
@@ -195,120 +235,123 @@ let ParserRules = [
     {"name": "fin_vp_np_moved", "symbols": ["np", "vp_np_np", "np"]},
     {"name": "fin_vp_pp_moved", "symbols": ["np", "vp_pp"]},
     {"name": "fin_vp_pp_moved", "symbols": ["np", "vp_np_pp", "np"]},
-    {"name": "fin_vp_pp_stranded", "symbols": ["np", "vp_pp", (lexer.has("preposition") ? {type: "preposition"} : preposition)]},
-    {"name": "fin_vp_pp_stranded", "symbols": ["np", "vp_np_pp", "np", (lexer.has("preposition") ? {type: "preposition"} : preposition)]},
-    {"name": "np", "symbols": [(lexer.has("proper_noun") ? {type: "proper_noun"} : proper_noun)]},
-    {"name": "np", "symbols": [(lexer.has("pronoun") ? {type: "pronoun"} : pronoun)]},
+    {"name": "fin_vp_pp_stranded", "symbols": ["np", "vp_pp", preposition]},
+    {"name": "fin_vp_pp_stranded", "symbols": ["np", "vp_np_pp", "np", preposition]},
+    {"name": "np", "symbols": [proper_noun]},
+    {"name": "np", "symbols": [pronoun]},
     {"name": "np$ebnf$1", "symbols": []},
-    {"name": "np$ebnf$1", "symbols": ["np$ebnf$1", (lexer.has("periph_mod") ? {type: "periph_mod"} : periph_mod)], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "np$ebnf$1", "symbols": ["np$ebnf$1", periph_mod], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "np$ebnf$2", "symbols": []},
-    {"name": "np$ebnf$2", "symbols": ["np$ebnf$2", "ap"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "np$ebnf$2", "symbols": ["np$ebnf$2", "ap"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "np$ebnf$3", "symbols": []},
-    {"name": "np$ebnf$3", "symbols": ["np$ebnf$3", "n_modifier"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "np$ebnf$3", "symbols": ["np$ebnf$3", "n_modifier"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "np$ebnf$4", "symbols": []},
-    {"name": "np$ebnf$4", "symbols": ["np$ebnf$4", (lexer.has("periph_mod") ? {type: "periph_mod"} : periph_mod)], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "np", "symbols": ["np$ebnf$1", "dp", "np$ebnf$2", (lexer.has("noun") ? {type: "noun"} : noun), "np$ebnf$3", "np$ebnf$4"]},
-    {"name": "wh_np", "symbols": [(lexer.has("wh") ? {type: "wh"} : wh), "np"]},
+    {"name": "np$ebnf$4", "symbols": ["np$ebnf$4", periph_mod], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "np", "symbols": ["np$ebnf$1", "dp", "np$ebnf$2", noun, "np$ebnf$3", "np$ebnf$4"]},
+    {"name": "wh_np", "symbols": [wh, "np"]},
     {"name": "n_modifier", "symbols": ["declarative_cl"]},
     {"name": "n_modifier", "symbols": ["pp"]},
-    {"name": "dp", "symbols": [(lexer.has("det") ? {type: "det"} : det)]},
-    {"name": "dp", "symbols": ["np", (lexer.has("s") ? {type: "s"} : s)]},
-    {"name": "dp", "symbols": [(lexer.has("pronoun_pos") ? {type: "pronoun_pos"} : pronoun_pos)]},
-    {"name": "pp", "symbols": [(lexer.has("preposition") ? {type: "preposition"} : preposition), "np"]},
-    {"name": "wh_pp", "symbols": [(lexer.has("preposition") ? {type: "preposition"} : preposition), "wh_np"]},
-    {"name": "ap", "symbols": [(lexer.has("adj") ? {type: "adj"} : adj)]},
-    {"name": "ap", "symbols": [(lexer.has("adj_pp") ? {type: "adj_pp"} : adj_pp), "pp"]},
-    {"name": "advp", "symbols": [(lexer.has("adv") ? {type: "adv"} : adv)]},
+    {"name": "dp", "symbols": [det]},
+    {"name": "dp", "symbols": ["np", s]},
+    {"name": "dp", "symbols": [pronoun_pos]},
+    {"name": "pp", "symbols": [preposition, "np"]},
+    {"name": "wh_pp", "symbols": [preposition, "wh_np"]},
+    {"name": "ap", "symbols": ["advp", "ap"]},
+    {"name": "ap", "symbols": [adj]},
+    {"name": "ap", "symbols": [adj_pp, "pp"]},
+    {"name": "advp", "symbols": [adv]},
     {"name": "vp$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp", "symbols": ["vp$ebnf$1", (lexer.has("v") ? {type: "v"} : v), "vp$ebnf$2"]},
+    {"name": "vp$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp", "symbols": ["vp$ebnf$1", v, "vp$ebnf$2"]},
     {"name": "vp_pp$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_pp$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_pp$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_pp$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_pp$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_pp", "symbols": ["vp_pp$ebnf$1", (lexer.has("v_pp") ? {type: "v_pp"} : v_pp), "vp_pp$ebnf$2"]},
+    {"name": "vp_pp$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_pp", "symbols": ["vp_pp$ebnf$1", v_pp, "vp_pp$ebnf$2"]},
     {"name": "vp_ap$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_ap$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_ap$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_ap$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_ap$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_ap", "symbols": ["vp_ap$ebnf$1", (lexer.has("v_ap") ? {type: "v_ap"} : v_ap), "vp_ap$ebnf$2"]},
+    {"name": "vp_ap$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_ap", "symbols": ["vp_ap$ebnf$1", v_ap, "vp_ap$ebnf$2"]},
     {"name": "vp_to_inf_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_to_inf_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_to_inf_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_to_inf_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_to_inf_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_to_inf_cl", "symbols": ["vp_to_inf_cl$ebnf$1", (lexer.has("v_to_inf_cl") ? {type: "v_to_inf_cl"} : v_to_inf_cl), "vp_to_inf_cl$ebnf$2"]},
+    {"name": "vp_to_inf_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_to_inf_cl", "symbols": ["vp_to_inf_cl$ebnf$1", v_to_inf_cl, "vp_to_inf_cl$ebnf$2"]},
     {"name": "vp_bare_inf_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_bare_inf_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_bare_inf_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_bare_inf_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_bare_inf_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_bare_inf_cl", "symbols": ["vp_bare_inf_cl$ebnf$1", (lexer.has("v_bare_inf_cl") ? {type: "v_bare_inf_cl"} : v_bare_inf_cl), "vp_bare_inf_cl$ebnf$2"]},
+    {"name": "vp_bare_inf_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_bare_inf_cl", "symbols": ["vp_bare_inf_cl$ebnf$1", v_bare_inf_cl, "vp_bare_inf_cl$ebnf$2"]},
     {"name": "vp_declarative_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_declarative_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_declarative_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_declarative_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_declarative_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_declarative_cl", "symbols": ["vp_declarative_cl$ebnf$1", (lexer.has("v_declarative_cl") ? {type: "v_declarative_cl"} : v_declarative_cl), "vp_declarative_cl$ebnf$2"]},
+    {"name": "vp_declarative_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_declarative_cl", "symbols": ["vp_declarative_cl$ebnf$1", v_declarative_cl, "vp_declarative_cl$ebnf$2"]},
     {"name": "vp_exclamative_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_exclamative_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_exclamative_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_exclamative_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_exclamative_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_exclamative_cl", "symbols": ["vp_exclamative_cl$ebnf$1", (lexer.has("v_exclamative_cl") ? {type: "v_exclamative_cl"} : v_exclamative_cl), "vp_exclamative_cl$ebnf$2"]},
+    {"name": "vp_exclamative_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_exclamative_cl", "symbols": ["vp_exclamative_cl$ebnf$1", v_exclamative_cl, "vp_exclamative_cl$ebnf$2"]},
     {"name": "vp_interrogative_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_interrogative_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_interrogative_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_interrogative_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_interrogative_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_interrogative_cl", "symbols": ["vp_interrogative_cl$ebnf$1", (lexer.has("v_interrogative_cl") ? {type: "v_interrogative_cl"} : v_interrogative_cl), "vp_interrogative_cl$ebnf$2"]},
+    {"name": "vp_interrogative_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_interrogative_cl", "symbols": ["vp_interrogative_cl$ebnf$1", v_interrogative_cl, "vp_interrogative_cl$ebnf$2"]},
     {"name": "vp_np$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_np$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np", "symbols": ["vp_np$ebnf$1", (lexer.has("v_np") ? {type: "v_np"} : v_np), "vp_np$ebnf$2"]},
+    {"name": "vp_np$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np", "symbols": ["vp_np$ebnf$1", v_np, "vp_np$ebnf$2"]},
     {"name": "vp_np_pp$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_pp$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np_pp$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_np_pp$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_pp$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np_pp", "symbols": ["vp_np_pp$ebnf$1", (lexer.has("v_np_pp") ? {type: "v_np_pp"} : v_np_pp), "vp_np_pp$ebnf$2"]},
+    {"name": "vp_np_pp$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np_pp", "symbols": ["vp_np_pp$ebnf$1", v_np_pp, "vp_np_pp$ebnf$2"]},
     {"name": "vp_np_ap$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_ap$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np_ap$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_np_ap$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_ap$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np_ap", "symbols": ["vp_np_ap$ebnf$1", (lexer.has("v_np_ap") ? {type: "v_np_ap"} : v_np_ap), "vp_np_ap$ebnf$2"]},
+    {"name": "vp_np_ap$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np_ap", "symbols": ["vp_np_ap$ebnf$1", v_np_ap, "vp_np_ap$ebnf$2"]},
     {"name": "vp_np_to_inf_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_to_inf_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np_to_inf_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_np_to_inf_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_to_inf_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np_to_inf_cl", "symbols": ["vp_np_to_inf_cl$ebnf$1", (lexer.has("v_np_to_inf_cl") ? {type: "v_np_to_inf_cl"} : v_np_to_inf_cl), "vp_np_to_inf_cl$ebnf$2"]},
+    {"name": "vp_np_to_inf_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np_to_inf_cl", "symbols": ["vp_np_to_inf_cl$ebnf$1", v_np_to_inf_cl, "vp_np_to_inf_cl$ebnf$2"]},
     {"name": "vp_np_bare_inf_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_bare_inf_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np_bare_inf_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_np_bare_inf_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_bare_inf_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np_bare_inf_cl", "symbols": ["vp_np_bare_inf_cl$ebnf$1", (lexer.has("v_np_bare_inf_cl") ? {type: "v_np_bare_inf_cl"} : v_np_bare_inf_cl), "vp_np_bare_inf_cl$ebnf$2"]},
+    {"name": "vp_np_bare_inf_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np_bare_inf_cl", "symbols": ["vp_np_bare_inf_cl$ebnf$1", v_np_bare_inf_cl, "vp_np_bare_inf_cl$ebnf$2"]},
     {"name": "vp_np_declarative_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_declarative_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np_declarative_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_np_declarative_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_declarative_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np_declarative_cl", "symbols": ["vp_np_declarative_cl$ebnf$1", (lexer.has("v_np_declarative_cl") ? {type: "v_np_declarative_cl"} : v_np_declarative_cl), "vp_np_declarative_cl$ebnf$2"]},
+    {"name": "vp_np_declarative_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np_declarative_cl", "symbols": ["vp_np_declarative_cl$ebnf$1", v_np_declarative_cl, "vp_np_declarative_cl$ebnf$2"]},
     {"name": "vp_np_exclamative_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_exclamative_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np_exclamative_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_np_exclamative_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_exclamative_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np_exclamative_cl", "symbols": ["vp_np_exclamative_cl$ebnf$1", (lexer.has("v_np_exclamative_cl") ? {type: "v_np_exclamative_cl"} : v_np_exclamative_cl), "vp_np_exclamative_cl$ebnf$2"]},
+    {"name": "vp_np_exclamative_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np_exclamative_cl", "symbols": ["vp_np_exclamative_cl$ebnf$1", v_np_exclamative_cl, "vp_np_exclamative_cl$ebnf$2"]},
     {"name": "vp_np_interrogative_cl$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_interrogative_cl$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np_interrogative_cl$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_np_interrogative_cl$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_interrogative_cl$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np_interrogative_cl", "symbols": ["vp_np_interrogative_cl$ebnf$1", (lexer.has("v_np_interrogative_cl") ? {type: "v_np_interrogative_cl"} : v_np_interrogative_cl), "vp_np_interrogative_cl$ebnf$2"]},
+    {"name": "vp_np_interrogative_cl$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np_interrogative_cl", "symbols": ["vp_np_interrogative_cl$ebnf$1", v_np_interrogative_cl, "vp_np_interrogative_cl$ebnf$2"]},
     {"name": "vp_np_np$ebnf$1", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_np$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np_np$ebnf$1", "symbols": [], "postprocess": () => null},
     {"name": "vp_np_np$ebnf$2", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_np$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np_np", "symbols": ["vp_np_np$ebnf$1", (lexer.has("v_np_np") ? {type: "v_np_np"} : v_np_np), "vp_np_np$ebnf$2"]},
+    {"name": "vp_np_np$ebnf$2", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np_np", "symbols": ["vp_np_np$ebnf$1", v_np_np, "vp_np_np$ebnf$2"]},
     {"name": "vp_np_np$ebnf$3", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_np$ebnf$3", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "vp_np_np$ebnf$3", "symbols": [], "postprocess": () => null},
     {"name": "vp_np_np$ebnf$4", "symbols": ["advp"], "postprocess": id},
-    {"name": "vp_np_np$ebnf$4", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "vp_np_np", "symbols": ["vp_np_np$ebnf$3", (lexer.has("v_np_np") ? {type: "v_np_np"} : v_np_np), "vp_np_np$ebnf$4"]}
-];
-let ParserStart = "decl_fin_cl";
-export default { Lexer, ParserRules, ParserStart };
+    {"name": "vp_np_np$ebnf$4", "symbols": [], "postprocess": () => null},
+    {"name": "vp_np_np", "symbols": ["vp_np_np$ebnf$3", v_np_np, "vp_np_np$ebnf$4"]}
+  ],
+  ParserStart: "decl_fin_cl",
+};
+
+export default grammar;
