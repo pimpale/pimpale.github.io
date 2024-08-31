@@ -271,21 +271,57 @@ ap -> advp ap
 advp -> %adv
 
 # a verb modified by an adverb
-vp                     -> advp:? %v                     advp:?
-vp_pp                  -> advp:? %v_pp                  advp:?
-vp_ap                  -> advp:? %v_ap                  advp:?
-vp_to_inf_cl           -> advp:? %v_to_inf_cl           advp:?
-vp_bare_inf_cl         -> advp:? %v_bare_inf_cl         advp:?
-vp_declarative_cl      -> advp:? %v_declarative_cl      advp:?
-vp_exclamative_cl      -> advp:? %v_exclamative_cl      advp:?
-vp_interrogative_cl    -> advp:? %v_interrogative_cl    advp:?
-vp_np                  -> advp:? %v_np                  advp:?
-vp_np_pp               -> advp:? %v_np_pp               advp:?
-vp_np_ap               -> advp:? %v_np_ap               advp:?
-vp_np_to_inf_cl        -> advp:? %v_np_to_inf_cl        advp:?
-vp_np_bare_inf_cl      -> advp:? %v_np_bare_inf_cl      advp:?
-vp_np_declarative_cl   -> advp:? %v_np_declarative_cl   advp:?
-vp_np_exclamative_cl   -> advp:? %v_np_exclamative_cl   advp:?
-vp_np_interrogative_cl -> advp:? %v_np_interrogative_cl advp:?
-vp_np_np               -> advp:? %v_np_np               advp:?
-vp_np_np               -> advp:? %v_np_np               advp:?
+vp                     -> %v
+                        | advp %v
+                        | %v advp
+vp_pp                  -> %v_pp
+                        | advp %v_pp
+                        | %v_pp advp
+vp_ap                  -> %v_ap
+                        | advp %v_ap
+                        | %v_ap advp
+vp_to_inf_cl           -> %v_to_inf_cl
+                        | advp %v_to_inf_cl
+                        | %v_to_inf_cl advp
+vp_bare_inf_cl         -> %v_bare_inf_cl
+                        | advp %v_bare_inf_cl
+                        | %v_bare_inf_cl advp
+vp_declarative_cl      -> %v_declarative_cl
+                        | advp %v_declarative_cl
+                        | %v_declarative_cl advp
+vp_exclamative_cl      -> %v_exclamative_cl
+                        | advp %v_exclamative_cl
+                        | %v_exclamative_cl advp
+vp_interrogative_cl    -> %v_interrogative_cl
+                        | advp %v_interrogative_cl
+                        | %v_interrogative_cl advp
+vp_np                  -> %v_np
+                        | advp %v_np
+                        | %v_np advp
+vp_np_pp               -> %v_np_pp
+                        | advp %v_np_pp
+                        | %v_np_pp advp
+vp_np_ap               -> %v_np_ap
+                        | advp %v_np_ap
+                        | %v_np_ap advp
+vp_np_to_inf_cl        -> %v_np_to_inf_cl
+                        | advp %v_np_to_inf_cl
+                        | %v_np_to_inf_cl advp
+vp_np_bare_inf_cl      -> %v_np_bare_inf_cl
+                        | advp %v_np_bare_inf_cl
+                        | %v_np_bare_inf_cl advp
+vp_np_declarative_cl   -> %v_np_declarative_cl
+                        | advp %v_np_declarative_cl
+                        | %v_np_declarative_cl advp
+vp_np_exclamative_cl   -> %v_np_exclamative_cl
+                        | advp %v_np_exclamative_cl
+                        | %v_np_exclamative_cl advp
+vp_np_interrogative_cl -> %v_np_interrogative_cl
+                        | advp %v_np_interrogative_cl
+                        | %v_np_interrogative_cl advp
+vp_np_np               -> %v_np_np
+                        | advp %v_np_np
+                        | %v_np_np advp
+vp_np_np               -> %v_np_np
+                        | advp %v_np_np
+                        | %v_np_np advp
