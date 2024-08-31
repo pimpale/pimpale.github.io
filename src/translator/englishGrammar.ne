@@ -241,7 +241,8 @@ np -> %proper_noun
     | %periph_mod:* dp ap:* %noun n_modifier:* %periph_mod:* # determiner phrase followed by a nominal (ex: "even all the lovely food too")
 
 # a noun phrase that has been moved to the front (wh-movement)
-wh_np -> %wh np
+wh_np -> %wh
+       | %wh np
 
 
 # a specifier coming after the noun

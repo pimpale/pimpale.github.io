@@ -14,7 +14,7 @@ function testNearley(input: string) {
     console.log(tokens);
 
     // Parse something!
-    parser.feed(tokens);
+    parser.feed(tokens as any);
 
     // parser.results is an array of possible parsings.
     console.log(JSON.stringify(parser.results));
