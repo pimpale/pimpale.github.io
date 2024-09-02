@@ -55,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@types/katex": "^0.16.7",
     "@types/nearley": "^2.11.5",
     "@vitejs/plugin-react": "^4.3.1",
     "path": "^0.12.7",

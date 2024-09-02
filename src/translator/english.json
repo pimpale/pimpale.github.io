@@ -35,6 +35,13 @@
         "car": null,
         "house": null
     },
+    "uncountable_noun": {
+        "water": null,
+        "milk": null,
+        "rice": null,
+        "money": null,
+        "food": null
+    },
     "preposition": {
         "in": null,
         "on": null,
@@ -285,10 +292,13 @@
         "slowly": null,
         "happily": null
     },
-    "periph_mod": {
+    "precorenp_modifier": {
         "even": null,
-        "also": null,
-        "too": null
+        "all": null
+    },
+    "postcorenp_modifier": {
+        "too": null,
+        "altogether": null
     },
     "wh": {
         "who": null,
