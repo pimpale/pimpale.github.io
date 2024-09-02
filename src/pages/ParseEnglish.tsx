@@ -13,7 +13,7 @@ type TreeNode = {
 
 
 function testNearley(input: string): TreeNode[] {
-    const parser = new nearley.Parser(nearley.Grammar.fromCompiled(englishGrammar));
+    const parser = new nearley.Parser(nearley.Grammar.fromCompiled(englishGrammar as any));
 
     // lex input into tokens
     const tokens = lex(input);
@@ -80,7 +80,10 @@ function augmentNode(node: TreeNode | string, depth: number, l_offset: number): 
     }
     let children = [];
     let curr_child_width = 0;
-    for (let child of node.children) {
+    let node_children = typeof node.children === "string" 
+        ? [node.children] 
+        : node.children;
+    for (let child of node_children) {
         let child_node = augmentNode(child, depth + 1, l_offset + curr_child_width);
         children.push(child_node);
         curr_child_width += child_node.width;
@@ -94,58 +97,44 @@ function augmentNode(node: TreeNode | string, depth: number, l_offset: number): 
 
 type SyntaxTreeSvgProps = {
     depth: number,
-    node: AugmentedTreeNode
+    maxdepth: number,
+    node: AugmentedTreeNode,
+    parent_loc: { x: number, y: number } | null
 }
 
+const LEVEL_DEPTH = 50;
+const CHAR_WIDTH = 10;
+
 function SyntaxTreeSvg(props: SyntaxTreeSvgProps) {
-    let { depth, node } = props;
+    let { depth, maxdepth, node, parent_loc } = props;
     let { kind, this_width, width, children, l_offset } = node;
 
     let center_x = l_offset + width / 2 - this_width / 2;
 
-    let x = center_x * 10;
-    let y = depth * 50;
+    let this_depth = children.length === 0  
+        ? maxdepth
+        : depth;
+
+    let x = center_x * CHAR_WIDTH;
+    let y = this_depth * LEVEL_DEPTH;
+
+    let line_x = (l_offset + width / 2) * CHAR_WIDTH
+    let line_y = this_depth * LEVEL_DEPTH + 20;
 
     return <>
         {children.length === 0
-            ? <rect x={x} y={y} width={this_width * 10} height="40" fill="var(--bs-blue)" />
-            : children.map((child, i) => <SyntaxTreeSvg key={i} node={child} depth={depth + 1} />)
+            ? <rect x={x} y={y} width={this_width * CHAR_WIDTH} height="40" fill="var(--bs-blue)" />
+            : children.map((child, i) => <SyntaxTreeSvg key={i} node={child} depth={depth + 1} maxdepth={maxdepth} parent_loc={{ x:line_x, y:line_y }} />)
         }
         <text x={x} y={y + 30} fill="var(--bs-body-color)">{kind}</text>
-    </>
-}
-
-function SyntaxTreeHtml(props: SyntaxTreeSvgProps) {
-    let { depth, node } = props;
-    let { kind, width, children, l_offset } = node;
-
-    const katexRef = React.useRef<HTMLElement>(null);
-    React.useEffect(() => {
-        if (katexRef.current) {
-            katex.render(kind, katexRef.current, {
-                throwOnError: false
-            });
-        }
-    }, [kind]);
-
-    let x = l_offset * 10;
-    let y = depth * 50;
-
-    return <>
-        <span
-            ref={katexRef}
-            style={{
-                position: "absolute",
-                left: `${x}px`,
-                top: `${y}px`,
-            }}
-        />
-        {typeof children === "string"
-            ? null
-            : children.map((child, i) => <SyntaxTreeHtml key={i} node={child} depth={depth + 1} />)
+        {
+            parent_loc === null
+                ? null
+                : <line x1={line_x} y1={line_y - 10} x2={parent_loc.x} y2={parent_loc.y + 15} stroke="var(--bs-blue)" />
         }
     </>
 }
+
 
 function SyntaxTree({ tree }: { tree: TreeNode }) {
     let prunedTree = pruneTree(tree);
@@ -155,16 +144,10 @@ function SyntaxTree({ tree }: { tree: TreeNode }) {
 
     let augmentedTree = augmentNode(prunedTree, 0, 0);
 
-
-    //     <div style={{position: "relative"}}>
-    //     <SyntaxTreeHtml node={augmentedTree} depth={0} />
-    // </div>
-
-    // placeholder
     return <div style={{ paddingTop: "2em" }}>
 
-        <svg width={(augmentedTree.width + 1) * 10} height={(augmentedTree.depth + 1) * 50}>
-            <SyntaxTreeSvg node={augmentedTree} depth={0} />
+        <svg width={(augmentedTree.width + 1) * CHAR_WIDTH} height={(augmentedTree.depth + 1) * LEVEL_DEPTH}>
+            <SyntaxTreeSvg node={augmentedTree} depth={0} maxdepth={augmentedTree.depth} parent_loc={null} />
         </svg >
     </div>;
 }

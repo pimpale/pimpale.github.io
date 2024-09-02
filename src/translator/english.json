@@ -80,7 +80,8 @@
         "speak": null,
         "listen": null,
         "talk": null,
-        "think": null
+        "think": null,
+        "go": null
     },
     "v_ap": {
         "be": null,

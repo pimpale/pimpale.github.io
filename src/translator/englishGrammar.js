@@ -1,8 +1,6 @@
 // Generated automatically by nearley, version 2.20.1
 // http://github.com/Hardmath123/nearley
-// Bypasses TS6133. Allow declared but unused functions.
-// @ts-ignore
-function id(d: any[]): any { return d[0]; }
+function id(x) { return x[0]; }
 
 import english from './english.json';
 
@@ -70,37 +68,8 @@ function terminal(kind) {
     return ([value]) => ({kind, children: value});
 }
 
-
-interface NearleyToken {
-  value: any;
-  [key: string]: any;
-};
-
-interface NearleyLexer {
-  reset: (chunk: string, info: any) => void;
-  next: () => NearleyToken | undefined;
-  save: () => any;
-  formatError: (token: never) => string;
-  has: (tokenType: string) => boolean;
-};
-
-interface NearleyRule {
-  name: string;
-  symbols: NearleySymbol[];
-  postprocess?: (d: any[], loc?: number, reject?: {}) => any;
-};
-
-type NearleySymbol = string | { literal: any } | { test: (token: any) => boolean };
-
-interface Grammar {
-  Lexer: NearleyLexer | undefined;
-  ParserRules: NearleyRule[];
-  ParserStart: string;
-};
-
-const grammar: Grammar = {
-  Lexer: undefined,
-  ParserRules: [
+let Lexer = undefined;
+let ParserRules = [
     {"name": "decl_fin_cl", "symbols": ["pp_list", "fin_vp", "pp_list"], "postprocess": (children) => ({kind: "decl_fin_cl", children})},
     {"name": "fin_vp", "symbols": ["np", "vp"], "postprocess": nonterminal("fin_vp")},
     {"name": "fin_vp", "symbols": ["np", "vp_pp", "pp"], "postprocess": nonterminal("fin_vp")},
@@ -233,10 +202,10 @@ const grammar: Grammar = {
     {"name": "fin_vp_pp_stranded", "symbols": ["np", "vp_np_pp", "np", "preposition"], "postprocess": nonterminal("fin_vp_pp_moved")},
     {"name": "np", "symbols": ["precorenp_modifier_list", "core_np", "postcorenp_modifier_list"], "postprocess": nonterminal("np")},
     {"name": "precorenp_modifier_list$ebnf$1", "symbols": []},
-    {"name": "precorenp_modifier_list$ebnf$1", "symbols": ["precorenp_modifier_list$ebnf$1", "precorenp_modifier"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "precorenp_modifier_list$ebnf$1", "symbols": ["precorenp_modifier_list$ebnf$1", "precorenp_modifier"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "precorenp_modifier_list", "symbols": ["precorenp_modifier_list$ebnf$1"], "postprocess": nonterminal_unpack("precorenp_modifier_list")},
     {"name": "postcorenp_modifier_list$ebnf$1", "symbols": []},
-    {"name": "postcorenp_modifier_list$ebnf$1", "symbols": ["postcorenp_modifier_list$ebnf$1", postcorenp_modifier], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "postcorenp_modifier_list$ebnf$1", "symbols": ["postcorenp_modifier_list$ebnf$1", postcorenp_modifier], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "postcorenp_modifier_list", "symbols": ["postcorenp_modifier_list$ebnf$1"], "postprocess": nonterminal_unpack("postcorenp_modifier_list")},
     {"name": "core_np", "symbols": ["proper_noun"], "postprocess": nonterminal("core_np")},
     {"name": "core_np", "symbols": ["pronoun"], "postprocess": nonterminal("core_np")},
@@ -247,21 +216,21 @@ const grammar: Grammar = {
     {"name": "n_modifier", "symbols": ["declarative_cl"], "postprocess": nonterminal("n_modifier")},
     {"name": "n_modifier", "symbols": ["pp"], "postprocess": nonterminal("n_modifier")},
     {"name": "n_modifier_list$ebnf$1", "symbols": []},
-    {"name": "n_modifier_list$ebnf$1", "symbols": ["n_modifier_list$ebnf$1", "n_modifier"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "n_modifier_list$ebnf$1", "symbols": ["n_modifier_list$ebnf$1", "n_modifier"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "n_modifier_list", "symbols": ["n_modifier_list$ebnf$1"], "postprocess": nonterminal_unpack("n_modifier_list")},
     {"name": "dp", "symbols": ["det"], "postprocess": nonterminal("det")},
     {"name": "dp", "symbols": ["np", "s"], "postprocess": nonterminal("det")},
     {"name": "dp", "symbols": ["pronoun_pos"], "postprocess": nonterminal("det")},
     {"name": "pp", "symbols": ["preposition", "np"], "postprocess": nonterminal("pp")},
     {"name": "pp_list$ebnf$1", "symbols": []},
-    {"name": "pp_list$ebnf$1", "symbols": ["pp_list$ebnf$1", "pp"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "pp_list$ebnf$1", "symbols": ["pp_list$ebnf$1", "pp"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "pp_list", "symbols": ["pp_list$ebnf$1"], "postprocess": nonterminal_unpack("pp_list")},
     {"name": "wh_pp", "symbols": ["preposition", "wh_np"], "postprocess": nonterminal("wh_pp")},
     {"name": "ap", "symbols": ["advp", "ap"], "postprocess": nonterminal("ap")},
     {"name": "ap", "symbols": ["adj"], "postprocess": nonterminal("ap")},
     {"name": "ap", "symbols": ["adj_pp", "pp"], "postprocess": nonterminal("ap")},
     {"name": "ap_list$ebnf$1", "symbols": []},
-    {"name": "ap_list$ebnf$1", "symbols": ["ap_list$ebnf$1", "ap"], "postprocess": (d) => d[0].concat([d[1]])},
+    {"name": "ap_list$ebnf$1", "symbols": ["ap_list$ebnf$1", "ap"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "ap_list", "symbols": ["ap_list$ebnf$1"], "postprocess": nonterminal_unpack("ap_list")},
     {"name": "advp", "symbols": ["adv"], "postprocess": nonterminal("advp")},
     {"name": "advp", "symbols": ["advp", "advp"], "postprocess": nonterminal("advp")},
@@ -350,8 +319,6 @@ const grammar: Grammar = {
     {"name": "wh", "symbols": [wh], "postprocess": terminal("wh")},
     {"name": "precorenp_modifier", "symbols": [precorenp_modifier], "postprocess": terminal("precorenp_modifier")},
     {"name": "postcorenp_modifier", "symbols": [postcorenp_modifier], "postprocess": terminal("postcorenp_modifier")}
-  ],
-  ParserStart: "decl_fin_cl",
-};
-
-export default grammar;
+];
+let ParserStart = "decl_fin_cl";
+export default { Lexer, ParserRules, ParserStart };

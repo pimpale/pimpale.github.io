@@ -1,4 +1,4 @@
-@preprocessor typescript
+@preprocessor module
 
 @{%
 import english from './english.json';
