@@ -62,7 +62,39 @@
         "if": null,
         "whether": null
     },
-    "v": {
+    "adj": {
+        "big": null,
+        "small": null,
+        "happy": null
+    },
+    "adj_pp": {
+        "interested": null,
+        "glad": null,
+        "sorry": null
+    },
+    "adv": {
+        "quickly": null,
+        "slowly": null,
+        "happily": null
+    },
+    "precorenp_modifier": {
+        "even": null,
+        "all": null
+    },
+    "postcorenp_modifier": {
+        "too": null,
+        "altogether": null
+    },
+    "wh": {
+        "who": null,
+        "what": null,
+        "which": null,
+        "where": null,
+        "when": null,
+        "why": null,
+        "how": null
+    },
+    "vb": {
         "smoke": null,
         "exist": null,
         "ache": null,
@@ -75,7 +107,7 @@
         "belch": null,
         "bellow": null
     },
-    "v_pp": {
+    "vb_pp": {
         "look": null,
         "speak": null,
         "listen": null,
@@ -83,7 +115,7 @@
         "think": null,
         "go": null
     },
-    "v_ap": {
+    "vb_ap": {
         "be": null,
         "seem": null,
         "appear": null,
@@ -93,14 +125,14 @@
         "smell": null,
         "feel": null
     },
-    "v_to_inf_cl": {
+    "vb_to_inf_cl": {
         "want": null,
         "need": null,
         "like": null,
         "love": null,
         "prefer": null
     },
-    "v_bare_inf_cl": {
+    "vb_bare_inf_cl": {
         "can": null,
         "could": null,
         "may": null,
@@ -111,7 +143,7 @@
         "would": null,
         "must": null
     },
-    "v_declarative_cl": {
+    "vb_declarative_cl": {
         "say": null,
         "know": null,
         "think": null,
@@ -130,7 +162,7 @@
         "inform": null,
         "complain": null
     },
-    "v_exclamative_cl": {
+    "vb_exclamative_cl": {
         "tell": null,
         "show": null,
         "explain": null,
@@ -144,14 +176,14 @@
         "forget": null,
         "say": null
     },
-    "v_interrogative_cl": {
+    "vb_interrogative_cl": {
         "know": null,
         "wonder": null,
         "inqure": null,
         "ask": null,
         "discover": null
     },
-    "v_np": {
+    "vb_np": {
         "eat": null,
         "drink": null,
         "read": null,
@@ -217,15 +249,15 @@
         "recognize": null,
         "watch": null
     },
-    "v_np_pp": {
+    "vb_np_pp": {
         "put": null,
         "keep": null,
         "leave": null
     },
-    "v_np_ap": {
+    "vb_np_ap": {
         "make": null
     },
-    "v_np_to_inf_cl": {
+    "vb_np_to_inf_cl": {
         "tell": null,
         "ask": null,
         "order": null,
@@ -237,25 +269,25 @@
         "help": null,
         "want": null
     },
-    "v_np_bare_inf_cl": {
+    "vb_np_bare_inf_cl": {
         "let": null,
         "make": null,
         "have": null
     },
-    "v_np_declarative_cl": {
+    "vb_np_declarative_cl": {
         "tell": null,
         "show": null,
         "convince": null,
         "persuade": null
     },
-    "v_np_exclamative_cl": {
+    "vb_np_exclamative_cl": {
         "tell": null,
         "show": null
     },
-    "v_np_interrogative_cl": {
+    "vb_np_interrogative_cl": {
         "ask": null
     },
-    "v_np_np": {
+    "vb_np_np": {
         "give": null,
         "send": null,
         "show": null,
@@ -278,36 +310,220 @@
         "remind": null,
         "help": null
     },
-    "adj": {
-        "big": null,
-        "small": null,
-        "happy": null
+    "vbd": {
+        "smoke": null,
+        "exist": null,
+        "ache": null,
+        "agonize": null,
+        "atrophy": null,
+        "babble": null,
+        "bark": null,
+        "beam": null,
+        "behave": null,
+        "belch": null,
+        "bellow": null
     },
-    "adj_pp": {
-        "interested": null,
-        "glad": null,
-        "sorry": null
+    "vbd_pp": {
+        "look": null,
+        "speak": null,
+        "listen": null,
+        "talk": null,
+        "think": null,
+        "go": null
     },
-    "adv": {
-        "quickly": null,
-        "slowly": null,
-        "happily": null
+    "vbd_ap": {
+        "be": null,
+        "seem": null,
+        "appear": null,
+        "look": null,
+        "sound": null,
+        "taste": null,
+        "smell": null,
+        "feel": null
     },
-    "precorenp_modifier": {
-        "even": null,
-        "all": null
+    "vbd_to_inf_cl": {
+        "want": null,
+        "need": null,
+        "like": null,
+        "love": null,
+        "prefer": null
     },
-    "postcorenp_modifier": {
-        "too": null,
-        "altogether": null
+    "vbd_bare_inf_cl": {
+        "can": null,
+        "could": null,
+        "may": null,
+        "might": null,
+        "shall": null,
+        "should": null,
+        "will": null,
+        "would": null,
+        "must": null
     },
-    "wh": {
-        "who": null,
-        "what": null,
-        "which": null,
-        "where": null,
-        "when": null,
-        "why": null,
-        "how": null
-    }
+    "vbd_declarative_cl": {
+        "say": null,
+        "know": null,
+        "think": null,
+        "believe": null,
+        "understand": null,
+        "realize": null,
+        "remember": null,
+        "forget": null,
+        "imagine": null,
+        "agree": null,
+        "promise": null,
+        "hope": null,
+        "expect": null,
+        "worry": null,
+        "fear": null,
+        "inform": null,
+        "complain": null
+    },
+    "vbd_exclamative_cl": {
+        "tell": null,
+        "show": null,
+        "explain": null,
+        "describe": null,
+        "demonstrate": null,
+        "illustrate": null,
+        "prove": null,
+        "convince": null,
+        "persuade": null,
+        "remember": null,
+        "forget": null,
+        "say": null
+    },
+    "vbd_interrogative_cl": {
+        "know": null,
+        "wonder": null,
+        "inqure": null,
+        "ask": null,
+        "discover": null
+    },
+    "vbd_np": {
+        "eat": null,
+        "drink": null,
+        "read": null,
+        "write": null,
+        "see": null,
+        "hear": null,
+        "smell": null,
+        "feel": null,
+        "touch": null,
+        "hit": null,
+        "kick": null,
+        "love": null,
+        "hate": null,
+        "like": null,
+        "dislike": null,
+        "want": null,
+        "need": null,
+        "have": null,
+        "own": null,
+        "possess": null,
+        "buy": null,
+        "send": null,
+        "show": null,
+        "tell": null,
+        "ask": null,
+        "order": null,
+        "promise": null,
+        "offer": null,
+        "allow": null,
+        "invite": null,
+        "advise": null,
+        "persuade": null,
+        "remind": null,
+        "teach": null,
+        "learn": null,
+        "help": null,
+        "prevent": null,
+        "stop": null,
+        "avoid": null,
+        "finish": null,
+        "start": null,
+        "continue": null,
+        "keep": null,
+        "mind": null,
+        "miss": null,
+        "regret": null,
+        "forget": null,
+        "remember": null,
+        "imagine": null,
+        "expect": null,
+        "hope": null,
+        "wish": null,
+        "fear": null,
+        "worry": null,
+        "understand": null,
+        "believe": null,
+        "deny": null,
+        "confirm": null,
+        "doubt": null,
+        "suspect": null,
+        "know": null,
+        "ignore": null,
+        "recognize": null,
+        "watch": null
+    },
+    "vbd_np_pp": {
+        "put": null,
+        "keep": null,
+        "leave": null
+    },
+    "vbd_np_ap": {
+        "make": null
+    },
+    "vbd_np_to_inf_cl": {
+        "tell": null,
+        "ask": null,
+        "order": null,
+        "invite": null,
+        "advise": null,
+        "persuade": null,
+        "remind": null,
+        "teach": null,
+        "help": null,
+        "want": null
+    },
+    "vbd_np_bare_inf_cl": {
+        "let": null,
+        "make": null,
+        "have": null
+    },
+    "vbd_np_declarative_cl": {
+        "tell": null,
+        "show": null,
+        "convince": null,
+        "persuade": null
+    },
+    "vbd_np_exclamative_cl": {
+        "tell": null,
+        "show": null
+    },
+    "vbd_np_interrogative_cl": {
+        "ask": null
+    },
+    "vbd_np_np": {
+        "give": null,
+        "send": null,
+        "show": null,
+        "offer": null,
+        "bring": null,
+        "lend": null,
+        "pass": null,
+        "hand": null,
+        "sell": null,
+        "buy": null,
+        "pay": null,
+        "promise": null,
+        "teach": null,
+        "tell": null,
+        "ask": null,
+        "order": null,
+        "invite": null,
+        "advise": null,
+        "persuade": null,
+        "remind": null,
+        "help": null
+    },
 }

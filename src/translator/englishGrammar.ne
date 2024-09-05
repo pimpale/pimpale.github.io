@@ -704,9 +704,21 @@ pp_list -> pp:* {%nonterminal_unpack("pp_list")%}
 wh_pp ->   preposition wh_np {%nt("wh_pp")%}
 
 # an adjective phrase
-ap -> advp ap   {%nt("ap")%} # an adverb phrase followed by an adjective phrase (ex: "very happy") 
-    | adj       {%nt("ap")%} # an adjective (ex: "happy")
-    | adj_pp pp {%nt("ap")%} # an adjective with a prepositional phrase argument (ex: "fond of music")
+ap ->
+      advp                  ap              {%nt("ap")%} # an adverb phrase followed by an adjective phrase (ex: "very happy") 
+    | adj                                   {%nt("ap")%} # an adjective (ex: "happy")
+    | adj_pp                pp              {%nt("ap")%} # an adjective with a prepositional phrase argument (ex: "fond of music")
+    | adj_declarative_cl    declarative_cl  {%nt("ap")%} # an adjective with a declarative content clause argument (ex: "happy that you are here")
+
+ap_pp_moved ->                                     
+      advp ap_pp_moved                              {%nt("ap_pp_moved")%}
+    | adj_pp                                        {%nt("ap_pp_moved")%}
+    | adj_declarative_cl declarative_cl_pp_moved    {%nt("ap_pp_moved")%}
+
+ap_np_moved ->                                     
+      advp ap_np_moved                              {%nt("ap_np_moved")%}
+    | adj_pp             preposition                {%nt("ap_np_moved")%}
+    | adj_declarative_cl declarative_cl_np_moved    {%nt("ap_np_moved")%}
 
 # a sequence of aps
 ap_list -> ap:* {%nonterminal_unpack("ap_list")%}
@@ -846,6 +858,7 @@ vbz_np_interrogative_cl -> %vbz_np_interrogative_cl {%t("vbz_np_interrogative_cl
 vbz_np_np -> %vbz_np_np {%t("vbz_np_np")%}
 adj -> %adj {%t("adj")%}
 adj_pp -> %adj_pp {%t("adj_pp")%}
+adj_declarative_cl -> %adj_declarative_cl {%t("adj_declarative_cl")%}s
 adv -> %adv {%t("adv")%}
 wh -> %wh {%t("wh")%}
 precorenp_modifier -> %precorenp_modifier {%t("precorenp_modifier")%}

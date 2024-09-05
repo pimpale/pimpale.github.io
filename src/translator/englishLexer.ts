@@ -10,7 +10,9 @@ function expandContractions(word: string): string[] {
     } else if(word.slice(-3) === "'re") {
         return [word.slice(0, -3), "are"];
     } else if (word === "I'm") {
-        return ["I", "am"];
+        return ["I", "are"];
+    } else if (word === "am") {
+        return ["are"];
     } else if (word.slice(-3) === "'ll") {
         return [word.slice(0, -3), "will"];
     } else {
