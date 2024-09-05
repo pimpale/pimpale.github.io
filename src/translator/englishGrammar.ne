@@ -242,26 +242,156 @@ fin_vp ->
 # a declarative clause but one of the noun phrases has been moved out of it
 # this happens when a declarative clause is inside an interrogative clause
 # this happens in sentences like "i know that you think that he eats the apple" -> "i know what you think that he eats"
-fin_vp_np_moved -> 
-      np vp_np                                                 {%nt("fin_vp_np_moved")%} # transitive verb (ex: "that I eat")
-    | np vp_np_pp                 pp                           {%nt("fin_vp_np_moved")%} # transitive verb with prepositional phrase argument (ex: "that I put on the table")
-    | np vp_np_ap                 ap                           {%nt("fin_vp_np_moved")%} # transitive verb with adjective phrase argument (ex: "that I find happy")
-    | np vp_np_to_inf_cl          to_inf_cl                    {%nt("fin_vp_np_moved")%} # transitive verb with infinitive verb argument (ex: "that I ask to eat")
-    | np vp_np_bare_inf_cl        bare_inf_cl                  {%nt("fin_vp_np_moved")%} # transitive verb with bare infinitive verb argument (ex: "that I make eat")
-    | np vp_np_declarative_cl     declarative_cl               {%nt("fin_vp_np_moved")%} # transitive verb with declarative content clause argument (ex: "who I tell that you eat")
-    | np vp_np_exclamative_cl     exclamative_cl               {%nt("fin_vp_np_moved")%} # transitive verb with exclamative content clause argument (ex: "who I told how expensive it was")
-    | np vp_np_interrogative_cl   interrogative_cl             {%nt("fin_vp_np_moved")%} # transitive verb with interrogative clause argument (ex: "who I ask what you eat")
-    | np vp_np_np                 np                           {%nt("fin_vp_np_moved")%} # ditransitive verb (ex: "that I give food")
+# non-finite verb phrase with a noun phrase moved
+fin_vp_np_moved ->
+# complete preterite verb phrase (move agent)
+         adv? vbd                     adv?                                                {%nt("fin_vp_np_moved")%} # I know who [smoked]
+    |    adv? vbd_pp                  adv? pp                                             {%nt("fin_vp_np_moved")%} # I know who [looked at it]
+    |    adv? vbd_ap                  adv? ap                                             {%nt("fin_vp_np_moved")%} # I know who [seemed happy]
+    |    adv? vbd_to_inf_cl           adv? to_inf_cl                                      {%nt("fin_vp_np_moved")%} # I know who [asked to bring cheese]
+    |    adv? vbd_bare_inf_cl         adv? bare_inf_cl                                    {%nt("fin_vp_np_moved")%} # I know who [helped bring cheese]
+    |    adv? vbd_declarative_cl      adv? declarative_cl                                 {%nt("fin_vp_np_moved")%} # I know who [said that you bring cheese]
+    |    adv? vbd_exclamative_cl      adv? exclamative_cl                                 {%nt("fin_vp_np_moved")%} # I know who [said how expensive it is]
+    |    adv? vbd_interrogative_cl    adv? interrogative_cl                               {%nt("fin_vp_np_moved")%} # I know who [asked what you bring]
+    |         vbd_vbg_cl                   vbg_cl                                         {%nt("fin_vp_np_moved")%} # I know who [was bringing the cheese]
+    |         vbd_vbn_cl                   vbn_cl                                         {%nt("fin_vp_np_moved")%} # I know who [had brought the cheese] OR I know what [was brought]
+    |    adv? vbd_np                  adv? np                                             {%nt("fin_vp_np_moved")%} # I know who [brought the cheese]
+    |    adv? vbd_np_pp               adv? np              pp                             {%nt("fin_vp_np_moved")%} # I know who [put the book on the table]
+    |    adv? vbd_np_ap               adv? np              ap                             {%nt("fin_vp_np_moved")%} # I know who [considered Bob good at chess]
+    |    adv? vbd_np_to_inf_cl        adv? np              to_inf_cl                      {%nt("fin_vp_np_moved")%} # I know who [asked Bob to bring cheese]
+    |    adv? vbd_np_bare_inf_cl      adv? np              bare_inf_cl                    {%nt("fin_vp_np_moved")%} # I know who [helped Bob bring cheese]
+    |    adv? vbd_np_declarative_cl   adv? np              declarative_cl                 {%nt("fin_vp_np_moved")%} # I know who [told Bob that you bring cheese]
+    |    adv? vbd_np_exclamative_cl   adv? np              exclamative_cl                 {%nt("fin_vp_np_moved")%} # I know who [told Bob how expensive it is]
+    |    adv? vbd_np_interrogative_cl adv? np              interrogative_cl               {%nt("fin_vp_np_moved")%} # I know who [asked Bob what you bring]
+    |    adv? vbd_np_np               adv? np              np                             {%nt("fin_vp_np_moved")%} # I know who [gave Bob the cheese]
+    |    adv? vbd_np_np               adv? np              to              np             {%nt("fin_vp_np_moved")%} # I know who [gave the book to Bob]
+# complete preterite verb phrase (move argument)
+    | np adv? vb_pp                   adv? preposition                                    {%nt("fin_vp_np_moved")%} # I know what you [talked about]
+    | np adv? vb_ap                   adv? ap_np_moved                                    {%nt("fin_vp_np_moved")%} # I know what you [seemed good at]
+    | np adv? vb_to_inf_cl            adv? to_inf_cl_np_moved                             {%nt("fin_vp_np_moved")%} # I know what you [asked to bring]
+    | np adv? vb_bare_inf_cl          adv? bare_inf_cl_np_moved                           {%nt("fin_vp_np_moved")%} # I know what you [helped bring]
+    | np adv? vb_declarative_cl       adv? declarative_cl_np_moved                        {%nt("fin_vp_np_moved")%} # I know what you [said that you bring]
+    | np      vb_vbg_cl                    vbg_cl_np_moved                                {%nt("fin_vp_np_moved")%} # I know what you [were bringing]
+    | np      vb_vbn_cl                    vbn_cl_np_moved                                {%nt("fin_vp_np_moved")%} # I know what you [had brought] OR I know what you [were brought]
+    | np adv? vb_np                   adv?                                                {%nt("fin_vp_np_moved")%} # I know what you [brought]
+    | np adv? vb_np_pp                adv? pp                                             {%nt("fin_vp_np_moved")%} # I know what you [put on the table]
+    | np adv? vb_np_pp                adv? np                     preposition             {%nt("fin_vp_np_moved")%} # I know what you [put the book on]
+    | np adv? vb_np_ap                adv? ap                                             {%nt("fin_vp_np_moved")%} # I know who you [considered good at chess]
+    | np adv? vb_np_ap                adv? np                     ap_np_moved             {%nt("fin_vp_np_moved")%} # I know what you [considered Bob good at]
+    | np adv? vb_np_to_inf_cl         adv? to_inf_cl                                      {%nt("fin_vp_np_moved")%} # I know who you [asked to bring cheese]
+    | np adv? vb_np_to_inf_cl         adv? np                     to_inf_cl_np_moved      {%nt("fin_vp_np_moved")%} # I know what you [asked Bob to bring]
+    | np adv? vb_np_bare_inf_cl       adv? bare_inf_cl                                    {%nt("fin_vp_np_moved")%} # I know who you [helped bring cheese]
+    | np adv? vb_np_bare_inf_cl       adv? np                     bare_inf_cl_np_moved    {%nt("fin_vp_np_moved")%} # I know what you [helped Bob bring]
+    | np adv? vb_np_declarative_cl    adv? declarative_cl                                 {%nt("fin_vp_np_moved")%} # I know who you [told that you bring cheese]
+    | np adv? vb_np_declarative_cl    adv? np                     declarative_cl_np_moved {%nt("fin_vp_np_moved")%} # I know what you [told Bob that you bring]
+    | np adv? vb_np_exclamative_cl    adv? exclamative_cl                                 {%nt("fin_vp_np_moved")%} # I know who you [told how expensive it is]
+    | np adv? vb_np_interrogative_cl  adv? interrogative_cl                               {%nt("fin_vp_np_moved")%} # I know who you [asked what Bob brings]
+    | np adv? vb_np_np                adv? np                                             {%nt("fin_vp_np_moved")%} # I know what you [gave Bob]
+    | np adv? vb_np_np                adv? to                     np                      {%nt("fin_vp_np_moved")%} # I know who you [gave the book to]
+# complete present verb phrase (non 3rd person singular) (move agent)
+    |    adv? vbp                     adv?                                                {%nt("fin_vp_np_moved")%} # I know which people [smoke]
+    |    adv? vbp_pp                  adv? pp                                             {%nt("fin_vp_np_moved")%} # I know which people [look at it]
+    |    adv? vbp_ap                  adv? ap                                             {%nt("fin_vp_np_moved")%} # I know which people [seem happy]
+    |    adv? vbp_to_inf_cl           adv? to_inf_cl                                      {%nt("fin_vp_np_moved")%} # I know which people [ask to bring cheese]
+    |    adv? vbp_bare_inf_cl         adv? bare_inf_cl                                    {%nt("fin_vp_np_moved")%} # I know which people [help bring cheese]
+    |    adv? vbp_declarative_cl      adv? declarative_cl                                 {%nt("fin_vp_np_moved")%} # I know which people [said that you bring cheese]
+    |    adv? vbp_exclamative_cl      adv? exclamative_cl                                 {%nt("fin_vp_np_moved")%} # I know which people [said how expensive it is]
+    |    adv? vbp_interrogative_cl    adv? interrogative_cl                               {%nt("fin_vp_np_moved")%} # I know which people [ask what you bring]
+    |         vbp_vbg_cl                   vbg_cl                                         {%nt("fin_vp_np_moved")%} # I know which people [were bringing the cheese]
+    |         vbp_vbn_cl                   vbn_cl                                         {%nt("fin_vp_np_moved")%} # I know which people [have brought the cheese] OR I know which cheeses [were brought]
+    |    adv? vbp_np                  adv? np                                             {%nt("fin_vp_np_moved")%} # I know which people [bring the cheese]
+    |    adv? vbp_np_pp               adv? np              pp                             {%nt("fin_vp_np_moved")%} # I know which people [put the book on the table]
+    |    adv? vbp_np_ap               adv? np              ap                             {%nt("fin_vp_np_moved")%} # I know which people [consider Bob good at chess]
+    |    adv? vbp_np_to_inf_cl        adv? np              to_inf_cl                      {%nt("fin_vp_np_moved")%} # I know which people [ask Bob to bring cheese]
+    |    adv? vbp_np_bare_inf_cl      adv? np              bare_inf_cl                    {%nt("fin_vp_np_moved")%} # I know which people [help Bob bring cheese]
+    |    adv? vbp_np_declarative_cl   adv? np              declarative_cl                 {%nt("fin_vp_np_moved")%} # I know which people [tell Bob that you bring cheese]
+    |    adv? vbp_np_exclamative_cl   adv? np              exclamative_cl                 {%nt("fin_vp_np_moved")%} # I know which people [tell Bob how expensive it is]
+    |    adv? vbp_np_interrogative_cl adv? np              interrogative_cl               {%nt("fin_vp_np_moved")%} # I know which people [ask Bob what you bring]
+    |    adv? vbp_np_np               adv? np              np                             {%nt("fin_vp_np_moved")%} # I know which people [give Bob the cheese]
+    |    adv? vbp_np_np               adv? np              to              np             {%nt("fin_vp_np_moved")%} # I know which people [give the book to Bob]
+# complete present verb phrase (non 3rd person singular) (move argument)
+    | np adv? vbp_pp                   adv? preposition                                    {%nt("fin_vp_np_moved")%} # I know what you [talk about]
+    | np adv? vbp_ap                   adv? ap_np_moved                                    {%nt("fin_vp_np_moved")%} # I know what you [seem good at]
+    | np adv? vbp_to_inf_cl            adv? to_inf_cl_np_moved                             {%nt("fin_vp_np_moved")%} # I know what you [ask to bring]
+    | np adv? vbp_bare_inf_cl          adv? bare_inf_cl_np_moved                           {%nt("fin_vp_np_moved")%} # I know what you [help bring]
+    | np adv? vbp_declarative_cl       adv? declarative_cl_np_moved                        {%nt("fin_vp_np_moved")%} # I know what you [say that you bring]
+    | np      vbp_vbg_cl                    vbg_cl_np_moved                                {%nt("fin_vp_np_moved")%} # I know what you [are bringing]
+    | np      vbp_vbn_cl                    vbn_cl_np_moved                                {%nt("fin_vp_np_moved")%} # I know what you [have brought] OR I know what you [were brought]
+    | np adv? vbp_np                   adv?                                                {%nt("fin_vp_np_moved")%} # I know what you [bring]
+    | np adv? vbp_np_pp                adv? pp                                             {%nt("fin_vp_np_moved")%} # I know what you [put on the table]
+    | np adv? vbp_np_pp                adv? np                     preposition             {%nt("fin_vp_np_moved")%} # I know what you [put the book on]
+    | np adv? vbp_np_ap                adv? ap                                             {%nt("fin_vp_np_moved")%} # I know who you [consider good at chess]
+    | np adv? vbp_np_ap                adv? np                     ap_np_moved             {%nt("fin_vp_np_moved")%} # I know what you [consider Bob good at]
+    | np adv? vbp_np_to_inf_cl         adv? to_inf_cl                                      {%nt("fin_vp_np_moved")%} # I know who you [ask to bring cheese]
+    | np adv? vbp_np_to_inf_cl         adv? np                     to_inf_cl_np_moved      {%nt("fin_vp_np_moved")%} # I know what you [ask Bob to bring]
+    | np adv? vbp_np_bare_inf_cl       adv? bare_inf_cl                                    {%nt("fin_vp_np_moved")%} # I know who you [help bring cheese]
+    | np adv? vbp_np_bare_inf_cl       adv? np                     bare_inf_cl_np_moved    {%nt("fin_vp_np_moved")%} # I know what you [help Bob bring]
+    | np adv? vbp_np_declarative_cl    adv? declarative_cl                                 {%nt("fin_vp_np_moved")%} # I know who you [tell that you bring cheese]
+    | np adv? vbp_np_declarative_cl    adv? np                     declarative_cl_np_moved {%nt("fin_vp_np_moved")%} # I know what you [tell Bob that you bring]
+    | np adv? vbp_np_exclamative_cl    adv? exclamative_cl                                 {%nt("fin_vp_np_moved")%} # I know who you [tell how expensive it is]
+    | np adv? vbp_np_interrogative_cl  adv? interrogative_cl                               {%nt("fin_vp_np_moved")%} # I know who you [ask what Bob brings]
+    | np adv? vbp_np_np                adv? np                                             {%nt("fin_vp_np_moved")%} # I know what you [give Bob]
+    | np adv? vbp_np_np                adv? to                     np                      {%nt("fin_vp_np_moved")%} # I know who you [give the book to]
+# complete present verb phrase (3rd person singular) (move agent)
+    |    adv? vbz                     adv?                                                {%nt("fin_vp_np_moved")%} # I know who [smokes]
+    |    adv? vbz_pp                  adv? pp                                             {%nt("fin_vp_np_moved")%} # I know who [looks at it]
+    |    adv? vbz_ap                  adv? ap                                             {%nt("fin_vp_np_moved")%} # I know who [seems happy]
+    |    adv? vbz_to_inf_cl           adv? to_inf_cl                                      {%nt("fin_vp_np_moved")%} # I know who [asks to bring cheese]
+    |    adv? vbz_bare_inf_cl         adv? bare_inf_cl                                    {%nt("fin_vp_np_moved")%} # I know who [helps bring cheese]
+    |    adv? vbz_declarative_cl      adv? declarative_cl                                 {%nt("fin_vp_np_moved")%} # I know who [says that you bring cheese]
+    |    adv? vbz_exclamative_cl      adv? exclamative_cl                                 {%nt("fin_vp_np_moved")%} # I know who [says how expensive it is]
+    |    adv? vbz_interrogative_cl    adv? interrogative_cl                               {%nt("fin_vp_np_moved")%} # I know who [asks what you bring]
+    |         vbz_vbg_cl                   vbg_cl                                         {%nt("fin_vp_np_moved")%} # I know who [is bringing the cheese]
+    |         vbz_vbn_cl                   vbn_cl                                         {%nt("fin_vp_np_moved")%} # I know who [has brought the cheese] OR I know what [is brought]
+    |    adv? vbz_np                  adv? np                                             {%nt("fin_vp_np_moved")%} # I know who [brings the cheese]
+    |    adv? vbz_np_pp               adv? np              pp                             {%nt("fin_vp_np_moved")%} # I know who [puts the book on the table]
+    |    adv? vbz_np_ap               adv? np              ap                             {%nt("fin_vp_np_moved")%} # I know who [considers Bob good at chess]
+    |    adv? vbz_np_to_inf_cl        adv? np              to_inf_cl                      {%nt("fin_vp_np_moved")%} # I know who [asks Bob to bring cheese]
+    |    adv? vbz_np_bare_inf_cl      adv? np              bare_inf_cl                    {%nt("fin_vp_np_moved")%} # I know who [helps Bob bring cheese]
+    |    adv? vbz_np_declarative_cl   adv? np              declarative_cl                 {%nt("fin_vp_np_moved")%} # I know who [tells Bob that you bring cheese]
+    |    adv? vbz_np_exclamative_cl   adv? np              exclamative_cl                 {%nt("fin_vp_np_moved")%} # I know who [tells Bob how expensive it is]
+    |    adv? vbz_np_interrogative_cl adv? np              interrogative_cl               {%nt("fin_vp_np_moved")%} # I know who [asks Bob what you bring]
+    |    adv? vbz_np_np               adv? np              np                             {%nt("fin_vp_np_moved")%} # I know who [gives Bob the cheese]
+    |    adv? vbz_np_np               adv? np              to              np             {%nt("fin_vp_np_moved")%} # I know who [gives the book to Bob]
+# complete present verb phrase (3rd person singular) (move argument)
+    | np adv? vbz_pp                   adv? preposition                                    {%nt("fin_vp_np_moved")%} # I know what he [talks about]
+    | np adv? vbz_ap                   adv? ap_np_moved                                    {%nt("fin_vp_np_moved")%} # I know what he [seems good at]
+    | np adv? vbz_to_inf_cl            adv? to_inf_cl_np_moved                             {%nt("fin_vp_np_moved")%} # I know what he [asks to bring]
+    | np adv? vbz_bare_inf_cl          adv? bare_inf_cl_np_moved                           {%nt("fin_vp_np_moved")%} # I know what he [helps bring]
+    | np adv? vbz_declarative_cl       adv? declarative_cl_np_moved                        {%nt("fin_vp_np_moved")%} # I know what he [says that you bring]
+    | np      vbz_vbg_cl                    vbg_cl_np_moved                                {%nt("fin_vp_np_moved")%} # I know what he [was bringing]
+    | np      vbz_vbn_cl                    vbn_cl_np_moved                                {%nt("fin_vp_np_moved")%} # I know what he [has brought] OR I know what he [was brought]
+    | np adv? vbz_np                   adv?                                                {%nt("fin_vp_np_moved")%} # I know what he [brings]
+    | np adv? vbz_np_pp                adv? pp                                             {%nt("fin_vp_np_moved")%} # I know what he [puts on the table]
+    | np adv? vbz_np_pp                adv? np                     preposition             {%nt("fin_vp_np_moved")%} # I know what he [puts the book on]
+    | np adv? vbz_np_ap                adv? ap                                             {%nt("fin_vp_np_moved")%} # I know who he [considers good at chess]
+    | np adv? vbz_np_ap                adv? np                     ap_np_moved             {%nt("fin_vp_np_moved")%} # I know what he [considers Bob good at]
+    | np adv? vbz_np_to_inf_cl         adv? to_inf_cl                                      {%nt("fin_vp_np_moved")%} # I know who he [asks to bring cheese]
+    | np adv? vbz_np_to_inf_cl         adv? np                     to_inf_cl_np_moved      {%nt("fin_vp_np_moved")%} # I know what he [asks Bob to bring]
+    | np adv? vbz_np_bare_inf_cl       adv? bare_inf_cl                                    {%nt("fin_vp_np_moved")%} # I know who he [helps bring cheese]
+    | np adv? vbz_np_bare_inf_cl       adv? np                     bare_inf_cl_np_moved    {%nt("fin_vp_np_moved")%} # I know what he [helps Bob bring]
+    | np adv? vbz_np_declarative_cl    adv? declarative_cl                                 {%nt("fin_vp_np_moved")%} # I know who he [tells that you bring cheese]
+    | np adv? vbz_np_declarative_cl    adv? np                     declarative_cl_np_moved {%nt("fin_vp_np_moved")%} # I know what he [tells Bob that you bring]
+    | np adv? vbz_np_exclamative_cl    adv? exclamative_cl                                 {%nt("fin_vp_np_moved")%} # I know who he [tells how expensive it is]
+    | np adv? vbz_np_interrogative_cl  adv? interrogative_cl                               {%nt("fin_vp_np_moved")%} # I know who he [asks what Bob brings]
+    | np adv? vbz_np_np                adv? np                                             {%nt("fin_vp_np_moved")%} # I know what he [gives Bob]
+    | np adv? vbz_np_np                adv? to                     np                      {%nt("fin_vp_np_moved")%} # I know who he [gives the book to]
 
-# a prepositional phrase moved
-fin_vp_pp_moved -> 
-      np vp_pp                                                {%nt("fin_vp_pp_moved")%}  # verb with prepositional phrase argument (ex: "that I look")
-    | np vp_np_pp           np                                {%nt("fin_vp_pp_moved")%}  # transitive verb with prepositional phrase argument (ex: "that I put the book on")
 
-# a prepositional phrase stranded
-fin_vp_pp_stranded -> 
-      np vp_pp              preposition                      {%nt("fin_vp_pp_moved")%}  # verb with prepositional phrase argument (ex: "that I look at")
-    | np vp_np_pp           np           preposition         {%nt("fin_vp_pp_moved")%}  # transitive verb with prepositional phrase argument (ex: "that I put the book on")
+# non-finite verb phrase with a prepositional phrase moved
+fin_vp_pp_moved ->
+# preterite verb phrase
+      np adv? vbp_pp                   adv?                                                 {%nt("fin_vp_pp_moved")%} # I know to where you [went]
+    | np adv? vbp_ap                   adv?     ap_pp_moved                                 {%nt("fin_vp_pp_moved")%} # I know at what you [seemed good]
+    | np adv? vbp_to_inf_cl            adv?     to_inf_cl_pp_moved                          {%nt("fin_vp_pp_moved")%} # I know to where you [asked to go]
+    | np adv? vbp_bare_inf_cl          adv?     bare_inf_cl_pp_moved                        {%nt("fin_vp_pp_moved")%} # I know to where you [helped go]
+    | np adv? vbp_declarative_cl       adv?     declarative_cl_pp_moved                     {%nt("fin_vp_pp_moved")%} # I know to where you [said that you go]
+    | np adv? vbp_np_pp                adv?     np                                          {%nt("fin_vp_pp_moved")%} # I know on what you [put the book]
+    | np adv? vbp_np_ap                adv?     np               ap_pp_moved                {%nt("fin_vp_pp_moved")%} # I know at what you [considered Bob good]
+    | np adv? vbp_np_to_inf_cl         adv?     np               to_inf_cl_pp_moved         {%nt("fin_vp_pp_moved")%} # I know to where you [asked Bob to go]
+    | np adv? vbp_np_bare_inf_cl       adv?     np               bare_inf_cl_pp_moved       {%nt("fin_vp_pp_moved")%} # I know to where you [helped Bob go]
+    | np adv? vbp_np_declarative_cl    adv?     np               declarative_cl_pp_moved    {%nt("fin_vp_pp_moved")%} # I know to where you [told Bob that you go]
+# 
 
 
 
@@ -363,42 +493,42 @@ vbn_vp ->
 
 # past participle verb phrase with a noun phrase moved
 vbn_vp_np_moved ->
-      adv? vbn_pp                   adv? preposition                                    {%nt("vbd_vp_np_moved")%} # I know what you have [talked about]
-    | adv? vbn_ap                   adv? ap_np_moved                                    {%nt("vbd_vp_np_moved")%} # I know what you have [seemed good at]
-    | adv? vbn_to_inf_cl            adv? to_inf_cl_np_moved                             {%nt("vbd_vp_np_moved")%} # I know what you have [asked to bring]
-    | adv? vbn_bare_inf_cl          adv? bare_inf_cl_np_moved                           {%nt("vbd_vp_np_moved")%} # I know what you have [helped bring]
-    | adv? vbn_declarative_cl       adv? declarative_cl_np_moved                        {%nt("vbd_vp_np_moved")%} # I know what you have [said that you bring]
-    |      vbn_vbg_cl                    vbg_cl_np_moved                                {%nt("vbd_vp_np_moved")%} # I know what you have [been bringing]
-    |      vbn_vbn_cl                    vbn_cl_np_moved                                {%nt("vbd_vp_np_moved")%} # I know what you have [had brought] OR I know what you have [been brought]
-    | adv? vbn_np                   adv?                                                {%nt("vbd_vp_np_moved")%} # I know what you have [brought]
-    | adv? vbn_np_pp                adv? pp                                             {%nt("vbd_vp_np_moved")%} # I know what you have [put on the table]
-    | adv? vbn_np_pp                adv? np                     preposition             {%nt("vbd_vp_np_moved")%} # I know what you have [put the book on]
-    | adv? vbn_np_ap                adv? ap                                             {%nt("vbd_vp_np_moved")%} # I know who you have [considered good at chess]
-    | adv? vbn_np_ap                adv? np                     ap_np_moved             {%nt("vbd_vp_np_moved")%} # I know what you have [considered Bob good at]
-    | adv? vbn_np_to_inf_cl         adv? to_inf_cl                                      {%nt("vbd_vp_np_moved")%} # I know who you have [asked to bring cheese]
-    | adv? vbn_np_to_inf_cl         adv? np                     to_inf_cl_np_moved      {%nt("vbd_vp_np_moved")%} # I know what you have [asked Bob to bring]
-    | adv? vbn_np_bare_inf_cl       adv? bare_inf_cl                                    {%nt("vbd_vp_np_moved")%} # I know who you have [helped bring cheese]
-    | adv? vbn_np_bare_inf_cl       adv? np                     bare_inf_cl_np_moved    {%nt("vbd_vp_np_moved")%} # I know what you have [helped Bob bring]
-    | adv? vbn_np_declarative_cl    adv? declarative_cl                                 {%nt("vbd_vp_np_moved")%} # I know who you have [told that you bring cheese]
-    | adv? vbn_np_declarative_cl    adv? np                     declarative_cl_np_moved {%nt("vbd_vp_np_moved")%} # I know what you have [told Bob that you bring]
-    | adv? vbn_np_exclamative_cl    adv? exclamative_cl                                 {%nt("vbd_vp_np_moved")%} # I know who you have [told how expensive it is]
-    | adv? vbn_np_interrogative_cl  adv? interrogative_cl                               {%nt("vbd_vp_np_moved")%} # I know who you have [asked what Bob brings]
-    | adv? vbn_np_np                adv? np                                             {%nt("vbd_vp_np_moved")%} # I know what you have [given Bob]
-    | adv? vbn_np_np                adv? to                     np                      {%nt("vbd_vp_np_moved")%} # I know who you have [given the book to]
+      adv? vbn_pp                   adv? preposition                                    {%nt("vbn_vp_np_moved")%} # I know what you have [talked about]
+    | adv? vbn_ap                   adv? ap_np_moved                                    {%nt("vbn_vp_np_moved")%} # I know what you have [seemed good at]
+    | adv? vbn_to_inf_cl            adv? to_inf_cl_np_moved                             {%nt("vbn_vp_np_moved")%} # I know what you have [asked to bring]
+    | adv? vbn_bare_inf_cl          adv? bare_inf_cl_np_moved                           {%nt("vbn_vp_np_moved")%} # I know what you have [helped bring]
+    | adv? vbn_declarative_cl       adv? declarative_cl_np_moved                        {%nt("vbn_vp_np_moved")%} # I know what you have [said that you bring]
+    |      vbn_vbg_cl                    vbg_cl_np_moved                                {%nt("vbn_vp_np_moved")%} # I know what you have [been bringing]
+    |      vbn_vbn_cl                    vbn_cl_np_moved                                {%nt("vbn_vp_np_moved")%} # I know what you have [had brought] OR I know what you have [been brought]
+    | adv? vbn_np                   adv?                                                {%nt("vbn_vp_np_moved")%} # I know what you have [brought]
+    | adv? vbn_np_pp                adv? pp                                             {%nt("vbn_vp_np_moved")%} # I know what you have [put on the table]
+    | adv? vbn_np_pp                adv? np                     preposition             {%nt("vbn_vp_np_moved")%} # I know what you have [put the book on]
+    | adv? vbn_np_ap                adv? ap                                             {%nt("vbn_vp_np_moved")%} # I know who you have [considered good at chess]
+    | adv? vbn_np_ap                adv? np                     ap_np_moved             {%nt("vbn_vp_np_moved")%} # I know what you have [considered Bob good at]
+    | adv? vbn_np_to_inf_cl         adv? to_inf_cl                                      {%nt("vbn_vp_np_moved")%} # I know who you have [asked to bring cheese]
+    | adv? vbn_np_to_inf_cl         adv? np                     to_inf_cl_np_moved      {%nt("vbn_vp_np_moved")%} # I know what you have [asked Bob to bring]
+    | adv? vbn_np_bare_inf_cl       adv? bare_inf_cl                                    {%nt("vbn_vp_np_moved")%} # I know who you have [helped bring cheese]
+    | adv? vbn_np_bare_inf_cl       adv? np                     bare_inf_cl_np_moved    {%nt("vbn_vp_np_moved")%} # I know what you have [helped Bob bring]
+    | adv? vbn_np_declarative_cl    adv? declarative_cl                                 {%nt("vbn_vp_np_moved")%} # I know who you have [told that you bring cheese]
+    | adv? vbn_np_declarative_cl    adv? np                     declarative_cl_np_moved {%nt("vbn_vp_np_moved")%} # I know what you have [told Bob that you bring]
+    | adv? vbn_np_exclamative_cl    adv? exclamative_cl                                 {%nt("vbn_vp_np_moved")%} # I know who you have [told how expensive it is]
+    | adv? vbn_np_interrogative_cl  adv? interrogative_cl                               {%nt("vbn_vp_np_moved")%} # I know who you have [asked what Bob brings]
+    | adv? vbn_np_np                adv? np                                             {%nt("vbn_vp_np_moved")%} # I know what you have [given Bob]
+    | adv? vbn_np_np                adv? to                     np                      {%nt("vbn_vp_np_moved")%} # I know who you have [given the book to]
 
 
 # past participle verb phrase with a prepositional phrase moved
 vbn_vp_pp_moved ->
-      adv? vbd_pp                   adv?                                                 {%nt("vbd_vp_pp_moved")%} # I know to where you have [gone]
-    | adv? vbd_ap                   adv?     ap_pp_moved                                 {%nt("vbd_vp_pp_moved")%} # I know at what you have [seemed good]
-    | adv? vbd_to_inf_cl            adv?     to_inf_cl_pp_moved                          {%nt("vbd_vp_pp_moved")%} # I know to where you have [asked to go]
-    | adv? vbd_bare_inf_cl          adv?     bare_inf_cl_pp_moved                        {%nt("vbd_vp_pp_moved")%} # I know to where you have [helped go]
-    | adv? vbd_declarative_cl       adv?     declarative_cl_pp_moved                     {%nt("vbd_vp_pp_moved")%} # I know to where you have [said that you go]
-    | adv? vbd_np_pp                adv?     np                                          {%nt("vbd_vp_pp_moved")%} # I know on what you have [put the book]
-    | adv? vbd_np_ap                adv?     np               ap_pp_moved                {%nt("vbd_vp_pp_moved")%} # I know at what you have [considered Bob good]
-    | adv? vbd_np_to_inf_cl         adv?     np               to_inf_cl_pp_moved         {%nt("vbd_vp_pp_moved")%} # I know to where you have [asked Bob to go]
-    | adv? vbd_np_bare_inf_cl       adv?     np               bare_inf_cl_pp_moved       {%nt("vbd_vp_pp_moved")%} # I know to where you have [helped Bob go]
-    | adv? vbd_np_declarative_cl    adv?     np               declarative_cl_pp_moved    {%nt("vbd_vp_pp_moved")%} # I know to where you have [told Bob that you go]
+      adv? vbn_pp                   adv?                                                 {%nt("vbn_vp_pp_moved")%} # I know to where you have [gone]
+    | adv? vbn_ap                   adv?     ap_pp_moved                                 {%nt("vbn_vp_pp_moved")%} # I know at what you have [seemed good]
+    | adv? vbn_to_inf_cl            adv?     to_inf_cl_pp_moved                          {%nt("vbn_vp_pp_moved")%} # I know to where you have [asked to go]
+    | adv? vbn_bare_inf_cl          adv?     bare_inf_cl_pp_moved                        {%nt("vbn_vp_pp_moved")%} # I know to where you have [helped go]
+    | adv? vbn_declarative_cl       adv?     declarative_cl_pp_moved                     {%nt("vbn_vp_pp_moved")%} # I know to where you have [said that you go]
+    | adv? vbn_np_pp                adv?     np                                          {%nt("vbn_vp_pp_moved")%} # I know on what you have [put the book]
+    | adv? vbn_np_ap                adv?     np               ap_pp_moved                {%nt("vbn_vp_pp_moved")%} # I know at what you have [considered Bob good]
+    | adv? vbn_np_to_inf_cl         adv?     np               to_inf_cl_pp_moved         {%nt("vbn_vp_pp_moved")%} # I know to where you have [asked Bob to go]
+    | adv? vbn_np_bare_inf_cl       adv?     np               bare_inf_cl_pp_moved       {%nt("vbn_vp_pp_moved")%} # I know to where you have [helped Bob go]
+    | adv? vbn_np_declarative_cl    adv?     np               declarative_cl_pp_moved    {%nt("vbn_vp_pp_moved")%} # I know to where you have [told Bob that you go]
 
 # present participle / gerund verb phrase
 vbg_vp ->
@@ -449,7 +579,7 @@ vbg_vp_np_moved ->
 
 
 # past participle verb phrase with a prepositional phrase moved
-vbn_vp_pp_moved ->
+vbg_vp_pp_moved ->
       adv? vbg_pp                   adv?                                                 {%nt("vbg_vp_pp_moved")%} # I know to where you have [gone]
     | adv? vbg_ap                   adv?     ap_pp_moved                                 {%nt("vbg_vp_pp_moved")%} # I know at what you have [seemed good]
     | adv? vbg_to_inf_cl            adv?     to_inf_cl_pp_moved                          {%nt("vbg_vp_pp_moved")%} # I know to where you have [asked to go]
