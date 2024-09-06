@@ -15,13 +15,13 @@
         "they": null
     },
     "pronoun_pos": {
-        "my": null,
-        "your": null,
+        "mine": null,
+        "yours": null,
         "his": null,
-        "her": null,
+        "hers": null,
         "its": null,
-        "our": null,
-        "their": null
+        "ours": null,
+        "theirs": null
     },
     "proper_noun": {
         "john": null,
