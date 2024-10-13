@@ -20,25 +20,10 @@ function expandContractions(word: string): string[] {
     }
 }
 
-function stem(word: string): string {
-    // irregular verbs
-    switch (word) {
-        case "am":
-        case "is":
-        case "are":
-        case "was":
-        case "were":
-            return "be";
-        default:
-            return word;
-    }
-}
-
 export function lex(input: string): string[] {
     // split on whitespace
     const words = input.split(/\s+/);
     return words
         .flatMap(word => expandContractions(word))
-        .map(word => word.toLowerCase())
-        .map(word => stem(word));
+        .map(word => word.toLowerCase());
 }

@@ -4,7 +4,6 @@ function id(x) { return x[0]; }
 
 import english from './english.json';
 
-console.log(english);
 
 // parts of speech
 const det = {test: x => x in english.det};
@@ -531,7 +530,7 @@ let ParserRules = [
     {"name": "precorenp_modifier_list$ebnf$1", "symbols": ["precorenp_modifier_list$ebnf$1", "precorenp_modifier"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "precorenp_modifier_list", "symbols": ["precorenp_modifier_list$ebnf$1"], "postprocess": nonterminal_unpack("precorenp_modifier_list")},
     {"name": "postcorenp_modifier_list$ebnf$1", "symbols": []},
-    {"name": "postcorenp_modifier_list$ebnf$1", "symbols": ["postcorenp_modifier_list$ebnf$1", postcorenp_modifier], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "postcorenp_modifier_list$ebnf$1", "symbols": ["postcorenp_modifier_list$ebnf$1", "postcorenp_modifier"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "postcorenp_modifier_list", "symbols": ["postcorenp_modifier_list$ebnf$1"], "postprocess": nonterminal_unpack("postcorenp_modifier_list")},
     {"name": "core_np", "symbols": ["proper_noun"], "postprocess": nt("core_np")},
     {"name": "core_np", "symbols": ["pronoun"], "postprocess": nt("core_np")},

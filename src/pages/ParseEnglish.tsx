@@ -59,6 +59,11 @@ function pruneTree(node: TreeNode): TreeNode | null {
     if (typeof node.children === "string") {
         return node;
     }
+
+    if(node.children == null) {
+        return null;
+    }
+
     let children = node.children.map(pruneTree).filter((child): child is TreeNode => child !== null);
     if (children.length === 0) {
         return null;

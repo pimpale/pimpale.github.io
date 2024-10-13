@@ -184,8 +184,8 @@ function t(kind) {
 %}
 
 # a declarative finite clause
-decl_fin_cl -> pp_list np fin_vp pp_list {%(children) => ({kind: "decl_fin_cl", children})%}
-
+decl_fin_cl -> pp_list np fin_vp pp_list {%nt("decl_fin_cl")%}
+            
 fin_vp -> 
 # complete preterite verb phrase
       advp? vbd                     advp?                                       {%nt("fin_vp")%} # intransitive verb (ex: "I smoked")
@@ -609,7 +609,8 @@ np ->
 
 precorenp_modifier_list -> precorenp_modifier:* {%nonterminal_unpack("precorenp_modifier_list")%} 
 
-postcorenp_modifier_list -> %postcorenp_modifier:* {%nonterminal_unpack("postcorenp_modifier_list")%}
+postcorenp_modifier_list -> postcorenp_modifier:* {%nonterminal_unpack("postcorenp_modifier_list")%}
+
 # a noun phrase not including peripheral modifiers
 core_np -> 
                     proper_noun                                     {%nt("core_np")%}  # a proper noun (ex: "John", "Mary")
