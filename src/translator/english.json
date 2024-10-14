@@ -77,7 +77,8 @@
     "adj": {
         "big": null,
         "small": null,
-        "happy": null
+        "happy": null,
+        "expensive": null
     },
     "adj_pp": {
         "interested": null,
