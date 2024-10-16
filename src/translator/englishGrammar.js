@@ -17,10 +17,14 @@ const preposition = {test: x => x in english.preposition};
 // particles
 const to = {test: x => x in english.to};
 const s = {test: x => x in english.s};
+const not = {test: x => x in english.not};
 const that = {test: x => x in english.that};
 const interrogative_subordinator = {test: x => x in english.interrogative_subordinator};
 
 // verbs
+
+// Modal (MODAL)
+const modal = {test: x => x in english.modal};
 
 // Base Verb (VB)
 const vb = {test: x => x in english.vb};
@@ -148,8 +152,13 @@ const vbz_np_exclamative_cl = {test: x => x in english.vbz_np_exclamative_cl};
 const vbz_np_interrogative_cl = {test: x => x in english.vbz_np_interrogative_cl};
 const vbz_np_np = {test: x => x in english.vbz_np_np};
 
-// Modal (MODAL)
-const modal = {test: x => x in english.modal};
+// certain core verbs
+const is = {test: x => x in english.is};
+const are = {test: x => x in english.are};
+const were = {test: x => x in english.were};
+const do_ = {test: x => x in english.do};
+const does = {test: x => x in english.does};
+const did = {test: x => x in english.did};
 
 // adjectives
 const adj = {test: x => x in english.adj}; // adjectives that don't take any arguments (ex: "happy")
@@ -167,6 +176,8 @@ const wh = {test: x => x in english.wh}; // wh-words (ex: "who", "what", "where"
 
 // replaces adjective phrases
 const how = {test: x => x in english.how}; // how
+// replaces reasons
+const why = {test: x => x in english.why}; // why
 
 // define postprocessors
 
@@ -187,7 +198,65 @@ function t(kind) {
 
 let Lexer = undefined;
 let ParserRules = [
+    {"name": "sentence", "symbols": ["decl_fin_cl"], "postprocess": nt("sentence")},
+    {"name": "sentence", "symbols": ["question_cl"], "postprocess": nt("sentence")},
     {"name": "decl_fin_cl", "symbols": ["pp_list", "np", "fin_vp", "pp_list"], "postprocess": nt("decl_fin_cl")},
+    {"name": "question_cl", "symbols": ["subj_aux_inv_cl", "pp_list"], "postprocess": nt("question_cl")},
+    {"name": "question_cl", "symbols": ["wh", "fin_vp", "pp_list"], "postprocess": nt("question_cl")},
+    {"name": "question_cl", "symbols": ["wh", "subj_aux_inv_cl_np_moved", "pp_list"], "postprocess": nt("question_cl")},
+    {"name": "question_cl", "symbols": ["why", "subj_aux_inv_cl", "pp_list"], "postprocess": nt("question_cl")},
+    {"name": "question_cl", "symbols": ["how", "advp?", "subj_aux_inv_cl", "pp_list"], "postprocess": nt("question_cl")},
+    {"name": "question_cl", "symbols": ["how", "subj_aux_inv_cl_ap_moved", "pp_list"], "postprocess": nt("question_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["modal", "not?", "np", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["were", "not?", "np", "ap"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["vbd_vbg_cl", "not?", "np", "vbg_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["vbd_vbn_cl", "not?", "np", "vbn_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["did", "not?", "np", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["are", "not?", "np", "ap"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["vbp_vbg_cl", "not?", "np", "vbg_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["vbp_vbn_cl", "not?", "np", "vbn_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["do", "not?", "np", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["is", "not?", "np", "ap"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["vbz_vbg_cl", "not?", "np", "vbg_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["vbz_vbn_cl", "not?", "np", "vbn_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["does", "not?", "np", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["modal", "not?", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["modal", "not?", "np", "bare_inf_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["were", "not?", "ap"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbd_vbg_cl", "not?", "vbg_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbd_vbn_cl", "not?", "vbn_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["did", "not?", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbd_vbg_cl", "not?", "np", "vbg_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbd_vbn_cl", "not?", "np", "vbn_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["did", "not?", "np", "bare_inf_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["are", "not?", "ap"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbp_vbg_cl", "not?", "vbg_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbp_vbn_cl", "not?", "vbn_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["do", "not?", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbp_vbg_cl", "not?", "np", "vbg_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbp_vbn_cl", "not?", "np", "vbn_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["do", "not?", "np", "bare_inf_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["is", "not?", "ap"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbz_vbg_cl", "not?", "vbg_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbz_vbn_cl", "not?", "vbn_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["does", "not?", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbz_vbg_cl", "not?", "np", "vbg_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbz_vbn_cl", "not?", "np", "vbn_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["does", "not?", "np", "bare_inf_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["modal", "not?", "np", "bare_inf_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["were", "not?", "np"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["vbd_vbg_cl", "not?", "np", "vbg_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["vbd_vbn_cl", "not?", "np", "vbn_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["did", "not?", "np", "bare_inf_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["are", "not?", "np"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["vbp_vbg_cl", "not?", "np", "vbg_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["vbp_vbn_cl", "not?", "np", "vbn_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["do", "not?", "np", "bare_inf_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["is", "not?", "np"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["vbz_vbg_cl", "not?", "np", "vbg_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["vbz_vbn_cl", "not?", "np", "vbn_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["does", "not?", "np", "bare_inf_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "fin_vp", "symbols": ["advp?", "modal", "not?", "advp?", "bare_inf_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp?", "vbd", "advp?"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp?", "vbd_pp", "advp?", "pp"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp?", "vbd_ap", "advp?", "ap"], "postprocess": nt("fin_vp")},
@@ -639,6 +708,9 @@ let ParserRules = [
     {"name": "advp?$ebnf$1", "symbols": ["advp"], "postprocess": id},
     {"name": "advp?$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
     {"name": "advp?", "symbols": ["advp?$ebnf$1"], "postprocess": nonterminal_unpack("advp?")},
+    {"name": "not?$ebnf$1", "symbols": ["not"], "postprocess": id},
+    {"name": "not?$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "not?", "symbols": ["not?$ebnf$1"], "postprocess": nonterminal_unpack("not?")},
     {"name": "det", "symbols": [det], "postprocess": t("det")},
     {"name": "pronoun", "symbols": [pronoun], "postprocess": t("pronoun")},
     {"name": "pronoun_pos", "symbols": [pronoun_pos], "postprocess": t("pronoun_pos")},
@@ -648,8 +720,10 @@ let ParserRules = [
     {"name": "preposition", "symbols": [preposition], "postprocess": t("preposition")},
     {"name": "to", "symbols": [to], "postprocess": t("to")},
     {"name": "s", "symbols": [s], "postprocess": t("s")},
+    {"name": "not", "symbols": [not], "postprocess": t("not")},
     {"name": "that", "symbols": [that], "postprocess": t("that")},
     {"name": "interrogative_subordinator", "symbols": [interrogative_subordinator], "postprocess": t("interrogative_subordinator")},
+    {"name": "modal", "symbols": [modal], "postprocess": t("modal")},
     {"name": "vb", "symbols": [vb], "postprocess": t("vb")},
     {"name": "vb_pp", "symbols": [vb_pp], "postprocess": t("vb_pp")},
     {"name": "vb_ap", "symbols": [vb_ap], "postprocess": t("vb_ap")},
@@ -769,9 +843,16 @@ let ParserRules = [
     {"name": "adj_declarative_cl", "symbols": [adj_declarative_cl], "postprocess": t("adj_declarative_cl")},
     {"name": "adv", "symbols": [adv], "postprocess": t("adv")},
     {"name": "wh", "symbols": [wh], "postprocess": t("wh")},
+    {"name": "why", "symbols": [why], "postprocess": t("why")},
     {"name": "how", "symbols": [how], "postprocess": t("how")},
     {"name": "precorenp_modifier", "symbols": [precorenp_modifier], "postprocess": t("precorenp_modifier")},
-    {"name": "postcorenp_modifier", "symbols": [postcorenp_modifier], "postprocess": t("postcorenp_modifier")}
+    {"name": "postcorenp_modifier", "symbols": [postcorenp_modifier], "postprocess": t("postcorenp_modifier")},
+    {"name": "is", "symbols": [is], "postprocess": t("is")},
+    {"name": "are", "symbols": [are], "postprocess": t("are")},
+    {"name": "were", "symbols": [were], "postprocess": t("were")},
+    {"name": "does", "symbols": [does], "postprocess": t("does")},
+    {"name": "do", "symbols": [do_], "postprocess": t("do")},
+    {"name": "did", "symbols": [did], "postprocess": t("did")}
 ];
-let ParserStart = "decl_fin_cl";
+let ParserStart = "sentence";
 export default { Lexer, ParserRules, ParserStart };

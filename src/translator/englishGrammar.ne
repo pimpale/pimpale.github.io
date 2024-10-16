@@ -16,10 +16,14 @@ const preposition = {test: x => x in english.preposition};
 // particles
 const to = {test: x => x in english.to};
 const s = {test: x => x in english.s};
+const not = {test: x => x in english.not};
 const that = {test: x => x in english.that};
 const interrogative_subordinator = {test: x => x in english.interrogative_subordinator};
 
 // verbs
+
+// Modal (MODAL)
+const modal = {test: x => x in english.modal};
 
 // Base Verb (VB)
 const vb = {test: x => x in english.vb};
@@ -147,8 +151,13 @@ const vbz_np_exclamative_cl = {test: x => x in english.vbz_np_exclamative_cl};
 const vbz_np_interrogative_cl = {test: x => x in english.vbz_np_interrogative_cl};
 const vbz_np_np = {test: x => x in english.vbz_np_np};
 
-// Modal (MODAL)
-const modal = {test: x => x in english.modal};
+// certain core verbs
+const is = {test: x => x in english.is};
+const are = {test: x => x in english.are};
+const were = {test: x => x in english.were};
+const do_ = {test: x => x in english.do};
+const does = {test: x => x in english.does};
+const did = {test: x => x in english.did};
 
 // adjectives
 const adj = {test: x => x in english.adj}; // adjectives that don't take any arguments (ex: "happy")
@@ -166,6 +175,8 @@ const wh = {test: x => x in english.wh}; // wh-words (ex: "who", "what", "where"
 
 // replaces adjective phrases
 const how = {test: x => x in english.how}; // how
+// replaces reasons
+const why = {test: x => x in english.why}; // why
 
 // define postprocessors
 
@@ -186,20 +197,108 @@ function t(kind) {
 
 %}
 
+sentence -> 
+      decl_fin_cl {%nt("sentence")%}
+    | question_cl {%nt("sentence")%}
+
 # a declarative finite clause
 decl_fin_cl -> pp_list np fin_vp pp_list {%nt("decl_fin_cl")%}
-            
+
+# a question clause
+question_cl -> 
+                subj_aux_inv_cl          pp_list {%nt("question_cl")%} # are you happy?
+    | wh        fin_vp                   pp_list {%nt("question_cl")%} # who ate that?
+    | wh        subj_aux_inv_cl_np_moved pp_list {%nt("question_cl")%} # what did you eat?
+    | why       subj_aux_inv_cl          pp_list {%nt("question_cl")%}
+    | how advp? subj_aux_inv_cl          pp_list {%nt("question_cl")%} # how did you eat the apple?
+    | how       subj_aux_inv_cl_ap_moved pp_list {%nt("question_cl")%} # how happy are you?
+
+
+subj_aux_inv_cl ->
+# modal
+      modal         not? np bare_inf_cl      {%nt("subj_aux_inv_cl")%} # can you eat?
+# preterite
+    | were          not? np ap               {%nt("subj_aux_inv_cl")%} # were you happy? (`be` when used as a copula)
+    | vbd_vbg_cl    not? np vbg_cl           {%nt("subj_aux_inv_cl")%} # were you eating?
+    | vbd_vbn_cl    not? np vbn_cl           {%nt("subj_aux_inv_cl")%} # were you eaten? / had you eaten?
+    | did           not? np bare_inf_cl      {%nt("subj_aux_inv_cl")%} # did you eat?
+# present (non-3rd person singular)
+    | are           not? np ap               {%nt("subj_aux_inv_cl")%} # are you happy?
+    | vbp_vbg_cl    not? np vbg_cl           {%nt("subj_aux_inv_cl")%} # are you eating?
+    | vbp_vbn_cl    not? np vbn_cl           {%nt("subj_aux_inv_cl")%} # have you eaten?
+    | do            not? np bare_inf_cl      {%nt("subj_aux_inv_cl")%} # do you eat?
+# present (3rd person singular)
+    | is            not? np ap               {%nt("subj_aux_inv_cl")%} # is he happy?
+    | vbz_vbg_cl    not? np vbg_cl           {%nt("subj_aux_inv_cl")%} # is he eating?
+    | vbz_vbn_cl    not? np vbn_cl           {%nt("subj_aux_inv_cl")%} # has he eaten?
+    | does          not? np bare_inf_cl      {%nt("subj_aux_inv_cl")%} # does he eat?
+
+
+subj_aux_inv_cl_np_moved ->
+# modal (move from head)
+      modal         not? bare_inf_cl                  {%nt("subj_aux_inv_cl")%} # who [can sing]?
+# modal (move from argument)
+    | modal         not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl")%} # what [can you sing]?
+# preterite (move from head)
+    | were          not? ap                           {%nt("subj_aux_inv_cl")%} # who [was happy]? (`be` when used as a copula)
+    | vbd_vbg_cl    not? vbg_cl                       {%nt("subj_aux_inv_cl")%} # who [was eating]?
+    | vbd_vbn_cl    not? vbn_cl                       {%nt("subj_aux_inv_cl")%} # who [was eaten]? / who [had eaten]?
+    | did           not? bare_inf_cl                  {%nt("subj_aux_inv_cl")%} # who [didn't eat]?
+# preterite (move from argument)
+    | vbd_vbg_cl    not? np vbg_cl_np_moved           {%nt("subj_aux_inv_cl")%} # what [were you eating]?
+    | vbd_vbn_cl    not? np vbn_cl_np_moved           {%nt("subj_aux_inv_cl")%} # what [were you given]? / what [had you eaten]?
+    | did           not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl")%} # what [did you eat]?
+# present (non-3rd person singular) (move from head)
+    | are           not? ap                           {%nt("subj_aux_inv_cl")%} # who [are happy]?
+    | vbp_vbg_cl    not? vbg_cl                       {%nt("subj_aux_inv_cl")%} # who [are eating]?
+    | vbp_vbn_cl    not? vbn_cl                       {%nt("subj_aux_inv_cl")%} # who [are eaten]? / who [has eaten]?
+    | do            not? bare_inf_cl                  {%nt("subj_aux_inv_cl")%} # who [don't eat]?
+# present (non-3rd person singular) (move from argument)
+    | vbp_vbg_cl    not? np vbg_cl_np_moved           {%nt("subj_aux_inv_cl")%} # what [are you eating]?
+    | vbp_vbn_cl    not? np vbn_cl_np_moved           {%nt("subj_aux_inv_cl")%} # what [are you given]? / what [have you eaten]?
+    | do            not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl")%} # what [do you eat]?
+# present (3rd person singular) (move from head)
+    | is            not? ap                           {%nt("subj_aux_inv_cl")%} # who [is happy]?
+    | vbz_vbg_cl    not? vbg_cl                       {%nt("subj_aux_inv_cl")%} # who [is eating]?
+    | vbz_vbn_cl    not? vbn_cl                       {%nt("subj_aux_inv_cl")%} # who [is eaten]? / who [has eaten]?
+    | does          not? bare_inf_cl                  {%nt("subj_aux_inv_cl")%} # who [doesn't eat]?
+# present (3rd person singular) (move from argument)
+    | vbz_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # what [is he eating]?
+    | vbz_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # what [is he given]? / what [has he eaten]?
+    | does          not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # what [does he eat]?
+
+
+subj_aux_inv_cl_ap_moved ->
+      modal         not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # how [can you eat]?
+# preterite
+    | were          not? np                           {%nt("subj_aux_inv_cl")%} # how [were you]? (`be` when used as a copula)
+    | vbd_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [were you feeling]?
+    | vbd_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [were you found]? / how [had you felt]?
+    | did           not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # how [did you feel]?
+# present (non-3rd person singular)
+    | are           not? np                           {%nt("subj_aux_inv_cl")%} # how [are you]?
+    | vbp_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [are you feeling]?
+    | vbp_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [are you found] / how [have you felt]?
+    | do            not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # how [do you feel]?
+# present (3rd person singular)
+    | is            not? np                           {%nt("subj_aux_inv_cl")%} # how [is he]?
+    | vbz_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [is he feeling]?
+    | vbz_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [is he found] / how [has he felt]?
+    | does          not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # how [does he feel]?
+
 fin_vp -> 
+# modal
+      advp? modal              not? advp? bare_inf_cl                           {%nt("fin_vp")%} # modal verb with bare infinitive clause argument (ex: "I can eat") 
 # complete preterite verb phrase
-      advp? vbd                     advp?                                       {%nt("fin_vp")%} # intransitive verb (ex: "I smoked")
+    | advp? vbd                     advp?                                       {%nt("fin_vp")%} # intransitive verb (ex: "I smoked")
     | advp? vbd_pp                  advp? pp                                    {%nt("fin_vp")%} # intransitive verb with prepositional phrase argument (ex: "I looked at the book")
     | advp? vbd_ap                  advp? ap                                    {%nt("fin_vp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
     | advp? vbd_to_inf_cl           advp? to_inf_cl                             {%nt("fin_vp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp? vbd_bare_inf_cl         advp? bare_inf_cl                           {%nt("fin_vp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped bring the book") 
+    | advp? vbd_bare_inf_cl         advp? bare_inf_cl                           {%nt("fin_vp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
     | advp? vbd_declarative_cl      advp? declarative_cl                        {%nt("fin_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
     | advp? vbd_exclamative_cl      advp? exclamative_cl                        {%nt("fin_vp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
     | advp? vbd_interrogative_cl    advp? interrogative_cl                      {%nt("fin_vp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    |       vbd_vbg_cl                    vbg_cl                                {%nt("fin_vp")%} # past continuous (ex: "I was eating")
+    |       vbd_vbg_cl                    vbg_cl                                {%nt("fin_vp")%} # past continuous (ex: "We were eating")
     |       vbd_vbn_cl                    vbn_cl                                {%nt("fin_vp")%} # past perfect (ex: "He had eaten") OR passive voice (ex: "He was eaten")
     | advp? vbd_np                  advp? np                                    {%nt("fin_vp")%} # transitive verb (ex: "I ate the apple")
     | advp? vbd_np_pp               advp? np              pp                    {%nt("fin_vp")%} # transitive verb with prepositional phrase argument (ex: "I put the book on the table")
@@ -216,7 +315,7 @@ fin_vp ->
     | advp? vbp_pp                  advp? pp                                    {%nt("fin_vp")%} # intransitive verb with prepositional phrase argument (ex: "I look at the book")
     | advp? vbp_ap                  advp? ap                                    {%nt("fin_vp")%} # intransitive verb with adjective phrase argument (ex: "You seem happy")
     | advp? vbp_to_inf_cl           advp? to_inf_cl                             {%nt("fin_vp")%} # intransitive verb with infinitive clause argument (ex: "I want to eat")
-    | advp? vbp_bare_inf_cl         advp? bare_inf_cl                           {%nt("fin_vp")%} # intransitive verb with bare infinitive clause argument (ex: "I might eat")
+    | advp? vbp_bare_inf_cl         advp? bare_inf_cl                           {%nt("fin_vp")%} # intransitive verb with bare infinitive clause argument (ex: "I help clean")
     | advp? vbp_declarative_cl      advp? declarative_cl                        {%nt("fin_vp")%} # intransitive verb with declarative content clause argument (ex: "I know that you eat")
     | advp? vbp_exclamative_cl      advp? exclamative_cl                        {%nt("fin_vp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
     | advp? vbp_interrogative_cl    advp? interrogative_cl                      {%nt("fin_vp")%} # intransitive verb with interrogative clause argument (ex: "I know what you eat")
@@ -753,6 +852,8 @@ advp -> adv  {%nt("advp")%} # an adverb (ex: "quickly")
 
 advp? -> advp:? {%nonterminal_unpack("advp?")%}
 
+not? -> not:? {%nonterminal_unpack("not?")%}
+
 # terminals
 
 det -> %det {%t("det")%}
@@ -764,8 +865,10 @@ noun -> %noun {%t("noun")%}
 preposition -> %preposition {%t("preposition")%}
 to -> %to {%t("to")%}
 s -> %s {%t("s")%}
+not -> %not {%t("not")%}
 that -> %that {%t("that")%}
 interrogative_subordinator -> %interrogative_subordinator {%t("interrogative_subordinator")%}
+modal -> %modal {%t("modal")%}
 vb -> %vb {%t("vb")%}
 vb_pp -> %vb_pp {%t("vb_pp")%}
 vb_ap -> %vb_ap {%t("vb_ap")%}
@@ -885,6 +988,13 @@ adj_pp -> %adj_pp {%t("adj_pp")%}
 adj_declarative_cl -> %adj_declarative_cl {%t("adj_declarative_cl")%}
 adv -> %adv {%t("adv")%}
 wh -> %wh {%t("wh")%}
+why -> %why {%t("why")%}
 how -> %how {%t("how")%}
 precorenp_modifier -> %precorenp_modifier {%t("precorenp_modifier")%}
 postcorenp_modifier -> %postcorenp_modifier {%t("postcorenp_modifier")%}
+is -> %is {%t("is")%}
+are -> %are {%t("are")%}
+were -> %were {%t("were")%}
+does -> %does {%t("does")%}
+do -> %do_ {%t("do")%}
+did -> %did {%t("did")%}

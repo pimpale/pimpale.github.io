@@ -61,6 +61,9 @@
         "to": null,
         "from": null
     },
+    "not": {
+        "not": null
+    },
     "to": {
         "to": null
     },
@@ -105,16 +108,47 @@
         "too": null,
         "altogether": null
     },
+    "modal": {
+        "can": null,
+        "could": null,
+        "may": null,
+        "might": null,
+        "shall": null,
+        "should": null,
+        "will": null,
+        "would": null,
+        "must": null
+    },
     "how": {
         "how": null
+    },
+    "why": {
+        "why": null
     },
     "wh": {
         "who": null,
         "what": null,
         "which": null,
         "where": null,
-        "when": null,
-        "why": null
+        "when": null
+    },
+    "is": {
+        "is": null
+    },
+    "are": {
+        "are": null
+    },
+    "were": {
+        "were": null
+    },
+    "does": {
+        "does": null
+    },
+    "do": {
+        "do": null
+    },
+    "did": {
+        "did": null
     },
     "noun": {
         "apple": null,
@@ -465,7 +499,7 @@
         "feel": null
     },
     "vbd_ap": {
-        "was": null,
+        "were": null,
         "seemed": null,
         "appeared": null,
         "looked": null,
@@ -560,7 +594,7 @@
         "be": null
     },
     "vbd_vbg_cl": {
-        "was": null
+        "were": null
     },
     "vbn_vbg_cl": {
         "been": null
@@ -591,17 +625,6 @@
     },
     "vbp_vbn_cl": {
         "have": null
-    },
-    "vb_aux": {
-        "can": null,
-        "could": null,
-        "may": null,
-        "might": null,
-        "shall": null,
-        "should": null,
-        "will": null,
-        "would": null,
-        "must": null
     },
     "vb_bare_inf_cl": {
         "help": null
