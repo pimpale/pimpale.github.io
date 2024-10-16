@@ -78,7 +78,7 @@
         "big": null,
         "small": null,
         "happy": null,
-        "expensive": null
+        "sad": null
     },
     "adj_pp": {
         "interested": null,
@@ -105,14 +105,16 @@
         "too": null,
         "altogether": null
     },
+    "how": {
+        "how": null
+    },
     "wh": {
         "who": null,
         "what": null,
         "which": null,
         "where": null,
         "when": null,
-        "why": null,
-        "how": null
+        "why": null
     },
     "noun": {
         "apple": null,
@@ -734,6 +736,7 @@
         "complain": null
     },
     "vb_exclamative_cl": {
+        "know": null,
         "tell": null,
         "show": null,
         "explain": null,
@@ -748,6 +751,7 @@
         "say": null
     },
     "vbd_exclamative_cl": {
+        "knew": null,
         "told": null,
         "showed": null,
         "explained": null,
@@ -762,6 +766,7 @@
         "said": null
     },
     "vbn_exclamative_cl": {
+        "known": null,
         "told": null,
         "showed": null,
         "explained": null,
@@ -776,6 +781,7 @@
         "said": null
     },
     "vbg_exclamative_cl": {
+        "knowing": null,
         "telling": null,
         "showing": null,
         "explaining": null,
@@ -790,6 +796,7 @@
         "saying": null
     },
     "vbz_exclamative_cl": {
+        "knows": null,
         "tells": null,
         "shows": null,
         "explains": null,
@@ -804,6 +811,7 @@
         "says": null
     },
     "vbp_exclamative_cl": {
+        "know": null,
         "tell": null,
         "show": null,
         "explain": null,

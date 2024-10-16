@@ -161,8 +161,11 @@ const adv = {test: x => x in english.adv}; // adverbs that don't take any argume
 const precorenp_modifier = {test: x => x in english.precorenp_modifier}; // peripheral modifiers (ex: "even", "all")
 const postcorenp_modifier = {test: x => x in english.postcorenp_modifier}; // peripheral modifiers (ex: "too", "altogether")
 
-// wh-words
-const wh = {test: x => x in english.wh}; // wh-words (ex: "who", "what", "where", "when", "why", "how")
+// wh-words (that replace nouns)
+const wh = {test: x => x in english.wh}; // wh-words (ex: "who", "what", "where", "when", "why")
+
+// replaces adjective phrases
+const how = {test: x => x in english.how}; // how
 
 // define postprocessors
 
@@ -494,6 +497,7 @@ inf_vp_ap_moved ->
 vbn_cl          -> vbn_vp          pp_list                 {%nt("vbn_cl")%}
 vbn_cl_np_moved -> vbn_vp_np_moved pp_list                 {%nt("vbn_cl_np_moved")%}
 vbn_cl_pp_moved -> vbn_vp_pp_moved pp_list                 {%nt("vbn_cl_pp_moved")%}
+vbn_cl_ap_moved -> vbn_vp_ap_moved pp_list                 {%nt("vbn_cl_ap_moved")%}
 
 # a past participle verb phrase
 vbn_vp ->
@@ -556,6 +560,19 @@ vbn_vp_pp_moved ->
     | advp? vbn_np_bare_inf_cl       advp?     np               bare_inf_cl_pp_moved       {%nt("vbn_vp_pp_moved")%} # I know to where you have [helped Bob go]
     | advp? vbn_np_declarative_cl    advp?     np               declarative_cl_pp_moved    {%nt("vbn_vp_pp_moved")%} # I know to where you have [told Bob that you go]
 
+vbn_vp_ap_moved ->
+      advp? vbn_ap                  advp?                                         {%nt("vbn_vp_ap_moved")%} # intransitive verb with adjective phrase argument (ex: "I know how happy you have [seemed]")
+    | advp? vbn_to_inf_cl           advp? to_inf_cl_ap_moved                      {%nt("vbn_vp_ap_moved")%} # intransitive verb with infinitive clause argument (ex: "I know how happy you have [tried to seem]")
+    | advp? vbn_bare_inf_cl         advp? bare_inf_cl_ap_moved                    {%nt("vbn_vp_ap_moved")%} # intransitive verb with bare infinitive clause argument (ex: "I know how happy you have [helped seem]") 
+    | advp? vbn_declarative_cl      advp? declarative_cl_ap_moved                 {%nt("vbn_vp_ap_moved")%} # intransitive verb with declarative content clause argument (ex: "I know how happy you have [known that you are]")
+    |       vbn_vbg_cl                    vbg_cl_ap_moved                         {%nt("vbn_vp_ap_moved")%} # past continuous (ex: "I know how happy you have [been seeming]")
+    |       vbn_vbn_cl                    vbn_cl_ap_moved                         {%nt("vbn_vp_ap_moved")%} # past perfect (ex: "I know how happy you have [seemed]") OR passive voice (ex: "I know how good bob has [been considered]")
+    | advp? vbn_np_ap               advp? np                                      {%nt("vbn_vp_ap_moved")%} # transitive verb with adjective phrase argument (ex: "I know how happy I have [found you]")
+    | advp? vbn_np_to_inf_cl        advp? np              to_inf_cl_ap_moved      {%nt("vbn_vp_ap_moved")%} # transitive verb with infinitive verb argument (ex: "I know how skilled I have [asked you to become]")
+    | advp? vbn_np_bare_inf_cl      advp? np              bare_inf_cl_ap_moved    {%nt("vbn_vp_ap_moved")%} # transitive verb with bare infinitive verb argument (ex: "I know how skilled bob has [made you become]")
+    | advp? vbn_np_declarative_cl   advp? np              declarative_cl_ap_moved {%nt("vbn_vp_ap_moved")%} # transitive verb with declarative content clause argument (ex: "I know how happy I have [told you that you are]")
+
+
 vbg_cl          -> vbg_vp           pp_list                 {%nt("vbg_cl")%}
 vbg_cl_np_moved -> vbg_vp_np_moved  pp_list                 {%nt("vbg_cl_np_moved")%}
 vbg_cl_pp_moved -> vbg_vp_pp_moved  pp_list                 {%nt("vbg_cl_pp_moved")%}
@@ -611,27 +628,40 @@ vbg_vp_np_moved ->
     | advp? vbg_np_np                advp? to                     np                      {%nt("vbg_vp_np_moved")%} # I know who you have [given the book to]
 
 
-# past participle verb phrase with a prepositional phrase moved
+# present participle verb phrase with a prepositional phrase moved
 vbg_vp_pp_moved ->
-      advp? vbg_pp                   advp?                                                 {%nt("vbg_vp_pp_moved")%} # I know to where you have [gone]
-    | advp? vbg_ap                   advp?     ap_pp_moved                                 {%nt("vbg_vp_pp_moved")%} # I know at what you have [seemed good]
-    | advp? vbg_to_inf_cl            advp?     to_inf_cl_pp_moved                          {%nt("vbg_vp_pp_moved")%} # I know to where you have [asked to go]
-    | advp? vbg_bare_inf_cl          advp?     bare_inf_cl_pp_moved                        {%nt("vbg_vp_pp_moved")%} # I know to where you have [helped go]
-    | advp? vbg_declarative_cl       advp?     declarative_cl_pp_moved                     {%nt("vbg_vp_pp_moved")%} # I know to where you have [said that you go]
-    | advp? vbg_np_pp                advp?     np                                          {%nt("vbg_vp_pp_moved")%} # I know on what you have [put the book]
-    | advp? vbg_np_ap                advp?     np               ap_pp_moved                {%nt("vbg_vp_pp_moved")%} # I know at what you have [considered Bob good]
-    | advp? vbg_np_to_inf_cl         advp?     np               to_inf_cl_pp_moved         {%nt("vbg_vp_pp_moved")%} # I know to where you have [asked Bob to go]
-    | advp? vbg_np_bare_inf_cl       advp?     np               bare_inf_cl_pp_moved       {%nt("vbg_vp_pp_moved")%} # I know to where you have [helped Bob go]
-    | advp? vbg_np_declarative_cl    advp?     np               declarative_cl_pp_moved    {%nt("vbg_vp_pp_moved")%} # I know to where you have [told Bob that you go]
+      advp? vbg_pp                   advp?                                                 {%nt("vbg_vp_pp_moved")%} # I know to where you are [going]
+    | advp? vbg_ap                   advp?     ap_pp_moved                                 {%nt("vbg_vp_pp_moved")%} # I know at what you are [seeming good]
+    | advp? vbg_to_inf_cl            advp?     to_inf_cl_pp_moved                          {%nt("vbg_vp_pp_moved")%} # I know to where you are [asking to go]
+    | advp? vbg_bare_inf_cl          advp?     bare_inf_cl_pp_moved                        {%nt("vbg_vp_pp_moved")%} # I know to where you are [helping go]
+    | advp? vbg_declarative_cl       advp?     declarative_cl_pp_moved                     {%nt("vbg_vp_pp_moved")%} # I know to where you are [saying that you go]
+    | advp? vbg_np_pp                advp?     np                                          {%nt("vbg_vp_pp_moved")%} # I know on what you are [putting the xbook]
+    | advp? vbg_np_ap                advp?     np               ap_pp_moved                {%nt("vbg_vp_pp_moved")%} # I know at what you are [considering Bob good]
+    | advp? vbg_np_to_inf_cl         advp?     np               to_inf_cl_pp_moved         {%nt("vbg_vp_pp_moved")%} # I know to where you are [asking Bob to go]
+    | advp? vbg_np_bare_inf_cl       advp?     np               bare_inf_cl_pp_moved       {%nt("vbg_vp_pp_moved")%} # I know to where you are [helping Bob go]
+    | advp? vbg_np_declarative_cl    advp?     np               declarative_cl_pp_moved    {%nt("vbg_vp_pp_moved")%} # I know to where you are [telling Bob that you go]
+
+# present participle verb phrase with an adjective phrase moved
+vbg_vp_ap_moved ->
+      advp? vbg_ap                  advp?                                         {%nt("vbg_vp_ap_moved")%} # intransitive verb with adjective phrase argument (ex: "I know how happy you are [seeming]")
+    | advp? vbg_to_inf_cl           advp? to_inf_cl_ap_moved                      {%nt("vbg_vp_ap_moved")%} # intransitive verb with infinitive clause argument (ex: "I know how happy you are [trying to seem]")
+    | advp? vbg_bare_inf_cl         advp? bare_inf_cl_ap_moved                    {%nt("vbg_vp_ap_moved")%} # intransitive verb with bare infinitive clause argument (ex: "I know how happy you are [helping seem]") 
+    | advp? vbg_declarative_cl      advp? declarative_cl_ap_moved                 {%nt("vbg_vp_ap_moved")%} # intransitive verb with declarative content clause argument (ex: "I know how happy you are [knowing that you are]")
+    |       vbg_vbg_cl                    vbg_cl_ap_moved                         {%nt("vbg_vp_ap_moved")%} # past continuous (ex: "I know how happy you are [being seeming]")
+    |       vbg_vbn_cl                    vbn_cl_ap_moved                         {%nt("vbg_vp_ap_moved")%} # past perfect (ex: "I know how happy you are [seeming]") OR passive voice (ex: "I know how good bob is [being considered]")
+    | advp? vbg_np_ap               advp? np                                      {%nt("vbg_vp_ap_moved")%} # transitive verb with adjective phrase argument (ex: "I know how happy I am [finding you]")
+    | advp? vbg_np_to_inf_cl        advp? np              to_inf_cl_ap_moved      {%nt("vbg_vp_ap_moved")%} # transitive verb with infinitive verb argument (ex: "I know how skilled I am [asking you to become]")
+    | advp? vbg_np_bare_inf_cl      advp? np              bare_inf_cl_ap_moved    {%nt("vbg_vp_ap_moved")%} # transitive verb with bare infinitive verb argument (ex: "I know how skilled bob is [making you become]")
+    | advp? vbg_np_declarative_cl   advp? np              declarative_cl_ap_moved {%nt("vbg_vp_ap_moved")%} # transitive verb with declarative content clause argument (ex: "I know how happy I am [telling you that you are]")
 
 
 # a declarative content clause
 declarative_cl ->  that decl_fin_cl                   {%nt("declarative_cl")%}
 
-# an exclamative content clause (TODO)
+# an exclamative content clause
 exclamative_cl -> 
       how advp decl_fin_cl            {%nt("exclamative_cl")%} # how quickly mary became happy
-    | how ap decl_fin_cl_ap_moved     {%nt("exclamative_cl")%} # how happy mary became
+    | how ap np fin_vp_ap_moved     {%nt("exclamative_cl")%} # how happy mary became
 
 # an interrogative content clause
 interrogative_cl -> 
@@ -653,6 +683,10 @@ declarative_cl_pp_moved ->
       that np fin_vp_pp_moved    pp_list          {%nt("declarative_cl_pp_moved")%}
     | that np fin_vp             pp_list          {%nt("declarative_cl_pp_moved")%}
 
+# a content clause with some ap moved
+declarative_cl_ap_moved ->
+      that np fin_vp_ap_moved    pp_list          {%nt("declarative_cl_ap_moved")%}
+    | that np fin_vp             pp_list          {%nt("declarative_cl_ap_moved")%}
 
 np ->
     precorenp_modifier_list core_np postcorenp_modifier_list  {%nt("np")%}
@@ -851,5 +885,6 @@ adj_pp -> %adj_pp {%t("adj_pp")%}
 adj_declarative_cl -> %adj_declarative_cl {%t("adj_declarative_cl")%}
 adv -> %adv {%t("adv")%}
 wh -> %wh {%t("wh")%}
+how -> %how {%t("how")%}
 precorenp_modifier -> %precorenp_modifier {%t("precorenp_modifier")%}
 postcorenp_modifier -> %postcorenp_modifier {%t("postcorenp_modifier")%}
