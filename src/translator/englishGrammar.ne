@@ -219,16 +219,19 @@ subj_aux_inv_cl ->
       modal         not? np bare_inf_cl      {%nt("subj_aux_inv_cl")%} # can you eat?
 # preterite
     | were          not? np ap               {%nt("subj_aux_inv_cl")%} # were you happy? (`be` when used as a copula)
+    | were          not? np np               {%nt("subj_aux_inv_cl")%} # were you a watchman? (`be` when used as an equative)
     | vbd_vbg_cl    not? np vbg_cl           {%nt("subj_aux_inv_cl")%} # were you eating?
     | vbd_vbn_cl    not? np vbn_cl           {%nt("subj_aux_inv_cl")%} # were you eaten? / had you eaten?
     | did           not? np bare_inf_cl      {%nt("subj_aux_inv_cl")%} # did you eat?
 # present (non-3rd person singular)
     | are           not? np ap               {%nt("subj_aux_inv_cl")%} # are you happy?
+    | are           not? np np               {%nt("subj_aux_inv_cl")%} # are you a watchman?
     | vbp_vbg_cl    not? np vbg_cl           {%nt("subj_aux_inv_cl")%} # are you eating?
     | vbp_vbn_cl    not? np vbn_cl           {%nt("subj_aux_inv_cl")%} # have you eaten?
     | do            not? np bare_inf_cl      {%nt("subj_aux_inv_cl")%} # do you eat?
 # present (3rd person singular)
     | is            not? np ap               {%nt("subj_aux_inv_cl")%} # is he happy?
+    | is            not? np np               {%nt("subj_aux_inv_cl")%} # is he a watchman?
     | vbz_vbg_cl    not? np vbg_cl           {%nt("subj_aux_inv_cl")%} # is he eating?
     | vbz_vbn_cl    not? np vbn_cl           {%nt("subj_aux_inv_cl")%} # has he eaten?
     | does          not? np bare_inf_cl      {%nt("subj_aux_inv_cl")%} # does he eat?
