@@ -23,6 +23,8 @@ function testNearley(input: string): TreeNode[] {
     // Parse something!
     parser.feed(tokens as any);
 
+    console.log(parser.results);
+
     // parser.results is an array of possible parsings.
     return parser.results as TreeNode[];
 }

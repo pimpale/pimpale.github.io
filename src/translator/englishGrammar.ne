@@ -236,55 +236,55 @@ subj_aux_inv_cl ->
 
 subj_aux_inv_cl_np_moved ->
 # modal (move from head)
-      modal         not? bare_inf_cl                  {%nt("subj_aux_inv_cl")%} # who [can sing]?
+      modal         not? bare_inf_cl                  {%nt("subj_aux_inv_cl_np_moved")%} # who [can sing]?
 # modal (move from argument)
-    | modal         not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl")%} # what [can you sing]?
+    | modal         not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl_np_moved")%} # what [can you sing]?
 # preterite (move from head)
-    | were          not? ap                           {%nt("subj_aux_inv_cl")%} # who [was happy]? (`be` when used as a copula)
-    | vbd_vbg_cl    not? vbg_cl                       {%nt("subj_aux_inv_cl")%} # who [was eating]?
-    | vbd_vbn_cl    not? vbn_cl                       {%nt("subj_aux_inv_cl")%} # who [was eaten]? / who [had eaten]?
-    | did           not? bare_inf_cl                  {%nt("subj_aux_inv_cl")%} # who [didn't eat]?
+    | were          not? ap                           {%nt("subj_aux_inv_cl_np_moved")%} # who [was happy]? (`be` when used as a copula)
+    | vbd_vbg_cl    not? vbg_cl                       {%nt("subj_aux_inv_cl_np_moved")%} # who [was eating]?
+    | vbd_vbn_cl    not? vbn_cl                       {%nt("subj_aux_inv_cl_np_moved")%} # who [was eaten]? / who [had eaten]?
+    | did           not? bare_inf_cl                  {%nt("subj_aux_inv_cl_np_moved")%} # who [didn't eat]?
 # preterite (move from argument)
-    | vbd_vbg_cl    not? np vbg_cl_np_moved           {%nt("subj_aux_inv_cl")%} # what [were you eating]?
-    | vbd_vbn_cl    not? np vbn_cl_np_moved           {%nt("subj_aux_inv_cl")%} # what [were you given]? / what [had you eaten]?
-    | did           not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl")%} # what [did you eat]?
+    | vbd_vbg_cl    not? np vbg_cl_np_moved           {%nt("subj_aux_inv_cl_np_moved")%} # what [were you eating]?
+    | vbd_vbn_cl    not? np vbn_cl_np_moved           {%nt("subj_aux_inv_cl_np_moved")%} # what [were you given]? / what [had you eaten]?
+    | did           not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl_np_moved")%} # what [did you eat]?
 # present (non-3rd person singular) (move from head)
-    | are           not? ap                           {%nt("subj_aux_inv_cl")%} # who [are happy]?
-    | vbp_vbg_cl    not? vbg_cl                       {%nt("subj_aux_inv_cl")%} # who [are eating]?
-    | vbp_vbn_cl    not? vbn_cl                       {%nt("subj_aux_inv_cl")%} # who [are eaten]? / who [has eaten]?
-    | do            not? bare_inf_cl                  {%nt("subj_aux_inv_cl")%} # who [don't eat]?
+    | are           not? ap                           {%nt("subj_aux_inv_cl_np_moved")%} # who [are happy]?
+    | vbp_vbg_cl    not? vbg_cl                       {%nt("subj_aux_inv_cl_np_moved")%} # who [are eating]?
+    | vbp_vbn_cl    not? vbn_cl                       {%nt("subj_aux_inv_cl_np_moved")%} # who [are eaten]? / who [has eaten]?
+    | do            not? bare_inf_cl                  {%nt("subj_aux_inv_cl_np_moved")%} # who [don't eat]?
 # present (non-3rd person singular) (move from argument)
-    | vbp_vbg_cl    not? np vbg_cl_np_moved           {%nt("subj_aux_inv_cl")%} # what [are you eating]?
-    | vbp_vbn_cl    not? np vbn_cl_np_moved           {%nt("subj_aux_inv_cl")%} # what [are you given]? / what [have you eaten]?
-    | do            not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl")%} # what [do you eat]?
+    | vbp_vbg_cl    not? np vbg_cl_np_moved           {%nt("subj_aux_inv_cl_np_moved")%} # what [are you eating]?
+    | vbp_vbn_cl    not? np vbn_cl_np_moved           {%nt("subj_aux_inv_cl_np_moved")%} # what [are you given]? / what [have you eaten]?
+    | do            not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl_np_moved")%} # what [do you eat]?
 # present (3rd person singular) (move from head)
-    | is            not? ap                           {%nt("subj_aux_inv_cl")%} # who [is happy]?
-    | vbz_vbg_cl    not? vbg_cl                       {%nt("subj_aux_inv_cl")%} # who [is eating]?
-    | vbz_vbn_cl    not? vbn_cl                       {%nt("subj_aux_inv_cl")%} # who [is eaten]? / who [has eaten]?
-    | does          not? bare_inf_cl                  {%nt("subj_aux_inv_cl")%} # who [doesn't eat]?
+    | is            not? ap                           {%nt("subj_aux_inv_cl_np_moved")%} # who [is happy]?
+    | vbz_vbg_cl    not? vbg_cl                       {%nt("subj_aux_inv_cl_np_moved")%} # who [is eating]?
+    | vbz_vbn_cl    not? vbn_cl                       {%nt("subj_aux_inv_cl_np_moved")%} # who [is eaten]? / who [has eaten]?
+    | does          not? bare_inf_cl                  {%nt("subj_aux_inv_cl_np_moved")%} # who [doesn't eat]?
 # present (3rd person singular) (move from argument)
-    | vbz_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # what [is he eating]?
-    | vbz_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # what [is he given]? / what [has he eaten]?
-    | does          not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # what [does he eat]?
+    | vbz_vbg_cl    not? np vbg_cl_np_moved           {%nt("subj_aux_inv_cl_np_moved")%} # what [is he eating]?
+    | vbz_vbn_cl    not? np vbn_cl_np_moved           {%nt("subj_aux_inv_cl_np_moved")%} # what [is he given]? / what [has he eaten]?
+    | does          not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl_np_moved")%} # what [does he eat]?
 
 
 subj_aux_inv_cl_ap_moved ->
-      modal         not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # how [can you eat]?
+      modal         not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl_ap_moved")%} # how [can you eat]?
 # preterite
-    | were          not? np                           {%nt("subj_aux_inv_cl")%} # how [were you]? (`be` when used as a copula)
-    | vbd_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [were you feeling]?
-    | vbd_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [were you found]? / how [had you felt]?
-    | did           not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # how [did you feel]?
+    | were          not? np                           {%nt("subj_aux_inv_cl_ap_moved")%} # how [were you]? (`be` when used as a copula)
+    | vbd_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl_ap_moved")%} # how [were you feeling]?
+    | vbd_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl_ap_moved")%} # how [were you found]? / how [had you felt]?
+    | did           not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl_ap_moved")%} # how [did you feel]?
 # present (non-3rd person singular)
-    | are           not? np                           {%nt("subj_aux_inv_cl")%} # how [are you]?
-    | vbp_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [are you feeling]?
-    | vbp_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [are you found] / how [have you felt]?
-    | do            not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # how [do you feel]?
+    | are           not? np                           {%nt("subj_aux_inv_cl_ap_moved")%} # how [are you]?
+    | vbp_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl_ap_moved")%} # how [are you feeling]?
+    | vbp_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl_ap_moved")%} # how [are you found] / how [have you felt]?
+    | do            not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl_ap_moved")%} # how [do you feel]?
 # present (3rd person singular)
-    | is            not? np                           {%nt("subj_aux_inv_cl")%} # how [is he]?
-    | vbz_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [is he feeling]?
-    | vbz_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl")%} # how [is he found] / how [has he felt]?
-    | does          not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl")%} # how [does he feel]?
+    | is            not? np                           {%nt("subj_aux_inv_cl_ap_moved")%} # how [is he]?
+    | vbz_vbg_cl    not? np vbg_cl_ap_moved           {%nt("subj_aux_inv_cl_ap_moved")%} # how [is he feeling]?
+    | vbz_vbn_cl    not? np vbn_cl_ap_moved           {%nt("subj_aux_inv_cl_ap_moved")%} # how [is he found] / how [has he felt]?
+    | does          not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl_ap_moved")%} # how [does he feel]?
 
 fin_vp -> 
 # modal
