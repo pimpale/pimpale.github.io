@@ -163,6 +163,7 @@ const did = {test: x => x in english.did};
 const adj = {test: x => x in english.adj}; // adjectives that don't take any arguments (ex: "happy")
 const adj_pp = {test: x => x in english.adj_pp}; // adjectives that take a prepositional phrase argument (ex: "fond of cheese")
 const adj_declarative_cl = {test: x => x in english.adj_declarative_cl}; // adjectives that take a declarative clause argument (ex: "happy that you could make it")
+const adj_to_inf_cl = {test: x => x in english.adj_to_inf_cl}; // adjectives that take an infinitive clause argument (ex: "happy to see you")
 
 
 // adverbs
@@ -202,16 +203,16 @@ sentence ->
     | question_cl {%nt("sentence")%}
 
 # a declarative finite clause
-decl_fin_cl -> pp_list np fin_vp pp_list {%nt("decl_fin_cl")%}
+decl_fin_cl -> adjunct_list np fin_vp adjunct_list {%nt("decl_fin_cl")%}
 
 # a question clause
 question_cl -> 
-                subj_aux_inv_cl          pp_list {%nt("question_cl")%} # are you happy?
-    | wh        fin_vp                   pp_list {%nt("question_cl")%} # who ate that?
-    | wh        subj_aux_inv_cl_np_moved pp_list {%nt("question_cl")%} # what did you eat?
-    | why       subj_aux_inv_cl          pp_list {%nt("question_cl")%}
-    | how advp? subj_aux_inv_cl          pp_list {%nt("question_cl")%} # how did you eat the apple?
-    | how       subj_aux_inv_cl_ap_moved pp_list {%nt("question_cl")%} # how happy are you?
+                subj_aux_inv_cl          adjunct_list {%nt("question_cl")%} # are you happy?
+    | wh        fin_vp                   adjunct_list {%nt("question_cl")%} # who ate that?
+    | wh        subj_aux_inv_cl_np_moved adjunct_list {%nt("question_cl")%} # what did you eat?
+    | why       subj_aux_inv_cl          adjunct_list {%nt("question_cl")%}
+    | how advp? subj_aux_inv_cl          adjunct_list {%nt("question_cl")%} # how did you eat the apple?
+    | how       subj_aux_inv_cl_ap_moved adjunct_list {%nt("question_cl")%} # how happy are you?
 
 
 subj_aux_inv_cl ->
@@ -510,17 +511,17 @@ fin_vp_ap_moved ->
     | advp? vbz_np_declarative_cl   advp? np              declarative_cl_ap_moved {%nt("fin_vp_ap_moved")%} # transitive verb with declarative content clause argument (ex: "I know how happy he [tells you that you are]")
 
 # a non-finite clause starting with "to"
-to_inf_cl -> to bare_inf_cl                                  {%nt("to_inf_cl")%}
-to_inf_cl_np_moved -> to bare_inf_cl_np_moved                {%nt("to_inf_cl_np_moved")%}
-to_inf_cl_pp_moved -> to bare_inf_cl_pp_moved                {%nt("to_inf_cl_pp_moved")%}
-to_inf_cl_ap_moved -> to bare_inf_cl_ap_moved                {%nt("to_inf_cl_pp_moved")%}
+to_inf_cl ->            to inf_vp          adjunct_list                {%nt("to_inf_cl")%}
+to_inf_cl_np_moved ->   to inf_vp_np_moved adjunct_list                {%nt("to_inf_cl_np_moved")%}
+to_inf_cl_pp_moved ->   to inf_vp_pp_moved adjunct_list                {%nt("to_inf_cl_pp_moved")%}
+to_inf_cl_ap_moved ->   to inf_vp_ap_moved adjunct_list                {%nt("to_inf_cl_ap_moved")%}
 
 
 # a non-finite clause with a bare infinitive
-bare_inf_cl -> inf_vp pp_list                                {%nt("bare_inf_cl")%}
-bare_inf_cl_np_moved -> inf_vp_np_moved pp_list              {%nt("bare_inf_cl_np_moved")%}
-bare_inf_cl_pp_moved -> inf_vp_pp_moved pp_list              {%nt("bare_inf_cl_pp_moved")%}
-bare_inf_cl_ap_moved -> inf_vp_ap_moved pp_list              {%nt("bare_inf_cl_ap_moved")%}
+bare_inf_cl -> inf_vp adjunct_list                                {%nt("bare_inf_cl")%}
+bare_inf_cl_np_moved -> inf_vp_np_moved adjunct_list              {%nt("bare_inf_cl_np_moved")%}
+bare_inf_cl_pp_moved -> inf_vp_pp_moved adjunct_list              {%nt("bare_inf_cl_pp_moved")%}
+bare_inf_cl_ap_moved -> inf_vp_ap_moved adjunct_list              {%nt("bare_inf_cl_ap_moved")%}
 
 # a non-finite verb phrase
 inf_vp ->
@@ -596,10 +597,10 @@ inf_vp_ap_moved ->
     | advp? vb_np_bare_inf_cl      advp? np              bare_inf_cl_ap_moved    {%nt("inf_vp_ap_moved")%} # transitive verb with bare infinitive verb argument (ex: "I know how skilled bob wants to [make you become]")
     | advp? vb_np_declarative_cl   advp? np              declarative_cl_ap_moved {%nt("inf_vp_ap_moved")%} # transitive verb with declarative content clause argument (ex: "I know how happy I want to [tell you that you are]")
 
-vbn_cl          -> vbn_vp          pp_list                 {%nt("vbn_cl")%}
-vbn_cl_np_moved -> vbn_vp_np_moved pp_list                 {%nt("vbn_cl_np_moved")%}
-vbn_cl_pp_moved -> vbn_vp_pp_moved pp_list                 {%nt("vbn_cl_pp_moved")%}
-vbn_cl_ap_moved -> vbn_vp_ap_moved pp_list                 {%nt("vbn_cl_ap_moved")%}
+vbn_cl          -> vbn_vp          adjunct_list                 {%nt("vbn_cl")%}
+vbn_cl_np_moved -> vbn_vp_np_moved adjunct_list                 {%nt("vbn_cl_np_moved")%}
+vbn_cl_pp_moved -> vbn_vp_pp_moved adjunct_list                 {%nt("vbn_cl_pp_moved")%}
+vbn_cl_ap_moved -> vbn_vp_ap_moved adjunct_list                 {%nt("vbn_cl_ap_moved")%}
 
 # a past participle verb phrase
 vbn_vp ->
@@ -675,10 +676,10 @@ vbn_vp_ap_moved ->
     | advp? vbn_np_declarative_cl   advp? np              declarative_cl_ap_moved {%nt("vbn_vp_ap_moved")%} # transitive verb with declarative content clause argument (ex: "I know how happy I have [told you that you are]")
 
 
-vbg_cl          -> vbg_vp           pp_list                 {%nt("vbg_cl")%}
-vbg_cl_np_moved -> vbg_vp_np_moved  pp_list                 {%nt("vbg_cl_np_moved")%}
-vbg_cl_pp_moved -> vbg_vp_pp_moved  pp_list                 {%nt("vbg_cl_pp_moved")%}
-vbg_cl_ap_moved -> vbg_vp_ap_moved  pp_list                 {%nt("vbg_cl_ap_moved")%}
+vbg_cl          -> vbg_vp           adjunct_list                 {%nt("vbg_cl")%}
+vbg_cl_np_moved -> vbg_vp_np_moved  adjunct_list                 {%nt("vbg_cl_np_moved")%}
+vbg_cl_pp_moved -> vbg_vp_pp_moved  adjunct_list                 {%nt("vbg_cl_pp_moved")%}
+vbg_cl_ap_moved -> vbg_vp_ap_moved  adjunct_list                 {%nt("vbg_cl_ap_moved")%}
 
 
 # present participle / gerund verb phrase
@@ -767,28 +768,28 @@ exclamative_cl ->
 
 # an interrogative content clause
 interrogative_cl -> 
-      wh_np                      np fin_vp_np_moved              pp_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the core arguments
-    | wh_np                         fin_vp                       pp_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the agent
-    | wh_pp                      np fin_vp_pp_moved              pp_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the core arguments using pied piping (ex: "at where I look")
-    | wh_pp                      np fin_vp                       pp_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the adjuncts using pied piping (ex: "to where I go")
-    | wh_np                      np fin_vp          preposition  pp_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the adjuncts using preposition stranding (ex: "where I go to")    
-    | interrogative_subordinator np fin_vp                       pp_list                    {%nt("interrogative_cl")%} # closed interrogative clause (ex: "whether you eat the apple")
+      wh_np                      np fin_vp_np_moved              adjunct_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the core arguments
+    | wh_np                         fin_vp                       adjunct_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the agent
+    | wh_pp                      np fin_vp_pp_moved              adjunct_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the core arguments using pied piping (ex: "at where I look")
+    | wh_pp                      np fin_vp                       adjunct_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the adjuncts using pied piping (ex: "to where I go")
+    | wh_np                      np fin_vp          preposition  adjunct_list                    {%nt("interrogative_cl")%} # open interrogative clause with move from the adjuncts using preposition stranding (ex: "where I go to")    
+    | interrogative_subordinator np fin_vp                       adjunct_list                    {%nt("interrogative_cl")%} # closed interrogative clause (ex: "whether you eat the apple")
 
 # a content clause with some np moved
 declarative_cl_np_moved ->
-      that    fin_vp                      pp_list          {%nt("declarative_cl_np_moved")%}
-    | that np fin_vp_np_moved             pp_list          {%nt("declarative_cl_np_moved")%}
-    | that np fin_vp          preposition pp_list          {%nt("declarative_cl_np_moved")%}
+      that    fin_vp                      adjunct_list          {%nt("declarative_cl_np_moved")%}
+    | that np fin_vp_np_moved             adjunct_list          {%nt("declarative_cl_np_moved")%}
+    | that np fin_vp          preposition adjunct_list          {%nt("declarative_cl_np_moved")%}
 
 # a content clause with some pp moved
 declarative_cl_pp_moved ->
-      that np fin_vp_pp_moved    pp_list          {%nt("declarative_cl_pp_moved")%}
-    | that np fin_vp             pp_list          {%nt("declarative_cl_pp_moved")%}
+      that np fin_vp_pp_moved    adjunct_list          {%nt("declarative_cl_pp_moved")%}
+    | that np fin_vp             adjunct_list          {%nt("declarative_cl_pp_moved")%}
 
 # a content clause with some ap moved
 declarative_cl_ap_moved ->
-      that np fin_vp_ap_moved    pp_list          {%nt("declarative_cl_ap_moved")%}
-    | that np fin_vp             pp_list          {%nt("declarative_cl_ap_moved")%}
+      that np fin_vp_ap_moved    adjunct_list          {%nt("declarative_cl_ap_moved")%}
+    | that np fin_vp             adjunct_list          {%nt("declarative_cl_ap_moved")%}
 
 np ->
     precorenp_modifier_list core_np postcorenp_modifier_list  {%nt("np")%}
@@ -821,10 +822,15 @@ dp -> det         {%nt("det")%} # the, a, an, some, this, that
     | pronoun_pos {%nt("det")%} # a possessive pronoun (ex: "my", "yours", "his", "hers", "ours", "theirs")
 
 
+
+adjunct_list -> adjunct:* {%nonterminal_unpack("adjunct_list")%}
+
+adjunct ->
+      pp             {%nt("adjunct")%} # a prepositional phrase adjunct (ex: "in the house")
+    | advp           {%nt("adjunct")%} # an adverb phrase adjunct (ex: "quickly")
+
 # a prepositional phrase
 pp ->   preposition np {%nt("pp")%}
-
-pp_list -> pp:* {%nonterminal_unpack("pp_list")%}
 
 # a prepositional phrase that has been moved to the front (pied piping)
 wh_pp ->   preposition wh_np {%nt("wh_pp")%}
@@ -835,27 +841,32 @@ ap ->
     | adj                                   {%nt("ap")%} # an adjective (ex: "happy")
     | adj_pp                pp              {%nt("ap")%} # an adjective with a prepositional phrase argument (ex: "fond of music")
     | adj_declarative_cl    declarative_cl  {%nt("ap")%} # an adjective with a declarative content clause argument (ex: "happy that you are here")
+    | adj_to_inf_cl         to_inf_cl       {%nt("ap")%} # an adjective with an infinitive clause argument (ex: "happy to be here")
 
 ap_pp_moved ->                                     
       advp ap_pp_moved                              {%nt("ap_pp_moved")%}
     | adj_pp                                        {%nt("ap_pp_moved")%}
     | adj_declarative_cl declarative_cl_pp_moved    {%nt("ap_pp_moved")%}
+    | adj_to_inf_cl to_inf_cl_pp_moved              {%nt("ap_pp_moved")%}
 
 ap_np_moved ->                                     
       advp ap_np_moved                              {%nt("ap_np_moved")%}
     | adj_pp             preposition                {%nt("ap_np_moved")%}
     | adj_declarative_cl declarative_cl_np_moved    {%nt("ap_np_moved")%}
+    | adj_to_inf_cl      to_inf_cl_np_moved         {%nt("ap_np_moved")%}
 
 # a sequence of aps
 ap_list -> ap:* {%nonterminal_unpack("ap_list")%}
 
 # an adverb phrase
-advp -> adv  {%nt("advp")%} # an adverb (ex: "quickly")
-      | adv advp {%nt("advp")%} # an adverb phrase preceeded by another adverb phrase (ex: "very quickly")
+advp -> adv             {%nt("advp")%} # an adverb (ex: "quickly")
+      | adv advp        {%nt("advp")%} # an adverb phrase preceeded by another adverb phrase (ex: "very quickly")
 
-advp? -> advp:? {%nonterminal_unpack("advp?")%}
+advp? -> advp       {%nt("advp?")%}
+       | null       {%nt("advp?")%}
 
-not? -> not:? {%nonterminal_unpack("not?")%}
+not? -> not         {%nt("not?")%}
+      | null        {%nt("not?")%}
 
 # terminals
 
@@ -989,6 +1000,7 @@ vbz_np_np -> %vbz_np_np {%t("vbz_np_np")%}
 adj -> %adj {%t("adj")%}
 adj_pp -> %adj_pp {%t("adj_pp")%}
 adj_declarative_cl -> %adj_declarative_cl {%t("adj_declarative_cl")%}
+adj_to_inf_cl -> %adj_to_inf_cl {%t("adj_to_inf_cl")%}
 adv -> %adv {%t("adv")%}
 wh -> %wh {%t("wh")%}
 why -> %why {%t("why")%}
