@@ -16,7 +16,7 @@ export interface CitationComponents {
 
 export interface CitationManagerProps {
   prefix: string,
-  children: (c: CitationComponents) => React.ReactChild
+  children: (c: CitationComponents) => React.ReactElement
 }
 
 

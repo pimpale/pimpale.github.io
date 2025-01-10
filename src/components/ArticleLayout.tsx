@@ -5,7 +5,7 @@ import CitationManager, { CitationComponents } from '../components/CitationManag
 import 'katex/dist/katex.min.css';
 
 export interface ArticleLayoutProps {
-  children: (c: CitationComponents) => React.ReactChild
+  children: (c: CitationComponents) => React.ReactElement
 }
 
 const ArticleLayout = (props: ArticleLayoutProps) => <Layout>

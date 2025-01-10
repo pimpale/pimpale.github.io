@@ -1,1 +1,0 @@
-import{b as o,g as a}from"./index-BCoGhUYq.js";var t={},r;function i(){if(r)return t;r=1;var e=o();return t.createRoot=e.createRoot,t.hydrateRoot=e.hydrateRoot,t}var c=i();const s=a(c);export{s as R,c};

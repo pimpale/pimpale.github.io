@@ -20,7 +20,7 @@ type RotatedProps = {
   distance: number,
   // when collapsed should this be its own row
   ownRow?: boolean
-  children: React.ReactChild
+  children: React.ReactElement | React.ReactElement[]
 }
 
 function Rotated(props: RotatedProps) {

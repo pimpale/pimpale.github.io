@@ -182,17 +182,15 @@ const Technology = () => <ArticleLayout>{
   </>
 }</ArticleLayout>
 
-import ReactDOM from 'react-dom';
 
+import {createRoot} from 'react-dom/client';
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
-import { colorScheme } from '../utils/colorscheme';
-import chroma from 'chroma-js';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
-    <Technology />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <Technology/>
+  </React.StrictMode>
 );

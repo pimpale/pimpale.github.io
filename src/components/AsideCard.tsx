@@ -3,7 +3,7 @@ import React from 'react';
 type AsideCardProps = {
   title: string,
   id?: string,
-  children: React.ReactNode | React.ReactNodeArray,
+  children: string | React.ReactElement | (string | React.ReactElement)[],
 }
 
 

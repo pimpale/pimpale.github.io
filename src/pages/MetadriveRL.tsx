@@ -1,4 +1,5 @@
 import Layout from '../components/Layout';
+import ArticleLayout from '../components/ArticleLayout';
 import Section from '../components/Section';
 
 const PolicyGradientDerivationUrl = "./assets/metadrive_rl/policygradient.html";
@@ -43,16 +44,15 @@ const MetadriveRL = () =>
 
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 // Bootstrap CSS & JS
 import '../styles/style.scss';
 import 'bootstrap/dist/js/bootstrap';
-import ArticleLayout from '../components/ArticleLayout';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
     <MetadriveRL />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
