@@ -86,7 +86,13 @@ export const articleData: Map<string, Article> = new Map([
   ["english-parser", {
     name: "Constituency Parsing English",
     url: '../parse_english.html',
-    published: parse("14 Jul 2023", "d MMM y", new Date()),
+    published: parse("14 Jul 2024", "d MMM y", new Date()),
+    listed: true,
+  }],
+  ["linear-vs-logit-osl", {
+    name: "Linear vs Logit Observational Scaling Laws",
+    url: '../linear_vs_logit_observational_scaling_laws.html',
+    published: parse("2 Feb 2025", "d MMM y", new Date()),
     listed: true,
   }]
 ]);
