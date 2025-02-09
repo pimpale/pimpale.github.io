@@ -47,11 +47,16 @@ const LinearVsLogitPage = () => <ArticleLayout>{
     </Section>
     <Section id="introduction" name="Introduction">
       <p>
-        Observational Scaling Laws and the Predictability of Language Model Performance<Citation source='https://arxiv.org/abs/2405.10938' /> (henceforth abbreviated as OSL) is a paper that attempts to find a low dimensional capability space that predicts benchmark scores.
-        Essentially, if we have a list of a dozen benchmark scores for a hundred models, it allows us to boil down each model into a few numbers that are very predictive of its score on the greater set of benchmarks.
+        Observational Scaling Laws and the Predictability of Language Model Performance<Citation source='https://arxiv.org/abs/2405.10938' /> (henceforth abbreviated as OSL) is a paper that attempts to condense a set of benchmarks into a few numbers that are very predictive of its score on the greater set of benchmarks. For example, these numbers might represent something like "general intelligence", "coding ability", and "math ability" respectively. So, a model with low general intelligence might still do well on coding and math benchmarks, if it had a high coding and math ability.
+      </p>
+      <p>
+        However, there are diminishing returns to adding more numbers to describe the performance of the model. In this work, we focus on just the first number, which is the most predictive of the benchmark scores. OSL finds that just the first number predicts 80% of the variance in the benchmark scores.
       </p>
       <p>
         This is useful because it allows us to quantify model capabilities in a more accurate way. Prior to this, many people (Owen<Citation source='https://arxiv.org/abs/2401.04757' />, Finnveden<Citation source="https://www.alignmentforum.org/posts/k2SNji3jXaLGhBeYP/extrapolating-gpt-n-performance" />) used pretraining log-FLOP as a rough proxy of capability. This is somewhat well justified, since the Chinchilla scaling laws (Hoffman et al.)<Citation source="https://arxiv.org/abs/2203.15556" /> describe what the loss should be after a given pre-training budget. However, FLOP count is not the only thing that matters. Different model families have different levels of efficiency in converting FLOP to performance (i.e, different constants in the Hoffman loss equation). Additionally, how a model is post-trained also makes a huge difference when it comes to performance on benchmarks.
+      </p>
+      <p>
+        On the other hand, using OSL's 
       </p>
     </Section>
     <Section id="references" name="References">
