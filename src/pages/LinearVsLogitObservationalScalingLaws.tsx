@@ -9,9 +9,6 @@ import AsideCard from '../components/AsideCard';
 import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import LasagnaLogo from "../assets/projects/lasagna.png";
-import LasagnaFizzbuzzTxtUrl from "../assets/projects/lasagna_fizzbuzz.txt?url";
-
 import outdent from 'outdent';
 
 import { ArticleLink } from '../components/Articles';
