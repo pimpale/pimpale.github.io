@@ -10,10 +10,9 @@ import AsideCard from '../components/AsideCard';
 import ResumePdfUrl from '../assets/govind_pimpale_resume.pdf?url';
 
 const ResumeUrl = '/resume.html';
-const AchernarUrl = '/achernar.html';
-const TerrainGenerationUrl = '/terraingeneration1.html';
+const ProjectsUrl = '/projects.html';
 
-import { Arrow90degDown, CaretDownFill } from 'react-bootstrap-icons';
+import { Arrow90degDown, CaretDownFill, EnvelopeFill, Calendar3, FileEarmarkPdf, Github, GraphUpArrow } from 'react-bootstrap-icons';
 
 type RotatedProps = {
   rotation: number,
@@ -97,34 +96,36 @@ const Home = () =>
 
 
       {/* Data */}
+      {/* Right Side */}
       <Rotated distance={15} rotation={-45} >
-        <IntroCard title="About">
-          <a href="#about">About me, my projects, and this site</a>
+        <IntroCard title="Research">
+          <a href="#research">Exploring AI safety and capabilities forecasting</a>
         </IntroCard>
       </Rotated>
       <Rotated distance={15} rotation={0} >
-        <IntroCard title="Demo of the Day">
-          <a href="#dotd">Randomly Selected Javascript Widget</a>
+        <IntroCard title="Software Projects">
+          <a href="#projects">Open source tools and libraries</a>
         </IntroCard>
       </Rotated>
       <Rotated distance={15} rotation={45} >
-        <IntroCard title="Source">
-          <a href="https://github.com/pimpale/pimpale.github.io">View source code for this site</a>
+        <IntroCard title="Writing">
+          <a href="#articles">Articles on programming and technology</a>
         </IntroCard>
       </Rotated>
+      {/* Left Side */}
       <Rotated distance={15} rotation={-45 + 180} >
-        <IntroCard title="Achernar">
-          <a href="#achernar">A minimalistic, secure, and low level language</a>
+        <IntroCard title="About">
+          <a href="#about">About me, my background, and interests</a>
         </IntroCard>
       </Rotated>
       <Rotated distance={15} rotation={0 + 180} >
-        <IntroCard title="Articles">
-          <a href="#articles">Articles about projects</a>
+        <IntroCard title="Resume">
+          <a href={ResumeUrl}>View my professional experience</a>
         </IntroCard>
       </Rotated>
       <Rotated distance={15} rotation={45 + 180} >
-        <IntroCard title="Resume" >
-          <a href={ResumeUrl}>View Resume</a>
+        <IntroCard title="Contact" >
+          <a href="#contact">Get in touch with me</a>
         </IntroCard>
       </Rotated>
       {/* Down button */}
@@ -136,7 +137,8 @@ const Home = () =>
       <Section id="about" name="About">
         <h5>Me</h5>
         <p>
-          I'm a student at UCLA, studying Computer Science and Engineering.
+          I'm currently an AI Safety researcher at <a href="https://matsprogram.org/">MATS</a> (Cohort 7.0), studying whether models are aware that they are being evaluated.
+          I studied Computer Science and Engineering at UCLA (class of 2025).
           I believe in <a
             href="https://globalprioritiesinstitute.org/summary-the-case-for-strong-longtermism/">
             Strong Longtermism
@@ -162,34 +164,83 @@ const Home = () =>
           The source of this website can be found <a href="https://github.com/pimpale/pimpale.github.io">here</a>.
         </p>
       </Section>
-      <Section id="achernar" name="Achernar">
-        <h5>Goals</h5>
-        Achernar is a <b><i>Work In Progress</i></b> programming language focusing on:
-        <ul>
-          <li>
-            <b>Minimalism</b>: Achernar strives to be <i>orthogonal</i>.
-            Language features are simple to understand, independent, and highly composable.
-            As such, minimalism is both possible and ergonomic.
-          </li>
-          <li><b>Versatility</b>: Achernar does not lock the user into any particular framework and is highly unopinionated.
-            Use Achernar compiled or interpreted. It can be easily dropped into any existing project without dragging in any dependencies.
-          </li>
-          <li><b>Safe</b>: Achernar is designed with type safety in mind. It is strongly typed and offers additional Ada
-            style contract programming.
-          </li>
-        </ul>
-        <h5>Current Status</h5>
+
+      <Section id="research" name="Research">
+        <h5>Forecasting Frontier Language Model Agent Capabilities</h5>
+        <div>
+          TL;DR: Developed methods for predicting language model agent capabilities on practical tasks.
+          We validate our forecasting approaches by backtesting on existing models, then project that by
+          early 2026, frontier LM agents could reach 87% success rate on software development benchmarks like SWE-Bench Verified.
+        </div>
+        <div className="d-flex justify-content-left">
+          <div className='p-3'>
+            <a className='btn btn-outline-dark p-2 d-flex align-items-center' href="http://arxiv.org/abs/2502.15850">
+              <FileEarmarkPdf className='me-1' /> Arxiv
+            </a>
+          </div>
+          <div className='p-3'>
+            <a className='btn btn-outline-dark p-2 d-flex align-items-center' href="https://github.com/pimpale/forecasting-frontier-language-model-agent-capabilities">
+              <Github className='me-1' /> Code
+            </a>
+          </div>
+          <div className='p-3'>
+            <a className='btn btn-outline-dark p-2 d-flex align-items-center' href="https://pimpale.github.io/forecasting-frontier-language-model-agent-capabilities/">
+              <GraphUpArrow className='me-1' /> Interactive Forecast
+            </a>
+          </div>
+        </div>
+        <h5 className='mt-4'>Analyzing Probabilistic Methods for Evaluating Agent Capabilities</h5>
+        <div>
+          TL;DR: Analyzed two methods for estimating AI capabilities on difficult tasks: the milestone method
+          and expert best-of-N method. Our analysis reveals both methods reduce variance but introduce bias,
+          often underestimating true capabilities. Future work should build on Monte Carlo estimation literature.
+        </div>
+        <div className="d-flex justify-content-left">
+          <div className='p-3'>
+            <a className='btn btn-outline-dark p-2 d-flex align-items-center' href="http://arxiv.org/abs/2502.15850">
+              <FileEarmarkPdf className='me-1' /> Arxiv
+            </a>
+          </div>
+        </div>
+      </Section>
+
+      <Section id="projects" name="Projects">
         <p>
-          I am currently about 50% through writing the first compiler in C that will compile Achernar code.
-          The compiler uses its own custom standard library called <code>comlib</code> that will evolve into Achernar's standard library.
+          I've developed a variety of open source projects, including:
         </p>
-        <h5>Additional Information</h5>
+        <ul>
+          <li><b><a href={`${ProjectsUrl}#browser-voxel-game`}>Browser Voxel Game</a></b>: A Minecraft-like voxel game implementation with realistic lighting and shadows</li>
+          <li><b><a href={`${ProjectsUrl}#torus-weather-sim`}>Torus Weather Simulation</a></b>: A simulation of weather patterns on a torus-shaped planet</li>
+          <li><b><a href={`${ProjectsUrl}#compugenesis`}>Compugenesis</a></b>: A Rust simulation using L-Systems to model plants efficiently</li>
+          <li><b><a href={`${ProjectsUrl}#vulkan-voxel-renderer`}>Vulkan Voxel Renderer</a></b>: A voxel renderer built from scratch with Vulkan and C</li>
+          <li><b><a href={`${ProjectsUrl}#c-opencl-raymarcher`}>OpenCL Raymarcher</a></b>: A GPU-accelerated raymarcher written in C with OpenCL</li>
+          <li><b><a href={`${ProjectsUrl}#lasagna`}>Lasagna</a></b>: A minimal stack-based programming language inspired by Lisp and Forth</li>
+        </ul>
         <p>
-          <a href="https://github.com/pimpale/achernar">Achernar Source Code</a>
-          <br />
-          <a href={AchernarUrl}>More Info</a>
+          <a href={ProjectsUrl}>See detailed project information</a>
         </p>
       </Section>
+
+      <Section id="contact" name="Contact">
+        <p>Feel free to reach out to me through any of these channels:</p>
+        <ul>
+          <li>Email: gpimpale29 [dot] at [dot] gmail [dot] com</li>
+          <li><a href="https://calendly.com/gpimpale29/30min">Schedule a 30-minute meeting with me</a></li>
+          <li><a href="https://github.com/pimpale/">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/govind-pimpale/">LinkedIn</a></li>
+        </ul>
+
+        <h5>Things I'd love to talk about</h5>
+        <ul>
+          <li>How can we forecast LLM Agent abilities</li>
+          <li>Building more realistic evaluations</li>
+          <li>Starting an EA or AI Safety student group</li>
+          <li>Research collaborations</li>
+          <li>Computer graphics (especially ray tracing)</li>
+          <li>Theorem provers</li>
+        </ul>
+      </Section>
+
       <Section id="dotd" name="Demo of the Day">
         <AsideCard title="Classify Numbers Client Side!">
           <p className='card-text'>
