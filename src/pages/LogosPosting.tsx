@@ -17,7 +17,7 @@ import { articleData } from '../components/ArticleData';
 const LogosPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
     <Section id="overview" name="Overview">
-      
+      something
     </Section>
     <Section id="references" name="References">
       <CitationBank />

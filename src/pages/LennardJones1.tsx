@@ -15,13 +15,8 @@ import Plot from 'react-plotly.js'
 
 const GravityPage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
-    <Section name="Spacewar" id="spacewar">
-      <p>
-        <HrefLink href="https://github.com/pimpale/spacewar" />
-      </p>
-      <p>
-        <HrefLink href="https://github.com/pimpale/GravitySimulator" />
-      </p>
+    <Section name="Lennard Jones Simulation" id="lennard-jones">
+      The Lennard Jones 
 
       <AsideCard title="Canvas Setup" id="canvas-setup-demo">
         <LennardJonesDemo
