@@ -12,7 +12,7 @@ import ResumePdfUrl from '../assets/govind_pimpale_resume.pdf?url';
 const ResumeUrl = '/resume.html';
 const ProjectsUrl = '/projects.html';
 
-import { Arrow90degDown, CaretDownFill, EnvelopeFill, Calendar3, FileEarmarkPdf, Github, GraphUpArrow } from 'react-bootstrap-icons';
+import { Arrow90degDown, CaretDownFill, FileEarmarkPdf, Github, GraphUpArrow } from 'react-bootstrap-icons';
 
 type RotatedProps = {
   rotation: number,
@@ -220,7 +220,7 @@ const Home = () =>
           <a href={ProjectsUrl}>See detailed project information</a>
         </p>
       </Section>
-
+      <Articles />
       <Section id="contact" name="Contact">
         <p>Feel free to reach out to me through any of these channels:</p>
         <ul>
@@ -240,7 +240,6 @@ const Home = () =>
           <li>Theorem provers</li>
         </ul>
       </Section>
-
       <Section id="dotd" name="Demo of the Day">
         <AsideCard title="Classify Numbers Client Side!">
           <p className='card-text'>
@@ -249,15 +248,12 @@ const Home = () =>
           <MnistOnnxDemo />
         </AsideCard>
       </Section>
-      <Articles />
     </div>
   </Layout>
 
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-
-import ReactDOM from 'react-dom';
 
 // Bootstrap CSS & JS
 import '../styles/style.scss';

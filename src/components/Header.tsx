@@ -1,8 +1,8 @@
 import { ThreeDotsVertical } from 'react-bootstrap-icons'
 
-const ArticlesUrl = '/articles.html';
 const ResumeUrl = '/resume.html';
 const ProjectsUrl = '/projects.html';
+const ArticlesUrl = '/index.html#articles';
 
 const Header = () =>
   <header className="pb-5">

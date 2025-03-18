@@ -297,6 +297,7 @@ class MnistOnnxDemoInner extends React.Component<MnistOnnxDemoProps, MnistOnnxDe
 }
 
 function MnistOnnxDemo() {
+
   return (
     <Async promise={ort.InferenceSession.create(MnistOnnxUrl)}>
       <Async.Loading>Loading...</Async.Loading>
