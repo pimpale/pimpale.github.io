@@ -32,11 +32,19 @@ function testNearley(input: string): TreeNode[] {
 function ParseEnglishWidget() {
     let [input, setInput] = React.useState("");
     let [output, setOutput] = React.useState<TreeNode[]>([]);
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+            setOutput(testNearley(input));
+        }
+    };
+
     return <>
         <textarea
             style={{ width: "100%", height: "200px" }}
             value={input}
             onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
         />
         <button onClick={() => setOutput(testNearley(input))}>Parse</button>
         {output.map((tree, i) =>

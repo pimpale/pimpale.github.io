@@ -21,6 +21,11 @@ const not = {test: x => x in english.not};
 const that = {test: x => x in english.that};
 const interrogative_subordinator = {test: x => x in english.interrogative_subordinator};
 
+// punctuation
+const period = {test: x => x == "." };
+const question_mark = { test: x => x == "?" };
+const exclamation_mark = { test: x => x == "!" };
+
 // verbs
 
 // Modal (MODAL)
@@ -149,9 +154,13 @@ function t(kind) {
 
 let Lexer = undefined;
 let ParserRules = [
-    {"name": "sentence", "symbols": ["decl_fin_cl"], "postprocess": nt("sentence")},
-    {"name": "sentence", "symbols": ["question_cl"], "postprocess": nt("sentence")},
-    {"name": "decl_fin_cl", "symbols": ["adjunct_list", "np", "fin_vp", "adjunct_list"], "postprocess": nt("decl_fin_cl")},
+    {"name": "text$ebnf$1", "symbols": []},
+    {"name": "text$ebnf$1", "symbols": ["text$ebnf$1", "sentence"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "text", "symbols": ["text$ebnf$1"], "postprocess": nonterminal_unpack("text")},
+    {"name": "sentence", "symbols": ["fin_cl", "period"], "postprocess": nt("sentence")},
+    {"name": "sentence", "symbols": ["fin_cl", "exclamation_mark"], "postprocess": nt("sentence")},
+    {"name": "sentence", "symbols": ["question_cl", "question_mark"], "postprocess": nt("sentence")},
+    {"name": "fin_cl", "symbols": ["adjunct_list", "np", "fin_vp", "adjunct_list"], "postprocess": nt("fin_cl")},
     {"name": "question_cl", "symbols": ["subj_aux_inv_cl", "adjunct_list"], "postprocess": nt("question_cl")},
     {"name": "question_cl", "symbols": ["wh", "fin_vp", "adjunct_list"], "postprocess": nt("question_cl")},
     {"name": "question_cl", "symbols": ["wh", "subj_aux_inv_cl_np_moved", "adjunct_list"], "postprocess": nt("question_cl")},
@@ -179,6 +188,7 @@ let ParserRules = [
     {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["vbf_vbn_cl", "not?", "np", "vbn_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl_ap_moved")},
     {"name": "subj_aux_inv_cl_ap_moved", "symbols": ["do_fin", "not?", "np", "bare_inf_cl_ap_moved"], "postprocess": nt("subj_aux_inv_cl_ap_moved")},
     {"name": "fin_vp", "symbols": ["advp?", "modal", "not?", "advp?", "bare_inf_cl"], "postprocess": nt("fin_vp")},
+    {"name": "fin_vp", "symbols": ["advp?", "do_fin", "not?", "bare_inf_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp?", "vbf", "advp?"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp?", "vbf_ap", "advp?", "ap"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp?", "vbf_to_inf_cl", "advp?", "to_inf_cl"], "postprocess": nt("fin_vp")},
@@ -196,7 +206,6 @@ let ParserRules = [
     {"name": "fin_vp", "symbols": ["advp?", "vbf_np_exclamative_cl", "advp?", "np", "exclamative_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp?", "vbf_np_interrogative_cl", "advp?", "np", "interrogative_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp?", "vbf_np_np", "advp?", "np", "np"], "postprocess": nt("fin_vp")},
-    {"name": "fin_vp", "symbols": ["advp?", "vbf_np_np", "advp?", "np", "to", "np"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp_np_moved", "symbols": ["advp?", "vbf_ap", "advp?", "ap_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp?", "vbf_to_inf_cl", "advp?", "to_inf_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp?", "vbf_bare_inf_cl", "advp?", "bare_inf_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
@@ -216,6 +225,7 @@ let ParserRules = [
     {"name": "fin_vp_np_moved", "symbols": ["advp?", "vbf_np_interrogative_cl", "advp?", "interrogative_cl"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp?", "vbf_np_np", "advp?", "np"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp?", "vbf_np_np", "advp?", "to", "np"], "postprocess": nt("fin_vp_np_moved")},
+    {"name": "fin_vp_pp_moved", "symbols": ["advp?", "vbf", "advp?"], "postprocess": nt("fin_vp_pp_moved")},
     {"name": "fin_vp_pp_moved", "symbols": ["advp?", "vbf_ap", "advp?", "ap_pp_moved"], "postprocess": nt("fin_vp_pp_moved")},
     {"name": "fin_vp_pp_moved", "symbols": ["advp?", "vbf_to_inf_cl", "advp?", "to_inf_cl_pp_moved"], "postprocess": nt("fin_vp_pp_moved")},
     {"name": "fin_vp_pp_moved", "symbols": ["advp?", "vbf_bare_inf_cl", "advp?", "bare_inf_cl_pp_moved"], "postprocess": nt("fin_vp_pp_moved")},
@@ -279,7 +289,6 @@ let ParserRules = [
     {"name": "inf_vp_np_moved", "symbols": ["advp?", "vb_np_exclamative_cl", "advp?", "exclamative_cl"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp?", "vb_np_interrogative_cl", "advp?", "interrogative_cl"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp?", "vb_np_np", "advp?", "np"], "postprocess": nt("inf_vp_np_moved")},
-    {"name": "inf_vp_np_moved", "symbols": ["advp?", "vb_np_np", "advp?", "to", "np"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_pp_moved", "symbols": ["advp?", "vb_ap", "advp?", "ap_pp_moved"], "postprocess": nt("inf_vp_pp_moved")},
     {"name": "inf_vp_pp_moved", "symbols": ["advp?", "vb_to_inf_cl", "advp?", "to_inf_cl_pp_moved"], "postprocess": nt("inf_vp_pp_moved")},
     {"name": "inf_vp_pp_moved", "symbols": ["advp?", "vb_bare_inf_cl", "advp?", "bare_inf_cl_pp_moved"], "postprocess": nt("inf_vp_pp_moved")},
@@ -337,7 +346,6 @@ let ParserRules = [
     {"name": "vbn_vp_np_moved", "symbols": ["advp?", "vbn_np_exclamative_cl", "advp?", "exclamative_cl"], "postprocess": nt("vbn_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp?", "vbn_np_interrogative_cl", "advp?", "interrogative_cl"], "postprocess": nt("vbn_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp?", "vbn_np_np", "advp?", "np"], "postprocess": nt("vbn_vp_np_moved")},
-    {"name": "vbn_vp_np_moved", "symbols": ["advp?", "vbn_np_np", "advp?", "to", "np"], "postprocess": nt("vbn_vp_np_moved")},
     {"name": "vbn_vp_pp_moved", "symbols": ["advp?", "vbn_ap", "advp?", "ap_pp_moved"], "postprocess": nt("vbn_vp_pp_moved")},
     {"name": "vbn_vp_pp_moved", "symbols": ["advp?", "vbn_to_inf_cl", "advp?", "to_inf_cl_pp_moved"], "postprocess": nt("vbn_vp_pp_moved")},
     {"name": "vbn_vp_pp_moved", "symbols": ["advp?", "vbn_bare_inf_cl", "advp?", "bare_inf_cl_pp_moved"], "postprocess": nt("vbn_vp_pp_moved")},
@@ -395,7 +403,6 @@ let ParserRules = [
     {"name": "vbg_vp_np_moved", "symbols": ["advp?", "vbg_np_exclamative_cl", "advp?", "exclamative_cl"], "postprocess": nt("vbg_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp?", "vbg_np_interrogative_cl", "advp?", "interrogative_cl"], "postprocess": nt("vbg_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp?", "vbg_np_np", "advp?", "np"], "postprocess": nt("vbg_vp_np_moved")},
-    {"name": "vbg_vp_np_moved", "symbols": ["advp?", "vbg_np_np", "advp?", "to", "np"], "postprocess": nt("vbg_vp_np_moved")},
     {"name": "vbg_vp_pp_moved", "symbols": ["advp?", "vbg_ap", "advp?", "ap_pp_moved"], "postprocess": nt("vbg_vp_pp_moved")},
     {"name": "vbg_vp_pp_moved", "symbols": ["advp?", "vbg_to_inf_cl", "advp?", "to_inf_cl_pp_moved"], "postprocess": nt("vbg_vp_pp_moved")},
     {"name": "vbg_vp_pp_moved", "symbols": ["advp?", "vbg_bare_inf_cl", "advp?", "bare_inf_cl_pp_moved"], "postprocess": nt("vbg_vp_pp_moved")},
@@ -414,8 +421,8 @@ let ParserRules = [
     {"name": "vbg_vp_ap_moved", "symbols": ["advp?", "vbg_np_to_inf_cl", "advp?", "np", "to_inf_cl_ap_moved"], "postprocess": nt("vbg_vp_ap_moved")},
     {"name": "vbg_vp_ap_moved", "symbols": ["advp?", "vbg_np_bare_inf_cl", "advp?", "np", "bare_inf_cl_ap_moved"], "postprocess": nt("vbg_vp_ap_moved")},
     {"name": "vbg_vp_ap_moved", "symbols": ["advp?", "vbg_np_declarative_cl", "advp?", "np", "declarative_cl_ap_moved"], "postprocess": nt("vbg_vp_ap_moved")},
-    {"name": "declarative_cl", "symbols": ["that", "decl_fin_cl"], "postprocess": nt("declarative_cl")},
-    {"name": "exclamative_cl", "symbols": ["how", "advp", "decl_fin_cl"], "postprocess": nt("exclamative_cl")},
+    {"name": "declarative_cl", "symbols": ["that", "fin_cl"], "postprocess": nt("declarative_cl")},
+    {"name": "exclamative_cl", "symbols": ["how", "advp", "fin_cl"], "postprocess": nt("exclamative_cl")},
     {"name": "exclamative_cl", "symbols": ["how", "ap", "np", "fin_vp_ap_moved"], "postprocess": nt("exclamative_cl")},
     {"name": "interrogative_cl", "symbols": ["wh_np", "np", "fin_vp_np_moved", "adjunct_list"], "postprocess": nt("interrogative_cl")},
     {"name": "interrogative_cl", "symbols": ["wh_np", "fin_vp", "adjunct_list"], "postprocess": nt("interrogative_cl")},
@@ -572,7 +579,10 @@ let ParserRules = [
     {"name": "precorenp_modifier", "symbols": [precorenp_modifier], "postprocess": t("precorenp_modifier")},
     {"name": "postcorenp_modifier", "symbols": [postcorenp_modifier], "postprocess": t("postcorenp_modifier")},
     {"name": "be_fin", "symbols": [be_fin], "postprocess": t("is_fin")},
-    {"name": "do_fin", "symbols": [do_fin], "postprocess": t("do_fin")}
+    {"name": "do_fin", "symbols": [do_fin], "postprocess": t("do_fin")},
+    {"name": "period", "symbols": [period], "postprocess": t("period")},
+    {"name": "question_mark", "symbols": [question_mark], "postprocess": t("question_mark")},
+    {"name": "exclamation_mark", "symbols": [exclamation_mark], "postprocess": t("exclamation_mark")}
 ];
-let ParserStart = "sentence";
+let ParserStart = "text";
 export default { Lexer, ParserRules, ParserStart };

@@ -18,6 +18,23 @@ function expandContractions(word: string): string[] {
     }
 }
 
+function seperatePunctuation(word: string): string[] {
+    if (word.length === 0) {
+        return [];
+    }
+    
+    const lastChar = word[word.length - 1];
+    const punctuationRegex = /[.,!?;:'"()[\]{}]/;
+    
+    if (punctuationRegex.test(lastChar)) {
+        // Split the word and the punctuation
+        return [word.slice(0, -1), lastChar];
+    } else {
+        return [word];
+    }
+}
+
+
 function normalizeBe(word: string): string {
     if (word === "am") {
         return "are";
@@ -32,6 +49,8 @@ export function lex(input: string): string[] {
     // split on whitespace
     const words = input.split(/\s+/);
     return words
+        .filter(x => x.trim() != "")
+        .flatMap(seperatePunctuation)
         .flatMap(expandContractions)
         .map(normalizeBe)
         .map(word => word.toLowerCase());

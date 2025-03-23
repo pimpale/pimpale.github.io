@@ -20,6 +20,11 @@ const not = {test: x => x in english.not};
 const that = {test: x => x in english.that};
 const interrogative_subordinator = {test: x => x in english.interrogative_subordinator};
 
+// punctuation
+const period = {test: x => x == "." };
+const question_mark = { test: x => x == "?" };
+const exclamation_mark = { test: x => x == "!" };
+
 // verbs
 
 // Modal (MODAL)
@@ -148,21 +153,24 @@ function t(kind) {
 
 %}
 
+text -> sentence:* {%nonterminal_unpack("text")%}
+
 sentence -> 
-      fin_cl {%nt("sentence")%}
-    | question_cl {%nt("sentence")%}
+      fin_cl period {%nt("sentence")%}
+    | fin_cl exclamation_mark {%nt("sentence")%}
+    | question_cl question_mark {%nt("sentence")%}
 
 # a declarative finite clause
-fin_cl -> adjunct_list np fin_vp adjunct_list {%nt("fin_cl")%}
+fin_cl -> adjunct_list np fin_vp {%nt("fin_cl")%}
 
 # a question clause
-question_cl -> 
-                subj_aux_inv_cl          adjunct_list {%nt("question_cl")%} # are you happy?
-    | wh        fin_vp                   adjunct_list {%nt("question_cl")%} # who ate that?
-    | wh        subj_aux_inv_cl_np_moved adjunct_list {%nt("question_cl")%} # what did you eat?
-    | why       subj_aux_inv_cl          adjunct_list {%nt("question_cl")%}
-    | how advp? subj_aux_inv_cl          adjunct_list {%nt("question_cl")%} # how did you eat the apple?
-    | how       subj_aux_inv_cl_ap_moved adjunct_list {%nt("question_cl")%} # how happy are you?
+question_cl ->
+                subj_aux_inv_cl          {%nt("question_cl")%} # are you happy?
+    | wh        fin_vp                   {%nt("question_cl")%} # who ate that?
+    | wh        subj_aux_inv_cl_np_moved {%nt("question_cl")%} # what did you eat?
+    | why       subj_aux_inv_cl          {%nt("question_cl")%}
+    | how advp? subj_aux_inv_cl          {%nt("question_cl")%} # how did you eat the apple?
+    | how       subj_aux_inv_cl_ap_moved {%nt("question_cl")%} # how happy are you?
 
 
 subj_aux_inv_cl ->
@@ -190,7 +198,7 @@ subj_aux_inv_cl_np_moved ->
     | vbf_vbg_cl    not? np vbg_cl_np_moved           {%nt("subj_aux_inv_cl_np_moved")%} # what [were you eating]?
     | vbf_vbn_cl    not? np vbn_cl_np_moved           {%nt("subj_aux_inv_cl_np_moved")%} # what [were you given]? / what [had you eaten]?
     | do_fin        not? np bare_inf_cl_np_moved      {%nt("subj_aux_inv_cl_np_moved")%} # what [did you eat]?
-
+# finite (move from )
 
 subj_aux_inv_cl_ap_moved ->
       modal         not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl_ap_moved")%} # how [can you eat]?
@@ -201,10 +209,15 @@ subj_aux_inv_cl_ap_moved ->
     | do_fin        not? np bare_inf_cl_ap_moved      {%nt("subj_aux_inv_cl_ap_moved")%} # how [did you feel]?
 
 
+# following constituents are flat grammars that permit core arguments + some adjuncts in any order
+
+
 fin_vp -> 
 # modal
       advp? modal              not? advp? bare_inf_cl                           {%nt("fin_vp")%} # modal verb with bare infinitive clause argument (ex: "I can eat") 
-# complete preterite verb phrase
+# do support
+    | advp? do_fin             not?       bare_inf_cl                           {%nt("fin_vp")%} # do support (ex: "I didn't eat") 
+# complete finite verb phrase
     | advp? vbf                     advp?                                       {%nt("fin_vp")%} # intransitive verb (ex: "I smoked")
     | advp? vbf_ap                  advp? ap                                    {%nt("fin_vp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
     | advp? vbf_to_inf_cl           advp? to_inf_cl                             {%nt("fin_vp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
@@ -276,17 +289,11 @@ fin_vp_ap_moved ->
     | advp? vbf_np_declarative_cl   advp? np              declarative_cl_ap_moved {%nt("fin_vp_ap_moved")%} # transitive verb with declarative content clause argument (ex: "I know how happy I [told you that you are]")
 
 # a non-finite clause starting with "to"
-to_inf_cl ->            to inf_vp          adjunct_list                {%nt("to_inf_cl")%}
-to_inf_cl_np_moved ->   to inf_vp_np_moved adjunct_list                {%nt("to_inf_cl_np_moved")%}
-to_inf_cl_pp_moved ->   to inf_vp_pp_moved adjunct_list                {%nt("to_inf_cl_pp_moved")%}
-to_inf_cl_ap_moved ->   to inf_vp_ap_moved adjunct_list                {%nt("to_inf_cl_ap_moved")%}
+to_inf_cl ->            to inf_vp                          {%nt("to_inf_cl")%}
+to_inf_cl_np_moved ->   to inf_vp_np_moved                 {%nt("to_inf_cl_np_moved")%}
+to_inf_cl_pp_moved ->   to inf_vp_pp_moved                 {%nt("to_inf_cl_pp_moved")%}
+to_inf_cl_ap_moved ->   to inf_vp_ap_moved                 {%nt("to_inf_cl_ap_moved")%}
 
-
-# a non-finite clause with a bare infinitive
-bare_inf_cl -> inf_vp adjunct_list                                {%nt("bare_inf_cl")%}
-bare_inf_cl_np_moved -> inf_vp_np_moved adjunct_list              {%nt("bare_inf_cl_np_moved")%}
-bare_inf_cl_pp_moved -> inf_vp_pp_moved adjunct_list              {%nt("bare_inf_cl_pp_moved")%}
-bare_inf_cl_ap_moved -> inf_vp_ap_moved adjunct_list              {%nt("bare_inf_cl_ap_moved")%}
 
 # a non-finite verb phrase
 inf_vp ->
@@ -353,11 +360,6 @@ inf_vp_ap_moved ->
     | advp? vb_np_to_inf_cl        advp? np              to_inf_cl_ap_moved      {%nt("inf_vp_ap_moved")%} # transitive verb with infinitive verb argument (ex: "I know how skilled I want to [ask you to become]")
     | advp? vb_np_bare_inf_cl      advp? np              bare_inf_cl_ap_moved    {%nt("inf_vp_ap_moved")%} # transitive verb with bare infinitive verb argument (ex: "I know how skilled bob wants to [make you become]")
     | advp? vb_np_declarative_cl   advp? np              declarative_cl_ap_moved {%nt("inf_vp_ap_moved")%} # transitive verb with declarative content clause argument (ex: "I know how happy I want to [tell you that you are]")
-
-vbn_cl          -> vbn_vp          adjunct_list                 {%nt("vbn_cl")%}
-vbn_cl_np_moved -> vbn_vp_np_moved adjunct_list                 {%nt("vbn_cl_np_moved")%}
-vbn_cl_pp_moved -> vbn_vp_pp_moved adjunct_list                 {%nt("vbn_cl_pp_moved")%}
-vbn_cl_ap_moved -> vbn_vp_ap_moved adjunct_list                 {%nt("vbn_cl_ap_moved")%}
 
 
 # a past participle verb phrase
@@ -427,11 +429,6 @@ vbn_vp_ap_moved ->
     | advp? vbn_np_bare_inf_cl      advp? np              bare_inf_cl_ap_moved    {%nt("vbn_vp_ap_moved")%} # transitive verb with bare infinitive verb argument (ex: "I know how skilled bob has [made you become]")
     | advp? vbn_np_declarative_cl   advp? np              declarative_cl_ap_moved {%nt("vbn_vp_ap_moved")%} # transitive verb with declarative content clause argument (ex: "I know how happy I have [told you that you are]")
 
-
-vbg_cl          -> vbg_vp           adjunct_list                 {%nt("vbg_cl")%}
-vbg_cl_np_moved -> vbg_vp_np_moved  adjunct_list                 {%nt("vbg_cl_np_moved")%}
-vbg_cl_pp_moved -> vbg_vp_pp_moved  adjunct_list                 {%nt("vbg_cl_pp_moved")%}
-vbg_cl_ap_moved -> vbg_vp_ap_moved  adjunct_list                 {%nt("vbg_cl_ap_moved")%}
 
 
 # present participle / gerund verb phrase
@@ -706,3 +703,6 @@ precorenp_modifier -> %precorenp_modifier {%t("precorenp_modifier")%}
 postcorenp_modifier -> %postcorenp_modifier {%t("postcorenp_modifier")%}
 be_fin -> %be_fin {%t("is_fin")%}
 do_fin -> %do_fin {%t("do_fin")%}
+period -> %period {%t("period")%}
+question_mark -> %question_mark {%t("question_mark")%}
+exclamation_mark -> %exclamation_mark {%t("exclamation_mark")%}
