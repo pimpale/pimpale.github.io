@@ -582,55 +582,45 @@ adjunct_list_exclamative_cl -> adjunct_list_exclamative_cl {%nt("adjunct_list_ex
 
 adjunct_list_interrogative_cl -> adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl")%}
 
-adjunct_list_np_ap_moved ->
-      adjunct_list_np              {%nt("adjunct_list_np_ap_moved")%}
-    | adjunct_list_np_moved_       {%nt("adjunct_list_np_ap_moved")%}
+adjunct_list_np_ap_moved -> adjunct_list_np {%nt("adjunct_list_np_ap_moved")%}
 
-adjunct_list_np_ap_moved_
-      adjunct           adjunct_list_np_np_moved_                    {%nt("adjunct_list_np_ap_moved_")%}
-    | np_ap_moved_      adjunct_list                                 {%nt("adjunct_list_np_ap_moved_")%}
+adjunct_list_np_ap_ap_moved -> 
+      adjunct_list_np_ap            {%nt("adjunct_list_np_ap_ap_moved_")%}
+    | adjunct_list_np               {%nt("adjunct_list_np_ap_ap_moved_")%}
 
+adjunct_list_np_to_inf_cl_ap_moved ->
+      adjunct_list_np_to_inf_cl                     {%nt("adjunct_list_np_to_inf_cl_ap_moved")%} 
+    | adjunct_list_np_to_inf_cl_ap_moved_           {%nt("adjunct_list_np_to_inf_cl_ap_moved")%} 
 
-adjunct_list_np_ap -> 
+adjunct_list_np_to_inf_cl_ap_moved_ -> 
+      adjunct          adjunct_list_np_to_inf_cl_ap_moved_ {%nt("adjunct_list_np_to_inf_cl_ap_moved_")%}
+    | np               adjunct_list_to_inf_cl_ap_moved_    {%nt("adjunct_list_np_to_inf_cl_ap_moved_")%}
 
-adjunct_list_np_ap -> 
-      adjunct adjunct_list_np_ap            {%nt("adjunct_list_np_ap")%}
-    | np      adjunct_list_ap               {%nt("adjunct_list_np_ap")%}
-    | ap      adjunct_list_np               {%nt("adjunct_list_np_ap")%}
-
-adjunct_list_np_to_inf_cl ->
-      adjunct_list_np_to_inf_cl                           {%nt("adjunct_list_np_to_inf_cl_ap_moved")%} 
-    | adjunct          adjunct_list_np_to_inf_cl_ap_moved {%nt("adjunct_list_np_to_inf_cl_ap_moved")%}
-    | np_ap_moved      adjunct_list_to_inf_cl             {%nt("adjunct_list_np_to_inf_cl_ap_moved")%}
-    | np               adjunct_list_to_inf_cl_ap_moved    {%nt("adjunct_list_np_to_inf_cl_ap_moved")%}
-
-adjunct_list_np_bare_inf_cl ->
+adjunct_list_np_bare_inf_cl_ap_moved ->
       adjunct_list_np_bare_inf_cl                           {%nt("adjunct_list_np_bare_inf_cl_ap_moved")%} 
-    | adjunct          adjunct_list_np_bare_inf_cl_ap_moved {%nt("adjunct_list_np_bare_inf_cl_ap_moved")%}
-    | np_ap_moved      adjunct_list_bare_inf_cl             {%nt("adjunct_list_np_bare_inf_cl_ap_moved")%}
-    | np               adjunct_list_bare_inf_cl_ap_moved    {%nt("adjunct_list_np_bare_inf_cl_ap_moved")%}
+    | adjunct_list_np_bare_inf_cl_ap_moved_                 {%nt("adjunct_list_np_bare_inf_cl_ap_moved")%} 
+
+adjunct_list_np_bare_inf_cl_ap_moved_ ->
+      adjunct          adjunct_list_np_bare_inf_cl_ap_moved_   {%nt("adjunct_list_np_bare_inf_cl_ap_moved_")%}
+    | np               adjunct_list_bare_inf_cl_ap_moved_      {%nt("adjunct_list_np_bare_inf_cl_ap_moved_")%}
 
 adjunct_list_np_declarative_cl_ap_moved ->
       adjunct_list_np_declarative_cl                                {%nt("adjunct_list_np_declarative_cl_ap_moved")%}
-    | adjunct               adjunct_list_np_declarative_cl_ap_moved {%nt("adjunct_list_np_declarative_cl_ap_moved")%}
-    | np_ap_moved           adjunct_list_declarative_cl             {%nt("adjunct_list_np_declarative_cl_ap_moved")%}
-    | np                    adjunct_list_declarative_cl_ap_moved    {%nt("adjunct_list_np_declarative_cl_ap_moved")%}
+    | adjunct_list_np_declarative_cl_ap_moved_                      {%nt("adjunct_list_np_declarative_cl_ap_moved")%}
+
+adjunct_list_np_declarative_cl_ap_moved_ ->
+      adjunct               adjunct_list_np_declarative_cl_ap_moved {%nt("adjunct_list_np_declarative_cl_ap_moved_")%}
+    | np                    adjunct_list_declarative_cl_ap_moved    {%nt("adjunct_list_np_declarative_cl_ap_moved_")%}
 
 adjunct_list_np_exclamative_cl_ap_moved -> 
       adjunct_list_np_exclamative_cl                         {%nt("adjunct_list_np_exclamative_cl_ap_moved")%}
-    | adjunct               adjunct_list_np_exclamative_cl   {%nt("adjunct_list_np_exclamative_cl_ap_moved")%}
-    | np_ap_moved           adjunct_list_exclamative_cl      {%nt("adjunct_list_np_exclamative_cl_ap_moved")%}
 
 adjunct_list_np_interrogative_cl_ap_moved -> 
-      adjunct_list_np_interrogative_cl                                      {%nt("adjunct_list_np_interrogative_cl_ap_moved")%}
-    | adjunct                   adjunct_list_np_interrogative_cl_ap_moved   {%nt("adjunct_list_np_interrogative_cl_ap_moved")%}
-    | np_ap_moved               adjunct_list_interrogative_cl               {%nt("adjunct_list_np_interrogative_cl_ap_moved")%}
+      adjunct_list_np_interrogative_cl                         {%nt("adjunct_list_np_interrogative_cl_ap_moved")%}
 
 adjunct_list_np_np_ap_moved ->
-      adjunct_list_np_np                                             {%nt("adjunct_list_np_np_ap_moved")%}
-    | adjunct                    adjunct_list_np_np_ap_moved         {%nt("adjunct_list_np_np_ap_moved")%}
-    | np_ap_moved                adjunct_list_np                     {%nt("adjunct_list_np_np_ap_moved")%}
-    | to np_ap_moved             adjunct_list_np                     {%nt("adjunct_list_np_np_ap_moved")%}
+      adjunct_list_np_np           {%nt("adjunct_list_np_np_ap_moved")%}
+
 
 fin_vp_ap_moved -> 
 # modal
