@@ -12,7 +12,7 @@ type TreeNode = {
 }
 
 
-function testNearley(input: string): TreeNode[] {
+function parseEnglish(input: string): TreeNode[] {
     const parser = new nearley.Parser(nearley.Grammar.fromCompiled(englishGrammar as any));
 
     // lex input into tokens
@@ -33,26 +33,69 @@ function ParseEnglishWidget() {
     let [input, setInput] = React.useState("");
     let [output, setOutput] = React.useState<TreeNode[]>([]);
 
+    const exampleSentences = [
+        "Who are you?",
+        "I know that you like cheese.",
+        "She walked to the store.",
+        "The cat, which was sleeping on the windowsill, woke up suddenly.",
+        "John and Mary went to the park yesterday.",
+        "The book that I read was very interesting.",
+        "Running through the forest, he felt free.",
+        "The teacher explained the concept clearly to the students.",
+        "After the rain stopped, the sun came out.",
+        "The old house on the hill looked mysterious.",
+        "They were playing tennis when it started to rain."
+    ];
+
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.ctrlKey && e.key === 'Enter') {
-            setOutput(testNearley(input));
+            setOutput(parseEnglish(input));
         }
     };
 
-    return <>
-        <textarea
-            style={{ width: "100%", height: "200px" }}
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-        />
-        <button onClick={() => setOutput(testNearley(input))}>Parse</button>
-        {output.map((tree, i) =>
-            <div key={i}>
-                <SyntaxTree tree={tree} />
+    const handleExampleClick = (sentence: string) => {
+        setInput(sentence);
+        setOutput(parseEnglish(sentence));
+    };
+
+    return <div className="d-flex gap-3">
+        <div className="sidebar" style={{ width: "250px" }}>
+            <h5 className="mb-3">Example Sentences</h5>
+            <div style={{ maxHeight: "600px", overflowY: "auto" }}>
+                <div className="list-group">
+                    {exampleSentences.map((sentence, index) => (
+                        <button
+                            key={index}
+                            className="list-group-item list-group-item-action text-start"
+                            onClick={() => handleExampleClick(sentence)}
+                        >
+                            {sentence}
+                        </button>
+                    ))}
+                </div>
             </div>
-        )}
-    </>
+        </div>
+        <div className="flex-grow-1">
+            <textarea
+                style={{ width: "100%", height: "200px" }}
+                value={input}
+                className="form-control"
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+            />
+            <button 
+                className="mt-2 btn btn-primary" 
+                onClick={() => setOutput(parseEnglish(input))}
+            >
+                Parse
+            </button>
+            {output.map((tree, i) =>
+                <div key={i}>
+                    <SyntaxTree tree={tree} />
+                </div>
+            )}
+        </div>
+    </div>;
 }
 
 type AugmentedTreeNode = {
@@ -70,7 +113,7 @@ function pruneTree(node: TreeNode): TreeNode | null {
         return node;
     }
 
-    if(node.children == null) {
+    if (node.children == null) {
         return null;
     }
 
@@ -95,8 +138,8 @@ function augmentNode(node: TreeNode | string, depth: number, l_offset: number): 
     }
     let children = [];
     let curr_child_width = 0;
-    let node_children = typeof node.children === "string" 
-        ? [node.children] 
+    let node_children = typeof node.children === "string"
+        ? [node.children]
         : node.children;
     for (let child of node_children) {
         let child_node = augmentNode(child, depth + 1, l_offset + curr_child_width);
@@ -126,7 +169,7 @@ function SyntaxTreeSvg(props: SyntaxTreeSvgProps) {
 
     let center_x = l_offset + width / 2 - this_width / 2;
 
-    let this_depth = children.length === 0  
+    let this_depth = children.length === 0
         ? maxdepth
         : depth;
 
@@ -139,7 +182,7 @@ function SyntaxTreeSvg(props: SyntaxTreeSvgProps) {
     return <>
         {children.length === 0
             ? <rect x={x} y={y} width={this_width * CHAR_WIDTH} height="40" fill="var(--bs-blue)" />
-            : children.map((child, i) => <SyntaxTreeSvg key={i} node={child} depth={depth + 1} maxdepth={maxdepth} parent_loc={{ x:line_x, y:line_y }} />)
+            : children.map((child, i) => <SyntaxTreeSvg key={i} node={child} depth={depth + 1} maxdepth={maxdepth} parent_loc={{ x: line_x, y: line_y }} />)
         }
         <text x={x} y={y + 30} fill="var(--bs-body-color)">{kind}</text>
         {
@@ -173,7 +216,7 @@ const ParseEnglishPage = () => <ArticleLayout>{
         return <>
             <h1>Parse English</h1>
             <p>Parse English is a tool that can parse English sentences into a structured format. It is built using the <a href="https://nearley.js.org/">Nearley</a> parsing toolkit.</p>
-            <p>It is currently a work in progress, but you can try it out by entering a sentence below:</p>
+            <p>It is currently a work in progress, but you can try it out by entering a sentence below, and pressing <kbd>Ctrl+Enter</kbd> or clicking the Parse button. Make sure to insert correct punctuation.</p>
             <ParseEnglishWidget />
         </>
     }

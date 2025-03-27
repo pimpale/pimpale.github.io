@@ -18,7 +18,13 @@ const to = {test: x => x in english.to};
 const s = {test: x => x in english.s};
 const not = {test: x => x in english.not};
 const that = {test: x => x in english.that};
-const interrogative_subordinator = {test: x => x in english.interrogative_subordinator};
+const interrogative_subordinator = {test: x => x in english.interrogative_subordinator}; // if whether
+// replaces adjective phrases
+const how = {test: x => x in english.how}; // how
+// replaces reasons
+const why = {test: x => x in english.why}; // why
+// can be used as a restrictive restrictive_correlative
+const which = {test: x => x in english.which}; // which
 
 // punctuation
 const period = {test: x => x == "." };
@@ -128,11 +134,6 @@ const postcorenp_modifier = {test: x => x in english.postcorenp_modifier}; // pe
 
 // wh-words (that replace nouns)
 const wh = {test: x => x in english.wh}; // wh-words (ex: "who", "what", "where", "when", "why")
-
-// replaces adjective phrases
-const how = {test: x => x in english.how}; // how
-// replaces reasons
-const why = {test: x => x in english.why}; // why
 
 // define postprocessors
 
@@ -738,14 +739,13 @@ interrogative_cl ->
 
 # a content clause with some np moved
 declarative_cl_np_moved ->
-      that    fin_vp                      adjunct_list          {%nt("declarative_cl_np_moved")%}
-    | that np fin_vp_np_moved             adjunct_list          {%nt("declarative_cl_np_moved")%}
-    | that np fin_vp          preposition adjunct_list          {%nt("declarative_cl_np_moved")%}
+      that    fin_vp              {%nt("declarative_cl_np_moved")%}
+    | that np fin_vp_np_moved     {%nt("declarative_cl_np_moved")%}
 
 # a content clause with some ap moved
 declarative_cl_ap_moved ->
-      that np fin_vp_ap_moved    adjunct_list          {%nt("declarative_cl_ap_moved")%}
-    | that np fin_vp             adjunct_list          {%nt("declarative_cl_ap_moved")%}
+      that np fin_vp_ap_moved     {%nt("declarative_cl_ap_moved")%}
+    | that np fin_vp              {%nt("declarative_cl_ap_moved")%}
 
 np ->
     precorenp_modifier_list core_np postcorenp_modifier_list  {%nt("np")%}
@@ -766,10 +766,17 @@ core_np ->
 wh_np -> wh    {%nt("wh_np")%} 
        | wh np {%nt("wh_np")%}
 
+restrictive_correlative -> 
+  that  {%nt("restrictive_correlative")%}
+| which {%nt("restrictive_correlative")%}
 
+restrictive_cl -> 
+      restrictive_correlative    fin_vp              {%nt("restrictive_cl")%}
+    | restrictive_correlative np fin_vp_np_moved     {%nt("restrictive_cl")%}
+  
 # a specifier coming after the noun
-n_modifier -> declarative_cl  {%nt("n_modifier")%} # a relative clause specifying the noun (ex: president who was elected) (ex: box that is on the table)
-            | pp              {%nt("n_modifier")%} # a prepositional phrase specifying the noun (ex: "the book on the table")
+n_modifier -> restrictive_cl           {%nt("n_modifier")%} # a relative clause specifying the noun (ex: president who was elected) (ex: box that is on the table)
+            | pp                       {%nt("n_modifier")%} # a prepositional phrase specifying the noun (ex: "the book on the table")
 
 n_modifier_list -> n_modifier:* {%nonterminal_unpack("n_modifier_list")%}
 # a determiner phrase
@@ -912,6 +919,7 @@ adv -> %adv {%t("adv")%}
 wh -> %wh {%t("wh")%}
 why -> %why {%t("why")%}
 how -> %how {%t("how")%}
+which -> %which {%t("which")%}
 precorenp_modifier -> %precorenp_modifier {%t("precorenp_modifier")%}
 postcorenp_modifier -> %postcorenp_modifier {%t("postcorenp_modifier")%}
 be_fin -> %be_fin {%t("is_fin")%}

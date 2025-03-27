@@ -19,7 +19,13 @@ const to = {test: x => x in english.to};
 const s = {test: x => x in english.s};
 const not = {test: x => x in english.not};
 const that = {test: x => x in english.that};
-const interrogative_subordinator = {test: x => x in english.interrogative_subordinator};
+const interrogative_subordinator = {test: x => x in english.interrogative_subordinator}; // if whether
+// replaces adjective phrases
+const how = {test: x => x in english.how}; // how
+// replaces reasons
+const why = {test: x => x in english.why}; // why
+// can be used as a restrictive restrictive_correlative
+const which = {test: x => x in english.which}; // which
 
 // punctuation
 const period = {test: x => x == "." };
@@ -129,11 +135,6 @@ const postcorenp_modifier = {test: x => x in english.postcorenp_modifier}; // pe
 
 // wh-words (that replace nouns)
 const wh = {test: x => x in english.wh}; // wh-words (ex: "who", "what", "where", "when", "why")
-
-// replaces adjective phrases
-const how = {test: x => x in english.how}; // how
-// replaces reasons
-const why = {test: x => x in english.why}; // why
 
 // define postprocessors
 
@@ -520,11 +521,10 @@ let ParserRules = [
     {"name": "interrogative_cl", "symbols": ["wh_np", "fin_vp"], "postprocess": nt("interrogative_cl")},
     {"name": "interrogative_cl", "symbols": ["wh_pp", "np", "fin_vp"], "postprocess": nt("interrogative_cl")},
     {"name": "interrogative_cl", "symbols": ["interrogative_subordinator", "np", "fin_vp"], "postprocess": nt("interrogative_cl")},
-    {"name": "declarative_cl_np_moved", "symbols": ["that", "fin_vp", "adjunct_list"], "postprocess": nt("declarative_cl_np_moved")},
-    {"name": "declarative_cl_np_moved", "symbols": ["that", "np", "fin_vp_np_moved", "adjunct_list"], "postprocess": nt("declarative_cl_np_moved")},
-    {"name": "declarative_cl_np_moved", "symbols": ["that", "np", "fin_vp", "preposition", "adjunct_list"], "postprocess": nt("declarative_cl_np_moved")},
-    {"name": "declarative_cl_ap_moved", "symbols": ["that", "np", "fin_vp_ap_moved", "adjunct_list"], "postprocess": nt("declarative_cl_ap_moved")},
-    {"name": "declarative_cl_ap_moved", "symbols": ["that", "np", "fin_vp", "adjunct_list"], "postprocess": nt("declarative_cl_ap_moved")},
+    {"name": "declarative_cl_np_moved", "symbols": ["that", "fin_vp"], "postprocess": nt("declarative_cl_np_moved")},
+    {"name": "declarative_cl_np_moved", "symbols": ["that", "np", "fin_vp_np_moved"], "postprocess": nt("declarative_cl_np_moved")},
+    {"name": "declarative_cl_ap_moved", "symbols": ["that", "np", "fin_vp_ap_moved"], "postprocess": nt("declarative_cl_ap_moved")},
+    {"name": "declarative_cl_ap_moved", "symbols": ["that", "np", "fin_vp"], "postprocess": nt("declarative_cl_ap_moved")},
     {"name": "np", "symbols": ["precorenp_modifier_list", "core_np", "postcorenp_modifier_list"], "postprocess": nt("np")},
     {"name": "precorenp_modifier_list$ebnf$1", "symbols": []},
     {"name": "precorenp_modifier_list$ebnf$1", "symbols": ["precorenp_modifier_list$ebnf$1", "precorenp_modifier"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
@@ -538,7 +538,11 @@ let ParserRules = [
     {"name": "core_np", "symbols": ["dp", "ap_list", "noun", "n_modifier_list"], "postprocess": nt("core_np")},
     {"name": "wh_np", "symbols": ["wh"], "postprocess": nt("wh_np")},
     {"name": "wh_np", "symbols": ["wh", "np"], "postprocess": nt("wh_np")},
-    {"name": "n_modifier", "symbols": ["declarative_cl"], "postprocess": nt("n_modifier")},
+    {"name": "restrictive_correlative", "symbols": ["that"], "postprocess": nt("restrictive_correlative")},
+    {"name": "restrictive_correlative", "symbols": ["which"], "postprocess": nt("restrictive_correlative")},
+    {"name": "restrictive_cl", "symbols": ["restrictive_correlative", "fin_vp"], "postprocess": nt("restrictive_cl")},
+    {"name": "restrictive_cl", "symbols": ["restrictive_correlative", "np", "fin_vp_np_moved"], "postprocess": nt("restrictive_cl")},
+    {"name": "n_modifier", "symbols": ["restrictive_cl"], "postprocess": nt("n_modifier")},
     {"name": "n_modifier", "symbols": ["pp"], "postprocess": nt("n_modifier")},
     {"name": "n_modifier_list$ebnf$1", "symbols": []},
     {"name": "n_modifier_list$ebnf$1", "symbols": ["n_modifier_list$ebnf$1", "n_modifier"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
@@ -659,6 +663,7 @@ let ParserRules = [
     {"name": "wh", "symbols": [wh], "postprocess": t("wh")},
     {"name": "why", "symbols": [why], "postprocess": t("why")},
     {"name": "how", "symbols": [how], "postprocess": t("how")},
+    {"name": "which", "symbols": [which], "postprocess": t("which")},
     {"name": "precorenp_modifier", "symbols": [precorenp_modifier], "postprocess": t("precorenp_modifier")},
     {"name": "postcorenp_modifier", "symbols": [postcorenp_modifier], "postprocess": t("postcorenp_modifier")},
     {"name": "be_fin", "symbols": [be_fin], "postprocess": t("is_fin")},
