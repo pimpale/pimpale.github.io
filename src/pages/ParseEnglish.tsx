@@ -13,20 +13,25 @@ type TreeNode = {
 
 
 function parseEnglish(input: string): TreeNode[] {
-    const parser = new nearley.Parser(nearley.Grammar.fromCompiled(englishGrammar as any));
+    try {
+        const parser = new nearley.Parser(nearley.Grammar.fromCompiled(englishGrammar as any));
 
-    // lex input into tokens
-    const tokens = lex(input);
+        // lex input into tokens
+        const tokens = lex(input);
 
-    console.log(tokens);
+        console.log(tokens);
 
-    // Parse something!
-    parser.feed(tokens as any);
+        // Parse something!
+        parser.feed(tokens as any);
 
-    console.log(parser.results);
+        console.log(parser.results);
 
-    // parser.results is an array of possible parsings.
-    return parser.results as TreeNode[];
+        // parser.results is an array of possible parsings.
+        return parser.results as TreeNode[];
+    } catch (error) {
+        console.error('Error parsing sentence:', error);
+        return [];
+    }
 }
 
 function ParseEnglishWidget() {
@@ -37,7 +42,7 @@ function ParseEnglishWidget() {
         "Who are you?",
         "I know that you like cheese.",
         "She walked to the store.",
-        "The cat, which was sleeping on the windowsill, woke up suddenly.",
+        "The box that is on the table is my favorite.",
         "John and Mary went to the park yesterday.",
         "The book that I read was very interesting.",
         "Running through the forest, he felt free.",
@@ -58,15 +63,15 @@ function ParseEnglishWidget() {
         setOutput(parseEnglish(sentence));
     };
 
-    return <div className="d-flex gap-3">
-        <div className="sidebar" style={{ width: "250px" }}>
+    return <div className="row">
+        <div className="col-md-3">
             <h5 className="mb-3">Example Sentences</h5>
             <div style={{ maxHeight: "600px", overflowY: "auto" }}>
                 <div className="list-group">
                     {exampleSentences.map((sentence, index) => (
                         <button
                             key={index}
-                            className="list-group-item list-group-item-action text-start"
+                            className={`list-group-item list-group-item-action text-start ${sentence === input ? 'active' : ''}`}
                             onClick={() => handleExampleClick(sentence)}
                         >
                             {sentence}
@@ -75,7 +80,7 @@ function ParseEnglishWidget() {
                 </div>
             </div>
         </div>
-        <div className="flex-grow-1">
+        <div className="col-md-9">
             <textarea
                 style={{ width: "100%", height: "200px" }}
                 value={input}
@@ -89,10 +94,26 @@ function ParseEnglishWidget() {
             >
                 Parse
             </button>
-            {output.map((tree, i) =>
-                <div key={i}>
-                    <SyntaxTree tree={tree} />
+            {output.length === 0 ? (
+                <div className="alert alert-danger mt-3">
+                    No valid parse trees found for this sentence.
                 </div>
+            ) : (
+                <>
+                    {output.length > 1 && (
+                        <div className="alert alert-warning mt-3">
+                            This sentence has multiple possible parses (ambiguous).
+                        </div>
+                    )}
+                    {output.map((tree, i) =>
+                        <div key={i} className="mt-3">
+                            {output.length > 1 && (
+                                <h3 className="mb-2">Parse {i + 1}</h3>
+                            )}
+                            <SyntaxTree tree={tree} />
+                        </div>
+                    )}
+                </>
             )}
         </div>
     </div>;

@@ -8,7 +8,8 @@ import english from './english.json';
 // parts of speech
 const det = {test: x => x in english.det};
 const pronoun = {test: x => x in english.pronoun};
-const pronoun_pos = {test: x => x in english.pronoun_pos};
+const possessive_pronoun = {test: x => x in english.possessive_pronoun};
+const possessive_adjective = {test: x => x in english.possessive_adjective};
 const proper_noun = {test: x => x in english.proper_noun};
 const uncountable_noun = {test: x => x in english.uncountable_noun};
 const noun = {test: x => x in english.noun};
@@ -534,6 +535,7 @@ let ParserRules = [
     {"name": "postcorenp_modifier_list", "symbols": ["postcorenp_modifier_list$ebnf$1"], "postprocess": nonterminal_unpack("postcorenp_modifier_list")},
     {"name": "core_np", "symbols": ["proper_noun"], "postprocess": nt("core_np")},
     {"name": "core_np", "symbols": ["pronoun"], "postprocess": nt("core_np")},
+    {"name": "core_np", "symbols": ["possessive_pronoun"], "postprocess": nt("core_np")},
     {"name": "core_np", "symbols": ["ap_list", "uncountable_noun", "n_modifier_list"], "postprocess": nt("core_np")},
     {"name": "core_np", "symbols": ["dp", "ap_list", "noun", "n_modifier_list"], "postprocess": nt("core_np")},
     {"name": "wh_np", "symbols": ["wh"], "postprocess": nt("wh_np")},
@@ -549,7 +551,7 @@ let ParserRules = [
     {"name": "n_modifier_list", "symbols": ["n_modifier_list$ebnf$1"], "postprocess": nonterminal_unpack("n_modifier_list")},
     {"name": "dp", "symbols": ["det"], "postprocess": nt("det")},
     {"name": "dp", "symbols": ["np", "s"], "postprocess": nt("det")},
-    {"name": "dp", "symbols": ["pronoun_pos"], "postprocess": nt("det")},
+    {"name": "dp", "symbols": ["possessive_adjective"], "postprocess": nt("det")},
     {"name": "adjunct", "symbols": ["pp"], "postprocess": nt("adjunct")},
     {"name": "adjunct", "symbols": ["advp"], "postprocess": nt("adjunct")},
     {"name": "adjunct_np_moved", "symbols": ["pp_np_moved"], "postprocess": nt("adjunct")},
@@ -576,7 +578,8 @@ let ParserRules = [
     {"name": "not?", "symbols": [], "postprocess": nt("not?")},
     {"name": "det", "symbols": [det], "postprocess": t("det")},
     {"name": "pronoun", "symbols": [pronoun], "postprocess": t("pronoun")},
-    {"name": "pronoun_pos", "symbols": [pronoun_pos], "postprocess": t("pronoun_pos")},
+    {"name": "possessive_adjective", "symbols": [possessive_adjective], "postprocess": t("possessive_adjective")},
+    {"name": "possessive_pronoun", "symbols": [possessive_pronoun], "postprocess": t("possessive_pronoun")},
     {"name": "proper_noun", "symbols": [proper_noun], "postprocess": t("proper_noun")},
     {"name": "uncountable_noun", "symbols": [uncountable_noun], "postprocess": t("uncountable_noun")},
     {"name": "noun", "symbols": [noun], "postprocess": t("noun")},

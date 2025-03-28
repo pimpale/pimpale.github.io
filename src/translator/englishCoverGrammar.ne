@@ -7,7 +7,8 @@ import english from './english.json';
 // parts of speech
 const det = {test: x => x in english.det};
 const pronoun = {test: x => x in english.pronoun};
-const pronoun_pos = {test: x => x in english.pronoun_pos};
+const possessive_pronoun = {test: x => x in english.possessive_pronoun};
+const possessive_adjective = {test: x => x in english.possessive_adjective};
 const proper_noun = {test: x => x in english.proper_noun};
 const uncountable_noun = {test: x => x in english.uncountable_noun};
 const noun = {test: x => x in english.noun};
@@ -758,6 +759,7 @@ postcorenp_modifier_list -> postcorenp_modifier:* {%nonterminal_unpack("postcore
 core_np -> 
                     proper_noun                                     {%nt("core_np")%}  # a proper noun (ex: "John", "Mary")
     |               pronoun                                         {%nt("core_np")%}  # a pronoun (ex: "I", "you", "he", "she", "it", "we", "they")
+    |               possessive_pronoun                              {%nt("core_np")%}  # a possessive pronoun (ex: "mine", "yours")
     |     ap_list   uncountable_noun n_modifier_list                {%nt("core_np")%}  # an uncountable noun with an adjective phrase (ex: "happy music") 
     | dp  ap_list   noun             n_modifier_list                {%nt("core_np")%}  # determiner phrase followed by a nominal (ex: "even all the lovely food too")
 
@@ -780,9 +782,9 @@ n_modifier -> restrictive_cl           {%nt("n_modifier")%} # a relative clause 
 
 n_modifier_list -> n_modifier:* {%nonterminal_unpack("n_modifier_list")%}
 # a determiner phrase
-dp -> det         {%nt("det")%} # the, a, an, some, this, that
-    | np s        {%nt("det")%} # a noun phrase followed by a possessive suffix (ex: "John's")
-    | pronoun_pos {%nt("det")%} # a possessive pronoun (ex: "my", "yours", "his", "hers", "ours", "theirs")
+dp -> det                {%nt("det")%} # the, a, an, some, this, that
+    | np s               {%nt("det")%} # a noun phrase followed by a possessive suffix (ex: "John's")
+    | possessive_adjective {%nt("det")%} # a possessive pronoun (ex: "my", "your", "his", "her", "our", "their")
 
 adjunct ->
       pp             {%nt("adjunct")%} # a prepositional phrase adjunct (ex: "in the house")
@@ -832,7 +834,8 @@ not? -> not         {%nt("not?")%}
 
 det -> %det {%t("det")%}
 pronoun -> %pronoun {%t("pronoun")%}
-pronoun_pos -> %pronoun_pos {%t("pronoun_pos")%}
+possessive_adjective -> %possessive_adjective {%t("possessive_adjective")%}
+possessive_pronoun -> %possessive_pronoun {%t("possessive_pronoun")%}
 proper_noun -> %proper_noun {%t("proper_noun")%}
 uncountable_noun -> %uncountable_noun {%t("uncountable_noun")%}
 noun -> %noun {%t("noun")%}
