@@ -3,29 +3,33 @@
 @{%
 import english from './english.json';
 
+function isPoS(pos) {
+  return {test: word => (english[word] ?? ["UNK"]).includes(pos)}
+}
+
+function isAnyOfPoS(pos_arr) {
+  return {test: word => pos_arr.some(pos => (english[word] ?? ["UNK"]).includes(pos))}
+}
 
 // parts of speech
-const det = {test: x => x in english.det};
-const pronoun = {test: x => x in english.pronoun};
-const possessive_pronoun = {test: x => x in english.possessive_pronoun};
-const possessive_adjective = {test: x => x in english.possessive_adjective};
-const proper_noun = {test: x => x in english.proper_noun};
-const uncountable_noun = {test: x => x in english.uncountable_noun};
-const noun = {test: x => x in english.noun};
-const preposition = {test: x => x in english.preposition};
+const det = isPoS("det");
+const pronoun = isPoS("pronoun");
+const possessive_pronoun = isPoS("possessive_pronoun");
+const possessive_adjective = isPoS("possessive_adjective");
+const proper_noun = isPoS("proper_noun");
+const uncountable_noun = isPoS("uncountable_noun");
+const noun = isPoS("noun");
+const preposition = isPoS("preposition");
 
 // particles
-const to = {test: x => x in english.to};
-const s = {test: x => x in english.s};
-const not = {test: x => x in english.not};
-const that = {test: x => x in english.that};
-const interrogative_subordinator = {test: x => x in english.interrogative_subordinator}; // if whether
-// replaces adjective phrases
-const how = {test: x => x in english.how}; // how
-// replaces reasons
-const why = {test: x => x in english.why}; // why
-// can be used as a restrictive restrictive_correlative
-const which = {test: x => x in english.which}; // which
+const to = isPoS("to");
+const s = isPoS("s");
+const not = isPoS("not");
+const that = isPoS("that");
+const interrogative_subordinator = isPoS("interrogative_subordinator");
+const how = isPoS("how");
+const why = isPoS("why");
+const which = isPoS("which");
 
 // punctuation
 const period = {test: x => x == "." };
@@ -35,106 +39,101 @@ const exclamation_mark = { test: x => x == "!" };
 // verbs
 
 // Modal (MODAL)
-const modal = {test: x => x in english.modal};
+const modal = isPoS("modal");
 
 // Base Verb (VB)
-const vb = {test: x => x in english.vb};
-const vb_ap = {test: x => x in english.vb_ap};
-const vb_to_inf_cl = {test: x => x in english.vb_to_inf_cl};
-const vb_bare_inf_cl = {test: x => x in english.vb_bare_inf_cl};
-const vb_declarative_cl = {test: x => x in english.vb_declarative_cl};
-const vb_exclamative_cl = {test: x => x in english.vb_exclamative_cl};
-const vb_interrogative_cl = {test: x => x in english.vb_interrogative_cl};
-const vb_vbg_cl = {test: x => x in english.vb_vbg_cl};
-const vb_vbn_cl = {test: x => x in english.vb_vbn_cl};
-const vb_np = {test: x => x in english.vb_np};
-const vb_np_ap = {test: x => x in english.vb_np_ap};
-const vb_np_to_inf_cl = {test: x => x in english.vb_np_to_inf_cl};
-const vb_np_bare_inf_cl = {test: x => x in english.vb_np_bare_inf_cl};
-const vb_np_declarative_cl = {test: x => x in english.vb_np_declarative_cl};
-const vb_np_exclamative_cl = {test: x => x in english.vb_np_exclamative_cl};
-const vb_np_interrogative_cl = {test: x => x in english.vb_np_interrogative_cl};
-const vb_np_np = {test: x => x in english.vb_np_np};
+const vb = isPoS("vb");
+const vb_ap = isPoS("vb_ap");
+const vb_to_inf_cl = isPoS("vb_to_inf_cl");
+const vb_bare_inf_cl = isPoS("vb_bare_inf_cl");
+const vb_declarative_cl = isPoS("vb_declarative_cl");
+const vb_exclamative_cl = isPoS("vb_exclamative_cl");
+const vb_interrogative_cl = isPoS("vb_interrogative_cl");
+const vb_vbg_cl = isPoS("vb_vbg_cl");
+const vb_vbn_cl = isPoS("vb_vbn_cl");
+const vb_np = isPoS("vb_np");
+const vb_np_ap = isPoS("vb_np_ap");
+const vb_np_to_inf_cl = isPoS("vb_np_to_inf_cl");
+const vb_np_bare_inf_cl = isPoS("vb_np_bare_inf_cl");
+const vb_np_declarative_cl = isPoS("vb_np_declarative_cl");
+const vb_np_exclamative_cl = isPoS("vb_np_exclamative_cl");
+const vb_np_interrogative_cl = isPoS("vb_np_interrogative_cl");
+const vb_np_np = isPoS("vb_np_np");
 
 // Verb Gerund or Present Participle (VBG)
-const vbg = {test: x => x in english.vbg};
-const vbg_ap = {test: x => x in english.vbg_ap};
-const vbg_to_inf_cl = {test: x => x in english.vbg_to_inf_cl};
-const vbg_bare_inf_cl = {test: x => x in english.vbg_bare_inf_cl};
-const vbg_declarative_cl = {test: x => x in english.vbg_declarative_cl};
-const vbg_exclamative_cl = {test: x => x in english.vbg_exclamative_cl};
-const vbg_interrogative_cl = {test: x => x in english.vbg_interrogative_cl};
-const vbg_vbg_cl = {test: x => x in english.vbg_vbg_cl};
-const vbg_vbn_cl = {test: x => x in english.vbg_vbn_cl};
-const vbg_np = {test: x => x in english.vbg_np};
-const vbg_np_ap = {test: x => x in english.vbg_np_ap};
-const vbg_np_to_inf_cl = {test: x => x in english.vbg_np_to_inf_cl};
-const vbg_np_bare_inf_cl = {test: x => x in english.vbg_np_bare_inf_cl};
-const vbg_np_declarative_cl = {test: x => x in english.vbg_np_declarative_cl};
-const vbg_np_exclamative_cl = {test: x => x in english.vbg_np_exclamative_cl};
-const vbg_np_interrogative_cl = {test: x => x in english.vbg_np_interrogative_cl};
-const vbg_np_np = {test: x => x in english.vbg_np_np};
+const vbg = isPoS("vbg");
+const vbg_ap = isPoS("vbg_ap");
+const vbg_to_inf_cl = isPoS("vbg_to_inf_cl");
+const vbg_bare_inf_cl = isPoS("vbg_bare_inf_cl");
+const vbg_declarative_cl = isPoS("vbg_declarative_cl");
+const vbg_exclamative_cl = isPoS("vbg_exclamative_cl");
+const vbg_interrogative_cl = isPoS("vbg_interrogative_cl");
+const vbg_vbg_cl = isPoS("vbg_vbg_cl");
+const vbg_vbn_cl = isPoS("vbg_vbn_cl");
+const vbg_np = isPoS("vbg_np");
+const vbg_np_ap = isPoS("vbg_np_ap");
+const vbg_np_to_inf_cl = isPoS("vbg_np_to_inf_cl");
+const vbg_np_bare_inf_cl = isPoS("vbg_np_bare_inf_cl");
+const vbg_np_declarative_cl = isPoS("vbg_np_declarative_cl");
+const vbg_np_exclamative_cl = isPoS("vbg_np_exclamative_cl");
+const vbg_np_interrogative_cl = isPoS("vbg_np_interrogative_cl");
+const vbg_np_np = isPoS("vbg_np_np");
 
 // Verb Past Participle (VBN)
-const vbn = {test: x => x in english.vbn};
-const vbn_ap = {test: x => x in english.vbn_ap};
-const vbn_to_inf_cl = {test: x => x in english.vbn_to_inf_cl};
-const vbn_bare_inf_cl = {test: x => x in english.vbn_bare_inf_cl};
-const vbn_declarative_cl = {test: x => x in english.vbn_declarative_cl};
-const vbn_exclamative_cl = {test: x => x in english.vbn_exclamative_cl};
-const vbn_interrogative_cl = {test: x => x in english.vbn_interrogative_cl};
-const vbn_vbg_cl = {test: x => x in english.vbn_vbg_cl};
-const vbn_vbn_cl = {test: x => x in english.vbn_vbn_cl};
-const vbn_np = {test: x => x in english.vbn_np};
-const vbn_np_ap = {test: x => x in english.vbn_np_ap};
-const vbn_np_to_inf_cl = {test: x => x in english.vbn_np_to_inf_cl};
-const vbn_np_bare_inf_cl = {test: x => x in english.vbn_np_bare_inf_cl};
-const vbn_np_declarative_cl = {test: x => x in english.vbn_np_declarative_cl};
-const vbn_np_exclamative_cl = {test: x => x in english.vbn_np_exclamative_cl};
-const vbn_np_interrogative_cl = {test: x => x in english.vbn_np_interrogative_cl};
-const vbn_np_np = {test: x => x in english.vbn_np_np};
+const vbn = isPoS("vbn");
+const vbn_ap = isPoS("vbn_ap");
+const vbn_to_inf_cl = isPoS("vbn_to_inf_cl");
+const vbn_bare_inf_cl = isPoS("vbn_bare_inf_cl");
+const vbn_declarative_cl = isPoS("vbn_declarative_cl");
+const vbn_exclamative_cl = isPoS("vbn_exclamative_cl");
+const vbn_interrogative_cl = isPoS("vbn_interrogative_cl");
+const vbn_vbg_cl = isPoS("vbn_vbg_cl");
+const vbn_vbn_cl = isPoS("vbn_vbn_cl");
+const vbn_np = isPoS("vbn_np");
+const vbn_np_ap = isPoS("vbn_np_ap");
+const vbn_np_to_inf_cl = isPoS("vbn_np_to_inf_cl");
+const vbn_np_bare_inf_cl = isPoS("vbn_np_bare_inf_cl");
+const vbn_np_declarative_cl = isPoS("vbn_np_declarative_cl");
+const vbn_np_exclamative_cl = isPoS("vbn_np_exclamative_cl");
+const vbn_np_interrogative_cl = isPoS("vbn_np_interrogative_cl");
+const vbn_np_np = isPoS("vbn_np_np");
 
 // Verb Finite (VBF): supercategory for the following
-// - Past Tense Verb (VBD)
-// - Non-third person singular present (VBP)
-// - Third person singular present (VBZ)
-
-const vbf = {test: x => x in english.vbd || x in english.vbp || x in english.vbz};
-const vbf_ap = {test: x => x in english.vbd_ap || x in english.vbp_ap || x in english.vbz_ap};
-const vbf_to_inf_cl = {test: x => x in english.vbd_to_inf_cl || x in english.vbp_to_inf_cl || x in english.vbz_to_inf_cl};
-const vbf_bare_inf_cl = {test: x => x in english.vbd_bare_inf_cl || x in english.vbp_bare_inf_cl || x in english.vbz_bare_inf_cl};
-const vbf_declarative_cl = {test: x => x in english.vbd_declarative_cl || x in english.vbp_declarative_cl || x in english.vbz_declarative_cl};
-const vbf_exclamative_cl = {test: x => x in english.vbd_exclamative_cl || x in english.vbp_exclamative_cl || x in english.vbz_exclamative_cl};
-const vbf_interrogative_cl = {test: x => x in english.vbd_interrogative_cl || x in english.vbp_interrogative_cl || x in english.vbz_interrogative_cl};
-const vbf_vbg_cl = {test: x => x in english.vbd_vbg_cl || x in english.vbp_vbg_cl || x in english.vbz_vbg_cl};
-const vbf_vbn_cl = {test: x => x in english.vbd_vbn_cl || x in english.vbp_vbn_cl || x in english.vbz_vbn_cl};
-const vbf_np = {test: x => x in english.vbd_np || x in english.vbp_np || x in english.vbz_np};
-const vbf_np_ap = {test: x => x in english.vbd_np_ap || x in english.vbp_np_ap || x in english.vbz_np_ap};
-const vbf_np_to_inf_cl = {test: x => x in english.vbd_np_to_inf_cl || x in english.vbp_np_to_inf_cl || x in english.vbz_np_to_inf_cl};
-const vbf_np_bare_inf_cl = {test: x => x in english.vbd_np_bare_inf_cl || x in english.vbp_np_bare_inf_cl || x in english.vbz_np_bare_inf_cl};
-const vbf_np_declarative_cl = {test: x => x in english.vbd_np_declarative_cl || x in english.vbp_np_declarative_cl || x in english.vbz_np_declarative_cl};
-const vbf_np_exclamative_cl = {test: x => x in english.vbd_np_exclamative_cl || x in english.vbp_np_exclamative_cl || x in english.vbz_np_exclamative_cl};
-const vbf_np_interrogative_cl = {test: x => x in english.vbd_np_interrogative_cl || x in english.vbp_np_interrogative_cl || x in english.vbz_np_interrogative_cl};
-const vbf_np_np = {test: x => x in english.vbd_np_np || x in english.vbp_np_np || x in english.vbz_np_np};
+const vbf = isAnyOfPoS(["vbd","vbp","vbz"]);
+const vbf_ap = isAnyOfPoS(["vbd_ap","vbp_ap","vbz_ap"]);
+const vbf_to_inf_cl = isAnyOfPoS(["vbd_to_inf_cl","vbp_to_inf_cl","vbz_to_inf_cl"]);
+const vbf_bare_inf_cl = isAnyOfPoS(["vbd_bare_inf_cl","vbp_bare_inf_cl","vbz_bare_inf_cl"]);
+const vbf_declarative_cl = isAnyOfPoS(["vbd_declarative_cl","vbp_declarative_cl","vbz_declarative_cl"]);
+const vbf_exclamative_cl = isAnyOfPoS(["vbd_exclamative_cl","vbp_exclamative_cl","vbz_exclamative_cl"]);
+const vbf_interrogative_cl = isAnyOfPoS(["vbd_interrogative_cl","vbp_interrogative_cl","vbz_interrogative_cl"]);
+const vbf_vbg_cl = isAnyOfPoS(["vbd_vbg_cl","vbp_vbg_cl","vbz_vbg_cl"]);
+const vbf_vbn_cl = isAnyOfPoS(["vbd_vbn_cl","vbp_vbn_cl","vbz_vbn_cl"]);
+const vbf_np = isAnyOfPoS(["vbd_np","vbp_np","vbz_np"]);
+const vbf_np_ap = isAnyOfPoS(["vbd_np_ap","vbp_np_ap","vbz_np_ap"]);
+const vbf_np_to_inf_cl = isAnyOfPoS(["vbd_np_to_inf_cl","vbp_np_to_inf_cl","vbz_np_to_inf_cl"]);
+const vbf_np_bare_inf_cl = isAnyOfPoS(["vbd_np_bare_inf_cl","vbp_np_bare_inf_cl","vbz_np_bare_inf_cl"]);
+const vbf_np_declarative_cl = isAnyOfPoS(["vbd_np_declarative_cl","vbp_np_declarative_cl","vbz_np_declarative_cl"]);
+const vbf_np_exclamative_cl = isAnyOfPoS(["vbd_np_exclamative_cl","vbp_np_exclamative_cl","vbz_np_exclamative_cl"]);
+const vbf_np_interrogative_cl = isAnyOfPoS(["vbd_np_interrogative_cl","vbp_np_interrogative_cl","vbz_np_interrogative_cl"]);
+const vbf_np_np = isAnyOfPoS(["vbd_np_np","vbp_np_np","vbz_np_np"]);
 
 // certain core verbs
-const be_fin = {test: x => x in english.is || x in english.are || x in english.were};
-const do_fin = {test: x => x in english.do || x in english.does || x in english.did};
+const be_fin = isAnyOfPoS(["is","are","were"]);
+const do_fin = isAnyOfPoS(["do","does","did"]);
 
 // adjectives
-const adj = {test: x => x in english.adj}; // adjectives that don't take any arguments (ex: "happy")
-const adj_pp = {test: x => x in english.adj_pp}; // adjectives that take a prepositional phrase argument (ex: "fond of cheese")
-const adj_declarative_cl = {test: x => x in english.adj_declarative_cl}; // adjectives that take a declarative clause argument (ex: "happy that you could make it")
-const adj_to_inf_cl = {test: x => x in english.adj_to_inf_cl}; // adjectives that take an infinitive clause argument (ex: "happy to see you")
-
+const adj = isPoS("adj");
+const adj_pp = isPoS("adj_pp");
+const adj_declarative_cl = isPoS("adj_declarative_cl");
+const adj_to_inf_cl = isPoS("adj_to_inf_cl");
 
 // adverbs
-const adv = {test: x => x in english.adv}; // adverbs that don't take any arguments (ex: "quickly")
-const precorenp_modifier = {test: x => x in english.precorenp_modifier}; // peripheral modifiers (ex: "even", "all")
-const postcorenp_modifier = {test: x => x in english.postcorenp_modifier}; // peripheral modifiers (ex: "too", "altogether")
+const adv = isPoS("adv");
+const precorenp_modifier = isPoS("precorenp_modifier");
+const postcorenp_modifier = isPoS("postcorenp_modifier");
 
 // wh-words (that replace nouns)
-const wh = {test: x => x in english.wh}; // wh-words (ex: "who", "what", "where", "when", "why")
+const wh = isPoS("wh");
 
 // define postprocessors
 

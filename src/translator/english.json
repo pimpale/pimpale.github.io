@@ -1,2959 +1,6027 @@
 {
-    "det": {
-        "a": null,
-        "an": null,
-        "the": null,
-        "some": null
-    },
-    "pronoun": {
-        "i": null,
-        "you": null,
-        "he": null,
-        "she": null,
-        "it": null,
-        "we": null,
-        "they": null,
-        "this": null,
-        "that": null,
-        "these": null,
-        "those": null
-    },
-    "possessive_adjective": {
-        "my": null,
-        "your": null,
-        "his": null,
-        "her": null,
-        "its": null,
-        "our": null,
-        "their": null
-    },
-    "possessive_pronoun": {
-        "mine": null,
-        "yours": null,
-        "his": null,
-        "hers": null,
-        "its": null,
-        "ours": null,
-        "theirs": null
-    },
-    "proper_noun": {
-        "London": null,
-        "Paris": null,
-        "Berlin": null,
-        "Moscow": null,
-        "Tokyo": null,
-        "Beijing": null,
-        "New York": null,
-        "Los Angeles": null,
-        "San Francisco": null,
-        "Roxy": null,
-        "Max": null,
-        "Daisy": null,
-        "Sue": null,
-        "John": null,
-        "Mary": null,
-        "Peter": null,
-        "Paul": null,
-        "Carlos": null,
-        "Jesus": null,
-        "Darnell": null,
-        "Milly": null,
-        "Alice": null,
-        "Anna": null,
-        "Becky": null,
-        "Bertha": null,
-        "Bob": null,
-        "Charlie": null,
-        "Carol": null,
-        "David": null,
-        "Disney": null,
-        "Emily": null,
-        "Eve": null,
-        "Frank": null,
-        "Grace": null,
-        "Gloria": null,
-        "Henry": null
-    },
-    "uncountable_noun": {
-        "water": null,
-        "milk": null,
-        "rice": null,
-        "money": null,
-        "food": null,
-        "air": null,
-        "light": null,
-        "heat": null,
-        "cold": null,
-        "ice": null,
-        "bread": null,
-        "flour": null,
-        "snow": null,
-        "rain": null,
-        "news": null,
-        "information": null,
-        "knowledge": null,
-        "wisdom": null,
-        "furniture": null,
-        "equipment": null,
-        "luggage": null,
-        "time": null,
-        "sand": null,
-        "popcorn": null,
-        "music": null,
-        "soda": null,
-        "pizza": null,
-        "fish": null,
-        "meat": null,
-        "chicken": null,
-        "broccoli": null,
-        "candy": null,
-        "magic": null,
-        "stuff": null,
-        "yogurt": null,
-        "honey": null,
-        "smoke": null,
-        "cream": null,
-        "cheese": null,
-        "advice": null,
-        "jewelry": null,
-        "blood": null,
-        "biology": null,
-        "astronomy": null,
-        "chemistry": null,
-        "research": null,
-        "football": null,
-        "tennis": null,
-        "baseball": null,
-        "jenga": null,
-        "soccer": null,
-        "badminton": null
-    },
-    "not": {
-        "not": null
-    },
-    "to": {
-        "to": null
-    },
-    "s": {
-        "s": null
-    },
-    "that": {
-        "that": null
-    },
-    "interrogative_subordinator": {
-        "if": null,
-        "whether": null
-    },
-    "adj": {
-        "big": null,
-        "small": null,
-        "little": null,
-        "happy": null,
-        "sad": null,
-        "icy": null,
-        "thoughtful": null,
-        "careful": null,
-        "lonely": null,
-        "kind": null,
-        "quick": null,
-        "interesting": null,
-        "mysterious": null,
-        "free": null,
-        "young": null,
-        "old": null
-    },
-    "adj_pp": {
-        "interested": null,
-        "glad": null,
-        "sad": null,
-        "sorry": null
-    },
-    "adj_declarative_cl": {
-        "happy": null,
-        "glad": null,
-        "sad": null,
-        "sorry": null
-    },
-    "adj_to_inf_cl": {
-        "happy": null,
-        "glad": null,
-        "sad": null,
-        "sorry": null
-    },
-    "adv": {
-        "quickly": null,
-        "slowly": null,
-        "happily": null,
-        "now": null,
-        "very": null,
-        "clearly": null,
-        "sadly": null,
-        "suddenly": null
-    },
-    "precorenp_modifier": {
-        "even": null,
-        "all": null
-    },
-    "postcorenp_modifier": {
-        "too": null,
-        "altogether": null
-    },
-    "modal": {
-        "can": null,
-        "could": null,
-        "may": null,
-        "might": null,
-        "shall": null,
-        "should": null,
-        "will": null,
-        "would": null,
-        "must": null
-    },
-    "how": {
-        "how": null
-    },
-    "why": {
-        "why": null
-    },
-    "wh": {
-        "who": null,
-        "what": null,
-        "which": null,
-        "where": null,
-        "when": null
-    },
-    "is": {
-        "is": null
-    },
-    "are": {
-        "are": null
-    },
-    "were": {
-        "were": null
-    },
-    "does": {
-        "does": null
-    },
-    "do": {
-        "do": null
-    },
-    "did": {
-        "did": null
-    },
-    "which": {
-        "which": null
-    },
-    "noun": {
-        "apple": null,
-        "banana": null,
-        "car": null,
-        "house": null,
-        "tree": null,
-        "flower": null,
-        "daisy": null,
-        "bee": null,
-        "dog": null,
-        "cat": null,
-        "cow": null,
-        "pig": null,
-        "horse": null,
-        "sheep": null,
-        "chicken": null,
-        "bird": null,
-        "hummingbird": null,
-        "rhinoceros": null,
-        "elephant": null,
-        "fish": null,
-        "whale": null,
-        "octopus": null,
-        "book": null,
-        "pen": null,
-        "pencil": null,
-        "computer": null,
-        "phone": null,
-        "television": null,
-        "radio": null,
-        "newspaper": null,
-        "magazine": null,
-        "letter": null,
-        "email": null,
-        "picture": null,
-        "photograph": null,
-        "video": null,
-        "movie": null,
-        "music": null,
-        "song": null,
-        "dance": null,
-        "game": null,
-        "toy": null,
-        "snowman": null,
-        "ball": null,
-        "doll": null,
-        "carpet": null,
-        "floor": null,
-        "ceiling": null,
-        "wall": null,
-        "window": null,
-        "door": null,
-        "roof": null,
-        "stair": null,
-        "step": null,
-        "hall": null,
-        "room": null,
-        "kitchen": null,
-        "stove": null,
-        "spatula": null,
-        "spoon": null,
-        "knife": null,
-        "fork": null,
-        "bowl": null,
-        "plate": null,
-        "cup": null,
-        "glass": null,
-        "mug": null,
-        "platter": null,
-        "dish": null,
-        "vegetable": null,
-        "meat": null,
-        "grain": null,
-        "bathroom": null,
-        "bedroom": null,
-        "bed": null,
-        "table": null,
-        "chair": null,
-        "sofa": null,
-        "couch": null,
-        "desk": null,
-        "shelf": null,
-        "drawer": null,
-        "cabinet": null,
-        "closet": null,
-        "mirror": null,
-        "sink": null,
-        "toilet": null,
-        "bathtub": null,
-        "shower": null,
-        "towel": null,
-        "soap": null,
-        "shampoo": null,
-        "toothbrush": null,
-        "toothpaste": null,
-        "hairbrush": null,
-        "lightbulb": null,
-        "lamp": null,
-        "candle": null,
-        "garden": null,
-        "yard": null,
-        "street": null,
-        "road": null,
-        "highway": null,
-        "bridge": null,
-        "tunnel": null,
-        "river": null,
-        "lake": null,
-        "ocean": null,
-        "sea": null,
-        "beach": null,
-        "mountain": null,
-        "hill": null,
-        "valley": null,
-        "forest": null,
-        "jungle": null,
-        "desert": null,
-        "island": null,
-        "continent": null,
-        "country": null,
-        "state": null,
-        "city": null,
-        "town": null,
-        "village": null,
-        "store": null,
-        "supermarket": null,
-        "bakery": null,
-        "restaurant": null,
-        "neighborhood": null,
-        "household": null,
-        "family": null,
-        "parent": null,
-        "mother": null,
-        "father": null,
-        "child": null,
-        "son": null,
-        "daughter": null,
-        "brother": null,
-        "sister": null,
-        "grandparent": null,
-        "grandmother": null,
-        "grandfather": null,
-        "grandson": null,
-        "granddaughter": null,
-        "uncle": null,
-        "aunt": null,
-        "cousin": null,
-        "nephew": null,
-        "niece": null,
-        "friend": null,
-        "enemy": null,
-        "stranger": null,
-        "guest": null,
-        "host": null,
-        "customer": null,
-        "client": null,
-        "farmer": null,
-        "gardener": null,
-        "cook": null,
-        "fisherman": null,
-        "teacher": null,
-        "professor": null,
-        "student": null,
-        "doctor": null,
-        "nurse": null,
-        "patient": null,
-        "balloon": null,
-        "jar": null,
-        "automobile": null,
-        "park": null,
-        "comet": null,
-        "star": null,
-        "rabbit": null,
-        "veil": null,
-        "truck": null,
-        "racecar": null,
-        "pond": null,
-        "fairy": null,
-        "swing": null,
-        "bush": null,
-        "map": null,
-        "machine": null,
-        "voice": null,
-        "stroke": null,
-        "sack": null,
-        "key": null,
-        "value": null,
-        "wind": null,
-        "treat": null,
-        "race": null,
-        "box": null,
-        "shirt": null,
-        "jail": null,
-        "rainbow": null,
-        "garage": null,
-        "birthday": null,
-        "candy": null,
-        "stuff": null,
-        "sausage": null,
-        "birdcage": null,
-        "bunny": null,
-        "nest": null,
-        "egg": null,
-        "yogurt": null,
-        "robot": null,
-        "castle": null,
-        "tag": null,
-        "honey": null,
-        "hook": null,
-        "button": null,
-        "firework": null,
-        "block": null,
-        "crayon": null,
-        "hanger": null,
-        "janitor": null,
-        "cream": null,
-        "curve": null,
-        "jacket": null,
-        "sweater": null,
-        "dress": null,
-        "blouse": null,
-        "arrow": null,
-        "tub": null,
-        "plan": null,
-        "advice": null,
-        "flashlight": null,
-        "tent": null,
-        "crane": null,
-        "sign": null,
-        "attic": null,
-        "spider": null,
-        "blueberry": null,
-        "strawberry": null,
-        "raspberry": null,
-        "huckleberry": null,
-        "blackberry": null,
-        "orange": null,
-        "wish": null,
-        "laugh": null,
-        "shop": null,
-        "hug": null,
-        "word": null,
-        "verb": null,
-        "noun": null,
-        "adjective": null,
-        "adverb": null,
-        "preposition": null,
-        "pole": null,
-        "reward": null,
-        "loss": null,
-        "agent": null,
-        "whistle": null,
-        "collar": null,
-        "belt": null,
-        "slide": null,
-        "coaster": null,
-        "skull": null,
-        "tibia": null,
-        "pelvis": null,
-        "femur": null,
-        "clavicle": null,
-        "collarbone": null,
-        "vertebra": null,
-        "phalange": null,
-        "rib": null,
-        "sternum": null,
-        "basket": null,
-        "blade": null,
-        "blow": null,
-        "boat": null,
-        "body": null,
-        "carrot": null,
-        "branch": null,
-        "bomb": null,
-        "boy": null,
-        "girl": null,
-        "border": null,
-        "bottom": null,
-        "brain": null,
-        "bottle": null,
-        "brush": null,
-        "budget": null,
-        "concept": null,
-        "sun": null,
-        "moon": null,
-        "earth": null,
-        "rain": null,
-        "snow": null,
-        "hail": null,
-        "favorite": null,
-        "home": null,
-        "apples": null,
-        "bananas": null,
-        "cars": null,
-        "houses": null,
-        "trees": null,
-        "flowers": null,
-        "daisies": null,
-        "bees": null,
-        "dogs": null,
-        "cats": null,
-        "cows": null,
-        "pigs": null,
-        "horses": null,
-        "chickens": null,
-        "birds": null,
-        "hummingbirds": null,
-        "rhinoceroses": null,
-        "elephants": null,
-        "fishes": null,
-        "whales": null,
-        "octopuses": null,
-        "books": null,
-        "pens": null,
-        "pencils": null,
-        "computers": null,
-        "phones": null,
-        "televisions": null,
-        "radios": null,
-        "newspapers": null,
-        "magazines": null,
-        "letters": null,
-        "emails": null,
-        "pictures": null,
-        "photographs": null,
-        "videos": null,
-        "movies": null,
-        "musics": null,
-        "songs": null,
-        "dances": null,
-        "games": null,
-        "toys": null,
-        "snowmans": null,
-        "balls": null,
-        "dolls": null,
-        "carpets": null,
-        "floors": null,
-        "ceilings": null,
-        "walls": null,
-        "windows": null,
-        "doors": null,
-        "roofs": null,
-        "stairs": null,
-        "steps": null,
-        "halls": null,
-        "rooms": null,
-        "kitchens": null,
-        "stoves": null,
-        "spatulas": null,
-        "spoons": null,
-        "knifes": null,
-        "forks": null,
-        "bowls": null,
-        "plates": null,
-        "cups": null,
-        "glasses": null,
-        "mugs": null,
-        "platters": null,
-        "dishes": null,
-        "vegetables": null,
-        "meats": null,
-        "grains": null,
-        "bathrooms": null,
-        "bedrooms": null,
-        "beds": null,
-        "tables": null,
-        "chairs": null,
-        "sofas": null,
-        "couches": null,
-        "desks": null,
-        "shelfs": null,
-        "drawers": null,
-        "cabinets": null,
-        "closets": null,
-        "mirrors": null,
-        "sinks": null,
-        "toilets": null,
-        "bathtubs": null,
-        "showers": null,
-        "towels": null,
-        "soaps": null,
-        "shampoos": null,
-        "toothbrushes": null,
-        "toothpastes": null,
-        "hairbrushes": null,
-        "lightbulbs": null,
-        "lamps": null,
-        "candles": null,
-        "gardens": null,
-        "yards": null,
-        "streets": null,
-        "roads": null,
-        "highways": null,
-        "bridges": null,
-        "tunnels": null,
-        "rivers": null,
-        "lakes": null,
-        "oceans": null,
-        "seas": null,
-        "beaches": null,
-        "mountains": null,
-        "hills": null,
-        "valleys": null,
-        "forests": null,
-        "jungles": null,
-        "deserts": null,
-        "islands": null,
-        "continents": null,
-        "countries": null,
-        "states": null,
-        "cities": null,
-        "towns": null,
-        "villages": null,
-        "stores": null,
-        "supermarkets": null,
-        "bakeries": null,
-        "restaurants": null,
-        "neighborhoods": null,
-        "households": null,
-        "families": null,
-        "parents": null,
-        "mothers": null,
-        "fathers": null,
-        "children": null,
-        "sons": null,
-        "daughters": null,
-        "brothers": null,
-        "sisters": null,
-        "grandparents": null,
-        "grandmothers": null,
-        "grandfathers": null,
-        "grandsons": null,
-        "granddaughters": null,
-        "uncles": null,
-        "aunts": null,
-        "cousins": null,
-        "nephews": null,
-        "nieces": null,
-        "friends": null,
-        "enemies": null,
-        "strangers": null,
-        "guests": null,
-        "hosts": null,
-        "customers": null,
-        "clients": null,
-        "farmers": null,
-        "gardeners": null,
-        "cooks": null,
-        "fishermans": null,
-        "teachers": null,
-        "professors": null,
-        "students": null,
-        "doctors": null,
-        "nurses": null,
-        "patients": null,
-        "balloons": null,
-        "jars": null,
-        "automobiles": null,
-        "parks": null,
-        "comets": null,
-        "stars": null,
-        "rabbits": null,
-        "veils": null,
-        "trucks": null,
-        "racecars": null,
-        "ponds": null,
-        "fairies": null,
-        "swings": null,
-        "bushes": null,
-        "maps": null,
-        "machines": null,
-        "voices": null,
-        "strokes": null,
-        "sacks": null,
-        "keys": null,
-        "values": null,
-        "winds": null,
-        "treats": null,
-        "races": null,
-        "boxes": null,
-        "shirts": null,
-        "jails": null,
-        "rainbows": null,
-        "garages": null,
-        "birthdays": null,
-        "candies": null,
-        "stuffs": null,
-        "sausages": null,
-        "birdcages": null,
-        "bunnies": null,
-        "nests": null,
-        "eggs": null,
-        "yogurts": null,
-        "robots": null,
-        "castles": null,
-        "tags": null,
-        "honeys": null,
-        "hooks": null,
-        "buttons": null,
-        "fireworks": null,
-        "blocks": null,
-        "crayons": null,
-        "hangers": null,
-        "janitors": null,
-        "creams": null,
-        "curves": null,
-        "jackets": null,
-        "sweaters": null,
-        "dresses": null,
-        "blouses": null,
-        "arrows": null,
-        "tubs": null,
-        "plans": null,
-        "advices": null,
-        "flashlights": null,
-        "tents": null,
-        "cranes": null,
-        "signs": null,
-        "attics": null,
-        "spiders": null,
-        "blueberries": null,
-        "strawberries": null,
-        "raspberries": null,
-        "huckleberries": null,
-        "blackberries": null,
-        "oranges": null,
-        "wishes": null,
-        "laughs": null,
-        "shops": null,
-        "hugs": null,
-        "words": null,
-        "verbs": null,
-        "nouns": null,
-        "adjectives": null,
-        "adverbs": null,
-        "prepositions": null,
-        "poles": null,
-        "rewards": null,
-        "losses": null,
-        "agents": null,
-        "whistles": null,
-        "collars": null,
-        "belts": null,
-        "slides": null,
-        "coasters": null,
-        "skulls": null,
-        "tibias": null,
-        "pelvises": null,
-        "femurs": null,
-        "clavicles": null,
-        "collarbones": null,
-        "vertebras": null,
-        "phalanges": null,
-        "ribs": null,
-        "sternums": null,
-        "baskets": null,
-        "blades": null,
-        "blows": null,
-        "boats": null,
-        "bodies": null,
-        "carrots": null,
-        "branches": null,
-        "bombs": null,
-        "boys": null,
-        "girls": null,
-        "borders": null,
-        "bottoms": null,
-        "brains": null,
-        "bottles": null,
-        "brushes": null,
-        "budgets": null,
-        "concepts": null,
-        "suns": null,
-        "moons": null,
-        "earths": null,
-        "rains": null,
-        "snows": null,
-        "hails": null,
-        "favorites": null,
-        "homes": null
-    },
-    "vb": {
-        "be": null,
-        "smoke": null,
-        "exist": null,
-        "ache": null,
-        "agonize": null,
-        "atrophy": null,
-        "babble": null,
-        "bark": null,
-        "beam": null,
-        "behave": null,
-        "belch": null,
-        "bellow": null,
-        "sing": null,
-        "speak": null,
-        "slip": null,
-        "smile": null,
-        "snarl": null,
-        "laugh": null,
-        "stumble": null,
-        "swim": null,
-        "talk": null,
-        "think": null,
-        "caw": null,
-        "choke": null,
-        "clap": null,
-        "climb": null,
-        "crawl": null,
-        "cry": null,
-        "dance": null,
-        "dive": null,
-        "dream": null,
-        "drink": null,
-        "clamor": null,
-        "clatter": null,
-        "clink": null,
-        "cool": null,
-        "cook": null,
-        "cough": null,
-        "crack": null,
-        "crash": null,
-        "creak": null,
-        "croak": null,
-        "crow": null,
-        "darken": null,
-        "dazzle": null,
-        "drip": null,
-        "ding": null,
-        "daydream": null,
-        "doze": null,
-        "drowse": null,
-        "drift": null,
-        "drown": null,
-        "dwell": null,
-        "drool": null,
-        "escape": null,
-        "faint": null,
-        "fade": null,
-        "fish": null,
-        "float": null,
-        "flail": null,
-        "fly": null,
-        "flash": null,
-        "frown": null,
-        "focus": null,
-        "feast": null,
-        "gasp": null,
-        "giggle": null,
-        "glare": null,
-        "glint": null,
-        "glisten": null,
-        "glimmer": null,
-        "glow": null,
-        "go": null,
-        "growl": null,
-        "gurgle": null,
-        "gush": null,
-        "help": null,
-        "hiss": null,
-        "howl": null,
-        "hesitate": null,
-        "hide": null,
-        "hike": null,
-        "honk": null,
-        "hoot": null,
-        "holler": null,
-        "improve": null,
-        "inch": null,
-        "increase": null,
-        "insist": null,
-        "iron": null,
-        "itch": null,
-        "jangle": null,
-        "jingle": null,
-        "jog": null,
-        "kick": null,
-        "kneel": null,
-        "leak": null,
-        "lighten": null,
-        "listen": null,
-        "load": null,
-        "look": null,
-        "limp": null,
-        "lose": null,
-        "lurk": null,
-        "lurch": null,
-        "march": null,
-        "meander": null,
-        "melt": null,
-        "mew": null,
-        "meow": null,
-        "moan": null,
-        "moo": null,
-        "mumble": null,
-        "murmur": null,
-        "mutter": null,
-        "walk": null,
-        "play": null
-    },
-    "vbd": {
-        "were": null,
-        "smoked": null,
-        "existed": null,
-        "ached": null,
-        "agonized": null,
-        "atrophied": null,
-        "babbled": null,
-        "barked": null,
-        "beamed": null,
-        "behaved": null,
-        "belched": null,
-        "bellowed": null,
-        "sang": null,
-        "spoke": null,
-        "sliped": null,
-        "smiled": null,
-        "snarled": null,
-        "laughed": null,
-        "stumbled": null,
-        "swimed": null,
-        "talked": null,
-        "thought": null,
-        "cawed": null,
-        "choked": null,
-        "claped": null,
-        "climbed": null,
-        "crawled": null,
-        "cried": null,
-        "danced": null,
-        "dived": null,
-        "dreamed": null,
-        "drank": null,
-        "clamored": null,
-        "clattered": null,
-        "clinked": null,
-        "cooled": null,
-        "cooked": null,
-        "coughed": null,
-        "cracked": null,
-        "crashed": null,
-        "creaked": null,
-        "croaked": null,
-        "crowed": null,
-        "darkened": null,
-        "dazzled": null,
-        "driped": null,
-        "dinged": null,
-        "daydreamed": null,
-        "dozed": null,
-        "drowsed": null,
-        "drifted": null,
-        "drowned": null,
-        "dwelled": null,
-        "drooled": null,
-        "escaped": null,
-        "fainted": null,
-        "faded": null,
-        "fished": null,
-        "floated": null,
-        "flailed": null,
-        "flied": null,
-        "flashed": null,
-        "frowned": null,
-        "focused": null,
-        "feasted": null,
-        "gasped": null,
-        "giggled": null,
-        "glared": null,
-        "glinted": null,
-        "glistened": null,
-        "glimmered": null,
-        "glowed": null,
-        "went": null,
-        "growled": null,
-        "gurgled": null,
-        "gushed": null,
-        "helped": null,
-        "hissed": null,
-        "howled": null,
-        "hesitated": null,
-        "hided": null,
-        "hiked": null,
-        "honked": null,
-        "hooted": null,
-        "hollered": null,
-        "improved": null,
-        "inched": null,
-        "increased": null,
-        "insisted": null,
-        "ironed": null,
-        "itched": null,
-        "jangled": null,
-        "jingled": null,
-        "joged": null,
-        "kicked": null,
-        "kneeled": null,
-        "leaked": null,
-        "lightened": null,
-        "listened": null,
-        "loaded": null,
-        "looked": null,
-        "limped": null,
-        "losed": null,
-        "lurked": null,
-        "lurched": null,
-        "marched": null,
-        "meandered": null,
-        "melted": null,
-        "mewed": null,
-        "meowed": null,
-        "moaned": null,
-        "mooed": null,
-        "mumbled": null,
-        "murmured": null,
-        "muttered": null,
-        "walked": null,
-        "played": null
-    },
-    "vbn": {
-        "been": null,
-        "smoked": null,
-        "existed": null,
-        "ached": null,
-        "agonized": null,
-        "atrophied": null,
-        "babbled": null,
-        "barked": null,
-        "beamed": null,
-        "behaved": null,
-        "belched": null,
-        "bellowed": null,
-        "sung": null,
-        "spoken": null,
-        "sliped": null,
-        "smiled": null,
-        "snarled": null,
-        "laughed": null,
-        "stumbled": null,
-        "swimed": null,
-        "talked": null,
-        "thought": null,
-        "cawed": null,
-        "choked": null,
-        "claped": null,
-        "climbed": null,
-        "crawled": null,
-        "cried": null,
-        "danced": null,
-        "dived": null,
-        "dreamed": null,
-        "drunk": null,
-        "clamored": null,
-        "clattered": null,
-        "clinked": null,
-        "cooled": null,
-        "cooked": null,
-        "coughed": null,
-        "cracked": null,
-        "crashed": null,
-        "creaked": null,
-        "croaked": null,
-        "crowed": null,
-        "darkened": null,
-        "dazzled": null,
-        "driped": null,
-        "dinged": null,
-        "daydreamed": null,
-        "dozed": null,
-        "drowsed": null,
-        "drifted": null,
-        "drowned": null,
-        "dwelled": null,
-        "drooled": null,
-        "escaped": null,
-        "fainted": null,
-        "faded": null,
-        "fished": null,
-        "floated": null,
-        "flailed": null,
-        "flied": null,
-        "flashed": null,
-        "frowned": null,
-        "focused": null,
-        "feasted": null,
-        "gasped": null,
-        "giggled": null,
-        "glared": null,
-        "glinted": null,
-        "glistened": null,
-        "glimmered": null,
-        "glowed": null,
-        "gone": null,
-        "growled": null,
-        "gurgled": null,
-        "gushed": null,
-        "helped": null,
-        "hissed": null,
-        "howled": null,
-        "hesitated": null,
-        "hided": null,
-        "hiked": null,
-        "honked": null,
-        "hooted": null,
-        "hollered": null,
-        "improved": null,
-        "inched": null,
-        "increased": null,
-        "insisted": null,
-        "ironed": null,
-        "itched": null,
-        "jangled": null,
-        "jingled": null,
-        "joged": null,
-        "kicked": null,
-        "kneeled": null,
-        "leaked": null,
-        "lightened": null,
-        "listened": null,
-        "loaded": null,
-        "looked": null,
-        "limped": null,
-        "losed": null,
-        "lurked": null,
-        "lurched": null,
-        "marched": null,
-        "meandered": null,
-        "melted": null,
-        "mewed": null,
-        "meowed": null,
-        "moaned": null,
-        "mooed": null,
-        "mumbled": null,
-        "murmured": null,
-        "muttered": null,
-        "walked": null,
-        "played": null
-    },
-    "vbg": {
-        "being": null,
-        "smoking": null,
-        "existing": null,
-        "aching": null,
-        "agonizing": null,
-        "atrophying": null,
-        "babbling": null,
-        "barking": null,
-        "beaming": null,
-        "behaving": null,
-        "belching": null,
-        "bellowing": null,
-        "singing": null,
-        "speaking": null,
-        "sliping": null,
-        "smiling": null,
-        "snarling": null,
-        "laughing": null,
-        "stumbling": null,
-        "swiming": null,
-        "talking": null,
-        "thinking": null,
-        "cawing": null,
-        "choking": null,
-        "claping": null,
-        "climbing": null,
-        "crawling": null,
-        "crying": null,
-        "dancing": null,
-        "diving": null,
-        "dreaming": null,
-        "drinking": null,
-        "clamoring": null,
-        "clattering": null,
-        "clinking": null,
-        "cooling": null,
-        "cooking": null,
-        "coughing": null,
-        "cracking": null,
-        "crashing": null,
-        "creaking": null,
-        "croaking": null,
-        "crowing": null,
-        "darkening": null,
-        "dazzling": null,
-        "driping": null,
-        "dinging": null,
-        "daydreaming": null,
-        "dozing": null,
-        "drowsing": null,
-        "drifting": null,
-        "drowning": null,
-        "dwelling": null,
-        "drooling": null,
-        "escaping": null,
-        "fainting": null,
-        "fading": null,
-        "fishing": null,
-        "floating": null,
-        "flailing": null,
-        "flying": null,
-        "flashing": null,
-        "frowning": null,
-        "focusing": null,
-        "feasting": null,
-        "gasping": null,
-        "giggling": null,
-        "glaring": null,
-        "glinting": null,
-        "glistening": null,
-        "glimmering": null,
-        "glowing": null,
-        "going": null,
-        "growling": null,
-        "gurgling": null,
-        "gushing": null,
-        "helping": null,
-        "hissing": null,
-        "howling": null,
-        "hesitating": null,
-        "hiding": null,
-        "hiking": null,
-        "honking": null,
-        "hooting": null,
-        "hollering": null,
-        "improving": null,
-        "inching": null,
-        "increasing": null,
-        "insisting": null,
-        "ironing": null,
-        "itching": null,
-        "jangling": null,
-        "jingling": null,
-        "joging": null,
-        "kicking": null,
-        "kneeling": null,
-        "leaking": null,
-        "lightening": null,
-        "listening": null,
-        "loading": null,
-        "looking": null,
-        "limping": null,
-        "losing": null,
-        "lurking": null,
-        "lurching": null,
-        "marching": null,
-        "meandering": null,
-        "melting": null,
-        "mewing": null,
-        "meowing": null,
-        "moaning": null,
-        "mooing": null,
-        "mumbling": null,
-        "murmuring": null,
-        "muttering": null,
-        "walking": null,
-        "playing": null
-    },
-    "vbz": {
-        "is": null,
-        "smokes": null,
-        "exists": null,
-        "aches": null,
-        "agonizes": null,
-        "atrophies": null,
-        "babbles": null,
-        "barks": null,
-        "beams": null,
-        "behaves": null,
-        "belches": null,
-        "bellows": null,
-        "sings": null,
-        "speaks": null,
-        "slips": null,
-        "smiles": null,
-        "snarls": null,
-        "laughs": null,
-        "stumbles": null,
-        "swims": null,
-        "talks": null,
-        "thinks": null,
-        "caws": null,
-        "chokes": null,
-        "claps": null,
-        "climbs": null,
-        "crawls": null,
-        "cries": null,
-        "dances": null,
-        "dives": null,
-        "dreams": null,
-        "drinks": null,
-        "clamors": null,
-        "clatters": null,
-        "clinks": null,
-        "cools": null,
-        "cooks": null,
-        "coughs": null,
-        "cracks": null,
-        "crashes": null,
-        "creaks": null,
-        "croaks": null,
-        "crows": null,
-        "darkens": null,
-        "dazzles": null,
-        "drips": null,
-        "dings": null,
-        "daydreams": null,
-        "dozes": null,
-        "drowses": null,
-        "drifts": null,
-        "drowns": null,
-        "dwells": null,
-        "drools": null,
-        "escapes": null,
-        "faints": null,
-        "fades": null,
-        "fishes": null,
-        "floats": null,
-        "flails": null,
-        "flies": null,
-        "flashes": null,
-        "frowns": null,
-        "focuses": null,
-        "feasts": null,
-        "gasps": null,
-        "giggles": null,
-        "glares": null,
-        "glints": null,
-        "glistens": null,
-        "glimmers": null,
-        "glows": null,
-        "goes": null,
-        "growls": null,
-        "gurgles": null,
-        "gushes": null,
-        "helps": null,
-        "hisses": null,
-        "howls": null,
-        "hesitates": null,
-        "hides": null,
-        "hikes": null,
-        "honks": null,
-        "hoots": null,
-        "hollers": null,
-        "improves": null,
-        "inches": null,
-        "increases": null,
-        "insists": null,
-        "irons": null,
-        "itches": null,
-        "jangles": null,
-        "jingles": null,
-        "jogs": null,
-        "kicks": null,
-        "kneels": null,
-        "leaks": null,
-        "lightens": null,
-        "listens": null,
-        "loads": null,
-        "looks": null,
-        "limps": null,
-        "loses": null,
-        "lurks": null,
-        "lurches": null,
-        "marches": null,
-        "meanders": null,
-        "melts": null,
-        "mews": null,
-        "meows": null,
-        "moans": null,
-        "moos": null,
-        "mumbles": null,
-        "murmurs": null,
-        "mutters": null,
-        "walks": null,
-        "plays": null
-    },
-    "vbp": {
-        "are": null,
-        "smoke": null,
-        "exist": null,
-        "ache": null,
-        "agonize": null,
-        "atrophy": null,
-        "babble": null,
-        "bark": null,
-        "beam": null,
-        "behave": null,
-        "belch": null,
-        "bellow": null,
-        "sing": null,
-        "speak": null,
-        "slip": null,
-        "smile": null,
-        "snarl": null,
-        "laugh": null,
-        "stumble": null,
-        "swim": null,
-        "talk": null,
-        "think": null,
-        "caw": null,
-        "choke": null,
-        "clap": null,
-        "climb": null,
-        "crawl": null,
-        "cry": null,
-        "dance": null,
-        "dive": null,
-        "dream": null,
-        "drink": null,
-        "clamor": null,
-        "clatter": null,
-        "clink": null,
-        "cool": null,
-        "cook": null,
-        "cough": null,
-        "crack": null,
-        "crash": null,
-        "creak": null,
-        "croak": null,
-        "crow": null,
-        "darken": null,
-        "dazzle": null,
-        "drip": null,
-        "ding": null,
-        "daydream": null,
-        "doze": null,
-        "drowse": null,
-        "drift": null,
-        "drown": null,
-        "dwell": null,
-        "drool": null,
-        "escape": null,
-        "faint": null,
-        "fade": null,
-        "fish": null,
-        "float": null,
-        "flail": null,
-        "fly": null,
-        "flash": null,
-        "frown": null,
-        "focus": null,
-        "feast": null,
-        "gasp": null,
-        "giggle": null,
-        "glare": null,
-        "glint": null,
-        "glisten": null,
-        "glimmer": null,
-        "glow": null,
-        "go": null,
-        "growl": null,
-        "gurgle": null,
-        "gush": null,
-        "help": null,
-        "hiss": null,
-        "howl": null,
-        "hesitate": null,
-        "hide": null,
-        "hike": null,
-        "honk": null,
-        "hoot": null,
-        "holler": null,
-        "improve": null,
-        "inch": null,
-        "increase": null,
-        "insist": null,
-        "iron": null,
-        "itch": null,
-        "jangle": null,
-        "jingle": null,
-        "jog": null,
-        "kick": null,
-        "kneel": null,
-        "leak": null,
-        "lighten": null,
-        "listen": null,
-        "load": null,
-        "look": null,
-        "limp": null,
-        "lose": null,
-        "lurk": null,
-        "lurch": null,
-        "march": null,
-        "meander": null,
-        "melt": null,
-        "mew": null,
-        "meow": null,
-        "moan": null,
-        "moo": null,
-        "mumble": null,
-        "murmur": null,
-        "mutter": null,
-        "walk": null,
-        "play": null
-    },
-    "vb_ap": {
-        "be": null,
-        "seem": null,
-        "appear": null,
-        "look": null,
-        "sound": null,
-        "taste": null,
-        "smell": null,
-        "feel": null
-    },
-    "vbd_ap": {
-        "were": null,
-        "seemed": null,
-        "appeared": null,
-        "looked": null,
-        "sounded": null,
-        "tasted": null,
-        "smelt": null,
-        "felt": null
-    },
-    "vbn_ap": {
-        "been": null,
-        "seemed": null,
-        "appeared": null,
-        "looked": null,
-        "sounded": null,
-        "tasted": null,
-        "smelt": null,
-        "felt": null
-    },
-    "vbg_ap": {
-        "being": null,
-        "seeming": null,
-        "appearing": null,
-        "looking": null,
-        "sounding": null,
-        "tasting": null,
-        "smelling": null,
-        "feeling": null
-    },
-    "vbz_ap": {
-        "is": null,
-        "seems": null,
-        "appears": null,
-        "looks": null,
-        "sounds": null,
-        "tastes": null,
-        "smells": null,
-        "feels": null
-    },
-    "vbp_ap": {
-        "are": null,
-        "seem": null,
-        "appear": null,
-        "look": null,
-        "sound": null,
-        "taste": null,
-        "smell": null,
-        "feel": null
-    },
-    "vb_to_inf_cl": {
-        "want": null,
-        "need": null,
-        "like": null,
-        "love": null,
-        "prefer": null,
-        "know": null
-    },
-    "vbd_to_inf_cl": {
-        "wanted": null,
-        "needed": null,
-        "liked": null,
-        "loved": null,
-        "prefered": null,
-        "knew": null
-    },
-    "vbn_to_inf_cl": {
-        "wanted": null,
-        "needed": null,
-        "liked": null,
-        "loved": null,
-        "prefered": null,
-        "known": null
-    },
-    "vbg_to_inf_cl": {
-        "wanting": null,
-        "needing": null,
-        "liking": null,
-        "loving": null,
-        "prefering": null,
-        "knowing": null
-    },
-    "vbz_to_inf_cl": {
-        "wants": null,
-        "needs": null,
-        "likes": null,
-        "loves": null,
-        "prefers": null,
-        "knows": null
-    },
-    "vbp_to_inf_cl": {
-        "want": null,
-        "need": null,
-        "like": null,
-        "love": null,
-        "prefer": null,
-        "know": null
-    },
-    "vb_vbg_cl": {
-        "be": null
-    },
-    "vbd_vbg_cl": {
-        "were": null
-    },
-    "vbn_vbg_cl": {
-        "been": null
-    },
-    "vbg_vbg_cl": {
-        "being": null
-    },
-    "vbz_vbg_cl": {
-        "is": null
-    },
-    "vbp_vbg_cl": {
-        "are": null
-    },
-    "vb_vbn_cl": {
-        "have": null
-    },
-    "vbd_vbn_cl": {
-        "had": null
-    },
-    "vbn_vbn_cl": {
-        "had": null
-    },
-    "vbg_vbn_cl": {
-        "having": null
-    },
-    "vbz_vbn_cl": {
-        "has": null
-    },
-    "vbp_vbn_cl": {
-        "have": null
-    },
-    "vb_bare_inf_cl": {
-        "do": null,
-        "help": null
-    },
-    "vbd_bare_inf_cl": {
-        "doed": null,
-        "helped": null
-    },
-    "vbn_bare_inf_cl": {
-        "doed": null,
-        "helped": null
-    },
-    "vbg_bare_inf_cl": {
-        "doing": null,
-        "helping": null
-    },
-    "vbz_bare_inf_cl": {
-        "dos": null,
-        "helps": null
-    },
-    "vbp_bare_inf_cl": {
-        "do": null,
-        "help": null
-    },
-    "vb_declarative_cl": {
-        "say": null,
-        "know": null,
-        "think": null,
-        "believe": null,
-        "understand": null,
-        "realize": null,
-        "learn": null,
-        "remember": null,
-        "forget": null,
-        "imagine": null,
-        "agree": null,
-        "promise": null,
-        "hope": null,
-        "expect": null,
-        "worry": null,
-        "fear": null,
-        "inform": null,
-        "complain": null,
-        "prove": null,
-        "recall": null
-    },
-    "vbd_declarative_cl": {
-        "said": null,
-        "knew": null,
-        "thought": null,
-        "believed": null,
-        "understood": null,
-        "realized": null,
-        "learned": null,
-        "remembered": null,
-        "forgot": null,
-        "imagined": null,
-        "agreed": null,
-        "promised": null,
-        "hoped": null,
-        "expected": null,
-        "worried": null,
-        "feared": null,
-        "informed": null,
-        "complained": null,
-        "proved": null,
-        "recalled": null
-    },
-    "vbn_declarative_cl": {
-        "said": null,
-        "known": null,
-        "thought": null,
-        "believed": null,
-        "understood": null,
-        "realized": null,
-        "learned": null,
-        "remembered": null,
-        "forgotten": null,
-        "imagined": null,
-        "agreed": null,
-        "promised": null,
-        "hoped": null,
-        "expected": null,
-        "worried": null,
-        "feared": null,
-        "informed": null,
-        "complained": null,
-        "proved": null,
-        "recalled": null
-    },
-    "vbg_declarative_cl": {
-        "saying": null,
-        "knowing": null,
-        "thinking": null,
-        "believing": null,
-        "understanding": null,
-        "realizing": null,
-        "learning": null,
-        "remembering": null,
-        "forgetting": null,
-        "imagining": null,
-        "agreing": null,
-        "promising": null,
-        "hoping": null,
-        "expecting": null,
-        "worrying": null,
-        "fearing": null,
-        "informing": null,
-        "complaining": null,
-        "proving": null,
-        "recalling": null
-    },
-    "vbz_declarative_cl": {
-        "says": null,
-        "knows": null,
-        "thinks": null,
-        "believes": null,
-        "understands": null,
-        "realizes": null,
-        "learns": null,
-        "remembers": null,
-        "forgets": null,
-        "imagines": null,
-        "agrees": null,
-        "promises": null,
-        "hopes": null,
-        "expects": null,
-        "worries": null,
-        "fears": null,
-        "informs": null,
-        "complains": null,
-        "proves": null,
-        "recalls": null
-    },
-    "vbp_declarative_cl": {
-        "say": null,
-        "know": null,
-        "think": null,
-        "believe": null,
-        "understand": null,
-        "realize": null,
-        "learn": null,
-        "remember": null,
-        "forget": null,
-        "imagine": null,
-        "agree": null,
-        "promise": null,
-        "hope": null,
-        "expect": null,
-        "worry": null,
-        "fear": null,
-        "inform": null,
-        "complain": null,
-        "prove": null,
-        "recall": null
-    },
-    "vb_exclamative_cl": {
-        "know": null,
-        "tell": null,
-        "show": null,
-        "explain": null,
-        "describe": null,
-        "demonstrate": null,
-        "illustrate": null,
-        "prove": null,
-        "convince": null,
-        "persuade": null,
-        "remember": null,
-        "forget": null,
-        "say": null
-    },
-    "vbd_exclamative_cl": {
-        "knew": null,
-        "told": null,
-        "showed": null,
-        "explained": null,
-        "described": null,
-        "demonstrated": null,
-        "illustrated": null,
-        "proved": null,
-        "convinced": null,
-        "persuaded": null,
-        "remembered": null,
-        "forgot": null,
-        "said": null
-    },
-    "vbn_exclamative_cl": {
-        "known": null,
-        "told": null,
-        "showed": null,
-        "explained": null,
-        "described": null,
-        "demonstrated": null,
-        "illustrated": null,
-        "proved": null,
-        "convinced": null,
-        "persuaded": null,
-        "remembered": null,
-        "forgotten": null,
-        "said": null
-    },
-    "vbg_exclamative_cl": {
-        "knowing": null,
-        "telling": null,
-        "showing": null,
-        "explaining": null,
-        "describing": null,
-        "demonstrating": null,
-        "illustrating": null,
-        "proving": null,
-        "convincing": null,
-        "persuading": null,
-        "remembering": null,
-        "forgetting": null,
-        "saying": null
-    },
-    "vbz_exclamative_cl": {
-        "knows": null,
-        "tells": null,
-        "shows": null,
-        "explains": null,
-        "describes": null,
-        "demonstrates": null,
-        "illustrates": null,
-        "proves": null,
-        "convinces": null,
-        "persuades": null,
-        "remembers": null,
-        "forgets": null,
-        "says": null
-    },
-    "vbp_exclamative_cl": {
-        "know": null,
-        "tell": null,
-        "show": null,
-        "explain": null,
-        "describe": null,
-        "demonstrate": null,
-        "illustrate": null,
-        "prove": null,
-        "convince": null,
-        "persuade": null,
-        "remember": null,
-        "forget": null,
-        "say": null
-    },
-    "vb_interrogative_cl": {
-        "know": null,
-        "wonder": null,
-        "inqure": null,
-        "ask": null,
-        "discover": null,
-        "prove": null
-    },
-    "vbd_interrogative_cl": {
-        "knew": null,
-        "wondered": null,
-        "inqured": null,
-        "asked": null,
-        "discovered": null,
-        "proved": null
-    },
-    "vbn_interrogative_cl": {
-        "known": null,
-        "wondered": null,
-        "inqured": null,
-        "asked": null,
-        "discovered": null,
-        "proved": null
-    },
-    "vbg_interrogative_cl": {
-        "knowing": null,
-        "wondering": null,
-        "inquring": null,
-        "asking": null,
-        "discovering": null,
-        "proving": null
-    },
-    "vbz_interrogative_cl": {
-        "knows": null,
-        "wonders": null,
-        "inqures": null,
-        "asks": null,
-        "discovers": null,
-        "proves": null
-    },
-    "vbp_interrogative_cl": {
-        "know": null,
-        "wonder": null,
-        "inqure": null,
-        "ask": null,
-        "discover": null,
-        "prove": null
-    },
-    "vb_np": {
-        "be": null,
-        "do": null,
-        "eat": null,
-        "drink": null,
-        "read": null,
-        "write": null,
-        "see": null,
-        "hear": null,
-        "smell": null,
-        "feel": null,
-        "touch": null,
-        "hit": null,
-        "kick": null,
-        "love": null,
-        "hate": null,
-        "like": null,
-        "dislike": null,
-        "want": null,
-        "need": null,
-        "have": null,
-        "own": null,
-        "possess": null,
-        "buy": null,
-        "send": null,
-        "show": null,
-        "tell": null,
-        "ask": null,
-        "order": null,
-        "promise": null,
-        "offer": null,
-        "allow": null,
-        "invite": null,
-        "advise": null,
-        "persuade": null,
-        "remind": null,
-        "teach": null,
-        "learn": null,
-        "help": null,
-        "prevent": null,
-        "stop": null,
-        "avoid": null,
-        "finish": null,
-        "start": null,
-        "continue": null,
-        "keep": null,
-        "mind": null,
-        "miss": null,
-        "regret": null,
-        "forget": null,
-        "remember": null,
-        "imagine": null,
-        "expect": null,
-        "hope": null,
-        "wish": null,
-        "fear": null,
-        "worry": null,
-        "understand": null,
-        "believe": null,
-        "deny": null,
-        "confirm": null,
-        "doubt": null,
-        "suspect": null,
-        "know": null,
-        "ignore": null,
-        "recognize": null,
-        "watch": null,
-        "sing": null,
-        "accept": null,
-        "achieve": null,
-        "affect": null,
-        "blame": null,
-        "protect": null,
-        "punch": null,
-        "raise": null,
-        "rake": null,
-        "ram": null,
-        "rattle": null,
-        "rearrange": null,
-        "rebuild": null,
-        "recall": null,
-        "receive": null,
-        "recite": null,
-        "prune": null,
-        "put": null,
-        "leave": null,
-        "meet": null,
-        "explain": null,
-        "describe": null,
-        "play": null
-    },
-    "vbd_np": {
-        "were": null,
-        "doed": null,
-        "ate": null,
-        "drank": null,
-        "read": null,
-        "wrote": null,
-        "saw": null,
-        "heard": null,
-        "smelt": null,
-        "felt": null,
-        "touched": null,
-        "hit": null,
-        "kicked": null,
-        "loved": null,
-        "hated": null,
-        "liked": null,
-        "disliked": null,
-        "wanted": null,
-        "needed": null,
-        "had": null,
-        "owned": null,
-        "possessed": null,
-        "bought": null,
-        "sent": null,
-        "showed": null,
-        "told": null,
-        "asked": null,
-        "ordered": null,
-        "promised": null,
-        "offered": null,
-        "allowed": null,
-        "invited": null,
-        "advised": null,
-        "persuaded": null,
-        "reminded": null,
-        "teached": null,
-        "learned": null,
-        "helped": null,
-        "prevented": null,
-        "stopped": null,
-        "avoided": null,
-        "finished": null,
-        "started": null,
-        "continued": null,
-        "kept": null,
-        "minded": null,
-        "missed": null,
-        "regretted": null,
-        "forgot": null,
-        "remembered": null,
-        "imagined": null,
-        "expected": null,
-        "hoped": null,
-        "wished": null,
-        "feared": null,
-        "worried": null,
-        "understood": null,
-        "believed": null,
-        "denied": null,
-        "confirmed": null,
-        "doubted": null,
-        "suspected": null,
-        "knew": null,
-        "ignored": null,
-        "recognized": null,
-        "watched": null,
-        "sang": null,
-        "accepted": null,
-        "achieved": null,
-        "affected": null,
-        "blamed": null,
-        "protected": null,
-        "punched": null,
-        "raised": null,
-        "raked": null,
-        "ramed": null,
-        "rattled": null,
-        "rearranged": null,
-        "rebuilded": null,
-        "recalled": null,
-        "received": null,
-        "recited": null,
-        "pruned": null,
-        "put": null,
-        "leaved": null,
-        "met": null,
-        "explained": null,
-        "described": null,
-        "played": null
-    },
-    "vbn_np": {
-        "been": null,
-        "doed": null,
-        "eaten": null,
-        "drunk": null,
-        "read": null,
-        "written": null,
-        "seen": null,
-        "heard": null,
-        "smelt": null,
-        "felt": null,
-        "touched": null,
-        "hit": null,
-        "kicked": null,
-        "loved": null,
-        "hated": null,
-        "liked": null,
-        "disliked": null,
-        "wanted": null,
-        "needed": null,
-        "had": null,
-        "owned": null,
-        "possessed": null,
-        "bought": null,
-        "sent": null,
-        "showed": null,
-        "told": null,
-        "asked": null,
-        "ordered": null,
-        "promised": null,
-        "offered": null,
-        "allowed": null,
-        "invited": null,
-        "advised": null,
-        "persuaded": null,
-        "reminded": null,
-        "teached": null,
-        "learned": null,
-        "helped": null,
-        "prevented": null,
-        "stopped": null,
-        "avoided": null,
-        "finished": null,
-        "started": null,
-        "continued": null,
-        "kept": null,
-        "minded": null,
-        "missed": null,
-        "regretted": null,
-        "forgotten": null,
-        "remembered": null,
-        "imagined": null,
-        "expected": null,
-        "hoped": null,
-        "wished": null,
-        "feared": null,
-        "worried": null,
-        "understood": null,
-        "believed": null,
-        "denied": null,
-        "confirmed": null,
-        "doubted": null,
-        "suspected": null,
-        "known": null,
-        "ignored": null,
-        "recognized": null,
-        "watched": null,
-        "sung": null,
-        "accepted": null,
-        "achieved": null,
-        "affected": null,
-        "blamed": null,
-        "protected": null,
-        "punched": null,
-        "raised": null,
-        "raked": null,
-        "ramed": null,
-        "rattled": null,
-        "rearranged": null,
-        "rebuilded": null,
-        "recalled": null,
-        "received": null,
-        "recited": null,
-        "pruned": null,
-        "put": null,
-        "leaved": null,
-        "met": null,
-        "explained": null,
-        "described": null,
-        "played": null
-    },
-    "vbg_np": {
-        "being": null,
-        "doing": null,
-        "eating": null,
-        "drinking": null,
-        "reading": null,
-        "writing": null,
-        "seeing": null,
-        "hearing": null,
-        "smelling": null,
-        "feeling": null,
-        "touching": null,
-        "hitting": null,
-        "kicking": null,
-        "loving": null,
-        "hating": null,
-        "liking": null,
-        "disliking": null,
-        "wanting": null,
-        "needing": null,
-        "having": null,
-        "owning": null,
-        "possessing": null,
-        "buying": null,
-        "sending": null,
-        "showing": null,
-        "telling": null,
-        "asking": null,
-        "ordering": null,
-        "promising": null,
-        "offering": null,
-        "allowing": null,
-        "inviting": null,
-        "advising": null,
-        "persuading": null,
-        "reminding": null,
-        "teaching": null,
-        "learning": null,
-        "helping": null,
-        "preventing": null,
-        "stopping": null,
-        "avoiding": null,
-        "finishing": null,
-        "starting": null,
-        "continuing": null,
-        "keeping": null,
-        "minding": null,
-        "missing": null,
-        "regretting": null,
-        "forgetting": null,
-        "remembering": null,
-        "imagining": null,
-        "expecting": null,
-        "hoping": null,
-        "wishing": null,
-        "fearing": null,
-        "worrying": null,
-        "understanding": null,
-        "believing": null,
-        "denying": null,
-        "confirming": null,
-        "doubting": null,
-        "suspecting": null,
-        "knowing": null,
-        "ignoring": null,
-        "recognizing": null,
-        "watching": null,
-        "singing": null,
-        "accepting": null,
-        "achieving": null,
-        "affecting": null,
-        "blaming": null,
-        "protecting": null,
-        "punching": null,
-        "raising": null,
-        "raking": null,
-        "raming": null,
-        "rattling": null,
-        "rearranging": null,
-        "rebuilding": null,
-        "recalling": null,
-        "receiving": null,
-        "reciting": null,
-        "pruning": null,
-        "putting": null,
-        "leaving": null,
-        "meeting": null,
-        "explaining": null,
-        "describing": null,
-        "playing": null
-    },
-    "vbz_np": {
-        "is": null,
-        "dos": null,
-        "eats": null,
-        "drinks": null,
-        "reads": null,
-        "writes": null,
-        "sees": null,
-        "hears": null,
-        "smells": null,
-        "feels": null,
-        "touches": null,
-        "hits": null,
-        "kicks": null,
-        "loves": null,
-        "hates": null,
-        "likes": null,
-        "dislikes": null,
-        "wants": null,
-        "needs": null,
-        "has": null,
-        "owns": null,
-        "possesses": null,
-        "buys": null,
-        "sends": null,
-        "shows": null,
-        "tells": null,
-        "asks": null,
-        "orders": null,
-        "promises": null,
-        "offers": null,
-        "allows": null,
-        "invites": null,
-        "advises": null,
-        "persuades": null,
-        "reminds": null,
-        "teaches": null,
-        "learns": null,
-        "helps": null,
-        "prevents": null,
-        "stops": null,
-        "avoids": null,
-        "finishes": null,
-        "starts": null,
-        "continues": null,
-        "keeps": null,
-        "minds": null,
-        "misses": null,
-        "regrets": null,
-        "forgets": null,
-        "remembers": null,
-        "imagines": null,
-        "expects": null,
-        "hopes": null,
-        "wishes": null,
-        "fears": null,
-        "worries": null,
-        "understands": null,
-        "believes": null,
-        "denies": null,
-        "confirms": null,
-        "doubts": null,
-        "suspects": null,
-        "knows": null,
-        "ignores": null,
-        "recognizes": null,
-        "watches": null,
-        "sings": null,
-        "accepts": null,
-        "achieves": null,
-        "affects": null,
-        "blames": null,
-        "protects": null,
-        "punches": null,
-        "raises": null,
-        "rakes": null,
-        "rams": null,
-        "rattles": null,
-        "rearranges": null,
-        "rebuilds": null,
-        "recalls": null,
-        "receives": null,
-        "recites": null,
-        "prunes": null,
-        "puts": null,
-        "leaves": null,
-        "meets": null,
-        "explains": null,
-        "describes": null,
-        "plays": null
-    },
-    "vbp_np": {
-        "are": null,
-        "do": null,
-        "eat": null,
-        "drink": null,
-        "read": null,
-        "write": null,
-        "see": null,
-        "hear": null,
-        "smell": null,
-        "feel": null,
-        "touch": null,
-        "hit": null,
-        "kick": null,
-        "love": null,
-        "hate": null,
-        "like": null,
-        "dislike": null,
-        "want": null,
-        "need": null,
-        "have": null,
-        "own": null,
-        "possess": null,
-        "buy": null,
-        "send": null,
-        "show": null,
-        "tell": null,
-        "ask": null,
-        "order": null,
-        "promise": null,
-        "offer": null,
-        "allow": null,
-        "invite": null,
-        "advise": null,
-        "persuade": null,
-        "remind": null,
-        "teach": null,
-        "learn": null,
-        "help": null,
-        "prevent": null,
-        "stop": null,
-        "avoid": null,
-        "finish": null,
-        "start": null,
-        "continue": null,
-        "keep": null,
-        "mind": null,
-        "miss": null,
-        "regret": null,
-        "forget": null,
-        "remember": null,
-        "imagine": null,
-        "expect": null,
-        "hope": null,
-        "wish": null,
-        "fear": null,
-        "worry": null,
-        "understand": null,
-        "believe": null,
-        "deny": null,
-        "confirm": null,
-        "doubt": null,
-        "suspect": null,
-        "know": null,
-        "ignore": null,
-        "recognize": null,
-        "watch": null,
-        "sing": null,
-        "accept": null,
-        "achieve": null,
-        "affect": null,
-        "blame": null,
-        "protect": null,
-        "punch": null,
-        "raise": null,
-        "rake": null,
-        "ram": null,
-        "rattle": null,
-        "rearrange": null,
-        "rebuild": null,
-        "recall": null,
-        "receive": null,
-        "recite": null,
-        "prune": null,
-        "put": null,
-        "leave": null,
-        "meet": null,
-        "explain": null,
-        "describe": null,
-        "play": null
-    },
-    "vb_np_ap": {
-        "make": null
-    },
-    "vbd_np_ap": {
-        "made": null
-    },
-    "vbn_np_ap": {
-        "made": null
-    },
-    "vbg_np_ap": {
-        "making": null
-    },
-    "vbz_np_ap": {
-        "makes": null
-    },
-    "vbp_np_ap": {
-        "make": null
-    },
-    "vb_np_to_inf_cl": {
-        "tell": null,
-        "ask": null,
-        "order": null,
-        "invite": null,
-        "advise": null,
-        "persuade": null,
-        "remind": null,
-        "teach": null,
-        "help": null,
-        "want": null
-    },
-    "vbd_np_to_inf_cl": {
-        "told": null,
-        "asked": null,
-        "ordered": null,
-        "invited": null,
-        "advised": null,
-        "persuaded": null,
-        "reminded": null,
-        "teached": null,
-        "helped": null,
-        "wanted": null
-    },
-    "vbn_np_to_inf_cl": {
-        "told": null,
-        "asked": null,
-        "ordered": null,
-        "invited": null,
-        "advised": null,
-        "persuaded": null,
-        "reminded": null,
-        "teached": null,
-        "helped": null,
-        "wanted": null
-    },
-    "vbg_np_to_inf_cl": {
-        "telling": null,
-        "asking": null,
-        "ordering": null,
-        "inviting": null,
-        "advising": null,
-        "persuading": null,
-        "reminding": null,
-        "teaching": null,
-        "helping": null,
-        "wanting": null
-    },
-    "vbz_np_to_inf_cl": {
-        "tells": null,
-        "asks": null,
-        "orders": null,
-        "invites": null,
-        "advises": null,
-        "persuades": null,
-        "reminds": null,
-        "teaches": null,
-        "helps": null,
-        "wants": null
-    },
-    "vbp_np_to_inf_cl": {
-        "tell": null,
-        "ask": null,
-        "order": null,
-        "invite": null,
-        "advise": null,
-        "persuade": null,
-        "remind": null,
-        "teach": null,
-        "help": null,
-        "want": null
-    },
-    "vb_np_bare_inf_cl": {
-        "let": null,
-        "make": null,
-        "have": null
-    },
-    "vbd_np_bare_inf_cl": {
-        "let": null,
-        "made": null,
-        "had": null
-    },
-    "vbn_np_bare_inf_cl": {
-        "let": null,
-        "made": null,
-        "had": null
-    },
-    "vbg_np_bare_inf_cl": {
-        "letting": null,
-        "making": null,
-        "having": null
-    },
-    "vbz_np_bare_inf_cl": {
-        "lets": null,
-        "makes": null,
-        "has": null
-    },
-    "vbp_np_bare_inf_cl": {
-        "let": null,
-        "make": null,
-        "have": null
-    },
-    "vb_np_declarative_cl": {
-        "tell": null,
-        "show": null,
-        "convince": null,
-        "persuade": null
-    },
-    "vbd_np_declarative_cl": {
-        "told": null,
-        "showed": null,
-        "convinced": null,
-        "persuaded": null
-    },
-    "vbn_np_declarative_cl": {
-        "told": null,
-        "showed": null,
-        "convinced": null,
-        "persuaded": null
-    },
-    "vbg_np_declarative_cl": {
-        "telling": null,
-        "showing": null,
-        "convincing": null,
-        "persuading": null
-    },
-    "vbz_np_declarative_cl": {
-        "tells": null,
-        "shows": null,
-        "convinces": null,
-        "persuades": null
-    },
-    "vbp_np_declarative_cl": {
-        "tell": null,
-        "show": null,
-        "convince": null,
-        "persuade": null
-    },
-    "vb_np_exclamative_cl": {
-        "tell": null,
-        "show": null
-    },
-    "vbd_np_exclamative_cl": {
-        "told": null,
-        "showed": null
-    },
-    "vbn_np_exclamative_cl": {
-        "told": null,
-        "showed": null
-    },
-    "vbg_np_exclamative_cl": {
-        "telling": null,
-        "showing": null
-    },
-    "vbz_np_exclamative_cl": {
-        "tells": null,
-        "shows": null
-    },
-    "vbp_np_exclamative_cl": {
-        "tell": null,
-        "show": null
-    },
-    "vb_np_interrogative_cl": {
-        "ask": null
-    },
-    "vbd_np_interrogative_cl": {
-        "asked": null
-    },
-    "vbn_np_interrogative_cl": {
-        "asked": null
-    },
-    "vbg_np_interrogative_cl": {
-        "asking": null
-    },
-    "vbz_np_interrogative_cl": {
-        "asks": null
-    },
-    "vbp_np_interrogative_cl": {
-        "ask": null
-    },
-    "vb_np_np": {
-        "give": null,
-        "send": null,
-        "show": null,
-        "offer": null,
-        "bring": null,
-        "lend": null,
-        "pass": null,
-        "hand": null,
-        "sell": null,
-        "buy": null,
-        "pay": null,
-        "promise": null,
-        "teach": null,
-        "tell": null,
-        "ask": null,
-        "order": null,
-        "invite": null,
-        "advise": null,
-        "persuade": null,
-        "remind": null,
-        "help": null
-    },
-    "vbd_np_np": {
-        "gave": null,
-        "sent": null,
-        "showed": null,
-        "offered": null,
-        "brought": null,
-        "lent": null,
-        "passed": null,
-        "handed": null,
-        "sold": null,
-        "bought": null,
-        "paid": null,
-        "promised": null,
-        "teached": null,
-        "told": null,
-        "asked": null,
-        "ordered": null,
-        "invited": null,
-        "advised": null,
-        "persuaded": null,
-        "reminded": null,
-        "helped": null
-    },
-    "vbn_np_np": {
-        "given": null,
-        "sent": null,
-        "showed": null,
-        "offered": null,
-        "brought": null,
-        "lent": null,
-        "passed": null,
-        "handed": null,
-        "sold": null,
-        "bought": null,
-        "paid": null,
-        "promised": null,
-        "teached": null,
-        "told": null,
-        "asked": null,
-        "ordered": null,
-        "invited": null,
-        "advised": null,
-        "persuaded": null,
-        "reminded": null,
-        "helped": null
-    },
-    "vbg_np_np": {
-        "giving": null,
-        "sending": null,
-        "showing": null,
-        "offering": null,
-        "bringing": null,
-        "lending": null,
-        "passing": null,
-        "handing": null,
-        "selling": null,
-        "buying": null,
-        "paying": null,
-        "promising": null,
-        "teaching": null,
-        "telling": null,
-        "asking": null,
-        "ordering": null,
-        "inviting": null,
-        "advising": null,
-        "persuading": null,
-        "reminding": null,
-        "helping": null
-    },
-    "vbz_np_np": {
-        "gives": null,
-        "sends": null,
-        "shows": null,
-        "offers": null,
-        "brings": null,
-        "lends": null,
-        "passes": null,
-        "hands": null,
-        "sells": null,
-        "buys": null,
-        "pays": null,
-        "promises": null,
-        "teaches": null,
-        "tells": null,
-        "asks": null,
-        "orders": null,
-        "invites": null,
-        "advises": null,
-        "persuades": null,
-        "reminds": null,
-        "helps": null
-    },
-    "vbp_np_np": {
-        "give": null,
-        "send": null,
-        "show": null,
-        "offer": null,
-        "bring": null,
-        "lend": null,
-        "pass": null,
-        "hand": null,
-        "sell": null,
-        "buy": null,
-        "pay": null,
-        "promise": null,
-        "teach": null,
-        "tell": null,
-        "ask": null,
-        "order": null,
-        "invite": null,
-        "advise": null,
-        "persuade": null,
-        "remind": null,
-        "help": null
-    },
-    "instrumental_preposition": {
-        "with": null,
-        "using": null
-    },
-    "comitative_preposition": {
-        "with": null
-    },
-    "spatial_preposition": {
-        "in": null,
-        "on": null,
-        "at": null,
-        "over": null,
-        "under": null,
-        "underneath": null,
-        "between": null,
-        "among": null,
-        "within": null,
-        "above": null,
-        "below": null,
-        "beside": null
-    },
-    "source_preposition": {
-        "from": null,
-        "off": null,
-        "out": null
-    },
-    "goal_preposition": {
-        "to": null,
-        "toward": null,
-        "towards": null,
-        "into": null,
-        "onto": null,
-        "upon": null,
-        "up": null,
-        "down": null,
-        "off": null,
-        "inside": null,
-        "outside": null,
-        "around": null,
-        "aboard": null,
-        "across": null,
-        "along": null
-    },
-    "temporal_point_preposition": {
-        "at": null,
-        "on": null,
-        "in": null
-    },
-    "temporal_duration_preposition": {
-        "for": null,
-        "since": null,
-        "until": null,
-        "before": null,
-        "after": null,
-        "by": null,
-        "within": null,
-        "during": null
-    },
-    "preposition": {
-        "with": null,
-        "using": null,
-        "in": null,
-        "on": null,
-        "at": null,
-        "over": null,
-        "under": null,
-        "underneath": null,
-        "between": null,
-        "among": null,
-        "within": null,
-        "above": null,
-        "below": null,
-        "beside": null,
-        "from": null,
-        "off": null,
-        "out": null,
-        "to": null,
-        "toward": null,
-        "towards": null,
-        "into": null,
-        "onto": null,
-        "upon": null,
-        "up": null,
-        "down": null,
-        "inside": null,
-        "outside": null,
-        "around": null,
-        "aboard": null,
-        "across": null,
-        "along": null,
-        "for": null,
-        "since": null,
-        "until": null,
-        "before": null,
-        "after": null,
-        "by": null,
-        "during": null
-    }
+    "a": [
+        "det"
+    ],
+    "an": [
+        "det"
+    ],
+    "the": [
+        "det"
+    ],
+    "some": [
+        "det"
+    ],
+    "i": [
+        "pronoun"
+    ],
+    "you": [
+        "pronoun"
+    ],
+    "he": [
+        "pronoun"
+    ],
+    "she": [
+        "pronoun"
+    ],
+    "it": [
+        "pronoun"
+    ],
+    "we": [
+        "pronoun"
+    ],
+    "they": [
+        "pronoun"
+    ],
+    "this": [
+        "pronoun"
+    ],
+    "that": [
+        "pronoun",
+        "that"
+    ],
+    "these": [
+        "pronoun"
+    ],
+    "those": [
+        "pronoun"
+    ],
+    "my": [
+        "possessive_adjective"
+    ],
+    "your": [
+        "possessive_adjective"
+    ],
+    "his": [
+        "possessive_adjective",
+        "possessive_pronoun"
+    ],
+    "her": [
+        "possessive_adjective"
+    ],
+    "its": [
+        "possessive_adjective",
+        "possessive_pronoun"
+    ],
+    "our": [
+        "possessive_adjective"
+    ],
+    "their": [
+        "possessive_adjective"
+    ],
+    "mine": [
+        "possessive_pronoun"
+    ],
+    "yours": [
+        "possessive_pronoun"
+    ],
+    "hers": [
+        "possessive_pronoun"
+    ],
+    "ours": [
+        "possessive_pronoun"
+    ],
+    "theirs": [
+        "possessive_pronoun"
+    ],
+    "London": [
+        "proper_noun"
+    ],
+    "Paris": [
+        "proper_noun"
+    ],
+    "Berlin": [
+        "proper_noun"
+    ],
+    "Moscow": [
+        "proper_noun"
+    ],
+    "Tokyo": [
+        "proper_noun"
+    ],
+    "Beijing": [
+        "proper_noun"
+    ],
+    "New York": [
+        "proper_noun"
+    ],
+    "Los Angeles": [
+        "proper_noun"
+    ],
+    "San Francisco": [
+        "proper_noun"
+    ],
+    "Roxy": [
+        "proper_noun"
+    ],
+    "Max": [
+        "proper_noun"
+    ],
+    "Daisy": [
+        "proper_noun"
+    ],
+    "Sue": [
+        "proper_noun"
+    ],
+    "John": [
+        "proper_noun"
+    ],
+    "Mary": [
+        "proper_noun"
+    ],
+    "Peter": [
+        "proper_noun"
+    ],
+    "Paul": [
+        "proper_noun"
+    ],
+    "Carlos": [
+        "proper_noun"
+    ],
+    "Jesus": [
+        "proper_noun"
+    ],
+    "Darnell": [
+        "proper_noun"
+    ],
+    "Milly": [
+        "proper_noun"
+    ],
+    "Alice": [
+        "proper_noun"
+    ],
+    "Anna": [
+        "proper_noun"
+    ],
+    "Becky": [
+        "proper_noun"
+    ],
+    "Bertha": [
+        "proper_noun"
+    ],
+    "Bob": [
+        "proper_noun"
+    ],
+    "Charlie": [
+        "proper_noun"
+    ],
+    "Carol": [
+        "proper_noun"
+    ],
+    "David": [
+        "proper_noun"
+    ],
+    "Disney": [
+        "proper_noun"
+    ],
+    "Emily": [
+        "proper_noun"
+    ],
+    "Eve": [
+        "proper_noun"
+    ],
+    "Frank": [
+        "proper_noun"
+    ],
+    "Grace": [
+        "proper_noun"
+    ],
+    "Gloria": [
+        "proper_noun"
+    ],
+    "Henry": [
+        "proper_noun"
+    ],
+    "water": [
+        "uncountable_noun"
+    ],
+    "milk": [
+        "uncountable_noun"
+    ],
+    "rice": [
+        "uncountable_noun"
+    ],
+    "money": [
+        "uncountable_noun"
+    ],
+    "food": [
+        "uncountable_noun"
+    ],
+    "air": [
+        "uncountable_noun"
+    ],
+    "light": [
+        "uncountable_noun"
+    ],
+    "heat": [
+        "uncountable_noun"
+    ],
+    "cold": [
+        "uncountable_noun"
+    ],
+    "ice": [
+        "uncountable_noun"
+    ],
+    "bread": [
+        "uncountable_noun"
+    ],
+    "flour": [
+        "uncountable_noun"
+    ],
+    "snow": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "rain": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "news": [
+        "uncountable_noun"
+    ],
+    "information": [
+        "uncountable_noun"
+    ],
+    "knowledge": [
+        "uncountable_noun"
+    ],
+    "wisdom": [
+        "uncountable_noun"
+    ],
+    "furniture": [
+        "uncountable_noun"
+    ],
+    "equipment": [
+        "uncountable_noun"
+    ],
+    "luggage": [
+        "uncountable_noun"
+    ],
+    "time": [
+        "uncountable_noun"
+    ],
+    "sand": [
+        "uncountable_noun"
+    ],
+    "popcorn": [
+        "uncountable_noun"
+    ],
+    "music": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "soda": [
+        "uncountable_noun"
+    ],
+    "pizza": [
+        "uncountable_noun"
+    ],
+    "fish": [
+        "uncountable_noun",
+        "noun",
+        "vb",
+        "vbp"
+    ],
+    "meat": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "chicken": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "broccoli": [
+        "uncountable_noun"
+    ],
+    "candy": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "magic": [
+        "uncountable_noun"
+    ],
+    "stuff": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "yogurt": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "honey": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "smoke": [
+        "uncountable_noun",
+        "vb",
+        "vbp"
+    ],
+    "cream": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "cheese": [
+        "uncountable_noun"
+    ],
+    "advice": [
+        "uncountable_noun",
+        "noun"
+    ],
+    "jewelry": [
+        "uncountable_noun"
+    ],
+    "blood": [
+        "uncountable_noun"
+    ],
+    "biology": [
+        "uncountable_noun"
+    ],
+    "astronomy": [
+        "uncountable_noun"
+    ],
+    "chemistry": [
+        "uncountable_noun"
+    ],
+    "research": [
+        "uncountable_noun"
+    ],
+    "football": [
+        "uncountable_noun"
+    ],
+    "tennis": [
+        "uncountable_noun"
+    ],
+    "baseball": [
+        "uncountable_noun"
+    ],
+    "jenga": [
+        "uncountable_noun"
+    ],
+    "soccer": [
+        "uncountable_noun"
+    ],
+    "badminton": [
+        "uncountable_noun"
+    ],
+    "not": [
+        "not"
+    ],
+    "to": [
+        "to",
+        "goal_preposition",
+        "preposition"
+    ],
+    "s": [
+        "s"
+    ],
+    "if": [
+        "interrogative_subordinator"
+    ],
+    "whether": [
+        "interrogative_subordinator"
+    ],
+    "big": [
+        "adj"
+    ],
+    "small": [
+        "adj"
+    ],
+    "little": [
+        "adj"
+    ],
+    "happy": [
+        "adj",
+        "adj_declarative_cl",
+        "adj_to_inf_cl"
+    ],
+    "sad": [
+        "adj",
+        "adj_pp",
+        "adj_declarative_cl",
+        "adj_to_inf_cl"
+    ],
+    "icy": [
+        "adj"
+    ],
+    "thoughtful": [
+        "adj"
+    ],
+    "careful": [
+        "adj"
+    ],
+    "lonely": [
+        "adj"
+    ],
+    "kind": [
+        "adj"
+    ],
+    "quick": [
+        "adj"
+    ],
+    "interesting": [
+        "adj"
+    ],
+    "mysterious": [
+        "adj"
+    ],
+    "free": [
+        "adj"
+    ],
+    "young": [
+        "adj"
+    ],
+    "old": [
+        "adj"
+    ],
+    "interested": [
+        "adj_pp"
+    ],
+    "glad": [
+        "adj_pp",
+        "adj_declarative_cl",
+        "adj_to_inf_cl"
+    ],
+    "sorry": [
+        "adj_pp",
+        "adj_declarative_cl",
+        "adj_to_inf_cl"
+    ],
+    "quickly": [
+        "adv"
+    ],
+    "slowly": [
+        "adv"
+    ],
+    "happily": [
+        "adv"
+    ],
+    "now": [
+        "adv"
+    ],
+    "very": [
+        "adv"
+    ],
+    "clearly": [
+        "adv"
+    ],
+    "sadly": [
+        "adv"
+    ],
+    "suddenly": [
+        "adv"
+    ],
+    "even": [
+        "precorenp_modifier"
+    ],
+    "all": [
+        "precorenp_modifier"
+    ],
+    "too": [
+        "postcorenp_modifier"
+    ],
+    "altogether": [
+        "postcorenp_modifier"
+    ],
+    "can": [
+        "modal"
+    ],
+    "could": [
+        "modal"
+    ],
+    "may": [
+        "modal"
+    ],
+    "might": [
+        "modal"
+    ],
+    "shall": [
+        "modal"
+    ],
+    "should": [
+        "modal"
+    ],
+    "will": [
+        "modal"
+    ],
+    "would": [
+        "modal"
+    ],
+    "must": [
+        "modal"
+    ],
+    "how": [
+        "how"
+    ],
+    "why": [
+        "why"
+    ],
+    "who": [
+        "wh"
+    ],
+    "what": [
+        "wh"
+    ],
+    "which": [
+        "wh",
+        "which"
+    ],
+    "where": [
+        "wh"
+    ],
+    "when": [
+        "wh"
+    ],
+    "is": [
+        "is",
+        "vbz",
+        "vbz_ap",
+        "vbz_vbg_cl",
+        "vbz_np"
+    ],
+    "are": [
+        "are",
+        "vbp",
+        "vbp_ap",
+        "vbp_vbg_cl",
+        "vbp_np"
+    ],
+    "were": [
+        "were",
+        "vbd",
+        "vbd_ap",
+        "vbd_vbg_cl",
+        "vbd_np"
+    ],
+    "does": [
+        "does"
+    ],
+    "do": [
+        "do",
+        "vb_bare_inf_cl",
+        "vbp_bare_inf_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "did": [
+        "did"
+    ],
+    "apple": [
+        "noun"
+    ],
+    "banana": [
+        "noun"
+    ],
+    "car": [
+        "noun"
+    ],
+    "house": [
+        "noun"
+    ],
+    "tree": [
+        "noun"
+    ],
+    "flower": [
+        "noun"
+    ],
+    "daisy": [
+        "noun"
+    ],
+    "bee": [
+        "noun"
+    ],
+    "dog": [
+        "noun"
+    ],
+    "cat": [
+        "noun"
+    ],
+    "cow": [
+        "noun"
+    ],
+    "pig": [
+        "noun"
+    ],
+    "horse": [
+        "noun"
+    ],
+    "sheep": [
+        "noun"
+    ],
+    "bird": [
+        "noun"
+    ],
+    "hummingbird": [
+        "noun"
+    ],
+    "rhinoceros": [
+        "noun"
+    ],
+    "elephant": [
+        "noun"
+    ],
+    "whale": [
+        "noun"
+    ],
+    "octopus": [
+        "noun"
+    ],
+    "book": [
+        "noun"
+    ],
+    "pen": [
+        "noun"
+    ],
+    "pencil": [
+        "noun"
+    ],
+    "computer": [
+        "noun"
+    ],
+    "phone": [
+        "noun"
+    ],
+    "television": [
+        "noun"
+    ],
+    "radio": [
+        "noun"
+    ],
+    "newspaper": [
+        "noun"
+    ],
+    "magazine": [
+        "noun"
+    ],
+    "letter": [
+        "noun"
+    ],
+    "email": [
+        "noun"
+    ],
+    "picture": [
+        "noun"
+    ],
+    "photograph": [
+        "noun"
+    ],
+    "video": [
+        "noun"
+    ],
+    "movie": [
+        "noun"
+    ],
+    "song": [
+        "noun"
+    ],
+    "dance": [
+        "noun",
+        "vb",
+        "vbp"
+    ],
+    "game": [
+        "noun"
+    ],
+    "toy": [
+        "noun"
+    ],
+    "snowman": [
+        "noun"
+    ],
+    "ball": [
+        "noun"
+    ],
+    "doll": [
+        "noun"
+    ],
+    "carpet": [
+        "noun"
+    ],
+    "floor": [
+        "noun"
+    ],
+    "ceiling": [
+        "noun"
+    ],
+    "wall": [
+        "noun"
+    ],
+    "window": [
+        "noun"
+    ],
+    "door": [
+        "noun"
+    ],
+    "roof": [
+        "noun"
+    ],
+    "stair": [
+        "noun"
+    ],
+    "step": [
+        "noun"
+    ],
+    "hall": [
+        "noun"
+    ],
+    "room": [
+        "noun"
+    ],
+    "kitchen": [
+        "noun"
+    ],
+    "stove": [
+        "noun"
+    ],
+    "spatula": [
+        "noun"
+    ],
+    "spoon": [
+        "noun"
+    ],
+    "knife": [
+        "noun"
+    ],
+    "fork": [
+        "noun"
+    ],
+    "bowl": [
+        "noun"
+    ],
+    "plate": [
+        "noun"
+    ],
+    "cup": [
+        "noun"
+    ],
+    "glass": [
+        "noun"
+    ],
+    "mug": [
+        "noun"
+    ],
+    "platter": [
+        "noun"
+    ],
+    "dish": [
+        "noun"
+    ],
+    "vegetable": [
+        "noun"
+    ],
+    "grain": [
+        "noun"
+    ],
+    "bathroom": [
+        "noun"
+    ],
+    "bedroom": [
+        "noun"
+    ],
+    "bed": [
+        "noun"
+    ],
+    "table": [
+        "noun"
+    ],
+    "chair": [
+        "noun"
+    ],
+    "sofa": [
+        "noun"
+    ],
+    "couch": [
+        "noun"
+    ],
+    "desk": [
+        "noun"
+    ],
+    "shelf": [
+        "noun"
+    ],
+    "drawer": [
+        "noun"
+    ],
+    "cabinet": [
+        "noun"
+    ],
+    "closet": [
+        "noun"
+    ],
+    "mirror": [
+        "noun"
+    ],
+    "sink": [
+        "noun"
+    ],
+    "toilet": [
+        "noun"
+    ],
+    "bathtub": [
+        "noun"
+    ],
+    "shower": [
+        "noun"
+    ],
+    "towel": [
+        "noun"
+    ],
+    "soap": [
+        "noun"
+    ],
+    "shampoo": [
+        "noun"
+    ],
+    "toothbrush": [
+        "noun"
+    ],
+    "toothpaste": [
+        "noun"
+    ],
+    "hairbrush": [
+        "noun"
+    ],
+    "lightbulb": [
+        "noun"
+    ],
+    "lamp": [
+        "noun"
+    ],
+    "candle": [
+        "noun"
+    ],
+    "garden": [
+        "noun"
+    ],
+    "yard": [
+        "noun"
+    ],
+    "street": [
+        "noun"
+    ],
+    "road": [
+        "noun"
+    ],
+    "highway": [
+        "noun"
+    ],
+    "bridge": [
+        "noun"
+    ],
+    "tunnel": [
+        "noun"
+    ],
+    "river": [
+        "noun"
+    ],
+    "lake": [
+        "noun"
+    ],
+    "ocean": [
+        "noun"
+    ],
+    "sea": [
+        "noun"
+    ],
+    "beach": [
+        "noun"
+    ],
+    "mountain": [
+        "noun"
+    ],
+    "hill": [
+        "noun"
+    ],
+    "valley": [
+        "noun"
+    ],
+    "forest": [
+        "noun"
+    ],
+    "jungle": [
+        "noun"
+    ],
+    "desert": [
+        "noun"
+    ],
+    "island": [
+        "noun"
+    ],
+    "continent": [
+        "noun"
+    ],
+    "country": [
+        "noun"
+    ],
+    "state": [
+        "noun"
+    ],
+    "city": [
+        "noun"
+    ],
+    "town": [
+        "noun"
+    ],
+    "village": [
+        "noun"
+    ],
+    "store": [
+        "noun"
+    ],
+    "supermarket": [
+        "noun"
+    ],
+    "bakery": [
+        "noun"
+    ],
+    "restaurant": [
+        "noun"
+    ],
+    "neighborhood": [
+        "noun"
+    ],
+    "household": [
+        "noun"
+    ],
+    "family": [
+        "noun"
+    ],
+    "parent": [
+        "noun"
+    ],
+    "mother": [
+        "noun"
+    ],
+    "father": [
+        "noun"
+    ],
+    "child": [
+        "noun"
+    ],
+    "son": [
+        "noun"
+    ],
+    "daughter": [
+        "noun"
+    ],
+    "brother": [
+        "noun"
+    ],
+    "sister": [
+        "noun"
+    ],
+    "grandparent": [
+        "noun"
+    ],
+    "grandmother": [
+        "noun"
+    ],
+    "grandfather": [
+        "noun"
+    ],
+    "grandson": [
+        "noun"
+    ],
+    "granddaughter": [
+        "noun"
+    ],
+    "uncle": [
+        "noun"
+    ],
+    "aunt": [
+        "noun"
+    ],
+    "cousin": [
+        "noun"
+    ],
+    "nephew": [
+        "noun"
+    ],
+    "niece": [
+        "noun"
+    ],
+    "friend": [
+        "noun"
+    ],
+    "enemy": [
+        "noun"
+    ],
+    "stranger": [
+        "noun"
+    ],
+    "guest": [
+        "noun"
+    ],
+    "host": [
+        "noun"
+    ],
+    "customer": [
+        "noun"
+    ],
+    "client": [
+        "noun"
+    ],
+    "farmer": [
+        "noun"
+    ],
+    "gardener": [
+        "noun"
+    ],
+    "cook": [
+        "noun",
+        "vb",
+        "vbp"
+    ],
+    "fisherman": [
+        "noun"
+    ],
+    "teacher": [
+        "noun"
+    ],
+    "professor": [
+        "noun"
+    ],
+    "student": [
+        "noun"
+    ],
+    "doctor": [
+        "noun"
+    ],
+    "nurse": [
+        "noun"
+    ],
+    "patient": [
+        "noun"
+    ],
+    "balloon": [
+        "noun"
+    ],
+    "jar": [
+        "noun"
+    ],
+    "automobile": [
+        "noun"
+    ],
+    "park": [
+        "noun"
+    ],
+    "comet": [
+        "noun"
+    ],
+    "star": [
+        "noun"
+    ],
+    "rabbit": [
+        "noun"
+    ],
+    "veil": [
+        "noun"
+    ],
+    "truck": [
+        "noun"
+    ],
+    "racecar": [
+        "noun"
+    ],
+    "pond": [
+        "noun"
+    ],
+    "fairy": [
+        "noun"
+    ],
+    "swing": [
+        "noun"
+    ],
+    "bush": [
+        "noun"
+    ],
+    "map": [
+        "noun"
+    ],
+    "machine": [
+        "noun"
+    ],
+    "voice": [
+        "noun"
+    ],
+    "stroke": [
+        "noun"
+    ],
+    "sack": [
+        "noun"
+    ],
+    "key": [
+        "noun"
+    ],
+    "value": [
+        "noun"
+    ],
+    "wind": [
+        "noun"
+    ],
+    "treat": [
+        "noun"
+    ],
+    "race": [
+        "noun"
+    ],
+    "box": [
+        "noun"
+    ],
+    "shirt": [
+        "noun"
+    ],
+    "jail": [
+        "noun"
+    ],
+    "rainbow": [
+        "noun"
+    ],
+    "garage": [
+        "noun"
+    ],
+    "birthday": [
+        "noun"
+    ],
+    "sausage": [
+        "noun"
+    ],
+    "birdcage": [
+        "noun"
+    ],
+    "bunny": [
+        "noun"
+    ],
+    "nest": [
+        "noun"
+    ],
+    "egg": [
+        "noun"
+    ],
+    "robot": [
+        "noun"
+    ],
+    "castle": [
+        "noun"
+    ],
+    "tag": [
+        "noun"
+    ],
+    "hook": [
+        "noun"
+    ],
+    "button": [
+        "noun"
+    ],
+    "firework": [
+        "noun"
+    ],
+    "block": [
+        "noun"
+    ],
+    "crayon": [
+        "noun"
+    ],
+    "hanger": [
+        "noun"
+    ],
+    "janitor": [
+        "noun"
+    ],
+    "curve": [
+        "noun"
+    ],
+    "jacket": [
+        "noun"
+    ],
+    "sweater": [
+        "noun"
+    ],
+    "dress": [
+        "noun"
+    ],
+    "blouse": [
+        "noun"
+    ],
+    "arrow": [
+        "noun"
+    ],
+    "tub": [
+        "noun"
+    ],
+    "plan": [
+        "noun"
+    ],
+    "flashlight": [
+        "noun"
+    ],
+    "tent": [
+        "noun"
+    ],
+    "crane": [
+        "noun"
+    ],
+    "sign": [
+        "noun"
+    ],
+    "attic": [
+        "noun"
+    ],
+    "spider": [
+        "noun"
+    ],
+    "blueberry": [
+        "noun"
+    ],
+    "strawberry": [
+        "noun"
+    ],
+    "raspberry": [
+        "noun"
+    ],
+    "huckleberry": [
+        "noun"
+    ],
+    "blackberry": [
+        "noun"
+    ],
+    "orange": [
+        "noun"
+    ],
+    "wish": [
+        "noun",
+        "vb_np",
+        "vbp_np"
+    ],
+    "laugh": [
+        "noun",
+        "vb",
+        "vbp"
+    ],
+    "shop": [
+        "noun"
+    ],
+    "hug": [
+        "noun"
+    ],
+    "word": [
+        "noun"
+    ],
+    "verb": [
+        "noun"
+    ],
+    "noun": [
+        "noun"
+    ],
+    "adjective": [
+        "noun"
+    ],
+    "adverb": [
+        "noun"
+    ],
+    "preposition": [
+        "noun"
+    ],
+    "pole": [
+        "noun"
+    ],
+    "reward": [
+        "noun"
+    ],
+    "loss": [
+        "noun"
+    ],
+    "agent": [
+        "noun"
+    ],
+    "whistle": [
+        "noun"
+    ],
+    "collar": [
+        "noun"
+    ],
+    "belt": [
+        "noun"
+    ],
+    "slide": [
+        "noun"
+    ],
+    "coaster": [
+        "noun"
+    ],
+    "skull": [
+        "noun"
+    ],
+    "tibia": [
+        "noun"
+    ],
+    "pelvis": [
+        "noun"
+    ],
+    "femur": [
+        "noun"
+    ],
+    "clavicle": [
+        "noun"
+    ],
+    "collarbone": [
+        "noun"
+    ],
+    "vertebra": [
+        "noun"
+    ],
+    "phalange": [
+        "noun"
+    ],
+    "rib": [
+        "noun"
+    ],
+    "sternum": [
+        "noun"
+    ],
+    "basket": [
+        "noun"
+    ],
+    "blade": [
+        "noun"
+    ],
+    "blow": [
+        "noun"
+    ],
+    "boat": [
+        "noun"
+    ],
+    "body": [
+        "noun"
+    ],
+    "carrot": [
+        "noun"
+    ],
+    "branch": [
+        "noun"
+    ],
+    "bomb": [
+        "noun"
+    ],
+    "boy": [
+        "noun"
+    ],
+    "girl": [
+        "noun"
+    ],
+    "border": [
+        "noun"
+    ],
+    "bottom": [
+        "noun"
+    ],
+    "brain": [
+        "noun"
+    ],
+    "bottle": [
+        "noun"
+    ],
+    "brush": [
+        "noun"
+    ],
+    "budget": [
+        "noun"
+    ],
+    "concept": [
+        "noun"
+    ],
+    "sun": [
+        "noun"
+    ],
+    "moon": [
+        "noun"
+    ],
+    "earth": [
+        "noun"
+    ],
+    "hail": [
+        "noun"
+    ],
+    "favorite": [
+        "noun"
+    ],
+    "home": [
+        "noun"
+    ],
+    "apples": [
+        "noun"
+    ],
+    "bananas": [
+        "noun"
+    ],
+    "cars": [
+        "noun"
+    ],
+    "houses": [
+        "noun"
+    ],
+    "trees": [
+        "noun"
+    ],
+    "flowers": [
+        "noun"
+    ],
+    "daisies": [
+        "noun"
+    ],
+    "bees": [
+        "noun"
+    ],
+    "dogs": [
+        "noun"
+    ],
+    "cats": [
+        "noun"
+    ],
+    "cows": [
+        "noun"
+    ],
+    "pigs": [
+        "noun"
+    ],
+    "horses": [
+        "noun"
+    ],
+    "chickens": [
+        "noun"
+    ],
+    "birds": [
+        "noun"
+    ],
+    "hummingbirds": [
+        "noun"
+    ],
+    "rhinoceroses": [
+        "noun"
+    ],
+    "elephants": [
+        "noun"
+    ],
+    "fishes": [
+        "noun",
+        "vbz"
+    ],
+    "whales": [
+        "noun"
+    ],
+    "octopuses": [
+        "noun"
+    ],
+    "books": [
+        "noun"
+    ],
+    "pens": [
+        "noun"
+    ],
+    "pencils": [
+        "noun"
+    ],
+    "computers": [
+        "noun"
+    ],
+    "phones": [
+        "noun"
+    ],
+    "televisions": [
+        "noun"
+    ],
+    "radios": [
+        "noun"
+    ],
+    "newspapers": [
+        "noun"
+    ],
+    "magazines": [
+        "noun"
+    ],
+    "letters": [
+        "noun"
+    ],
+    "emails": [
+        "noun"
+    ],
+    "pictures": [
+        "noun"
+    ],
+    "photographs": [
+        "noun"
+    ],
+    "videos": [
+        "noun"
+    ],
+    "movies": [
+        "noun"
+    ],
+    "musics": [
+        "noun"
+    ],
+    "songs": [
+        "noun"
+    ],
+    "dances": [
+        "noun",
+        "vbz"
+    ],
+    "games": [
+        "noun"
+    ],
+    "toys": [
+        "noun"
+    ],
+    "snowmans": [
+        "noun"
+    ],
+    "balls": [
+        "noun"
+    ],
+    "dolls": [
+        "noun"
+    ],
+    "carpets": [
+        "noun"
+    ],
+    "floors": [
+        "noun"
+    ],
+    "ceilings": [
+        "noun"
+    ],
+    "walls": [
+        "noun"
+    ],
+    "windows": [
+        "noun"
+    ],
+    "doors": [
+        "noun"
+    ],
+    "roofs": [
+        "noun"
+    ],
+    "stairs": [
+        "noun"
+    ],
+    "steps": [
+        "noun"
+    ],
+    "halls": [
+        "noun"
+    ],
+    "rooms": [
+        "noun"
+    ],
+    "kitchens": [
+        "noun"
+    ],
+    "stoves": [
+        "noun"
+    ],
+    "spatulas": [
+        "noun"
+    ],
+    "spoons": [
+        "noun"
+    ],
+    "knifes": [
+        "noun"
+    ],
+    "forks": [
+        "noun"
+    ],
+    "bowls": [
+        "noun"
+    ],
+    "plates": [
+        "noun"
+    ],
+    "cups": [
+        "noun"
+    ],
+    "glasses": [
+        "noun"
+    ],
+    "mugs": [
+        "noun"
+    ],
+    "platters": [
+        "noun"
+    ],
+    "dishes": [
+        "noun"
+    ],
+    "vegetables": [
+        "noun"
+    ],
+    "meats": [
+        "noun"
+    ],
+    "grains": [
+        "noun"
+    ],
+    "bathrooms": [
+        "noun"
+    ],
+    "bedrooms": [
+        "noun"
+    ],
+    "beds": [
+        "noun"
+    ],
+    "tables": [
+        "noun"
+    ],
+    "chairs": [
+        "noun"
+    ],
+    "sofas": [
+        "noun"
+    ],
+    "couches": [
+        "noun"
+    ],
+    "desks": [
+        "noun"
+    ],
+    "shelfs": [
+        "noun"
+    ],
+    "drawers": [
+        "noun"
+    ],
+    "cabinets": [
+        "noun"
+    ],
+    "closets": [
+        "noun"
+    ],
+    "mirrors": [
+        "noun"
+    ],
+    "sinks": [
+        "noun"
+    ],
+    "toilets": [
+        "noun"
+    ],
+    "bathtubs": [
+        "noun"
+    ],
+    "showers": [
+        "noun"
+    ],
+    "towels": [
+        "noun"
+    ],
+    "soaps": [
+        "noun"
+    ],
+    "shampoos": [
+        "noun"
+    ],
+    "toothbrushes": [
+        "noun"
+    ],
+    "toothpastes": [
+        "noun"
+    ],
+    "hairbrushes": [
+        "noun"
+    ],
+    "lightbulbs": [
+        "noun"
+    ],
+    "lamps": [
+        "noun"
+    ],
+    "candles": [
+        "noun"
+    ],
+    "gardens": [
+        "noun"
+    ],
+    "yards": [
+        "noun"
+    ],
+    "streets": [
+        "noun"
+    ],
+    "roads": [
+        "noun"
+    ],
+    "highways": [
+        "noun"
+    ],
+    "bridges": [
+        "noun"
+    ],
+    "tunnels": [
+        "noun"
+    ],
+    "rivers": [
+        "noun"
+    ],
+    "lakes": [
+        "noun"
+    ],
+    "oceans": [
+        "noun"
+    ],
+    "seas": [
+        "noun"
+    ],
+    "beaches": [
+        "noun"
+    ],
+    "mountains": [
+        "noun"
+    ],
+    "hills": [
+        "noun"
+    ],
+    "valleys": [
+        "noun"
+    ],
+    "forests": [
+        "noun"
+    ],
+    "jungles": [
+        "noun"
+    ],
+    "deserts": [
+        "noun"
+    ],
+    "islands": [
+        "noun"
+    ],
+    "continents": [
+        "noun"
+    ],
+    "countries": [
+        "noun"
+    ],
+    "states": [
+        "noun"
+    ],
+    "cities": [
+        "noun"
+    ],
+    "towns": [
+        "noun"
+    ],
+    "villages": [
+        "noun"
+    ],
+    "stores": [
+        "noun"
+    ],
+    "supermarkets": [
+        "noun"
+    ],
+    "bakeries": [
+        "noun"
+    ],
+    "restaurants": [
+        "noun"
+    ],
+    "neighborhoods": [
+        "noun"
+    ],
+    "households": [
+        "noun"
+    ],
+    "families": [
+        "noun"
+    ],
+    "parents": [
+        "noun"
+    ],
+    "mothers": [
+        "noun"
+    ],
+    "fathers": [
+        "noun"
+    ],
+    "children": [
+        "noun"
+    ],
+    "sons": [
+        "noun"
+    ],
+    "daughters": [
+        "noun"
+    ],
+    "brothers": [
+        "noun"
+    ],
+    "sisters": [
+        "noun"
+    ],
+    "grandparents": [
+        "noun"
+    ],
+    "grandmothers": [
+        "noun"
+    ],
+    "grandfathers": [
+        "noun"
+    ],
+    "grandsons": [
+        "noun"
+    ],
+    "granddaughters": [
+        "noun"
+    ],
+    "uncles": [
+        "noun"
+    ],
+    "aunts": [
+        "noun"
+    ],
+    "cousins": [
+        "noun"
+    ],
+    "nephews": [
+        "noun"
+    ],
+    "nieces": [
+        "noun"
+    ],
+    "friends": [
+        "noun"
+    ],
+    "enemies": [
+        "noun"
+    ],
+    "strangers": [
+        "noun"
+    ],
+    "guests": [
+        "noun"
+    ],
+    "hosts": [
+        "noun"
+    ],
+    "customers": [
+        "noun"
+    ],
+    "clients": [
+        "noun"
+    ],
+    "farmers": [
+        "noun"
+    ],
+    "gardeners": [
+        "noun"
+    ],
+    "cooks": [
+        "noun",
+        "vbz"
+    ],
+    "fishermans": [
+        "noun"
+    ],
+    "teachers": [
+        "noun"
+    ],
+    "professors": [
+        "noun"
+    ],
+    "students": [
+        "noun"
+    ],
+    "doctors": [
+        "noun"
+    ],
+    "nurses": [
+        "noun"
+    ],
+    "patients": [
+        "noun"
+    ],
+    "balloons": [
+        "noun"
+    ],
+    "jars": [
+        "noun"
+    ],
+    "automobiles": [
+        "noun"
+    ],
+    "parks": [
+        "noun"
+    ],
+    "comets": [
+        "noun"
+    ],
+    "stars": [
+        "noun"
+    ],
+    "rabbits": [
+        "noun"
+    ],
+    "veils": [
+        "noun"
+    ],
+    "trucks": [
+        "noun"
+    ],
+    "racecars": [
+        "noun"
+    ],
+    "ponds": [
+        "noun"
+    ],
+    "fairies": [
+        "noun"
+    ],
+    "swings": [
+        "noun"
+    ],
+    "bushes": [
+        "noun"
+    ],
+    "maps": [
+        "noun"
+    ],
+    "machines": [
+        "noun"
+    ],
+    "voices": [
+        "noun"
+    ],
+    "strokes": [
+        "noun"
+    ],
+    "sacks": [
+        "noun"
+    ],
+    "keys": [
+        "noun"
+    ],
+    "values": [
+        "noun"
+    ],
+    "winds": [
+        "noun"
+    ],
+    "treats": [
+        "noun"
+    ],
+    "races": [
+        "noun"
+    ],
+    "boxes": [
+        "noun"
+    ],
+    "shirts": [
+        "noun"
+    ],
+    "jails": [
+        "noun"
+    ],
+    "rainbows": [
+        "noun"
+    ],
+    "garages": [
+        "noun"
+    ],
+    "birthdays": [
+        "noun"
+    ],
+    "candies": [
+        "noun"
+    ],
+    "stuffs": [
+        "noun"
+    ],
+    "sausages": [
+        "noun"
+    ],
+    "birdcages": [
+        "noun"
+    ],
+    "bunnies": [
+        "noun"
+    ],
+    "nests": [
+        "noun"
+    ],
+    "eggs": [
+        "noun"
+    ],
+    "yogurts": [
+        "noun"
+    ],
+    "robots": [
+        "noun"
+    ],
+    "castles": [
+        "noun"
+    ],
+    "tags": [
+        "noun"
+    ],
+    "honeys": [
+        "noun"
+    ],
+    "hooks": [
+        "noun"
+    ],
+    "buttons": [
+        "noun"
+    ],
+    "fireworks": [
+        "noun"
+    ],
+    "blocks": [
+        "noun"
+    ],
+    "crayons": [
+        "noun"
+    ],
+    "hangers": [
+        "noun"
+    ],
+    "janitors": [
+        "noun"
+    ],
+    "creams": [
+        "noun"
+    ],
+    "curves": [
+        "noun"
+    ],
+    "jackets": [
+        "noun"
+    ],
+    "sweaters": [
+        "noun"
+    ],
+    "dresses": [
+        "noun"
+    ],
+    "blouses": [
+        "noun"
+    ],
+    "arrows": [
+        "noun"
+    ],
+    "tubs": [
+        "noun"
+    ],
+    "plans": [
+        "noun"
+    ],
+    "advices": [
+        "noun"
+    ],
+    "flashlights": [
+        "noun"
+    ],
+    "tents": [
+        "noun"
+    ],
+    "cranes": [
+        "noun"
+    ],
+    "signs": [
+        "noun"
+    ],
+    "attics": [
+        "noun"
+    ],
+    "spiders": [
+        "noun"
+    ],
+    "blueberries": [
+        "noun"
+    ],
+    "strawberries": [
+        "noun"
+    ],
+    "raspberries": [
+        "noun"
+    ],
+    "huckleberries": [
+        "noun"
+    ],
+    "blackberries": [
+        "noun"
+    ],
+    "oranges": [
+        "noun"
+    ],
+    "wishes": [
+        "noun",
+        "vbz_np"
+    ],
+    "laughs": [
+        "noun",
+        "vbz"
+    ],
+    "shops": [
+        "noun"
+    ],
+    "hugs": [
+        "noun"
+    ],
+    "words": [
+        "noun"
+    ],
+    "verbs": [
+        "noun"
+    ],
+    "nouns": [
+        "noun"
+    ],
+    "adjectives": [
+        "noun"
+    ],
+    "adverbs": [
+        "noun"
+    ],
+    "prepositions": [
+        "noun"
+    ],
+    "poles": [
+        "noun"
+    ],
+    "rewards": [
+        "noun"
+    ],
+    "losses": [
+        "noun"
+    ],
+    "agents": [
+        "noun"
+    ],
+    "whistles": [
+        "noun"
+    ],
+    "collars": [
+        "noun"
+    ],
+    "belts": [
+        "noun"
+    ],
+    "slides": [
+        "noun"
+    ],
+    "coasters": [
+        "noun"
+    ],
+    "skulls": [
+        "noun"
+    ],
+    "tibias": [
+        "noun"
+    ],
+    "pelvises": [
+        "noun"
+    ],
+    "femurs": [
+        "noun"
+    ],
+    "clavicles": [
+        "noun"
+    ],
+    "collarbones": [
+        "noun"
+    ],
+    "vertebras": [
+        "noun"
+    ],
+    "phalanges": [
+        "noun"
+    ],
+    "ribs": [
+        "noun"
+    ],
+    "sternums": [
+        "noun"
+    ],
+    "baskets": [
+        "noun"
+    ],
+    "blades": [
+        "noun"
+    ],
+    "blows": [
+        "noun"
+    ],
+    "boats": [
+        "noun"
+    ],
+    "bodies": [
+        "noun"
+    ],
+    "carrots": [
+        "noun"
+    ],
+    "branches": [
+        "noun"
+    ],
+    "bombs": [
+        "noun"
+    ],
+    "boys": [
+        "noun"
+    ],
+    "girls": [
+        "noun"
+    ],
+    "borders": [
+        "noun"
+    ],
+    "bottoms": [
+        "noun"
+    ],
+    "brains": [
+        "noun"
+    ],
+    "bottles": [
+        "noun"
+    ],
+    "brushes": [
+        "noun"
+    ],
+    "budgets": [
+        "noun"
+    ],
+    "concepts": [
+        "noun"
+    ],
+    "suns": [
+        "noun"
+    ],
+    "moons": [
+        "noun"
+    ],
+    "earths": [
+        "noun"
+    ],
+    "rains": [
+        "noun"
+    ],
+    "snows": [
+        "noun"
+    ],
+    "hails": [
+        "noun"
+    ],
+    "favorites": [
+        "noun"
+    ],
+    "homes": [
+        "noun"
+    ],
+    "be": [
+        "vb",
+        "vb_ap",
+        "vb_vbg_cl",
+        "vb_np"
+    ],
+    "exist": [
+        "vb",
+        "vbp"
+    ],
+    "ache": [
+        "vb",
+        "vbp"
+    ],
+    "agonize": [
+        "vb",
+        "vbp"
+    ],
+    "atrophy": [
+        "vb",
+        "vbp"
+    ],
+    "babble": [
+        "vb",
+        "vbp"
+    ],
+    "bark": [
+        "vb",
+        "vbp"
+    ],
+    "beam": [
+        "vb",
+        "vbp"
+    ],
+    "behave": [
+        "vb",
+        "vbp"
+    ],
+    "belch": [
+        "vb",
+        "vbp"
+    ],
+    "bellow": [
+        "vb",
+        "vbp"
+    ],
+    "sing": [
+        "vb",
+        "vbp",
+        "vb_np",
+        "vbp_np"
+    ],
+    "speak": [
+        "vb",
+        "vbp"
+    ],
+    "slip": [
+        "vb",
+        "vbp"
+    ],
+    "smile": [
+        "vb",
+        "vbp"
+    ],
+    "snarl": [
+        "vb",
+        "vbp"
+    ],
+    "stumble": [
+        "vb",
+        "vbp"
+    ],
+    "swim": [
+        "vb",
+        "vbp"
+    ],
+    "talk": [
+        "vb",
+        "vbp"
+    ],
+    "think": [
+        "vb",
+        "vbp",
+        "vb_declarative_cl",
+        "vbp_declarative_cl"
+    ],
+    "caw": [
+        "vb",
+        "vbp"
+    ],
+    "choke": [
+        "vb",
+        "vbp"
+    ],
+    "clap": [
+        "vb",
+        "vbp"
+    ],
+    "climb": [
+        "vb",
+        "vbp"
+    ],
+    "crawl": [
+        "vb",
+        "vbp"
+    ],
+    "cry": [
+        "vb",
+        "vbp"
+    ],
+    "dive": [
+        "vb",
+        "vbp"
+    ],
+    "dream": [
+        "vb",
+        "vbp"
+    ],
+    "drink": [
+        "vb",
+        "vbp",
+        "vb_np",
+        "vbp_np"
+    ],
+    "clamor": [
+        "vb",
+        "vbp"
+    ],
+    "clatter": [
+        "vb",
+        "vbp"
+    ],
+    "clink": [
+        "vb",
+        "vbp"
+    ],
+    "cool": [
+        "vb",
+        "vbp"
+    ],
+    "cough": [
+        "vb",
+        "vbp"
+    ],
+    "crack": [
+        "vb",
+        "vbp"
+    ],
+    "crash": [
+        "vb",
+        "vbp"
+    ],
+    "creak": [
+        "vb",
+        "vbp"
+    ],
+    "croak": [
+        "vb",
+        "vbp"
+    ],
+    "crow": [
+        "vb",
+        "vbp"
+    ],
+    "darken": [
+        "vb",
+        "vbp"
+    ],
+    "dazzle": [
+        "vb",
+        "vbp"
+    ],
+    "drip": [
+        "vb",
+        "vbp"
+    ],
+    "ding": [
+        "vb",
+        "vbp"
+    ],
+    "daydream": [
+        "vb",
+        "vbp"
+    ],
+    "doze": [
+        "vb",
+        "vbp"
+    ],
+    "drowse": [
+        "vb",
+        "vbp"
+    ],
+    "drift": [
+        "vb",
+        "vbp"
+    ],
+    "drown": [
+        "vb",
+        "vbp"
+    ],
+    "dwell": [
+        "vb",
+        "vbp"
+    ],
+    "drool": [
+        "vb",
+        "vbp"
+    ],
+    "escape": [
+        "vb",
+        "vbp"
+    ],
+    "faint": [
+        "vb",
+        "vbp"
+    ],
+    "fade": [
+        "vb",
+        "vbp"
+    ],
+    "float": [
+        "vb",
+        "vbp"
+    ],
+    "flail": [
+        "vb",
+        "vbp"
+    ],
+    "fly": [
+        "vb",
+        "vbp"
+    ],
+    "flash": [
+        "vb",
+        "vbp"
+    ],
+    "frown": [
+        "vb",
+        "vbp"
+    ],
+    "focus": [
+        "vb",
+        "vbp"
+    ],
+    "feast": [
+        "vb",
+        "vbp"
+    ],
+    "gasp": [
+        "vb",
+        "vbp"
+    ],
+    "giggle": [
+        "vb",
+        "vbp"
+    ],
+    "glare": [
+        "vb",
+        "vbp"
+    ],
+    "glint": [
+        "vb",
+        "vbp"
+    ],
+    "glisten": [
+        "vb",
+        "vbp"
+    ],
+    "glimmer": [
+        "vb",
+        "vbp"
+    ],
+    "glow": [
+        "vb",
+        "vbp"
+    ],
+    "go": [
+        "vb",
+        "vbp"
+    ],
+    "growl": [
+        "vb",
+        "vbp"
+    ],
+    "gurgle": [
+        "vb",
+        "vbp"
+    ],
+    "gush": [
+        "vb",
+        "vbp"
+    ],
+    "help": [
+        "vb",
+        "vbp",
+        "vb_bare_inf_cl",
+        "vbp_bare_inf_cl",
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "hiss": [
+        "vb",
+        "vbp"
+    ],
+    "howl": [
+        "vb",
+        "vbp"
+    ],
+    "hesitate": [
+        "vb",
+        "vbp"
+    ],
+    "hide": [
+        "vb",
+        "vbp"
+    ],
+    "hike": [
+        "vb",
+        "vbp"
+    ],
+    "honk": [
+        "vb",
+        "vbp"
+    ],
+    "hoot": [
+        "vb",
+        "vbp"
+    ],
+    "holler": [
+        "vb",
+        "vbp"
+    ],
+    "improve": [
+        "vb",
+        "vbp"
+    ],
+    "inch": [
+        "vb",
+        "vbp"
+    ],
+    "increase": [
+        "vb",
+        "vbp"
+    ],
+    "insist": [
+        "vb",
+        "vbp"
+    ],
+    "iron": [
+        "vb",
+        "vbp"
+    ],
+    "itch": [
+        "vb",
+        "vbp"
+    ],
+    "jangle": [
+        "vb",
+        "vbp"
+    ],
+    "jingle": [
+        "vb",
+        "vbp"
+    ],
+    "jog": [
+        "vb",
+        "vbp"
+    ],
+    "kick": [
+        "vb",
+        "vbp",
+        "vb_np",
+        "vbp_np"
+    ],
+    "kneel": [
+        "vb",
+        "vbp"
+    ],
+    "leak": [
+        "vb",
+        "vbp"
+    ],
+    "lighten": [
+        "vb",
+        "vbp"
+    ],
+    "listen": [
+        "vb",
+        "vbp"
+    ],
+    "load": [
+        "vb",
+        "vbp"
+    ],
+    "look": [
+        "vb",
+        "vbp",
+        "vb_ap",
+        "vbp_ap"
+    ],
+    "limp": [
+        "vb",
+        "vbp"
+    ],
+    "lose": [
+        "vb",
+        "vbp"
+    ],
+    "lurk": [
+        "vb",
+        "vbp"
+    ],
+    "lurch": [
+        "vb",
+        "vbp"
+    ],
+    "march": [
+        "vb",
+        "vbp"
+    ],
+    "meander": [
+        "vb",
+        "vbp"
+    ],
+    "melt": [
+        "vb",
+        "vbp"
+    ],
+    "mew": [
+        "vb",
+        "vbp"
+    ],
+    "meow": [
+        "vb",
+        "vbp"
+    ],
+    "moan": [
+        "vb",
+        "vbp"
+    ],
+    "moo": [
+        "vb",
+        "vbp"
+    ],
+    "mumble": [
+        "vb",
+        "vbp"
+    ],
+    "murmur": [
+        "vb",
+        "vbp"
+    ],
+    "mutter": [
+        "vb",
+        "vbp"
+    ],
+    "walk": [
+        "vb",
+        "vbp"
+    ],
+    "play": [
+        "vb",
+        "vbp",
+        "vb_np",
+        "vbp_np"
+    ],
+    "smoked": [
+        "vbd",
+        "vbn"
+    ],
+    "existed": [
+        "vbd",
+        "vbn"
+    ],
+    "ached": [
+        "vbd",
+        "vbn"
+    ],
+    "agonized": [
+        "vbd",
+        "vbn"
+    ],
+    "atrophied": [
+        "vbd",
+        "vbn"
+    ],
+    "babbled": [
+        "vbd",
+        "vbn"
+    ],
+    "barked": [
+        "vbd",
+        "vbn"
+    ],
+    "beamed": [
+        "vbd",
+        "vbn"
+    ],
+    "behaved": [
+        "vbd",
+        "vbn"
+    ],
+    "belched": [
+        "vbd",
+        "vbn"
+    ],
+    "bellowed": [
+        "vbd",
+        "vbn"
+    ],
+    "sang": [
+        "vbd",
+        "vbd_np"
+    ],
+    "spoke": [
+        "vbd"
+    ],
+    "sliped": [
+        "vbd",
+        "vbn"
+    ],
+    "smiled": [
+        "vbd",
+        "vbn"
+    ],
+    "snarled": [
+        "vbd",
+        "vbn"
+    ],
+    "laughed": [
+        "vbd",
+        "vbn"
+    ],
+    "stumbled": [
+        "vbd",
+        "vbn"
+    ],
+    "swimed": [
+        "vbd",
+        "vbn"
+    ],
+    "talked": [
+        "vbd",
+        "vbn"
+    ],
+    "thought": [
+        "vbd",
+        "vbn",
+        "vbd_declarative_cl",
+        "vbn_declarative_cl"
+    ],
+    "cawed": [
+        "vbd",
+        "vbn"
+    ],
+    "choked": [
+        "vbd",
+        "vbn"
+    ],
+    "claped": [
+        "vbd",
+        "vbn"
+    ],
+    "climbed": [
+        "vbd",
+        "vbn"
+    ],
+    "crawled": [
+        "vbd",
+        "vbn"
+    ],
+    "cried": [
+        "vbd",
+        "vbn"
+    ],
+    "danced": [
+        "vbd",
+        "vbn"
+    ],
+    "dived": [
+        "vbd",
+        "vbn"
+    ],
+    "dreamed": [
+        "vbd",
+        "vbn"
+    ],
+    "drank": [
+        "vbd",
+        "vbd_np"
+    ],
+    "clamored": [
+        "vbd",
+        "vbn"
+    ],
+    "clattered": [
+        "vbd",
+        "vbn"
+    ],
+    "clinked": [
+        "vbd",
+        "vbn"
+    ],
+    "cooled": [
+        "vbd",
+        "vbn"
+    ],
+    "cooked": [
+        "vbd",
+        "vbn"
+    ],
+    "coughed": [
+        "vbd",
+        "vbn"
+    ],
+    "cracked": [
+        "vbd",
+        "vbn"
+    ],
+    "crashed": [
+        "vbd",
+        "vbn"
+    ],
+    "creaked": [
+        "vbd",
+        "vbn"
+    ],
+    "croaked": [
+        "vbd",
+        "vbn"
+    ],
+    "crowed": [
+        "vbd",
+        "vbn"
+    ],
+    "darkened": [
+        "vbd",
+        "vbn"
+    ],
+    "dazzled": [
+        "vbd",
+        "vbn"
+    ],
+    "driped": [
+        "vbd",
+        "vbn"
+    ],
+    "dinged": [
+        "vbd",
+        "vbn"
+    ],
+    "daydreamed": [
+        "vbd",
+        "vbn"
+    ],
+    "dozed": [
+        "vbd",
+        "vbn"
+    ],
+    "drowsed": [
+        "vbd",
+        "vbn"
+    ],
+    "drifted": [
+        "vbd",
+        "vbn"
+    ],
+    "drowned": [
+        "vbd",
+        "vbn"
+    ],
+    "dwelled": [
+        "vbd",
+        "vbn"
+    ],
+    "drooled": [
+        "vbd",
+        "vbn"
+    ],
+    "escaped": [
+        "vbd",
+        "vbn"
+    ],
+    "fainted": [
+        "vbd",
+        "vbn"
+    ],
+    "faded": [
+        "vbd",
+        "vbn"
+    ],
+    "fished": [
+        "vbd",
+        "vbn"
+    ],
+    "floated": [
+        "vbd",
+        "vbn"
+    ],
+    "flailed": [
+        "vbd",
+        "vbn"
+    ],
+    "flied": [
+        "vbd",
+        "vbn"
+    ],
+    "flashed": [
+        "vbd",
+        "vbn"
+    ],
+    "frowned": [
+        "vbd",
+        "vbn"
+    ],
+    "focused": [
+        "vbd",
+        "vbn"
+    ],
+    "feasted": [
+        "vbd",
+        "vbn"
+    ],
+    "gasped": [
+        "vbd",
+        "vbn"
+    ],
+    "giggled": [
+        "vbd",
+        "vbn"
+    ],
+    "glared": [
+        "vbd",
+        "vbn"
+    ],
+    "glinted": [
+        "vbd",
+        "vbn"
+    ],
+    "glistened": [
+        "vbd",
+        "vbn"
+    ],
+    "glimmered": [
+        "vbd",
+        "vbn"
+    ],
+    "glowed": [
+        "vbd",
+        "vbn"
+    ],
+    "went": [
+        "vbd"
+    ],
+    "growled": [
+        "vbd",
+        "vbn"
+    ],
+    "gurgled": [
+        "vbd",
+        "vbn"
+    ],
+    "gushed": [
+        "vbd",
+        "vbn"
+    ],
+    "helped": [
+        "vbd",
+        "vbn",
+        "vbd_bare_inf_cl",
+        "vbn_bare_inf_cl",
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "hissed": [
+        "vbd",
+        "vbn"
+    ],
+    "howled": [
+        "vbd",
+        "vbn"
+    ],
+    "hesitated": [
+        "vbd",
+        "vbn"
+    ],
+    "hided": [
+        "vbd",
+        "vbn"
+    ],
+    "hiked": [
+        "vbd",
+        "vbn"
+    ],
+    "honked": [
+        "vbd",
+        "vbn"
+    ],
+    "hooted": [
+        "vbd",
+        "vbn"
+    ],
+    "hollered": [
+        "vbd",
+        "vbn"
+    ],
+    "improved": [
+        "vbd",
+        "vbn"
+    ],
+    "inched": [
+        "vbd",
+        "vbn"
+    ],
+    "increased": [
+        "vbd",
+        "vbn"
+    ],
+    "insisted": [
+        "vbd",
+        "vbn"
+    ],
+    "ironed": [
+        "vbd",
+        "vbn"
+    ],
+    "itched": [
+        "vbd",
+        "vbn"
+    ],
+    "jangled": [
+        "vbd",
+        "vbn"
+    ],
+    "jingled": [
+        "vbd",
+        "vbn"
+    ],
+    "joged": [
+        "vbd",
+        "vbn"
+    ],
+    "kicked": [
+        "vbd",
+        "vbn",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "kneeled": [
+        "vbd",
+        "vbn"
+    ],
+    "leaked": [
+        "vbd",
+        "vbn"
+    ],
+    "lightened": [
+        "vbd",
+        "vbn"
+    ],
+    "listened": [
+        "vbd",
+        "vbn"
+    ],
+    "loaded": [
+        "vbd",
+        "vbn"
+    ],
+    "looked": [
+        "vbd",
+        "vbn",
+        "vbd_ap",
+        "vbn_ap"
+    ],
+    "limped": [
+        "vbd",
+        "vbn"
+    ],
+    "losed": [
+        "vbd",
+        "vbn"
+    ],
+    "lurked": [
+        "vbd",
+        "vbn"
+    ],
+    "lurched": [
+        "vbd",
+        "vbn"
+    ],
+    "marched": [
+        "vbd",
+        "vbn"
+    ],
+    "meandered": [
+        "vbd",
+        "vbn"
+    ],
+    "melted": [
+        "vbd",
+        "vbn"
+    ],
+    "mewed": [
+        "vbd",
+        "vbn"
+    ],
+    "meowed": [
+        "vbd",
+        "vbn"
+    ],
+    "moaned": [
+        "vbd",
+        "vbn"
+    ],
+    "mooed": [
+        "vbd",
+        "vbn"
+    ],
+    "mumbled": [
+        "vbd",
+        "vbn"
+    ],
+    "murmured": [
+        "vbd",
+        "vbn"
+    ],
+    "muttered": [
+        "vbd",
+        "vbn"
+    ],
+    "walked": [
+        "vbd",
+        "vbn"
+    ],
+    "played": [
+        "vbd",
+        "vbn",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "been": [
+        "vbn",
+        "vbn_ap",
+        "vbn_vbg_cl",
+        "vbn_np"
+    ],
+    "sung": [
+        "vbn",
+        "vbn_np"
+    ],
+    "spoken": [
+        "vbn"
+    ],
+    "drunk": [
+        "vbn",
+        "vbn_np"
+    ],
+    "gone": [
+        "vbn"
+    ],
+    "being": [
+        "vbg",
+        "vbg_ap",
+        "vbg_vbg_cl",
+        "vbg_np"
+    ],
+    "smoking": [
+        "vbg"
+    ],
+    "existing": [
+        "vbg"
+    ],
+    "aching": [
+        "vbg"
+    ],
+    "agonizing": [
+        "vbg"
+    ],
+    "atrophying": [
+        "vbg"
+    ],
+    "babbling": [
+        "vbg"
+    ],
+    "barking": [
+        "vbg"
+    ],
+    "beaming": [
+        "vbg"
+    ],
+    "behaving": [
+        "vbg"
+    ],
+    "belching": [
+        "vbg"
+    ],
+    "bellowing": [
+        "vbg"
+    ],
+    "singing": [
+        "vbg",
+        "vbg_np"
+    ],
+    "speaking": [
+        "vbg"
+    ],
+    "sliping": [
+        "vbg"
+    ],
+    "smiling": [
+        "vbg"
+    ],
+    "snarling": [
+        "vbg"
+    ],
+    "laughing": [
+        "vbg"
+    ],
+    "stumbling": [
+        "vbg"
+    ],
+    "swiming": [
+        "vbg"
+    ],
+    "talking": [
+        "vbg"
+    ],
+    "thinking": [
+        "vbg",
+        "vbg_declarative_cl"
+    ],
+    "cawing": [
+        "vbg"
+    ],
+    "choking": [
+        "vbg"
+    ],
+    "claping": [
+        "vbg"
+    ],
+    "climbing": [
+        "vbg"
+    ],
+    "crawling": [
+        "vbg"
+    ],
+    "crying": [
+        "vbg"
+    ],
+    "dancing": [
+        "vbg"
+    ],
+    "diving": [
+        "vbg"
+    ],
+    "dreaming": [
+        "vbg"
+    ],
+    "drinking": [
+        "vbg",
+        "vbg_np"
+    ],
+    "clamoring": [
+        "vbg"
+    ],
+    "clattering": [
+        "vbg"
+    ],
+    "clinking": [
+        "vbg"
+    ],
+    "cooling": [
+        "vbg"
+    ],
+    "cooking": [
+        "vbg"
+    ],
+    "coughing": [
+        "vbg"
+    ],
+    "cracking": [
+        "vbg"
+    ],
+    "crashing": [
+        "vbg"
+    ],
+    "creaking": [
+        "vbg"
+    ],
+    "croaking": [
+        "vbg"
+    ],
+    "crowing": [
+        "vbg"
+    ],
+    "darkening": [
+        "vbg"
+    ],
+    "dazzling": [
+        "vbg"
+    ],
+    "driping": [
+        "vbg"
+    ],
+    "dinging": [
+        "vbg"
+    ],
+    "daydreaming": [
+        "vbg"
+    ],
+    "dozing": [
+        "vbg"
+    ],
+    "drowsing": [
+        "vbg"
+    ],
+    "drifting": [
+        "vbg"
+    ],
+    "drowning": [
+        "vbg"
+    ],
+    "dwelling": [
+        "vbg"
+    ],
+    "drooling": [
+        "vbg"
+    ],
+    "escaping": [
+        "vbg"
+    ],
+    "fainting": [
+        "vbg"
+    ],
+    "fading": [
+        "vbg"
+    ],
+    "fishing": [
+        "vbg"
+    ],
+    "floating": [
+        "vbg"
+    ],
+    "flailing": [
+        "vbg"
+    ],
+    "flying": [
+        "vbg"
+    ],
+    "flashing": [
+        "vbg"
+    ],
+    "frowning": [
+        "vbg"
+    ],
+    "focusing": [
+        "vbg"
+    ],
+    "feasting": [
+        "vbg"
+    ],
+    "gasping": [
+        "vbg"
+    ],
+    "giggling": [
+        "vbg"
+    ],
+    "glaring": [
+        "vbg"
+    ],
+    "glinting": [
+        "vbg"
+    ],
+    "glistening": [
+        "vbg"
+    ],
+    "glimmering": [
+        "vbg"
+    ],
+    "glowing": [
+        "vbg"
+    ],
+    "going": [
+        "vbg"
+    ],
+    "growling": [
+        "vbg"
+    ],
+    "gurgling": [
+        "vbg"
+    ],
+    "gushing": [
+        "vbg"
+    ],
+    "helping": [
+        "vbg",
+        "vbg_bare_inf_cl",
+        "vbg_np",
+        "vbg_np_to_inf_cl",
+        "vbg_np_np"
+    ],
+    "hissing": [
+        "vbg"
+    ],
+    "howling": [
+        "vbg"
+    ],
+    "hesitating": [
+        "vbg"
+    ],
+    "hiding": [
+        "vbg"
+    ],
+    "hiking": [
+        "vbg"
+    ],
+    "honking": [
+        "vbg"
+    ],
+    "hooting": [
+        "vbg"
+    ],
+    "hollering": [
+        "vbg"
+    ],
+    "improving": [
+        "vbg"
+    ],
+    "inching": [
+        "vbg"
+    ],
+    "increasing": [
+        "vbg"
+    ],
+    "insisting": [
+        "vbg"
+    ],
+    "ironing": [
+        "vbg"
+    ],
+    "itching": [
+        "vbg"
+    ],
+    "jangling": [
+        "vbg"
+    ],
+    "jingling": [
+        "vbg"
+    ],
+    "joging": [
+        "vbg"
+    ],
+    "kicking": [
+        "vbg",
+        "vbg_np"
+    ],
+    "kneeling": [
+        "vbg"
+    ],
+    "leaking": [
+        "vbg"
+    ],
+    "lightening": [
+        "vbg"
+    ],
+    "listening": [
+        "vbg"
+    ],
+    "loading": [
+        "vbg"
+    ],
+    "looking": [
+        "vbg",
+        "vbg_ap"
+    ],
+    "limping": [
+        "vbg"
+    ],
+    "losing": [
+        "vbg"
+    ],
+    "lurking": [
+        "vbg"
+    ],
+    "lurching": [
+        "vbg"
+    ],
+    "marching": [
+        "vbg"
+    ],
+    "meandering": [
+        "vbg"
+    ],
+    "melting": [
+        "vbg"
+    ],
+    "mewing": [
+        "vbg"
+    ],
+    "meowing": [
+        "vbg"
+    ],
+    "moaning": [
+        "vbg"
+    ],
+    "mooing": [
+        "vbg"
+    ],
+    "mumbling": [
+        "vbg"
+    ],
+    "murmuring": [
+        "vbg"
+    ],
+    "muttering": [
+        "vbg"
+    ],
+    "walking": [
+        "vbg"
+    ],
+    "playing": [
+        "vbg",
+        "vbg_np"
+    ],
+    "smokes": [
+        "vbz"
+    ],
+    "exists": [
+        "vbz"
+    ],
+    "aches": [
+        "vbz"
+    ],
+    "agonizes": [
+        "vbz"
+    ],
+    "atrophies": [
+        "vbz"
+    ],
+    "babbles": [
+        "vbz"
+    ],
+    "barks": [
+        "vbz"
+    ],
+    "beams": [
+        "vbz"
+    ],
+    "behaves": [
+        "vbz"
+    ],
+    "belches": [
+        "vbz"
+    ],
+    "bellows": [
+        "vbz"
+    ],
+    "sings": [
+        "vbz",
+        "vbz_np"
+    ],
+    "speaks": [
+        "vbz"
+    ],
+    "slips": [
+        "vbz"
+    ],
+    "smiles": [
+        "vbz"
+    ],
+    "snarls": [
+        "vbz"
+    ],
+    "stumbles": [
+        "vbz"
+    ],
+    "swims": [
+        "vbz"
+    ],
+    "talks": [
+        "vbz"
+    ],
+    "thinks": [
+        "vbz",
+        "vbz_declarative_cl"
+    ],
+    "caws": [
+        "vbz"
+    ],
+    "chokes": [
+        "vbz"
+    ],
+    "claps": [
+        "vbz"
+    ],
+    "climbs": [
+        "vbz"
+    ],
+    "crawls": [
+        "vbz"
+    ],
+    "cries": [
+        "vbz"
+    ],
+    "dives": [
+        "vbz"
+    ],
+    "dreams": [
+        "vbz"
+    ],
+    "drinks": [
+        "vbz",
+        "vbz_np"
+    ],
+    "clamors": [
+        "vbz"
+    ],
+    "clatters": [
+        "vbz"
+    ],
+    "clinks": [
+        "vbz"
+    ],
+    "cools": [
+        "vbz"
+    ],
+    "coughs": [
+        "vbz"
+    ],
+    "cracks": [
+        "vbz"
+    ],
+    "crashes": [
+        "vbz"
+    ],
+    "creaks": [
+        "vbz"
+    ],
+    "croaks": [
+        "vbz"
+    ],
+    "crows": [
+        "vbz"
+    ],
+    "darkens": [
+        "vbz"
+    ],
+    "dazzles": [
+        "vbz"
+    ],
+    "drips": [
+        "vbz"
+    ],
+    "dings": [
+        "vbz"
+    ],
+    "daydreams": [
+        "vbz"
+    ],
+    "dozes": [
+        "vbz"
+    ],
+    "drowses": [
+        "vbz"
+    ],
+    "drifts": [
+        "vbz"
+    ],
+    "drowns": [
+        "vbz"
+    ],
+    "dwells": [
+        "vbz"
+    ],
+    "drools": [
+        "vbz"
+    ],
+    "escapes": [
+        "vbz"
+    ],
+    "faints": [
+        "vbz"
+    ],
+    "fades": [
+        "vbz"
+    ],
+    "floats": [
+        "vbz"
+    ],
+    "flails": [
+        "vbz"
+    ],
+    "flies": [
+        "vbz"
+    ],
+    "flashes": [
+        "vbz"
+    ],
+    "frowns": [
+        "vbz"
+    ],
+    "focuses": [
+        "vbz"
+    ],
+    "feasts": [
+        "vbz"
+    ],
+    "gasps": [
+        "vbz"
+    ],
+    "giggles": [
+        "vbz"
+    ],
+    "glares": [
+        "vbz"
+    ],
+    "glints": [
+        "vbz"
+    ],
+    "glistens": [
+        "vbz"
+    ],
+    "glimmers": [
+        "vbz"
+    ],
+    "glows": [
+        "vbz"
+    ],
+    "goes": [
+        "vbz"
+    ],
+    "growls": [
+        "vbz"
+    ],
+    "gurgles": [
+        "vbz"
+    ],
+    "gushes": [
+        "vbz"
+    ],
+    "helps": [
+        "vbz",
+        "vbz_bare_inf_cl",
+        "vbz_np",
+        "vbz_np_to_inf_cl",
+        "vbz_np_np"
+    ],
+    "hisses": [
+        "vbz"
+    ],
+    "howls": [
+        "vbz"
+    ],
+    "hesitates": [
+        "vbz"
+    ],
+    "hides": [
+        "vbz"
+    ],
+    "hikes": [
+        "vbz"
+    ],
+    "honks": [
+        "vbz"
+    ],
+    "hoots": [
+        "vbz"
+    ],
+    "hollers": [
+        "vbz"
+    ],
+    "improves": [
+        "vbz"
+    ],
+    "inches": [
+        "vbz"
+    ],
+    "increases": [
+        "vbz"
+    ],
+    "insists": [
+        "vbz"
+    ],
+    "irons": [
+        "vbz"
+    ],
+    "itches": [
+        "vbz"
+    ],
+    "jangles": [
+        "vbz"
+    ],
+    "jingles": [
+        "vbz"
+    ],
+    "jogs": [
+        "vbz"
+    ],
+    "kicks": [
+        "vbz",
+        "vbz_np"
+    ],
+    "kneels": [
+        "vbz"
+    ],
+    "leaks": [
+        "vbz"
+    ],
+    "lightens": [
+        "vbz"
+    ],
+    "listens": [
+        "vbz"
+    ],
+    "loads": [
+        "vbz"
+    ],
+    "looks": [
+        "vbz",
+        "vbz_ap"
+    ],
+    "limps": [
+        "vbz"
+    ],
+    "loses": [
+        "vbz"
+    ],
+    "lurks": [
+        "vbz"
+    ],
+    "lurches": [
+        "vbz"
+    ],
+    "marches": [
+        "vbz"
+    ],
+    "meanders": [
+        "vbz"
+    ],
+    "melts": [
+        "vbz"
+    ],
+    "mews": [
+        "vbz"
+    ],
+    "meows": [
+        "vbz"
+    ],
+    "moans": [
+        "vbz"
+    ],
+    "moos": [
+        "vbz"
+    ],
+    "mumbles": [
+        "vbz"
+    ],
+    "murmurs": [
+        "vbz"
+    ],
+    "mutters": [
+        "vbz"
+    ],
+    "walks": [
+        "vbz"
+    ],
+    "plays": [
+        "vbz",
+        "vbz_np"
+    ],
+    "seem": [
+        "vb_ap",
+        "vbp_ap"
+    ],
+    "appear": [
+        "vb_ap",
+        "vbp_ap"
+    ],
+    "sound": [
+        "vb_ap",
+        "vbp_ap"
+    ],
+    "taste": [
+        "vb_ap",
+        "vbp_ap"
+    ],
+    "smell": [
+        "vb_ap",
+        "vbp_ap",
+        "vb_np",
+        "vbp_np"
+    ],
+    "feel": [
+        "vb_ap",
+        "vbp_ap",
+        "vb_np",
+        "vbp_np"
+    ],
+    "seemed": [
+        "vbd_ap",
+        "vbn_ap"
+    ],
+    "appeared": [
+        "vbd_ap",
+        "vbn_ap"
+    ],
+    "sounded": [
+        "vbd_ap",
+        "vbn_ap"
+    ],
+    "tasted": [
+        "vbd_ap",
+        "vbn_ap"
+    ],
+    "smelt": [
+        "vbd_ap",
+        "vbn_ap",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "felt": [
+        "vbd_ap",
+        "vbn_ap",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "seeming": [
+        "vbg_ap"
+    ],
+    "appearing": [
+        "vbg_ap"
+    ],
+    "sounding": [
+        "vbg_ap"
+    ],
+    "tasting": [
+        "vbg_ap"
+    ],
+    "smelling": [
+        "vbg_ap",
+        "vbg_np"
+    ],
+    "feeling": [
+        "vbg_ap",
+        "vbg_np"
+    ],
+    "seems": [
+        "vbz_ap"
+    ],
+    "appears": [
+        "vbz_ap"
+    ],
+    "sounds": [
+        "vbz_ap"
+    ],
+    "tastes": [
+        "vbz_ap"
+    ],
+    "smells": [
+        "vbz_ap",
+        "vbz_np"
+    ],
+    "feels": [
+        "vbz_ap",
+        "vbz_np"
+    ],
+    "want": [
+        "vb_to_inf_cl",
+        "vbp_to_inf_cl",
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl"
+    ],
+    "need": [
+        "vb_to_inf_cl",
+        "vbp_to_inf_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "like": [
+        "vb_to_inf_cl",
+        "vbp_to_inf_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "love": [
+        "vb_to_inf_cl",
+        "vbp_to_inf_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "prefer": [
+        "vb_to_inf_cl",
+        "vbp_to_inf_cl"
+    ],
+    "know": [
+        "vb_to_inf_cl",
+        "vbp_to_inf_cl",
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_interrogative_cl",
+        "vbp_interrogative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "wanted": [
+        "vbd_to_inf_cl",
+        "vbn_to_inf_cl",
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl"
+    ],
+    "needed": [
+        "vbd_to_inf_cl",
+        "vbn_to_inf_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "liked": [
+        "vbd_to_inf_cl",
+        "vbn_to_inf_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "loved": [
+        "vbd_to_inf_cl",
+        "vbn_to_inf_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "prefered": [
+        "vbd_to_inf_cl",
+        "vbn_to_inf_cl"
+    ],
+    "knew": [
+        "vbd_to_inf_cl",
+        "vbd_declarative_cl",
+        "vbd_exclamative_cl",
+        "vbd_interrogative_cl",
+        "vbd_np"
+    ],
+    "known": [
+        "vbn_to_inf_cl",
+        "vbn_declarative_cl",
+        "vbn_exclamative_cl",
+        "vbn_interrogative_cl",
+        "vbn_np"
+    ],
+    "wanting": [
+        "vbg_to_inf_cl",
+        "vbg_np",
+        "vbg_np_to_inf_cl"
+    ],
+    "needing": [
+        "vbg_to_inf_cl",
+        "vbg_np"
+    ],
+    "liking": [
+        "vbg_to_inf_cl",
+        "vbg_np"
+    ],
+    "loving": [
+        "vbg_to_inf_cl",
+        "vbg_np"
+    ],
+    "prefering": [
+        "vbg_to_inf_cl"
+    ],
+    "knowing": [
+        "vbg_to_inf_cl",
+        "vbg_declarative_cl",
+        "vbg_exclamative_cl",
+        "vbg_interrogative_cl",
+        "vbg_np"
+    ],
+    "wants": [
+        "vbz_to_inf_cl",
+        "vbz_np",
+        "vbz_np_to_inf_cl"
+    ],
+    "needs": [
+        "vbz_to_inf_cl",
+        "vbz_np"
+    ],
+    "likes": [
+        "vbz_to_inf_cl",
+        "vbz_np"
+    ],
+    "loves": [
+        "vbz_to_inf_cl",
+        "vbz_np"
+    ],
+    "prefers": [
+        "vbz_to_inf_cl"
+    ],
+    "knows": [
+        "vbz_to_inf_cl",
+        "vbz_declarative_cl",
+        "vbz_exclamative_cl",
+        "vbz_interrogative_cl",
+        "vbz_np"
+    ],
+    "have": [
+        "vb_vbn_cl",
+        "vbp_vbn_cl",
+        "vb_np",
+        "vbp_np",
+        "vb_np_bare_inf_cl",
+        "vbp_np_bare_inf_cl"
+    ],
+    "had": [
+        "vbd_vbn_cl",
+        "vbn_vbn_cl",
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_bare_inf_cl",
+        "vbn_np_bare_inf_cl"
+    ],
+    "having": [
+        "vbg_vbn_cl",
+        "vbg_np",
+        "vbg_np_bare_inf_cl"
+    ],
+    "has": [
+        "vbz_vbn_cl",
+        "vbz_np",
+        "vbz_np_bare_inf_cl"
+    ],
+    "doed": [
+        "vbd_bare_inf_cl",
+        "vbn_bare_inf_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "doing": [
+        "vbg_bare_inf_cl",
+        "vbg_np"
+    ],
+    "dos": [
+        "vbz_bare_inf_cl",
+        "vbz_np"
+    ],
+    "say": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl"
+    ],
+    "believe": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "understand": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "realize": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl"
+    ],
+    "learn": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "remember": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "forget": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "imagine": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "agree": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl"
+    ],
+    "promise": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "hope": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "expect": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "worry": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "fear": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "inform": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl"
+    ],
+    "complain": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl"
+    ],
+    "prove": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_interrogative_cl",
+        "vbp_interrogative_cl"
+    ],
+    "recall": [
+        "vb_declarative_cl",
+        "vbp_declarative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "said": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl"
+    ],
+    "believed": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "understood": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "realized": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl"
+    ],
+    "learned": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "remembered": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "forgot": [
+        "vbd_declarative_cl",
+        "vbd_exclamative_cl",
+        "vbd_np"
+    ],
+    "imagined": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "agreed": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl"
+    ],
+    "promised": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "hoped": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "expected": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "worried": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "feared": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "informed": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl"
+    ],
+    "complained": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl"
+    ],
+    "proved": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl",
+        "vbd_interrogative_cl",
+        "vbn_interrogative_cl"
+    ],
+    "recalled": [
+        "vbd_declarative_cl",
+        "vbn_declarative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "forgotten": [
+        "vbn_declarative_cl",
+        "vbn_exclamative_cl",
+        "vbn_np"
+    ],
+    "saying": [
+        "vbg_declarative_cl",
+        "vbg_exclamative_cl"
+    ],
+    "believing": [
+        "vbg_declarative_cl",
+        "vbg_np"
+    ],
+    "understanding": [
+        "vbg_declarative_cl",
+        "vbg_np"
+    ],
+    "realizing": [
+        "vbg_declarative_cl"
+    ],
+    "learning": [
+        "vbg_declarative_cl",
+        "vbg_np"
+    ],
+    "remembering": [
+        "vbg_declarative_cl",
+        "vbg_exclamative_cl",
+        "vbg_np"
+    ],
+    "forgetting": [
+        "vbg_declarative_cl",
+        "vbg_exclamative_cl",
+        "vbg_np"
+    ],
+    "imagining": [
+        "vbg_declarative_cl",
+        "vbg_np"
+    ],
+    "agreing": [
+        "vbg_declarative_cl"
+    ],
+    "promising": [
+        "vbg_declarative_cl",
+        "vbg_np",
+        "vbg_np_np"
+    ],
+    "hoping": [
+        "vbg_declarative_cl",
+        "vbg_np"
+    ],
+    "expecting": [
+        "vbg_declarative_cl",
+        "vbg_np"
+    ],
+    "worrying": [
+        "vbg_declarative_cl",
+        "vbg_np"
+    ],
+    "fearing": [
+        "vbg_declarative_cl",
+        "vbg_np"
+    ],
+    "informing": [
+        "vbg_declarative_cl"
+    ],
+    "complaining": [
+        "vbg_declarative_cl"
+    ],
+    "proving": [
+        "vbg_declarative_cl",
+        "vbg_exclamative_cl",
+        "vbg_interrogative_cl"
+    ],
+    "recalling": [
+        "vbg_declarative_cl",
+        "vbg_np"
+    ],
+    "says": [
+        "vbz_declarative_cl",
+        "vbz_exclamative_cl"
+    ],
+    "believes": [
+        "vbz_declarative_cl",
+        "vbz_np"
+    ],
+    "understands": [
+        "vbz_declarative_cl",
+        "vbz_np"
+    ],
+    "realizes": [
+        "vbz_declarative_cl"
+    ],
+    "learns": [
+        "vbz_declarative_cl",
+        "vbz_np"
+    ],
+    "remembers": [
+        "vbz_declarative_cl",
+        "vbz_exclamative_cl",
+        "vbz_np"
+    ],
+    "forgets": [
+        "vbz_declarative_cl",
+        "vbz_exclamative_cl",
+        "vbz_np"
+    ],
+    "imagines": [
+        "vbz_declarative_cl",
+        "vbz_np"
+    ],
+    "agrees": [
+        "vbz_declarative_cl"
+    ],
+    "promises": [
+        "vbz_declarative_cl",
+        "vbz_np",
+        "vbz_np_np"
+    ],
+    "hopes": [
+        "vbz_declarative_cl",
+        "vbz_np"
+    ],
+    "expects": [
+        "vbz_declarative_cl",
+        "vbz_np"
+    ],
+    "worries": [
+        "vbz_declarative_cl",
+        "vbz_np"
+    ],
+    "fears": [
+        "vbz_declarative_cl",
+        "vbz_np"
+    ],
+    "informs": [
+        "vbz_declarative_cl"
+    ],
+    "complains": [
+        "vbz_declarative_cl"
+    ],
+    "proves": [
+        "vbz_declarative_cl",
+        "vbz_exclamative_cl",
+        "vbz_interrogative_cl"
+    ],
+    "recalls": [
+        "vbz_declarative_cl",
+        "vbz_np"
+    ],
+    "tell": [
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl",
+        "vb_np_declarative_cl",
+        "vbp_np_declarative_cl",
+        "vb_np_exclamative_cl",
+        "vbp_np_exclamative_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "show": [
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_np",
+        "vbp_np",
+        "vb_np_declarative_cl",
+        "vbp_np_declarative_cl",
+        "vb_np_exclamative_cl",
+        "vbp_np_exclamative_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "explain": [
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "describe": [
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_np",
+        "vbp_np"
+    ],
+    "demonstrate": [
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl"
+    ],
+    "illustrate": [
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl"
+    ],
+    "convince": [
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_np_declarative_cl",
+        "vbp_np_declarative_cl"
+    ],
+    "persuade": [
+        "vb_exclamative_cl",
+        "vbp_exclamative_cl",
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl",
+        "vb_np_declarative_cl",
+        "vbp_np_declarative_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "told": [
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl",
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl",
+        "vbd_np_declarative_cl",
+        "vbn_np_declarative_cl",
+        "vbd_np_exclamative_cl",
+        "vbn_np_exclamative_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "showed": [
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl",
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_declarative_cl",
+        "vbn_np_declarative_cl",
+        "vbd_np_exclamative_cl",
+        "vbn_np_exclamative_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "explained": [
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "described": [
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl",
+        "vbd_np",
+        "vbn_np"
+    ],
+    "demonstrated": [
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl"
+    ],
+    "illustrated": [
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl"
+    ],
+    "convinced": [
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl",
+        "vbd_np_declarative_cl",
+        "vbn_np_declarative_cl"
+    ],
+    "persuaded": [
+        "vbd_exclamative_cl",
+        "vbn_exclamative_cl",
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl",
+        "vbd_np_declarative_cl",
+        "vbn_np_declarative_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "telling": [
+        "vbg_exclamative_cl",
+        "vbg_np",
+        "vbg_np_to_inf_cl",
+        "vbg_np_declarative_cl",
+        "vbg_np_exclamative_cl",
+        "vbg_np_np"
+    ],
+    "showing": [
+        "vbg_exclamative_cl",
+        "vbg_np",
+        "vbg_np_declarative_cl",
+        "vbg_np_exclamative_cl",
+        "vbg_np_np"
+    ],
+    "explaining": [
+        "vbg_exclamative_cl",
+        "vbg_np"
+    ],
+    "describing": [
+        "vbg_exclamative_cl",
+        "vbg_np"
+    ],
+    "demonstrating": [
+        "vbg_exclamative_cl"
+    ],
+    "illustrating": [
+        "vbg_exclamative_cl"
+    ],
+    "convincing": [
+        "vbg_exclamative_cl",
+        "vbg_np_declarative_cl"
+    ],
+    "persuading": [
+        "vbg_exclamative_cl",
+        "vbg_np",
+        "vbg_np_to_inf_cl",
+        "vbg_np_declarative_cl",
+        "vbg_np_np"
+    ],
+    "tells": [
+        "vbz_exclamative_cl",
+        "vbz_np",
+        "vbz_np_to_inf_cl",
+        "vbz_np_declarative_cl",
+        "vbz_np_exclamative_cl",
+        "vbz_np_np"
+    ],
+    "shows": [
+        "vbz_exclamative_cl",
+        "vbz_np",
+        "vbz_np_declarative_cl",
+        "vbz_np_exclamative_cl",
+        "vbz_np_np"
+    ],
+    "explains": [
+        "vbz_exclamative_cl",
+        "vbz_np"
+    ],
+    "describes": [
+        "vbz_exclamative_cl",
+        "vbz_np"
+    ],
+    "demonstrates": [
+        "vbz_exclamative_cl"
+    ],
+    "illustrates": [
+        "vbz_exclamative_cl"
+    ],
+    "convinces": [
+        "vbz_exclamative_cl",
+        "vbz_np_declarative_cl"
+    ],
+    "persuades": [
+        "vbz_exclamative_cl",
+        "vbz_np",
+        "vbz_np_to_inf_cl",
+        "vbz_np_declarative_cl",
+        "vbz_np_np"
+    ],
+    "wonder": [
+        "vb_interrogative_cl",
+        "vbp_interrogative_cl"
+    ],
+    "inqure": [
+        "vb_interrogative_cl",
+        "vbp_interrogative_cl"
+    ],
+    "ask": [
+        "vb_interrogative_cl",
+        "vbp_interrogative_cl",
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl",
+        "vb_np_interrogative_cl",
+        "vbp_np_interrogative_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "discover": [
+        "vb_interrogative_cl",
+        "vbp_interrogative_cl"
+    ],
+    "wondered": [
+        "vbd_interrogative_cl",
+        "vbn_interrogative_cl"
+    ],
+    "inqured": [
+        "vbd_interrogative_cl",
+        "vbn_interrogative_cl"
+    ],
+    "asked": [
+        "vbd_interrogative_cl",
+        "vbn_interrogative_cl",
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl",
+        "vbd_np_interrogative_cl",
+        "vbn_np_interrogative_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "discovered": [
+        "vbd_interrogative_cl",
+        "vbn_interrogative_cl"
+    ],
+    "wondering": [
+        "vbg_interrogative_cl"
+    ],
+    "inquring": [
+        "vbg_interrogative_cl"
+    ],
+    "asking": [
+        "vbg_interrogative_cl",
+        "vbg_np",
+        "vbg_np_to_inf_cl",
+        "vbg_np_interrogative_cl",
+        "vbg_np_np"
+    ],
+    "discovering": [
+        "vbg_interrogative_cl"
+    ],
+    "wonders": [
+        "vbz_interrogative_cl"
+    ],
+    "inqures": [
+        "vbz_interrogative_cl"
+    ],
+    "asks": [
+        "vbz_interrogative_cl",
+        "vbz_np",
+        "vbz_np_to_inf_cl",
+        "vbz_np_interrogative_cl",
+        "vbz_np_np"
+    ],
+    "discovers": [
+        "vbz_interrogative_cl"
+    ],
+    "eat": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "read": [
+        "vb_np",
+        "vbd_np",
+        "vbn_np",
+        "vbp_np"
+    ],
+    "write": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "see": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "hear": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "touch": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "hit": [
+        "vb_np",
+        "vbd_np",
+        "vbn_np",
+        "vbp_np"
+    ],
+    "hate": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "dislike": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "own": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "possess": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "buy": [
+        "vb_np",
+        "vbp_np",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "send": [
+        "vb_np",
+        "vbp_np",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "order": [
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "offer": [
+        "vb_np",
+        "vbp_np",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "allow": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "invite": [
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "advise": [
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "remind": [
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "teach": [
+        "vb_np",
+        "vbp_np",
+        "vb_np_to_inf_cl",
+        "vbp_np_to_inf_cl",
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "prevent": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "stop": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "avoid": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "finish": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "start": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "continue": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "keep": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "mind": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "miss": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "regret": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "deny": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "confirm": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "doubt": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "suspect": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "ignore": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "recognize": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "watch": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "accept": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "achieve": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "affect": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "blame": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "protect": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "punch": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "raise": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "rake": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "ram": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "rattle": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "rearrange": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "rebuild": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "receive": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "recite": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "prune": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "put": [
+        "vb_np",
+        "vbd_np",
+        "vbn_np",
+        "vbp_np"
+    ],
+    "leave": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "meet": [
+        "vb_np",
+        "vbp_np"
+    ],
+    "ate": [
+        "vbd_np"
+    ],
+    "wrote": [
+        "vbd_np"
+    ],
+    "saw": [
+        "vbd_np"
+    ],
+    "heard": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "touched": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "hated": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "disliked": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "owned": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "possessed": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "bought": [
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "sent": [
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "ordered": [
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "offered": [
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "allowed": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "invited": [
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "advised": [
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "reminded": [
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "teached": [
+        "vbd_np",
+        "vbn_np",
+        "vbd_np_to_inf_cl",
+        "vbn_np_to_inf_cl",
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "prevented": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "stopped": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "avoided": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "finished": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "started": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "continued": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "kept": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "minded": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "missed": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "regretted": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "wished": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "denied": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "confirmed": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "doubted": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "suspected": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "ignored": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "recognized": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "watched": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "accepted": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "achieved": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "affected": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "blamed": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "protected": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "punched": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "raised": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "raked": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "ramed": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "rattled": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "rearranged": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "rebuilded": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "received": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "recited": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "pruned": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "leaved": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "met": [
+        "vbd_np",
+        "vbn_np"
+    ],
+    "eaten": [
+        "vbn_np"
+    ],
+    "written": [
+        "vbn_np"
+    ],
+    "seen": [
+        "vbn_np"
+    ],
+    "eating": [
+        "vbg_np"
+    ],
+    "reading": [
+        "vbg_np"
+    ],
+    "writing": [
+        "vbg_np"
+    ],
+    "seeing": [
+        "vbg_np"
+    ],
+    "hearing": [
+        "vbg_np"
+    ],
+    "touching": [
+        "vbg_np"
+    ],
+    "hitting": [
+        "vbg_np"
+    ],
+    "hating": [
+        "vbg_np"
+    ],
+    "disliking": [
+        "vbg_np"
+    ],
+    "owning": [
+        "vbg_np"
+    ],
+    "possessing": [
+        "vbg_np"
+    ],
+    "buying": [
+        "vbg_np",
+        "vbg_np_np"
+    ],
+    "sending": [
+        "vbg_np",
+        "vbg_np_np"
+    ],
+    "ordering": [
+        "vbg_np",
+        "vbg_np_to_inf_cl",
+        "vbg_np_np"
+    ],
+    "offering": [
+        "vbg_np",
+        "vbg_np_np"
+    ],
+    "allowing": [
+        "vbg_np"
+    ],
+    "inviting": [
+        "vbg_np",
+        "vbg_np_to_inf_cl",
+        "vbg_np_np"
+    ],
+    "advising": [
+        "vbg_np",
+        "vbg_np_to_inf_cl",
+        "vbg_np_np"
+    ],
+    "reminding": [
+        "vbg_np",
+        "vbg_np_to_inf_cl",
+        "vbg_np_np"
+    ],
+    "teaching": [
+        "vbg_np",
+        "vbg_np_to_inf_cl",
+        "vbg_np_np"
+    ],
+    "preventing": [
+        "vbg_np"
+    ],
+    "stopping": [
+        "vbg_np"
+    ],
+    "avoiding": [
+        "vbg_np"
+    ],
+    "finishing": [
+        "vbg_np"
+    ],
+    "starting": [
+        "vbg_np"
+    ],
+    "continuing": [
+        "vbg_np"
+    ],
+    "keeping": [
+        "vbg_np"
+    ],
+    "minding": [
+        "vbg_np"
+    ],
+    "missing": [
+        "vbg_np"
+    ],
+    "regretting": [
+        "vbg_np"
+    ],
+    "wishing": [
+        "vbg_np"
+    ],
+    "denying": [
+        "vbg_np"
+    ],
+    "confirming": [
+        "vbg_np"
+    ],
+    "doubting": [
+        "vbg_np"
+    ],
+    "suspecting": [
+        "vbg_np"
+    ],
+    "ignoring": [
+        "vbg_np"
+    ],
+    "recognizing": [
+        "vbg_np"
+    ],
+    "watching": [
+        "vbg_np"
+    ],
+    "accepting": [
+        "vbg_np"
+    ],
+    "achieving": [
+        "vbg_np"
+    ],
+    "affecting": [
+        "vbg_np"
+    ],
+    "blaming": [
+        "vbg_np"
+    ],
+    "protecting": [
+        "vbg_np"
+    ],
+    "punching": [
+        "vbg_np"
+    ],
+    "raising": [
+        "vbg_np"
+    ],
+    "raking": [
+        "vbg_np"
+    ],
+    "raming": [
+        "vbg_np"
+    ],
+    "rattling": [
+        "vbg_np"
+    ],
+    "rearranging": [
+        "vbg_np"
+    ],
+    "rebuilding": [
+        "vbg_np"
+    ],
+    "receiving": [
+        "vbg_np"
+    ],
+    "reciting": [
+        "vbg_np"
+    ],
+    "pruning": [
+        "vbg_np"
+    ],
+    "putting": [
+        "vbg_np"
+    ],
+    "leaving": [
+        "vbg_np"
+    ],
+    "meeting": [
+        "vbg_np"
+    ],
+    "eats": [
+        "vbz_np"
+    ],
+    "reads": [
+        "vbz_np"
+    ],
+    "writes": [
+        "vbz_np"
+    ],
+    "sees": [
+        "vbz_np"
+    ],
+    "hears": [
+        "vbz_np"
+    ],
+    "touches": [
+        "vbz_np"
+    ],
+    "hits": [
+        "vbz_np"
+    ],
+    "hates": [
+        "vbz_np"
+    ],
+    "dislikes": [
+        "vbz_np"
+    ],
+    "owns": [
+        "vbz_np"
+    ],
+    "possesses": [
+        "vbz_np"
+    ],
+    "buys": [
+        "vbz_np",
+        "vbz_np_np"
+    ],
+    "sends": [
+        "vbz_np",
+        "vbz_np_np"
+    ],
+    "orders": [
+        "vbz_np",
+        "vbz_np_to_inf_cl",
+        "vbz_np_np"
+    ],
+    "offers": [
+        "vbz_np",
+        "vbz_np_np"
+    ],
+    "allows": [
+        "vbz_np"
+    ],
+    "invites": [
+        "vbz_np",
+        "vbz_np_to_inf_cl",
+        "vbz_np_np"
+    ],
+    "advises": [
+        "vbz_np",
+        "vbz_np_to_inf_cl",
+        "vbz_np_np"
+    ],
+    "reminds": [
+        "vbz_np",
+        "vbz_np_to_inf_cl",
+        "vbz_np_np"
+    ],
+    "teaches": [
+        "vbz_np",
+        "vbz_np_to_inf_cl",
+        "vbz_np_np"
+    ],
+    "prevents": [
+        "vbz_np"
+    ],
+    "stops": [
+        "vbz_np"
+    ],
+    "avoids": [
+        "vbz_np"
+    ],
+    "finishes": [
+        "vbz_np"
+    ],
+    "starts": [
+        "vbz_np"
+    ],
+    "continues": [
+        "vbz_np"
+    ],
+    "keeps": [
+        "vbz_np"
+    ],
+    "minds": [
+        "vbz_np"
+    ],
+    "misses": [
+        "vbz_np"
+    ],
+    "regrets": [
+        "vbz_np"
+    ],
+    "denies": [
+        "vbz_np"
+    ],
+    "confirms": [
+        "vbz_np"
+    ],
+    "doubts": [
+        "vbz_np"
+    ],
+    "suspects": [
+        "vbz_np"
+    ],
+    "ignores": [
+        "vbz_np"
+    ],
+    "recognizes": [
+        "vbz_np"
+    ],
+    "watches": [
+        "vbz_np"
+    ],
+    "accepts": [
+        "vbz_np"
+    ],
+    "achieves": [
+        "vbz_np"
+    ],
+    "affects": [
+        "vbz_np"
+    ],
+    "blames": [
+        "vbz_np"
+    ],
+    "protects": [
+        "vbz_np"
+    ],
+    "punches": [
+        "vbz_np"
+    ],
+    "raises": [
+        "vbz_np"
+    ],
+    "rakes": [
+        "vbz_np"
+    ],
+    "rams": [
+        "vbz_np"
+    ],
+    "rattles": [
+        "vbz_np"
+    ],
+    "rearranges": [
+        "vbz_np"
+    ],
+    "rebuilds": [
+        "vbz_np"
+    ],
+    "receives": [
+        "vbz_np"
+    ],
+    "recites": [
+        "vbz_np"
+    ],
+    "prunes": [
+        "vbz_np"
+    ],
+    "puts": [
+        "vbz_np"
+    ],
+    "leaves": [
+        "vbz_np"
+    ],
+    "meets": [
+        "vbz_np"
+    ],
+    "make": [
+        "vb_np_ap",
+        "vbp_np_ap",
+        "vb_np_bare_inf_cl",
+        "vbp_np_bare_inf_cl"
+    ],
+    "made": [
+        "vbd_np_ap",
+        "vbn_np_ap",
+        "vbd_np_bare_inf_cl",
+        "vbn_np_bare_inf_cl"
+    ],
+    "making": [
+        "vbg_np_ap",
+        "vbg_np_bare_inf_cl"
+    ],
+    "makes": [
+        "vbz_np_ap",
+        "vbz_np_bare_inf_cl"
+    ],
+    "let": [
+        "vb_np_bare_inf_cl",
+        "vbd_np_bare_inf_cl",
+        "vbn_np_bare_inf_cl",
+        "vbp_np_bare_inf_cl"
+    ],
+    "letting": [
+        "vbg_np_bare_inf_cl"
+    ],
+    "lets": [
+        "vbz_np_bare_inf_cl"
+    ],
+    "give": [
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "bring": [
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "lend": [
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "pass": [
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "hand": [
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "sell": [
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "pay": [
+        "vb_np_np",
+        "vbp_np_np"
+    ],
+    "gave": [
+        "vbd_np_np"
+    ],
+    "brought": [
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "lent": [
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "passed": [
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "handed": [
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "sold": [
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "paid": [
+        "vbd_np_np",
+        "vbn_np_np"
+    ],
+    "given": [
+        "vbn_np_np"
+    ],
+    "giving": [
+        "vbg_np_np"
+    ],
+    "bringing": [
+        "vbg_np_np"
+    ],
+    "lending": [
+        "vbg_np_np"
+    ],
+    "passing": [
+        "vbg_np_np"
+    ],
+    "handing": [
+        "vbg_np_np"
+    ],
+    "selling": [
+        "vbg_np_np"
+    ],
+    "paying": [
+        "vbg_np_np"
+    ],
+    "gives": [
+        "vbz_np_np"
+    ],
+    "brings": [
+        "vbz_np_np"
+    ],
+    "lends": [
+        "vbz_np_np"
+    ],
+    "passes": [
+        "vbz_np_np"
+    ],
+    "hands": [
+        "vbz_np_np"
+    ],
+    "sells": [
+        "vbz_np_np"
+    ],
+    "pays": [
+        "vbz_np_np"
+    ],
+    "with": [
+        "instrumental_preposition",
+        "comitative_preposition",
+        "preposition"
+    ],
+    "using": [
+        "instrumental_preposition",
+        "preposition"
+    ],
+    "in": [
+        "spatial_preposition",
+        "temporal_point_preposition",
+        "preposition"
+    ],
+    "on": [
+        "spatial_preposition",
+        "temporal_point_preposition",
+        "preposition"
+    ],
+    "at": [
+        "spatial_preposition",
+        "temporal_point_preposition",
+        "preposition"
+    ],
+    "over": [
+        "spatial_preposition",
+        "preposition"
+    ],
+    "under": [
+        "spatial_preposition",
+        "preposition"
+    ],
+    "underneath": [
+        "spatial_preposition",
+        "preposition"
+    ],
+    "between": [
+        "spatial_preposition",
+        "preposition"
+    ],
+    "among": [
+        "spatial_preposition",
+        "preposition"
+    ],
+    "within": [
+        "spatial_preposition",
+        "temporal_duration_preposition",
+        "preposition"
+    ],
+    "above": [
+        "spatial_preposition",
+        "preposition"
+    ],
+    "below": [
+        "spatial_preposition",
+        "preposition"
+    ],
+    "beside": [
+        "spatial_preposition",
+        "preposition"
+    ],
+    "from": [
+        "source_preposition",
+        "preposition"
+    ],
+    "off": [
+        "source_preposition",
+        "goal_preposition",
+        "preposition"
+    ],
+    "out": [
+        "source_preposition",
+        "preposition"
+    ],
+    "toward": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "towards": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "into": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "onto": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "upon": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "up": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "down": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "inside": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "outside": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "around": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "aboard": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "across": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "along": [
+        "goal_preposition",
+        "preposition"
+    ],
+    "for": [
+        "temporal_duration_preposition",
+        "preposition"
+    ],
+    "since": [
+        "temporal_duration_preposition",
+        "preposition"
+    ],
+    "until": [
+        "temporal_duration_preposition",
+        "preposition"
+    ],
+    "before": [
+        "temporal_duration_preposition",
+        "preposition"
+    ],
+    "after": [
+        "temporal_duration_preposition",
+        "preposition"
+    ],
+    "by": [
+        "temporal_duration_preposition",
+        "preposition"
+    ],
+    "during": [
+        "temporal_duration_preposition",
+        "preposition"
+    ]
 }
