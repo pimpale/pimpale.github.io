@@ -43,7 +43,7 @@ const ToggleableImageList = (props: ToggleableImageListProps) => {
 
   const compressedStyle = {
     overflow: "hidden" as const,
-    maxHeight: "20rem",
+    maxHeight: "15rem",
     mask: `linear-gradient(180deg, black, rgba(255, 255, 255, ${opacity})) center bottom/100% 5rem no-repeat, linear-gradient(180deg, black, black) center top/100% calc(100% - 5rem) no-repeat`
   }
 
