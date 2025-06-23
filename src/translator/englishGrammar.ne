@@ -12,10 +12,10 @@ function isAnyOfPoS(pos_arr) {
 }
 
 // parts of speech
-const det = isPoS("det");
+const determinative = isPoS("determinative");
 const pronoun = isPoS("pronoun");
-const possessive_pronoun = isPoS("possessive_pronoun");
-const possessive_adjective = isPoS("possessive_adjective");
+const independent_genitive_pronoun = isPoS("independent_genitive_pronoun");
+const dependent_genitive_pronoun = isPoS("dependent_genitive_pronoun");
 const proper_noun = isPoS("proper_noun");
 const uncountable_noun = isPoS("uncountable_noun");
 const countable_noun = isPoS("countable_noun");
@@ -828,22 +828,27 @@ bare_declarative_cl_ap_moved ->
 # a content clause with some ap moved
 that_declarative_cl_ap_moved -> that bare_declarative_cl_ap_moved {%nt("that_declarative_cl_ap_moved")%}
 
+np -> precorenp_modifier core_np postcorenp_modifier
 
-np ->
-    precorenp_modifier_list core_np postcorenp_modifier_list  {%nt("np")%}
-
-precorenp_modifier_list -> precorenp_modifier:* {%nonterminal_unpack("precorenp_modifier_list")%} 
-
-postcorenp_modifier_list -> postcorenp_modifier:* {%nonterminal_unpack("postcorenp_modifier_list")%}
-
-# a noun phrase not including peripheral modifiers
+# a core noun phrase without peripheral modifiers
 core_np -> 
-                    proper_noun                                     {%nt("core_np")%}  # a proper noun (ex: "John", "Mary")
-    |               pronoun                                         {%nt("core_np")%}  # a pronoun (ex: "I", "you", "he", "she", "it", "we", "they")
-    |               possessive_pronoun                              {%nt("core_np")%}  # a possessive pronoun (ex: "mine", "yours")
-    |     ap_list   uncountable_noun n_modifier_list                {%nt("core_np")%}  # an uncountable noun with an adjective phrase (ex: "happy music") 
-    | dp  ap_list   countable_noun   n_modifier_list                {%nt("core_np")%}  # determiner phrase followed by a nominal (ex: "even all the lovely food too")
+                                          proper_noun                                       {%nt("core_np")%}  # a proper noun (ex: "John", "Mary")
+    |                                     pronoun                                           {%nt("core_np")%}  # a pronoun (ex: "I", "you", "he", "she", "it", "we", "they")
+    |                                     independent_possessive_pronoun                    {%nt("core_np")%}  # a possessive pronoun (ex: "mine", "yours")
+    | predeterminer_modifier? determiner? ap_list noun                    n_modifier_list   {%nt("core_np")%}  # determiner phrase followed by a nominal (ex: "even all the lovely food too")
 
+fraction_expression -> number fraction_denominator
+times_expression -> number times
+
+quantificational_expression -> quantificational_modifier
+                             | fraction_expression
+                             | times_expression
+
+precore_emphatic_expression -> precore_emphatic_modifier         {%nt("precore_emphatic_modifier")%} # such a disaster 
+                             | precore_emphatic_modifier_adj ap  {%nt("precore_emphatic_modifier")%} # too risky a venture
+
+predeterminer_modifier -> quantificational_expression  {%nt("predeterminer_modifier")%}
+                        | precore_emphatic_expression  {%nt("predeterminer_modifier")%}
 
 # a noun phrase that has been moved to the front (wh-movement)
 wh_np -> wh    {%nt("wh_np")%} 
@@ -862,10 +867,15 @@ n_modifier -> restrictive_cl           {%nt("n_modifier")%} # a relative clause 
             | pp                       {%nt("n_modifier")%} # a prepositional phrase specifying the noun (ex: "the book on the table")
 
 n_modifier_list -> n_modifier:* {%nonterminal_unpack("n_modifier_list")%}
-# a determiner phrase
-dp -> det                {%nt("det")%} # the, a, an, some, this, that
-    | np s               {%nt("det")%} # a noun phrase followed by a possessive suffix (ex: "John's")
-    | possessive_adjective {%nt("det")%} # a possessive pronoun (ex: "my", "your", "his", "her", "our", "their")
+
+# a determiner phrase suitable for countable nouns only
+determiner -> dp                   {%nt("countable determiner")%} # the, a, an, some, this, that
+            | genitive_np          {%nt("countable determiner")%} # a noun phrase followed by a possessive suffix (ex: "John's")
+
+genitive_np -> np s                         {%nt("genitive_np")}
+             | dependent_genitive_pronoun   {%nt("genitive_np")}
+
+dp -> dp_modifier? determinative {%nt("dp")%}
 
 adjunct ->
       pp             {%nt("adjunct")%} # a prepositional phrase adjunct (ex: "in the house")
@@ -915,10 +925,12 @@ not? -> not         {%nt("not?")%}
 
 # terminals
 
-det -> %det {%t("det")%}
+determinative -> %determinative {%t("determinative")%}
+dp_modifier -> %dp_modifier {%t("dp_modifier")%}
+quantificational_modifier -> 
 pronoun -> %pronoun {%t("pronoun")%}
-possessive_adjective -> %possessive_adjective {%t("possessive_adjective")%}
-possessive_pronoun -> %possessive_pronoun {%t("possessive_pronoun")%}
+dependent_genitive_pronoun -> %genitive_pronoun {%t("dependent_genitive_pronoun")%}
+independent_genitive_pronoun -> %genitive_pronoun {%t("independent_genitive_pronoun")%}
 proper_noun -> %proper_noun {%t("proper_noun")%}
 uncountable_noun -> %uncountable_noun {%t("uncountable_noun")%}
 countable_noun -> %countable_noun {%t("countable_noun")%}
