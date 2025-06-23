@@ -4,11 +4,11 @@
 import english from './english.json';
 
 function isPoS(pos) {
-  return {test: word => (english[word] ?? ["UNK"]).includes(pos)}
+  return {test: word => english[word]?.includes(pos)}
 }
 
 function isAnyOfPoS(pos_arr) {
-  return {test: word => pos_arr.some(pos => (english[word] ?? ["UNK"]).includes(pos))}
+  return {test: word => pos_arr.some(pos => english[word]?.includes(pos))}
 }
 
 // parts of speech
@@ -17,8 +17,7 @@ const pronoun = isPoS("pronoun");
 const independent_genitive_pronoun = isPoS("independent_genitive_pronoun");
 const dependent_genitive_pronoun = isPoS("dependent_genitive_pronoun");
 const proper_noun = isPoS("proper_noun");
-const uncountable_noun = isPoS("uncountable_noun");
-const countable_noun = isPoS("countable_noun");
+const noun = isPoS("noun");
 const preposition = isPoS("preposition");
 
 // particles
@@ -129,6 +128,12 @@ const vbf_np_np = isAnyOfPoS(["vbd_np_np","vbp_np_np","vbz_np_np"]);
 const be_fin = isAnyOfPoS(["is","are","were"]);
 const do_fin = isAnyOfPoS(["do","does","did"]);
 
+// certain nouns with special treatment
+const times = isPos("times");
+const cardinal_number_eng = isPos("cardinal_number_eng");
+const digits = { test: word => !isNaN(word) };
+const fraction_denominator = isPos("fraction_denominator");
+
 // adjectives
 const adj = isPoS("adj");
 const adj_pp = isPoS("adj_pp");
@@ -140,6 +145,9 @@ const adj_to_inf_cl = isPoS("adj_to_inf_cl");
 const adv = isPoS("adv");
 const precorenp_modifier = isPoS("precorenp_modifier");
 const postcorenp_modifier = isPoS("postcorenp_modifier");
+const quantificational_modifier = isPoS("quantificational_modifier");
+const precore_emphatic_modifier = isPoS("precore_emphatic_modifier");
+const precore_emphatic_modifier_adj = isPoS("precore_emphatic_modifier_adj");
 
 // wh-words (that replace nouns)
 const wh = isPoS("wh");
@@ -828,26 +836,26 @@ bare_declarative_cl_ap_moved ->
 # a content clause with some ap moved
 that_declarative_cl_ap_moved -> that bare_declarative_cl_ap_moved {%nt("that_declarative_cl_ap_moved")%}
 
-np -> precorenp_modifier core_np postcorenp_modifier
+np -> precorenp_modifier core_np postcorenp_modifier {%nt("np")%}
 
 # a core noun phrase without peripheral modifiers
 core_np -> 
-                                          proper_noun                                       {%nt("core_np")%}  # a proper noun (ex: "John", "Mary")
-    |                                     pronoun                                           {%nt("core_np")%}  # a pronoun (ex: "I", "you", "he", "she", "it", "we", "they")
-    |                                     independent_possessive_pronoun                    {%nt("core_np")%}  # a possessive pronoun (ex: "mine", "yours")
+                                                  proper_noun                               {%nt("core_np")%}  # a proper noun (ex: "John", "Mary")
+    |                                             pronoun                                   {%nt("core_np")%}  # a pronoun (ex: "I", "you", "he", "she", "it", "we", "they")
+    |                                             independent_genitive_pronoun              {%nt("core_np")%}  # a possessive pronoun (ex: "mine", "yours")
     | predeterminer_modifier? determiner? ap_list noun                    n_modifier_list   {%nt("core_np")%}  # determiner phrase followed by a nominal (ex: "even all the lovely food too")
 
-fraction_expression -> number fraction_denominator
-times_expression -> number times
+number -> digits | cardinal_number_eng {%nt("number")%}
 
-quantificational_expression -> quantificational_modifier
-                             | fraction_expression
-                             | times_expression
+quantificational_expression -> quantificational_modifier                        {%nt("quantificational_expression")%}
+                             | number                     fraction_denominator  {%nt("quantificational_expression")%}
+                             | number                     times                 {%nt("quantificational_expression")%}
 
 precore_emphatic_expression -> precore_emphatic_modifier         {%nt("precore_emphatic_modifier")%} # such a disaster 
                              | precore_emphatic_modifier_adj ap  {%nt("precore_emphatic_modifier")%} # too risky a venture
 
-predeterminer_modifier -> quantificational_expression  {%nt("predeterminer_modifier")%}
+predeterminer_modifier? -> null                        {%nt("predeterminer_modifier")%}
+                        | quantificational_expression  {%nt("predeterminer_modifier")%}
                         | precore_emphatic_expression  {%nt("predeterminer_modifier")%}
 
 # a noun phrase that has been moved to the front (wh-movement)
@@ -869,13 +877,18 @@ n_modifier -> restrictive_cl           {%nt("n_modifier")%} # a relative clause 
 n_modifier_list -> n_modifier:* {%nonterminal_unpack("n_modifier_list")%}
 
 # a determiner phrase suitable for countable nouns only
-determiner -> dp                   {%nt("countable determiner")%} # the, a, an, some, this, that
-            | genitive_np          {%nt("countable determiner")%} # a noun phrase followed by a possessive suffix (ex: "John's")
+determiner? -> null                 {%nt("determiner")%} # null determiner
+             | dp                   {%nt("determiner")%} # the, a, an, some, this, that
+             | genitive_np          {%nt("determiner")%} # a noun phrase followed by a possessive suffix (ex: "John's")
 
-genitive_np -> np s                         {%nt("genitive_np")}
-             | dependent_genitive_pronoun   {%nt("genitive_np")}
+genitive_np -> np s                         {%nt("genitive_np")%}
+             | dependent_genitive_pronoun   {%nt("genitive_np")%}
+
+dp_modifier? -> null         {%nt("dp_modifier?")%}
+              | dp_modifier  {%nt("dp_modifier?")%}
 
 dp -> dp_modifier? determinative {%nt("dp")%}
+    | dp_modifier? number        {%nt("dp")%}
 
 adjunct ->
       pp             {%nt("adjunct")%} # a prepositional phrase adjunct (ex: "in the house")
@@ -927,19 +940,21 @@ not? -> not         {%nt("not?")%}
 
 determinative -> %determinative {%t("determinative")%}
 dp_modifier -> %dp_modifier {%t("dp_modifier")%}
-quantificational_modifier -> 
 pronoun -> %pronoun {%t("pronoun")%}
 dependent_genitive_pronoun -> %genitive_pronoun {%t("dependent_genitive_pronoun")%}
 independent_genitive_pronoun -> %genitive_pronoun {%t("independent_genitive_pronoun")%}
 proper_noun -> %proper_noun {%t("proper_noun")%}
-uncountable_noun -> %uncountable_noun {%t("uncountable_noun")%}
-countable_noun -> %countable_noun {%t("countable_noun")%}
+noun -> %noun {%t("noun")%}
 preposition -> %preposition {%t("preposition")%}
 to -> %to {%t("to")%}
 s -> %s {%t("s")%}
 not -> %not {%t("not")%}
 that -> %that {%t("that")%}
 interrogative_subordinator -> %interrogative_subordinator {%t("interrogative_subordinator")%}
+times -> %times {%t("times")%}
+cardinal_number_eng -> %cardinal_number_eng {%t("cardinal_number_eng")%}
+digits -> %digits {%t("digits")%}
+fraction_denominator -> %fraction_denominator {%t("fraction_denominator")%}
 modal -> %modal {%t("modal")%}
 vb -> %vb {%t("vb")%}
 vb_ap -> %vb_ap {%t("vb_ap")%}
@@ -1029,6 +1044,9 @@ how -> %how {%t("how")%}
 which -> %which {%t("which")%}
 precorenp_modifier -> %precorenp_modifier {%t("precorenp_modifier")%}
 postcorenp_modifier -> %postcorenp_modifier {%t("postcorenp_modifier")%}
+precore_emphatic_modifier -> %precore_emphatic_modifier {%t("precore_emphatic_modifier")%}
+precore_emphatic_modifier_adj -> %precore_emphatic_modifier_adj {%t("precore_emphatic_modifier_adj")%}
+quantificational_modifier -> %quantificational_modifier {%t("quantificational_modifier")%}
 be_fin -> %be_fin {%t("is_fin")%}
 do_fin -> %do_fin {%t("do_fin")%}
 period -> %period {%t("period")%}
