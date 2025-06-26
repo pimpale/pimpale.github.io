@@ -53,6 +53,10 @@ const LogosPage = () => <ArticleLayout style={{ maxWidth: "50em" }}>{
         But humans need language no less, the only thing that separates homo sapiens, the dominant earthly lifeform, from the dozens of other extinct hominids is your ability to communicate, to use language.</p>
       <br />
       <p>We are both children of Logos.</p>
+      <hr />
+      <p>
+        Comment here: <a href="https://open.substack.com/pub/pimpale/p/the-logos?r=p99dn&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true" target="_blank">Substack</a>
+      </p>
     </Section>
     <CitationBank />
   </>

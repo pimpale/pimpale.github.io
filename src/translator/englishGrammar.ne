@@ -144,6 +144,7 @@ const adj_to_inf_cl = isPoS("adj_to_inf_cl");
 
 // adverbs
 const adv = isPoS("adv");
+const adv_vp = isPoS("adv_vp");
 const precorenp_modifier = isPoS("precorenp_modifier");
 const postcorenp_modifier = isPoS("postcorenp_modifier");
 const quantificational_modifier = isPoS("quantificational_modifier");
@@ -1053,6 +1054,7 @@ adj_that_declarative_cl -> %adj_that_declarative_cl {%t("adj_that_declarative_cl
 adj_bare_declarative_cl -> %adj_bare_declarative_cl {%t("adj_bare_declarative_cl")%}
 adj_to_inf_cl -> %adj_to_inf_cl {%t("adj_to_inf_cl")%}
 adv -> %adv {%t("adv")%}
+adv_vp -> %adv_vp {%t("adv_vp")%}
 wh -> %wh {%t("wh")%}
 why -> %why {%t("why")%}
 how -> %how {%t("how")%}
