@@ -5,24 +5,25 @@ import { format } from 'date-fns';
 
 import { Article, articleData } from '../components/ArticleData';
 
-type ArticleLinkProps = {
-  a: Article,
-  showDate?: boolean
-}
-
-export const ArticleLink = ({ a, showDate }: ArticleLinkProps) => {
-  if (showDate === true) {
-    return <a href={a.url} children={`${a.name} (${format(a.published, "MMM d, y")})`} />
-  } else {
-    return <a href={a.url} children={a.name} />
-  }
-}
+export const ArticleLink = ({ a }: { a: Article }) =>
+  <a href={a.url} children={a.name} />
 
 const Articles = () =>
   <Section id="articles" name="Articles">
     <ul>
-      {Array.from(articleData.values()).map((a, i) =>
-        <li key={i}><ArticleLink a={a} /></li>
+      {Array.from(articleData.values()).filter(a => a.listed).sort((a, b) => b.published.getTime() - a.published.getTime()).map((a, i) =>
+        <li key={i}>
+          <b className="me-2"><ArticleLink a={a} /></b>
+          {a.fiction ? <span className="badge rounded-pill text-bg-light me-2">Fiction</span> : null}
+          {format(a.published, "(MMM d, y)")}
+          {"   "}
+          <ul>
+            <li><div className="text-muted text-nowrap d-inline-block">
+              {a.incipit ? a.incipit : null}
+            </div>
+            </li>
+          </ul>
+        </li>
       )}
     </ul>
   </Section>
