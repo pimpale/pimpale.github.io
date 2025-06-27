@@ -185,12 +185,23 @@ fin_cl -> adjunct_list np fin_vp {%nt("fin_cl")%}
 
 # a question clause
 question_cl ->
-                subj_aux_inv_cl          {%nt("question_cl")%} # are you happy?
-    | wh        fin_vp                   {%nt("question_cl")%} # who ate that?
-    | wh        subj_aux_inv_cl_np_moved {%nt("question_cl")%} # what did you eat?
-    | why       subj_aux_inv_cl          {%nt("question_cl")%}
-    | how advp? subj_aux_inv_cl          {%nt("question_cl")%} # how did you eat the apple?
-    | how       subj_aux_inv_cl_adjp_moved {%nt("question_cl")%} # how happy are you?
+# yes no qs
+                                    subj_aux_inv_cl            {%nt("question_cl")%} # are you happy?
+# question word replaces np
+    | who                           fin_vp                     {%nt("question_cl")%} # who ate that?
+    | who                           subj_aux_inv_cl_np_moved   {%nt("question_cl")%} # who did you eat?
+    | what                          fin_vp                     {%nt("question_cl")%} # what ate that?
+    | what                          subj_aux_inv_cl_np_moved   {%nt("question_cl")%} # what did you eat?
+# question word replaces determiner
+    | what       whichable_np       fin_vp                     {%nt("question_cl")%} # what kind of bread is that?
+    | what       whichable_np       subj_aux_inv_cl_np_moved   {%nt("question_cl")%} # what kind of bread did you eat?
+    | which      whichable_np       fin_vp                     {%nt("question_cl")%} # which (kind of bread) is that?
+    | which      whichable_np       subj_aux_inv_cl_np_moved   {%nt("question_cl")%} # which (kind of bread) did you eat?
+    | when       pp?                subj_aux_inv_cl            {%nt("question_cl")%} # when/where did you eat?
+    | where      pp?                subj_aux_inv_cl            {%nt("question_cl")%} # when/where did you eat?
+    | why                           subj_aux_inv_cl            {%nt("question_cl")%} # why did you eat?
+    | how        advp?              subj_aux_inv_cl            {%nt("question_cl")%} # how (quickly) did you eat the apple?
+    | how                           subj_aux_inv_cl_adjp_moved {%nt("question_cl")%} # how happy are you?
 
 
 subj_aux_inv_cl ->
@@ -815,12 +826,41 @@ exclamative_cl ->
       how advp_vp fin_cl            {%nt("exclamative_cl")%} # how quickly mary became happy
     | how adjp np fin_vp_adjp_moved     {%nt("exclamative_cl")%} # how happy mary became
 
+# yes no qs
+                                    subj_aux_inv_cl            {%nt("question_cl")%} # are you happy?
+# question word replaces np
+    | who                           fin_vp                     {%nt("question_cl")%} # who ate that?
+    | who                           subj_aux_inv_cl_np_moved   {%nt("question_cl")%} # who did you eat?
+    | what                          fin_vp                     {%nt("question_cl")%} # what ate that?
+    | what                          subj_aux_inv_cl_np_moved   {%nt("question_cl")%} # what did you eat?
+# question word replaces determiner
+    | what       whichable_np       fin_vp                     {%nt("question_cl")%} # what kind of bread became moldy?
+    | what       whichable_np       subj_aux_inv_cl_np_moved   {%nt("question_cl")%} # what kind of bread did you eat?
+    | which      whichable_np       fin_vp                     {%nt("question_cl")%} # which (kind of bread) became moldy?
+    | which      whichable_np       subj_aux_inv_cl_np_moved   {%nt("question_cl")%} # which (kind of bread) did you eat?
+    | when       pp?                subj_aux_inv_cl            {%nt("question_cl")%} # when/where did you eat?
+    | where      pp?                subj_aux_inv_cl            {%nt("question_cl")%} # when/where did you eat?
+    | why                           subj_aux_inv_cl            {%nt("question_cl")%} # why did you eat?
+    | how        advp?              subj_aux_inv_cl            {%nt("question_cl")%} # how (quickly) did you eat the apple?
+    | how                           subj_aux_inv_cl_adjp_moved {%nt("question_cl")%} # how happy are you?
+
+
 # an interrogative content clause
 interrogative_cl -> 
-      wh_np                      np fin_vp_np_moved            {%nt("interrogative_cl")%} # open interrogative clause with move from the core arguments
-    | wh_np                         fin_vp                     {%nt("interrogative_cl")%} # open interrogative clause with move from the agent
+# yes no qs
+      interrogative_subordinator np fin_vp                     {%nt("interrogative_cl")%} # closed interrogative clause (ex: "whether you eat the apple")
+# question word replaces np
+    | who                           fin_vp                    {%nt("interrogative_cl")%} # i know who ate that
+    | who                        np fin_vp_np_moved            {%nt("interrogative_cl")%} # i know who he ate
+    | what                          fin_vp                  {%nt("interrogative_cl")%} # i know what ate that
+    | what                       np fin_vp_np_moved            {%nt("interrogative_cl")%} # i know what he ate
+# question word replaces determiner
+    | what     whichable_np   fin_vp # i know what kind of bread became moldy
+    | what     whichable_np   np fin_vp_np_moved # i know what kind of bread you eat
+    | which     whichable_np   fin_vp # i know which kind of bread became moldy
+    | which     whichable_np   np fin_vp_np_moved # i know which kind of bread you eat 
+       | wh_np                         fin_vp                     {%nt("interrogative_cl")%} # open interrogative clause with move from the agent
     | wh_pp                      np fin_vp                     {%nt("interrogative_cl")%} # open interrogative clause with move from the adjuncts using pied piping (ex: "to where I go")
-    | interrogative_subordinator np fin_vp                     {%nt("interrogative_cl")%} # closed interrogative clause (ex: "whether you eat the apple")
 
 # a content clause with some np moved
 bare_declarative_cl_np_moved ->
@@ -846,6 +886,9 @@ precorenp_modifier? -> precorenp_modifier {%nt("precorenp_modifier?")%}
 postcorenp_modifier? -> postcorenp_modifier {%nt("postcorenp_modifier?")%}
                       | null                {%nt("postcorenp_modifier?")%}
 
+# a noun phrase that can be used in the sentence "which x did you get?"
+whichable_np -> adjp_list noun n_modifier_list
+
 # a core noun phrase without peripheral modifiers
 core_np -> 
                                                   proper_noun                               {%nt("core_np")%}  # a proper noun (ex: "John", "Mary")
@@ -865,10 +908,6 @@ precore_emphatic_expression -> precore_emphatic_modifier         {%nt("precore_e
 predeterminer_modifier? -> null                        {%nt("predeterminer_modifier")%}
                         | quantificational_expression  {%nt("predeterminer_modifier")%}
                         | precore_emphatic_expression  {%nt("predeterminer_modifier")%}
-
-# a noun phrase that has been moved to the front (wh-movement)
-wh_np -> wh    {%nt("wh_np")%} 
-       | wh np {%nt("wh_np")%}
 
 restrictive_correlative -> 
   that  {%nt("restrictive_correlative")%}
@@ -912,9 +951,6 @@ pp ->   preposition np {%nt("pp")%}
 # a prepositional phrase with np moved
 pp_np_moved -> preposition {%nt("pp_np_moved")%}
 
-
-# a prepositional phrase that has been moved to the front (pied piping)
-wh_pp ->   preposition wh_np {%nt("wh_pp")%}
 
 # an adjective phrase
 adjp ->
