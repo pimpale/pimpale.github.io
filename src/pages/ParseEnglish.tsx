@@ -49,7 +49,9 @@ function ParseEnglishWidget() {
         "The teacher explained the concept clearly to the students.",
         "After the rain stopped, the sun came out.",
         "The old house on the hill looked mysterious.",
-        "They were playing tennis when it started to rain."
+        "They were playing tennis when it started to rain.",
+        "She hasn't yet contacted the people whose house she wants to rent.",
+        "The horse raced past the barn fell.",
     ];
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
