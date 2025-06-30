@@ -2,7 +2,7 @@ import english from './english.json';
 
 function expandContractions(word: string): string[] {
     if (word.slice(-2) === "'s") {
-        return [word.slice(0, -2), "is"];
+        return [word.slice(0, -2), "s"];
     } else if (word === "won't") {
         return ["will", "not"];
     } else if (word.slice(-3) === "n't") {

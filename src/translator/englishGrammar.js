@@ -55,7 +55,7 @@ const modal = isPoS("modal");
 
 // Base Verb (VB)
 const vb = isPoS("vb");
-const vb_adjp = isPoS("vb_adjp");
+const vb_predcomp = isPoS("vb_predcomp");
 const vb_to_inf_cl = isPoS("vb_to_inf_cl");
 const vb_bare_inf_cl = isPoS("vb_bare_inf_cl");
 const vb_that_declarative_cl = isPoS("vb_that_declarative_cl");
@@ -65,7 +65,7 @@ const vb_interrogative_cl = isPoS("vb_interrogative_cl");
 const vb_vbg_cl = isPoS("vb_vbg_cl");
 const vb_vbn_cl = isPoS("vb_vbn_cl");
 const vb_np = isPoS("vb_np");
-const vb_np_adjp = isPoS("vb_np_adjp");
+const vb_np_predcomp = isPoS("vb_np_predcomp");
 const vb_np_to_inf_cl = isPoS("vb_np_to_inf_cl");
 const vb_np_bare_inf_cl = isPoS("vb_np_bare_inf_cl");
 const vb_np_that_declarative_cl = isPoS("vb_np_that_declarative_cl");
@@ -76,7 +76,7 @@ const vb_np_np = isPoS("vb_np_np");
 
 // Verb Gerund or Present Participle (VBG)
 const vbg = isPoS("vbg");
-const vbg_adjp = isPoS("vbg_adjp");
+const vbg_predcomp = isPoS("vbg_predcomp");
 const vbg_to_inf_cl = isPoS("vbg_to_inf_cl");
 const vbg_bare_inf_cl = isPoS("vbg_bare_inf_cl");
 const vbg_that_declarative_cl = isPoS("vbg_that_declarative_cl");
@@ -86,7 +86,7 @@ const vbg_interrogative_cl = isPoS("vbg_interrogative_cl");
 const vbg_vbg_cl = isPoS("vbg_vbg_cl");
 const vbg_vbn_cl = isPoS("vbg_vbn_cl");
 const vbg_np = isPoS("vbg_np");
-const vbg_np_adjp = isPoS("vbg_np_adjp");
+const vbg_np_predcomp = isPoS("vbg_np_predcomp");
 const vbg_np_to_inf_cl = isPoS("vbg_np_to_inf_cl");
 const vbg_np_bare_inf_cl = isPoS("vbg_np_bare_inf_cl");
 const vbg_np_that_declarative_cl = isPoS("vbg_np_that_declarative_cl");
@@ -97,7 +97,7 @@ const vbg_np_np = isPoS("vbg_np_np");
 
 // Verb Past Participle (VBN)
 const vbn = isPoS("vbn");
-const vbn_adjp = isPoS("vbn_adjp");
+const vbn_predcomp = isPoS("vbn_predcomp");
 const vbn_to_inf_cl = isPoS("vbn_to_inf_cl");
 const vbn_bare_inf_cl = isPoS("vbn_bare_inf_cl");
 const vbn_that_declarative_cl = isPoS("vbn_that_declarative_cl");
@@ -107,7 +107,7 @@ const vbn_interrogative_cl = isPoS("vbn_interrogative_cl");
 const vbn_vbg_cl = isPoS("vbn_vbg_cl");
 const vbn_vbn_cl = isPoS("vbn_vbn_cl");
 const vbn_np = isPoS("vbn_np");
-const vbn_np_adjp = isPoS("vbn_np_adjp");
+const vbn_np_predcomp = isPoS("vbn_np_predcomp");
 const vbn_np_to_inf_cl = isPoS("vbn_np_to_inf_cl");
 const vbn_np_bare_inf_cl = isPoS("vbn_np_bare_inf_cl");
 const vbn_np_that_declarative_cl = isPoS("vbn_np_that_declarative_cl");
@@ -118,7 +118,7 @@ const vbn_np_np = isPoS("vbn_np_np");
 
 // Verb Finite (VBF): supercategory for the following
 const vbf = isAnyOfPoS(["vbd","vbp","vbz"]);
-const vbf_adjp = isAnyOfPoS(["vbd_adjp","vbp_adjp","vbz_adjp"]);
+const vbf_predcomp = isAnyOfPoS(["vbd_predcomp","vbp_predcomp","vbz_predcomp"]);
 const vbf_to_inf_cl = isAnyOfPoS(["vbd_to_inf_cl","vbp_to_inf_cl","vbz_to_inf_cl"]);
 const vbf_bare_inf_cl = isAnyOfPoS(["vbd_bare_inf_cl","vbp_bare_inf_cl","vbz_bare_inf_cl"]);
 const vbf_that_declarative_cl = isAnyOfPoS(["vbd_that_declarative_cl","vbp_that_declarative_cl","vbz_that_declarative_cl"]);
@@ -128,7 +128,7 @@ const vbf_interrogative_cl = isAnyOfPoS(["vbd_interrogative_cl","vbp_interrogati
 const vbf_vbg_cl = isAnyOfPoS(["vbd_vbg_cl","vbp_vbg_cl","vbz_vbg_cl"]);
 const vbf_vbn_cl = isAnyOfPoS(["vbd_vbn_cl","vbp_vbn_cl","vbz_vbn_cl"]);
 const vbf_np = isAnyOfPoS(["vbd_np","vbp_np","vbz_np"]);
-const vbf_np_adjp = isAnyOfPoS(["vbd_np_adjp","vbp_np_adjp","vbz_np_adjp"]);
+const vbf_np_predcomp = isAnyOfPoS(["vbd_np_predcomp","vbp_np_predcomp","vbz_np_predcomp"]);
 const vbf_np_to_inf_cl = isAnyOfPoS(["vbd_np_to_inf_cl","vbp_np_to_inf_cl","vbz_np_to_inf_cl"]);
 const vbf_np_bare_inf_cl = isAnyOfPoS(["vbd_np_bare_inf_cl","vbp_np_bare_inf_cl","vbz_np_bare_inf_cl"]);
 const vbf_np_that_declarative_cl = isAnyOfPoS(["vbd_np_that_declarative_cl","vbp_np_that_declarative_cl","vbz_np_that_declarative_cl"]);
@@ -198,31 +198,31 @@ let ParserRules = [
     {"name": "question_cl", "symbols": ["ip_pp", "subj_aux_inv_cl"], "postprocess": nt("question_cl")},
     {"name": "question_cl", "symbols": ["ip_advp_vp", "subj_aux_inv_cl"], "postprocess": nt("question_cl")},
     {"name": "question_cl", "symbols": ["ip_adjp", "subj_aux_inv_cl_adjp_moved"], "postprocess": nt("question_cl")},
-    {"name": "subj_aux_inv_cl", "symbols": ["modal", "np", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
-    {"name": "subj_aux_inv_cl", "symbols": ["be_fin", "np", "adjp"], "postprocess": nt("subj_aux_inv_cl")},
-    {"name": "subj_aux_inv_cl", "symbols": ["be_fin", "np", "np"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["modal", "np", "adjunct_list_bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["be_fin", "np", "adjunct_list_predcomp"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl", "symbols": ["be_fin", "np", "adjunct_list_np"], "postprocess": nt("subj_aux_inv_cl")},
     {"name": "subj_aux_inv_cl", "symbols": ["vbf_vbg_cl", "np", "vbg_cl"], "postprocess": nt("subj_aux_inv_cl")},
     {"name": "subj_aux_inv_cl", "symbols": ["vbf_vbn_cl", "np", "vbn_cl"], "postprocess": nt("subj_aux_inv_cl")},
-    {"name": "subj_aux_inv_cl", "symbols": ["do_fin", "np", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
-    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["modal", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
-    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["modal", "np", "bare_inf_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
-    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["be_fin", "adjp"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
+    {"name": "subj_aux_inv_cl", "symbols": ["do_fin", "np", "adjunct_list_bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["modal", "adjunct_list_bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["modal", "adjunct_list_np_bare_inf_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["be_fin", "adjunct_list_predcomp"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
     {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbf_vbg_cl", "vbg_cl"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
     {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbf_vbn_cl", "vbn_cl"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
-    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["do_fin", "bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["do_fin", "adjunct_list_bare_inf_cl"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
     {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbf_vbg_cl", "np", "vbg_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
     {"name": "subj_aux_inv_cl_np_moved", "symbols": ["vbf_vbn_cl", "np", "vbn_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
-    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["do_fin", "np", "bare_inf_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
-    {"name": "subj_aux_inv_cl_adjp_moved", "symbols": ["modal", "np", "bare_inf_cl_adjp_moved"], "postprocess": nt("subj_aux_inv_cl_adjp_moved")},
+    {"name": "subj_aux_inv_cl_np_moved", "symbols": ["do_fin", "np", "adjunct_list_bare_inf_cl_np_moved"], "postprocess": nt("subj_aux_inv_cl_np_moved")},
+    {"name": "subj_aux_inv_cl_adjp_moved", "symbols": ["modal", "np", "adjunct_list_bare_inf_cl_adjp_moved"], "postprocess": nt("subj_aux_inv_cl_adjp_moved")},
     {"name": "subj_aux_inv_cl_adjp_moved", "symbols": ["be_fin", "np"], "postprocess": nt("subj_aux_inv_cl_adjp_moved")},
     {"name": "subj_aux_inv_cl_adjp_moved", "symbols": ["vbf_vbg_cl", "np", "vbg_cl_adjp_moved"], "postprocess": nt("subj_aux_inv_cl_adjp_moved")},
     {"name": "subj_aux_inv_cl_adjp_moved", "symbols": ["vbf_vbn_cl", "np", "vbn_cl_adjp_moved"], "postprocess": nt("subj_aux_inv_cl_adjp_moved")},
-    {"name": "subj_aux_inv_cl_adjp_moved", "symbols": ["do_fin", "np", "bare_inf_cl_adjp_moved"], "postprocess": nt("subj_aux_inv_cl_adjp_moved")},
+    {"name": "subj_aux_inv_cl_adjp_moved", "symbols": ["do_fin", "np", "adjunct_list_bare_inf_cl_adjp_moved"], "postprocess": nt("subj_aux_inv_cl_adjp_moved")},
     {"name": "adjunct_list$ebnf$1", "symbols": []},
     {"name": "adjunct_list$ebnf$1", "symbols": ["adjunct_list$ebnf$1", "adjunct"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "adjunct_list", "symbols": ["adjunct_list$ebnf$1"], "postprocess": nonterminal_unpack("adjunct_list")},
-    {"name": "adjunct_list_adjp", "symbols": ["adjunct", "adjunct_list_adjp"], "postprocess": nt("adjunct_list_adjp")},
-    {"name": "adjunct_list_adjp", "symbols": ["adjp", "adjunct_list"], "postprocess": nt("adjunct_list_adjp")},
+    {"name": "adjunct_list_predcomp", "symbols": ["adjunct", "adjunct_list_predcomp"], "postprocess": nt("adjunct_list_predcomp")},
+    {"name": "adjunct_list_predcomp", "symbols": ["predcomp", "adjunct_list"], "postprocess": nt("adjunct_list_predcomp")},
     {"name": "adjunct_list_to_inf_cl", "symbols": ["adjunct", "adjunct_list_to_inf_cl"], "postprocess": nt("adjunct_list_to_inf_cl")},
     {"name": "adjunct_list_to_inf_cl", "symbols": ["to_inf_cl", "adjunct_list"], "postprocess": nt("adjunct_list_to_inf_cl")},
     {"name": "adjunct_list_bare_inf_cl", "symbols": ["bare_inf_cl", "adjunct_list"], "postprocess": nt("adjunct_list_bare_inf_cl")},
@@ -235,12 +235,12 @@ let ParserRules = [
     {"name": "adjunct_list_interrogative_cl", "symbols": ["adjunct", "adjunct_list_interrogative_cl"], "postprocess": nt("adjunct_list_interrogative_cl")},
     {"name": "adjunct_list_interrogative_cl", "symbols": ["interrogative_cl", "adjunct_list"], "postprocess": nt("adjunct_list_interrogative_cl")},
     {"name": "adjunct_list_np", "symbols": ["np", "adjunct_list"], "postprocess": nt("adjunct_list_np")},
-    {"name": "adjunct_list_np_adjp", "symbols": ["np", "adjunct_list_adjp"], "postprocess": nt("adjunct_list_np_adjp")},
-    {"name": "adjunct_list_np_adjp", "symbols": ["adjp", "adjunct_list_np"], "postprocess": nt("adjunct_list_np_adjp")},
-    {"name": "adjunct_list_np_to_inf_cl", "symbols": ["adjunct", "adjunct_list_np_to_inf_cl"], "postprocess": nt("adjunct_list_np_adjp")},
-    {"name": "adjunct_list_np_to_inf_cl", "symbols": ["np", "adjunct_list_to_inf_cl"], "postprocess": nt("adjunct_list_np_adjp")},
-    {"name": "adjunct_list_np_bare_inf_cl", "symbols": ["adjunct", "adjunct_list_np_bare_inf_cl"], "postprocess": nt("adjunct_list_np_adjp")},
-    {"name": "adjunct_list_np_bare_inf_cl", "symbols": ["np", "adjunct_list_bare_inf_cl"], "postprocess": nt("adjunct_list_np_adjp")},
+    {"name": "adjunct_list_np_predcomp", "symbols": ["np", "adjunct_list_predcomp"], "postprocess": nt("adjunct_list_np_predcomp")},
+    {"name": "adjunct_list_np_predcomp", "symbols": ["predcomp", "adjunct_list_np"], "postprocess": nt("adjunct_list_np_predcomp")},
+    {"name": "adjunct_list_np_to_inf_cl", "symbols": ["adjunct", "adjunct_list_np_to_inf_cl"], "postprocess": nt("adjunct_list_np_predcomp")},
+    {"name": "adjunct_list_np_to_inf_cl", "symbols": ["np", "adjunct_list_to_inf_cl"], "postprocess": nt("adjunct_list_np_predcomp")},
+    {"name": "adjunct_list_np_bare_inf_cl", "symbols": ["adjunct", "adjunct_list_np_bare_inf_cl"], "postprocess": nt("adjunct_list_np_predcomp")},
+    {"name": "adjunct_list_np_bare_inf_cl", "symbols": ["np", "adjunct_list_bare_inf_cl"], "postprocess": nt("adjunct_list_np_predcomp")},
     {"name": "adjunct_list_np_that_declarative_cl", "symbols": ["adjunct", "adjunct_list_np_that_declarative_cl"], "postprocess": nt("adjunct_list_np_that_declarative_cl")},
     {"name": "adjunct_list_np_that_declarative_cl", "symbols": ["np", "adjunct_list_that_declarative_cl"], "postprocess": nt("adjunct_list_np_that_declarative_cl")},
     {"name": "adjunct_list_np_bare_declarative_cl", "symbols": ["adjunct", "adjunct_list_np_bare_declarative_cl"], "postprocess": nt("adjunct_list_np_bare_declarative_cl")},
@@ -254,7 +254,7 @@ let ParserRules = [
     {"name": "adjunct_list_np_np", "symbols": ["to", "np", "adjunct_list_np"], "postprocess": nt("adjunct_list_np_np")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "modal", "bare_inf_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf", "adjunct_list"], "postprocess": nt("fin_vp")},
-    {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_adjp", "adjunct_list_adjp"], "postprocess": nt("fin_vp")},
+    {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_predcomp", "adjunct_list_predcomp"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_to_inf_cl", "adjunct_list_to_inf_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_bare_inf_cl", "adjunct_list_bare_inf_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_that_declarative_cl", "adjunct_list_that_declarative_cl"], "postprocess": nt("fin_vp")},
@@ -264,7 +264,7 @@ let ParserRules = [
     {"name": "fin_vp", "symbols": ["vbf_vbg_cl", "vbg_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["vbf_vbn_cl", "vbn_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_np", "adjunct_list_np"], "postprocess": nt("fin_vp")},
-    {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_np_adjp", "adjunct_list_np_adjp"], "postprocess": nt("fin_vp")},
+    {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_np_predcomp", "adjunct_list_np_predcomp"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_np_to_inf_cl", "adjunct_list_np_to_inf_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl"], "postprocess": nt("fin_vp")},
@@ -273,7 +273,7 @@ let ParserRules = [
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_np_interrogative_cl", "adjunct_list_np_interrogative_cl"], "postprocess": nt("fin_vp")},
     {"name": "fin_vp", "symbols": ["advp_vp?", "vbf_np_np", "adjunct_list_np_np"], "postprocess": nt("fin_vp")},
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb", "adjunct_list"], "postprocess": nt("inf_vp")},
-    {"name": "inf_vp", "symbols": ["advp_vp?", "vb_adjp", "adjunct_list_adjp"], "postprocess": nt("inf_vp")},
+    {"name": "inf_vp", "symbols": ["advp_vp?", "vb_predcomp", "adjunct_list_predcomp"], "postprocess": nt("inf_vp")},
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb_to_inf_cl", "adjunct_list_to_inf_cl"], "postprocess": nt("inf_vp")},
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb_bare_inf_cl", "adjunct_list_bare_inf_cl"], "postprocess": nt("inf_vp")},
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb_that_declarative_cl", "adjunct_list_that_declarative_cl"], "postprocess": nt("inf_vp")},
@@ -283,7 +283,7 @@ let ParserRules = [
     {"name": "inf_vp", "symbols": ["vb_vbg_cl", "vbg_cl"], "postprocess": nt("inf_vp")},
     {"name": "inf_vp", "symbols": ["vb_vbn_cl", "vbn_cl"], "postprocess": nt("inf_vp")},
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb_np", "adjunct_list_np"], "postprocess": nt("inf_vp")},
-    {"name": "inf_vp", "symbols": ["advp_vp?", "vb_np_adjp", "adjunct_list_np_adjp"], "postprocess": nt("inf_vp")},
+    {"name": "inf_vp", "symbols": ["advp_vp?", "vb_np_predcomp", "adjunct_list_np_predcomp"], "postprocess": nt("inf_vp")},
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb_np_to_inf_cl", "adjunct_list_np_to_inf_cl"], "postprocess": nt("inf_vp")},
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl"], "postprocess": nt("inf_vp")},
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl"], "postprocess": nt("inf_vp")},
@@ -292,7 +292,7 @@ let ParserRules = [
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb_np_interrogative_cl", "adjunct_list_np_interrogative_cl"], "postprocess": nt("inf_vp")},
     {"name": "inf_vp", "symbols": ["advp_vp?", "vb_np_np", "adjunct_list_np_np"], "postprocess": nt("inf_vp")},
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg", "adjunct_list"], "postprocess": nt("vbg_vp")},
-    {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_adjp", "adjunct_list_adjp"], "postprocess": nt("vbg_vp")},
+    {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_predcomp", "adjunct_list_predcomp"], "postprocess": nt("vbg_vp")},
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_to_inf_cl", "adjunct_list_to_inf_cl"], "postprocess": nt("vbg_vp")},
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_bare_inf_cl", "adjunct_list_bare_inf_cl"], "postprocess": nt("vbg_vp")},
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_that_declarative_cl", "adjunct_list_that_declarative_cl"], "postprocess": nt("vbg_vp")},
@@ -302,7 +302,7 @@ let ParserRules = [
     {"name": "vbg_vp", "symbols": ["vbg_vbg_cl", "vbg_cl"], "postprocess": nt("vbg_vp")},
     {"name": "vbg_vp", "symbols": ["vbg_vbn_cl", "vbn_cl"], "postprocess": nt("vbg_vp")},
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_np", "adjunct_list_np"], "postprocess": nt("vbg_vp")},
-    {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_np_adjp", "adjunct_list_np_adjp"], "postprocess": nt("vbg_vp")},
+    {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_np_predcomp", "adjunct_list_np_predcomp"], "postprocess": nt("vbg_vp")},
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_np_to_inf_cl", "adjunct_list_np_to_inf_cl"], "postprocess": nt("vbg_vp")},
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl"], "postprocess": nt("vbg_vp")},
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl"], "postprocess": nt("vbg_vp")},
@@ -311,7 +311,7 @@ let ParserRules = [
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_np_interrogative_cl", "adjunct_list_np_interrogative_cl"], "postprocess": nt("vbg_vp")},
     {"name": "vbg_vp", "symbols": ["advp_vp?", "vbg_np_np", "adjunct_list_np_np"], "postprocess": nt("vbg_vp")},
     {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn", "adjunct_list"], "postprocess": nt("vbn_vp")},
-    {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_adjp", "adjunct_list_adjp"], "postprocess": nt("vbn_vp")},
+    {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_predcomp", "adjunct_list_predcomp"], "postprocess": nt("vbn_vp")},
     {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_to_inf_cl", "adjunct_list_to_inf_cl"], "postprocess": nt("vbn_vp")},
     {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_bare_inf_cl", "adjunct_list_bare_inf_cl"], "postprocess": nt("vbn_vp")},
     {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_that_declarative_cl", "adjunct_list_that_declarative_cl"], "postprocess": nt("vbn_vp")},
@@ -321,7 +321,7 @@ let ParserRules = [
     {"name": "vbn_vp", "symbols": ["vbn_vbg_cl", "vbg_cl"], "postprocess": nt("vbn_vp")},
     {"name": "vbn_vp", "symbols": ["vbn_vbn_cl", "vbn_cl"], "postprocess": nt("vbn_vp")},
     {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_np", "adjunct_list_np"], "postprocess": nt("vbn_vp")},
-    {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_np_adjp", "adjunct_list_np_adjp"], "postprocess": nt("vbn_vp")},
+    {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_np_predcomp", "adjunct_list_np_predcomp"], "postprocess": nt("vbn_vp")},
     {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_np_to_inf_cl", "adjunct_list_np_to_inf_cl"], "postprocess": nt("vbn_vp")},
     {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl"], "postprocess": nt("vbn_vp")},
     {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl"], "postprocess": nt("vbn_vp")},
@@ -331,9 +331,8 @@ let ParserRules = [
     {"name": "vbn_vp", "symbols": ["advp_vp?", "vbn_np_np", "adjunct_list_np_np"], "postprocess": nt("vbn_vp")},
     {"name": "adjunct_list_np_moved", "symbols": ["adjunct", "adjunct_list_np_moved"], "postprocess": nt("adjunct_list_np_moved")},
     {"name": "adjunct_list_np_moved", "symbols": ["adjunct_np_moved", "adjunct_list"], "postprocess": nt("adjunct_list_np_moved")},
-    {"name": "adjunct_list_adjp_np_moved", "symbols": ["adjunct", "adjunct_list_adjp_np_moved"], "postprocess": nt("adjunct_list_adjp_np_moved")},
-    {"name": "adjunct_list_adjp_np_moved", "symbols": ["adjp", "adjunct_list_np_moved"], "postprocess": nt("adjunct_list_adjp_np_moved")},
-    {"name": "adjunct_list_adjp_np_moved", "symbols": ["adjp_np_moved", "adjunct_list"], "postprocess": nt("adjunct_list_adjp_np_moved")},
+    {"name": "adjunct_list_predcomp_np_moved", "symbols": ["predcomp", "adjunct_list_np_moved"], "postprocess": nt("adjunct_list_predcomp_np_moved")},
+    {"name": "adjunct_list_predcomp_np_moved", "symbols": ["predcomp_np_moved", "adjunct_list"], "postprocess": nt("adjunct_list_predcomp_np_moved")},
     {"name": "adjunct_list_to_inf_cl_np_moved", "symbols": ["adjunct", "adjunct_list_to_inf_cl_np_moved"], "postprocess": nt("adjunct_list_to_inf_cl_np_moved")},
     {"name": "adjunct_list_to_inf_cl_np_moved", "symbols": ["to_inf_cl", "adjunct_list_np_moved"], "postprocess": nt("adjunct_list_to_inf_cl_np_moved")},
     {"name": "adjunct_list_to_inf_cl_np_moved", "symbols": ["to_inf_cl_np_moved", "adjunct_list"], "postprocess": nt("adjunct_list_to_inf_cl_np_moved")},
@@ -351,17 +350,13 @@ let ParserRules = [
     {"name": "adjunct_list_np_np_moved", "symbols": ["adjunct_np_moved", "adjunct_list_np"], "postprocess": nt("adjunct_list_np_np_moved")},
     {"name": "adjunct_list_np_np_moved", "symbols": ["np", "adjunct_list_np_moved"], "postprocess": nt("adjunct_list_np_np_moved")},
     {"name": "adjunct_list_np_np_moved", "symbols": [], "postprocess": nt("adjunct_list_np_np_moved")},
-    {"name": "adjunct_list_np_adjp_np_moved", "symbols": ["adjunct", "adjunct_list_np_adjp_np_moved"], "postprocess": nt("adjunct_list_np_adjp_np_moved")},
-    {"name": "adjunct_list_np_adjp_np_moved", "symbols": ["adjunct_np_moved", "adjunct_list_np_adjp"], "postprocess": nt("adjunct_list_np_adjp_np_moved")},
-    {"name": "adjunct_list_np_adjp_np_moved", "symbols": ["np", "adjunct_list_adjp_np_moved"], "postprocess": nt("adjunct_list_np_adjp_np_moved")},
-    {"name": "adjunct_list_np_adjp_np_moved", "symbols": ["adjp", "adjunct_list_np_np_moved"], "postprocess": nt("adjunct_list_np_adjp_np_moved")},
-    {"name": "adjunct_list_np_adjp_np_moved", "symbols": ["adjp_np_moved", "adjunct_list_np"], "postprocess": nt("adjunct_list_np_adjp_np_moved")},
+    {"name": "adjunct_list_np_predcomp_np_moved", "symbols": ["predcomp", "adjunct_list"], "postprocess": nt("adjunct_list_np_predcomp_np_moved")},
+    {"name": "adjunct_list_np_predcomp_np_moved", "symbols": ["np", "adjunct_list_predcomp_np_moved"], "postprocess": nt("adjunct_list_np_predcomp_np_moved")},
+    {"name": "adjunct_list_np_predcomp_np_moved", "symbols": ["predcomp_np_moved", "adjunct_list_np"], "postprocess": nt("adjunct_list_np_predcomp_np_moved")},
     {"name": "adjunct_list_np_to_inf_cl_np_moved", "symbols": ["adjunct", "adjunct_list_np_to_inf_cl_np_moved"], "postprocess": nt("adjunct_list_np_to_inf_cl_np_moved")},
     {"name": "adjunct_list_np_to_inf_cl_np_moved", "symbols": ["adjunct_np_moved", "adjunct_list_np_to_inf_cl"], "postprocess": nt("adjunct_list_np_to_inf_cl_np_moved")},
     {"name": "adjunct_list_np_to_inf_cl_np_moved", "symbols": ["np", "adjunct_list_to_inf_cl_np_moved"], "postprocess": nt("adjunct_list_np_to_inf_cl_np_moved")},
     {"name": "adjunct_list_np_to_inf_cl_np_moved", "symbols": ["to_inf_cl", "adjunct_list"], "postprocess": nt("adjunct_list_np_to_inf_cl_np_moved")},
-    {"name": "adjunct_list_np_bare_inf_cl_np_moved", "symbols": ["adjunct", "adjunct_list_np_bare_inf_cl_np_moved"], "postprocess": nt("adjunct_list_np_bare_inf_cl_np_moved")},
-    {"name": "adjunct_list_np_bare_inf_cl_np_moved", "symbols": ["adjunct_np_moved", "adjunct_list_np_bare_inf_cl"], "postprocess": nt("adjunct_list_np_bare_inf_cl_np_moved")},
     {"name": "adjunct_list_np_bare_inf_cl_np_moved", "symbols": ["np", "adjunct_list_bare_inf_cl_np_moved"], "postprocess": nt("adjunct_list_np_bare_inf_cl_np_moved")},
     {"name": "adjunct_list_np_bare_inf_cl_np_moved", "symbols": ["bare_inf_cl", "adjunct_list"], "postprocess": nt("adjunct_list_np_bare_inf_cl_np_moved")},
     {"name": "adjunct_list_np_that_declarative_cl_np_moved", "symbols": ["adjunct", "adjunct_list_np_that_declarative_cl_np_moved"], "postprocess": nt("adjunct_list_np_that_declarative_cl_np_moved")},
@@ -389,7 +384,7 @@ let ParserRules = [
     {"name": "adjunct_list_np_do_moved", "symbols": ["to", "adjunct_list"], "postprocess": nt("adjunct_list_np_do_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "modal", "bare_inf_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf", "adjunct_list_np_moved"], "postprocess": nt("fin_vp_np_moved")},
-    {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_adjp", "adjunct_list_adjp_np_moved"], "postprocess": nt("fin_vp_np_moved")},
+    {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_predcomp", "adjunct_list_predcomp_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_to_inf_cl", "adjunct_list_to_inf_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_bare_inf_cl", "adjunct_list_bare_inf_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_that_declarative_cl", "adjunct_list_that_declarative_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
@@ -397,7 +392,7 @@ let ParserRules = [
     {"name": "fin_vp_np_moved", "symbols": ["vbf_vbg_cl", "vbg_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["vbf_vbn_cl", "vbn_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_np", "adjunct_list_np_np_moved"], "postprocess": nt("fin_vp_np_moved")},
-    {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_np_adjp", "adjunct_list_np_adjp_np_moved"], "postprocess": nt("fin_vp_np_moved")},
+    {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_np_predcomp", "adjunct_list_np_predcomp_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_np_to_inf_cl", "adjunct_list_np_to_inf_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
@@ -406,7 +401,7 @@ let ParserRules = [
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_np_interrogative_cl", "adjunct_list_np_interrogative_cl_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "fin_vp_np_moved", "symbols": ["advp_vp?", "vbf_np_np", "adjunct_list_np_np_np_moved"], "postprocess": nt("fin_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb", "adjunct_list_np_moved"], "postprocess": nt("inf_vp_np_moved")},
-    {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_adjp", "adjunct_list_adjp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
+    {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_predcomp", "adjunct_list_predcomp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_to_inf_cl", "adjunct_list_to_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_bare_inf_cl", "adjunct_list_bare_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_that_declarative_cl", "adjunct_list_that_declarative_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
@@ -414,7 +409,7 @@ let ParserRules = [
     {"name": "inf_vp_np_moved", "symbols": ["vb_vbg_cl", "vbg_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["vb_vbn_cl", "vbn_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_np", "adjunct_list_np_np_moved"], "postprocess": nt("inf_vp_np_moved")},
-    {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_np_adjp", "adjunct_list_np_adjp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
+    {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_np_predcomp", "adjunct_list_np_predcomp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_np_to_inf_cl", "adjunct_list_np_to_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
@@ -423,7 +418,7 @@ let ParserRules = [
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_np_interrogative_cl", "adjunct_list_np_interrogative_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "inf_vp_np_moved", "symbols": ["advp_vp?", "vb_np_np", "adjunct_list_np_np_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg", "adjunct_list_np_moved"], "postprocess": nt("inf_vp_np_moved")},
-    {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_adjp", "adjunct_list_adjp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
+    {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_predcomp", "adjunct_list_predcomp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_to_inf_cl", "adjunct_list_to_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_bare_inf_cl", "adjunct_list_bare_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_that_declarative_cl", "adjunct_list_that_declarative_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
@@ -431,7 +426,7 @@ let ParserRules = [
     {"name": "vbg_vp_np_moved", "symbols": ["vbg_vbg_cl", "vbg_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["vbg_vbn_cl", "vbn_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_np", "adjunct_list_np_np_moved"], "postprocess": nt("inf_vp_np_moved")},
-    {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_np_adjp", "adjunct_list_np_adjp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
+    {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_np_predcomp", "adjunct_list_np_predcomp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_np_to_inf_cl", "adjunct_list_np_to_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
@@ -440,7 +435,7 @@ let ParserRules = [
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_np_interrogative_cl", "adjunct_list_np_interrogative_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbg_vp_np_moved", "symbols": ["advp_vp?", "vbg_np_np", "adjunct_list_np_np_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn", "adjunct_list_np_moved"], "postprocess": nt("inf_vp_np_moved")},
-    {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_adjp", "adjunct_list_adjp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
+    {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_predcomp", "adjunct_list_predcomp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_to_inf_cl", "adjunct_list_to_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_bare_inf_cl", "adjunct_list_bare_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_that_declarative_cl", "adjunct_list_that_declarative_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
@@ -448,7 +443,7 @@ let ParserRules = [
     {"name": "vbn_vp_np_moved", "symbols": ["vbn_vbg_cl", "vbg_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["vbn_vbn_cl", "vbn_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_np", "adjunct_list_np_np_moved"], "postprocess": nt("inf_vp_np_moved")},
-    {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_np_adjp", "adjunct_list_np_adjp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
+    {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_np_predcomp", "adjunct_list_np_predcomp_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_np_to_inf_cl", "adjunct_list_np_to_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_np_that_declarative_cl", "adjunct_list_np_bare_declarative_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
@@ -457,8 +452,8 @@ let ParserRules = [
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_np_interrogative_cl", "adjunct_list_np_interrogative_cl_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "vbn_vp_np_moved", "symbols": ["advp_vp?", "vbn_np_np", "adjunct_list_np_np_np_moved"], "postprocess": nt("inf_vp_np_moved")},
     {"name": "adjunct_list_adjp_moved", "symbols": ["adjunct_list"], "postprocess": nt("adjunct_list_adjp_moved")},
-    {"name": "adjunct_list_adjp_adjp_moved", "symbols": ["adjunct_list_adjp"], "postprocess": nt("adjunct_list_adjp_adjp_moved")},
-    {"name": "adjunct_list_adjp_adjp_moved", "symbols": ["adjunct_list"], "postprocess": nt("adjunct_list_adjp_adjp_moved")},
+    {"name": "adjunct_list_predcomp_adjp_moved", "symbols": ["predcomp_adjp_moved", "adjunct_list"], "postprocess": nt("adjunct_list_predcomp_adjp_moved")},
+    {"name": "adjunct_list_predcomp_adjp_moved", "symbols": ["adjunct_list"], "postprocess": nt("adjunct_list_predcomp_adjp_moved")},
     {"name": "adjunct_list_to_inf_cl_adjp_moved", "symbols": ["adjunct_list_to_inf_cl"], "postprocess": nt("adjunct_list_to_inf_cl_adjp_moved")},
     {"name": "adjunct_list_to_inf_cl_adjp_moved", "symbols": ["adjunct_list_to_inf_cl_adjp_moved_"], "postprocess": nt("adjunct_list_to_inf_cl_adjp_moved")},
     {"name": "adjunct_list_to_inf_cl_adjp_moved_", "symbols": ["adjunct", "adjunct_list_to_inf_cl_adjp_moved_"], "postprocess": nt("adjunct_list_to_inf_cl_adjp_moved_")},
@@ -477,8 +472,7 @@ let ParserRules = [
     {"name": "adjunct_list_exclamative_cl_adjp_moved", "symbols": ["adjunct_list_exclamative_cl"], "postprocess": nt("adjunct_list_exclamative_cl_adjp_moved")},
     {"name": "adjunct_list_interrogative_cl_adjp_moved", "symbols": ["adjunct_list_interrogative_cl"], "postprocess": nt("adjunct_list_interrogative_cl_adjp_moved")},
     {"name": "adjunct_list_np_adjp_moved", "symbols": ["adjunct_list_np"], "postprocess": nt("adjunct_list_np_adjp_moved")},
-    {"name": "adjunct_list_np_adjp_adjp_moved", "symbols": ["adjunct_list_np_adjp"], "postprocess": nt("adjunct_list_np_adjp_adjp_moved_")},
-    {"name": "adjunct_list_np_adjp_adjp_moved", "symbols": ["adjunct_list_np"], "postprocess": nt("adjunct_list_np_adjp_adjp_moved_")},
+    {"name": "adjunct_list_np_predcomp_adjp_moved", "symbols": ["np", "adjunct_list_predcomp_adjp_moved"], "postprocess": nt("adjunct_list_np_predcomp_adjp_moved")},
     {"name": "adjunct_list_np_to_inf_cl_adjp_moved", "symbols": ["adjunct_list_np_to_inf_cl"], "postprocess": nt("adjunct_list_np_to_inf_cl_adjp_moved")},
     {"name": "adjunct_list_np_to_inf_cl_adjp_moved", "symbols": ["adjunct_list_np_to_inf_cl_adjp_moved_"], "postprocess": nt("adjunct_list_np_to_inf_cl_adjp_moved")},
     {"name": "adjunct_list_np_to_inf_cl_adjp_moved_", "symbols": ["adjunct", "adjunct_list_np_to_inf_cl_adjp_moved_"], "postprocess": nt("adjunct_list_np_to_inf_cl_adjp_moved_")},
@@ -500,7 +494,7 @@ let ParserRules = [
     {"name": "adjunct_list_np_np_adjp_moved", "symbols": ["adjunct_list_np_np"], "postprocess": nt("adjunct_list_np_np_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "modal", "bare_inf_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf", "adjunct_list_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
-    {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_adjp", "adjunct_list_adjp_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
+    {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_predcomp", "adjunct_list_predcomp_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_to_inf_cl", "adjunct_list_to_inf_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_bare_inf_cl", "adjunct_list_bare_inf_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_that_declarative_cl", "adjunct_list_that_declarative_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
@@ -510,7 +504,7 @@ let ParserRules = [
     {"name": "fin_vp_adjp_moved", "symbols": ["vbf_vbg_cl", "vbg_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["vbf_vbn_cl", "vbn_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_np", "adjunct_list_np_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
-    {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_np_adjp", "adjunct_list_np_adjp_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
+    {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_np_predcomp", "adjunct_list_np_predcomp_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_np_to_inf_cl", "adjunct_list_np_to_inf_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
@@ -519,7 +513,7 @@ let ParserRules = [
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_np_interrogative_cl", "adjunct_list_np_interrogative_cl_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "fin_vp_adjp_moved", "symbols": ["advp_vp?", "vbf_np_np", "adjunct_list_np_np_adjp_moved"], "postprocess": nt("fin_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb", "adjunct_list_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
-    {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_adjp", "adjunct_list_adjp_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
+    {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_predcomp", "adjunct_list_predcomp_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_to_inf_cl", "adjunct_list_to_inf_cl_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_bare_inf_cl", "adjunct_list_bare_inf_cl_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_that_declarative_cl", "adjunct_list_that_declarative_cl_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
@@ -529,7 +523,7 @@ let ParserRules = [
     {"name": "inf_vp_adjp_moved", "symbols": ["vb_vbg_cl", "vbg_cl_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["vb_vbn_cl", "vbn_cl_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_np", "adjunct_list_np_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
-    {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_np_adjp", "adjunct_list_np_adjp_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
+    {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_np_predcomp", "adjunct_list_np_predcomp_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_np_to_inf_cl", "adjunct_list_np_to_inf_cl_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
@@ -538,7 +532,7 @@ let ParserRules = [
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_np_interrogative_cl", "adjunct_list_np_interrogative_cl_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "inf_vp_adjp_moved", "symbols": ["advp_vp?", "vb_np_np", "adjunct_list_np_np_adjp_moved"], "postprocess": nt("inf_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn", "adjunct_list_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
-    {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_adjp", "adjunct_list_adjp_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
+    {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_predcomp", "adjunct_list_predcomp_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_to_inf_cl", "adjunct_list_to_inf_cl_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_bare_inf_cl", "adjunct_list_bare_inf_cl_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_that_declarative_cl", "adjunct_list_that_declarative_cl_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
@@ -548,7 +542,7 @@ let ParserRules = [
     {"name": "vbn_vp_adjp_moved", "symbols": ["vbn_vbg_cl", "vbg_cl_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["vbn_vbn_cl", "vbn_cl_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_np", "adjunct_list_np_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
-    {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_np_adjp", "adjunct_list_np_adjp_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
+    {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_np_predcomp", "adjunct_list_np_predcomp_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_np_to_inf_cl", "adjunct_list_np_to_inf_cl_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
@@ -557,7 +551,7 @@ let ParserRules = [
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_np_interrogative_cl", "adjunct_list_np_interrogative_cl_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbn_vp_adjp_moved", "symbols": ["advp_vp?", "vbn_np_np", "adjunct_list_np_np_adjp_moved"], "postprocess": nt("vbn_vp_adjp_moved")},
     {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg", "adjunct_list_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
-    {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_adjp", "adjunct_list_adjp_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
+    {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_predcomp", "adjunct_list_predcomp_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
     {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_to_inf_cl", "adjunct_list_to_inf_cl_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
     {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_bare_inf_cl", "adjunct_list_bare_inf_cl_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
     {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_that_declarative_cl", "adjunct_list_that_declarative_cl_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
@@ -567,7 +561,7 @@ let ParserRules = [
     {"name": "vbg_vp_adjp_moved", "symbols": ["vbg_vbg_cl", "vbg_cl_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
     {"name": "vbg_vp_adjp_moved", "symbols": ["vbg_vbn_cl", "vbn_cl_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
     {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_np", "adjunct_list_np_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
-    {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_np_adjp", "adjunct_list_np_adjp_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
+    {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_np_predcomp", "adjunct_list_np_predcomp_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
     {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_np_to_inf_cl", "adjunct_list_np_to_inf_cl_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
     {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_np_bare_inf_cl", "adjunct_list_np_bare_inf_cl_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
     {"name": "vbg_vp_adjp_moved", "symbols": ["advp_vp?", "vbg_np_that_declarative_cl", "adjunct_list_np_that_declarative_cl_adjp_moved"], "postprocess": nt("vbg_vp_adjp_moved")},
@@ -595,15 +589,6 @@ let ParserRules = [
     {"name": "interrogative_cl", "symbols": ["ip_np", "fin_vp"], "postprocess": nt("interrogative_cl")},
     {"name": "interrogative_cl", "symbols": ["ip_np", "np", "fin_vp_np_moved"], "postprocess": nt("interrogative_cl")},
     {"name": "interrogative_cl", "symbols": ["ip_pp", "np", "fin_vp"], "postprocess": nt("interrogative_cl")},
-    {"name": "ip_np", "symbols": ["who"], "postprocess": nt("ip_np")},
-    {"name": "ip_np", "symbols": ["what"], "postprocess": nt("ip_np")},
-    {"name": "ip_np", "symbols": ["what", "whichable_np"], "postprocess": nt("ip_np")},
-    {"name": "ip_np", "symbols": ["which", "whichable_np"], "postprocess": nt("ip_np")},
-    {"name": "ip_np", "symbols": ["whose", "whichable_np"], "postprocess": nt("ip_np")},
-    {"name": "ip_pp", "symbols": ["where"], "postprocess": nt("ip_pp")},
-    {"name": "ip_pp", "symbols": ["when"], "postprocess": nt("ip_pp")},
-    {"name": "ip_pp", "symbols": ["why"], "postprocess": nt("ip_pp")},
-    {"name": "ip_pp", "symbols": ["preposition_np", "ip_np"], "postprocess": nt("ip_pp")},
     {"name": "ip_advp_vp", "symbols": ["how", "advp_vp"], "postprocess": nt("ip_advp_vp")},
     {"name": "ip_adjp", "symbols": ["how", "adjp"], "postprocess": nt("ip_adjp")},
     {"name": "bare_declarative_cl_np_moved", "symbols": ["fin_vp"], "postprocess": nt("bare_declarative_cl_np_moved")},
@@ -612,12 +597,18 @@ let ParserRules = [
     {"name": "bare_declarative_cl_adjp_moved", "symbols": ["np", "fin_vp_adjp_moved"], "postprocess": nt("bare_declarative_cl_adjp_moved")},
     {"name": "bare_declarative_cl_adjp_moved", "symbols": ["np", "fin_vp"], "postprocess": nt("bare_declarative_cl_adjp_moved")},
     {"name": "that_declarative_cl_adjp_moved", "symbols": ["that", "bare_declarative_cl_adjp_moved"], "postprocess": nt("that_declarative_cl_adjp_moved")},
+    {"name": "ip_np", "symbols": ["who"], "postprocess": nt("ip_np")},
+    {"name": "ip_np", "symbols": ["what"], "postprocess": nt("ip_np")},
+    {"name": "ip_np", "symbols": ["which"], "postprocess": nt("ip_np")},
+    {"name": "ip_np", "symbols": ["ip_det", "adjp_list", "noun", "n_modifier_list"], "postprocess": nt("ip_np")},
+    {"name": "ip_det", "symbols": ["which"], "postprocess": nt("ip_det")},
+    {"name": "ip_det", "symbols": ["whose"], "postprocess": nt("ip_det")},
     {"name": "np", "symbols": ["precorenp_modifier?", "core_np", "postcorenp_modifier?"], "postprocess": nt("np")},
     {"name": "precorenp_modifier?", "symbols": ["precorenp_modifier"], "postprocess": nt("precorenp_modifier?")},
     {"name": "precorenp_modifier?", "symbols": [], "postprocess": nt("precorenp_modifier?")},
     {"name": "postcorenp_modifier?", "symbols": ["postcorenp_modifier"], "postprocess": nt("postcorenp_modifier?")},
     {"name": "postcorenp_modifier?", "symbols": [], "postprocess": nt("postcorenp_modifier?")},
-    {"name": "whichable_np", "symbols": ["adjp_list", "noun", "n_modifier_list"]},
+    {"name": "whichable_np", "symbols": ["adjp_list", "noun", "n_modifier_list"], "postprocess": nt("whichable_np")},
     {"name": "core_np", "symbols": ["proper_noun"], "postprocess": nt("core_np")},
     {"name": "core_np", "symbols": ["pronoun"], "postprocess": nt("core_np")},
     {"name": "core_np", "symbols": ["independent_genitive_pronoun"], "postprocess": nt("core_np")},
@@ -632,10 +623,14 @@ let ParserRules = [
     {"name": "predeterminer_modifier?", "symbols": [], "postprocess": nt("predeterminer_modifier")},
     {"name": "predeterminer_modifier?", "symbols": ["quantificational_expression"], "postprocess": nt("predeterminer_modifier")},
     {"name": "predeterminer_modifier?", "symbols": ["precore_emphatic_expression"], "postprocess": nt("predeterminer_modifier")},
-    {"name": "restrictive_correlative", "symbols": ["that"], "postprocess": nt("restrictive_correlative")},
-    {"name": "restrictive_correlative", "symbols": ["which"], "postprocess": nt("restrictive_correlative")},
-    {"name": "restrictive_cl", "symbols": ["restrictive_correlative", "fin_vp"], "postprocess": nt("restrictive_cl")},
-    {"name": "restrictive_cl", "symbols": ["restrictive_correlative", "np", "fin_vp_np_moved"], "postprocess": nt("restrictive_cl")},
+    {"name": "relative_ip_np_subj", "symbols": ["who"], "postprocess": nt("relative_ip_np_subj")},
+    {"name": "relative_ip_np_subj", "symbols": ["which"], "postprocess": nt("relative_ip_np_subj")},
+    {"name": "relative_ip_np_subj", "symbols": ["that"], "postprocess": nt("relative_ip_np_subj")},
+    {"name": "relative_ip_np_obj", "symbols": [], "postprocess": nt("relative_ip_np_")},
+    {"name": "relative_ip_np_obj", "symbols": ["that"], "postprocess": nt("relative_ip_np_")},
+    {"name": "relative_ip_np_obj", "symbols": ["ip_np"], "postprocess": nt("relative_ip_np_")},
+    {"name": "restrictive_cl", "symbols": ["relative_ip_np_subj", "fin_vp"], "postprocess": nt("restrictive_cl")},
+    {"name": "restrictive_cl", "symbols": ["relative_ip_np_obj", "np", "fin_vp_np_moved"], "postprocess": nt("restrictive_cl")},
     {"name": "n_modifier", "symbols": ["restrictive_cl"], "postprocess": nt("n_modifier")},
     {"name": "n_modifier", "symbols": ["pp"], "postprocess": nt("n_modifier")},
     {"name": "n_modifier_list$ebnf$1", "symbols": []},
@@ -654,10 +649,19 @@ let ParserRules = [
     {"name": "adjunct", "symbols": ["pp"], "postprocess": nt("adjunct")},
     {"name": "adjunct", "symbols": ["advp_vp"], "postprocess": nt("adjunct")},
     {"name": "adjunct_np_moved", "symbols": ["pp_np_moved"], "postprocess": nt("adjunct")},
+    {"name": "ip_pp", "symbols": ["where"], "postprocess": nt("ip_pp")},
+    {"name": "ip_pp", "symbols": ["when"], "postprocess": nt("ip_pp")},
+    {"name": "ip_pp", "symbols": ["why"], "postprocess": nt("ip_pp")},
+    {"name": "ip_pp", "symbols": ["preposition_np", "ip_np"], "postprocess": nt("ip_pp")},
     {"name": "pp", "symbols": ["preposition"], "postprocess": nt("pp")},
     {"name": "pp", "symbols": ["preposition_np", "np"], "postprocess": nt("pp")},
+    {"name": "pp", "symbols": ["preposition_predcomp", "predcomp"], "postprocess": nt("pp")},
+    {"name": "pp", "symbols": ["preposition_advp", "advp"], "postprocess": nt("pp")},
     {"name": "pp", "symbols": ["preposition_bare_declarative_cl", "bare_declarative_cl"], "postprocess": nt("pp")},
     {"name": "pp_np_moved", "symbols": ["preposition_np"], "postprocess": nt("pp_np_moved")},
+    {"name": "predcomp", "symbols": ["adjp"], "postprocess": nt("predcomp")},
+    {"name": "predcomp_np_moved", "symbols": ["adjp_np_moved"], "postprocess": nt("predcomp_np_moved")},
+    {"name": "predcomp_adjp_moved", "symbols": [], "postprocess": nt("predcomp_adjp_moved")},
     {"name": "adjp", "symbols": ["advp", "adjp"], "postprocess": nt("adjp")},
     {"name": "adjp", "symbols": ["adj"], "postprocess": nt("adjp")},
     {"name": "adjp", "symbols": ["adj_pp", "pp"], "postprocess": nt("adjp")},
@@ -706,7 +710,7 @@ let ParserRules = [
     {"name": "fraction_denominator", "symbols": [fraction_denominator], "postprocess": t("fraction_denominator")},
     {"name": "modal", "symbols": [modal], "postprocess": t("modal")},
     {"name": "vb", "symbols": [vb], "postprocess": t("vb")},
-    {"name": "vb_adjp", "symbols": [vb_adjp], "postprocess": t("vb_adjp")},
+    {"name": "vb_predcomp", "symbols": [vb_predcomp], "postprocess": t("vb_predcomp")},
     {"name": "vb_to_inf_cl", "symbols": [vb_to_inf_cl], "postprocess": t("vb_to_inf_cl")},
     {"name": "vb_bare_inf_cl", "symbols": [vb_bare_inf_cl], "postprocess": t("vb_bare_inf_cl")},
     {"name": "vb_that_declarative_cl", "symbols": [vb_that_declarative_cl], "postprocess": t("vb_that_declarative_cl")},
@@ -716,7 +720,7 @@ let ParserRules = [
     {"name": "vb_vbg_cl", "symbols": [vb_vbg_cl], "postprocess": t("vb_vbg_cl")},
     {"name": "vb_vbn_cl", "symbols": [vb_vbn_cl], "postprocess": t("vb_vbn_cl")},
     {"name": "vb_np", "symbols": [vb_np], "postprocess": t("vb_np")},
-    {"name": "vb_np_adjp", "symbols": [vb_np_adjp], "postprocess": t("vb_np_adjp")},
+    {"name": "vb_np_predcomp", "symbols": [vb_np_predcomp], "postprocess": t("vb_np_predcomp")},
     {"name": "vb_np_to_inf_cl", "symbols": [vb_np_to_inf_cl], "postprocess": t("vb_np_to_inf_cl")},
     {"name": "vb_np_bare_inf_cl", "symbols": [vb_np_bare_inf_cl], "postprocess": t("vb_np_bare_inf_cl")},
     {"name": "vb_np_that_declarative_cl", "symbols": [vb_np_that_declarative_cl], "postprocess": t("vb_np_that_declarative_cl")},
@@ -725,7 +729,7 @@ let ParserRules = [
     {"name": "vb_np_interrogative_cl", "symbols": [vb_np_interrogative_cl], "postprocess": t("vb_np_interrogative_cl")},
     {"name": "vb_np_np", "symbols": [vb_np_np], "postprocess": t("vb_np_np")},
     {"name": "vbg", "symbols": [vbg], "postprocess": t("vbg")},
-    {"name": "vbg_adjp", "symbols": [vbg_adjp], "postprocess": t("vbg_adjp")},
+    {"name": "vbg_predcomp", "symbols": [vbg_predcomp], "postprocess": t("vbg_predcomp")},
     {"name": "vbg_to_inf_cl", "symbols": [vbg_to_inf_cl], "postprocess": t("vbg_to_inf_cl")},
     {"name": "vbg_bare_inf_cl", "symbols": [vbg_bare_inf_cl], "postprocess": t("vbg_bare_inf_cl")},
     {"name": "vbg_that_declarative_cl", "symbols": [vbg_that_declarative_cl], "postprocess": t("vbg_that_declarative_cl")},
@@ -735,7 +739,7 @@ let ParserRules = [
     {"name": "vbg_vbg_cl", "symbols": [vbg_vbg_cl], "postprocess": t("vbg_vbg_cl")},
     {"name": "vbg_vbn_cl", "symbols": [vbg_vbn_cl], "postprocess": t("vbg_vbn_cl")},
     {"name": "vbg_np", "symbols": [vbg_np], "postprocess": t("vbg_np")},
-    {"name": "vbg_np_adjp", "symbols": [vbg_np_adjp], "postprocess": t("vbg_np_adjp")},
+    {"name": "vbg_np_predcomp", "symbols": [vbg_np_predcomp], "postprocess": t("vbg_np_predcomp")},
     {"name": "vbg_np_to_inf_cl", "symbols": [vbg_np_to_inf_cl], "postprocess": t("vbg_np_to_inf_cl")},
     {"name": "vbg_np_bare_inf_cl", "symbols": [vbg_np_bare_inf_cl], "postprocess": t("vbg_np_bare_inf_cl")},
     {"name": "vbg_np_that_declarative_cl", "symbols": [vbg_np_that_declarative_cl], "postprocess": t("vbg_np_that_declarative_cl")},
@@ -744,7 +748,7 @@ let ParserRules = [
     {"name": "vbg_np_interrogative_cl", "symbols": [vbg_np_interrogative_cl], "postprocess": t("vbg_np_interrogative_cl")},
     {"name": "vbg_np_np", "symbols": [vbg_np_np], "postprocess": t("vbg_np_np")},
     {"name": "vbn", "symbols": [vbn], "postprocess": t("vbn")},
-    {"name": "vbn_adjp", "symbols": [vbn_adjp], "postprocess": t("vbn_adjp")},
+    {"name": "vbn_predcomp", "symbols": [vbn_predcomp], "postprocess": t("vbn_predcomp")},
     {"name": "vbn_to_inf_cl", "symbols": [vbn_to_inf_cl], "postprocess": t("vbn_to_inf_cl")},
     {"name": "vbn_bare_inf_cl", "symbols": [vbn_bare_inf_cl], "postprocess": t("vbn_bare_inf_cl")},
     {"name": "vbn_that_declarative_cl", "symbols": [vbn_that_declarative_cl], "postprocess": t("vbn_that_declarative_cl")},
@@ -754,7 +758,7 @@ let ParserRules = [
     {"name": "vbn_vbg_cl", "symbols": [vbn_vbg_cl], "postprocess": t("vbn_vbg_cl")},
     {"name": "vbn_vbn_cl", "symbols": [vbn_vbn_cl], "postprocess": t("vbn_vbn_cl")},
     {"name": "vbn_np", "symbols": [vbn_np], "postprocess": t("vbn_np")},
-    {"name": "vbn_np_adjp", "symbols": [vbn_np_adjp], "postprocess": t("vbn_np_adjp")},
+    {"name": "vbn_np_predcomp", "symbols": [vbn_np_predcomp], "postprocess": t("vbn_np_predcomp")},
     {"name": "vbn_np_to_inf_cl", "symbols": [vbn_np_to_inf_cl], "postprocess": t("vbn_np_to_inf_cl")},
     {"name": "vbn_np_bare_inf_cl", "symbols": [vbn_np_bare_inf_cl], "postprocess": t("vbn_np_bare_inf_cl")},
     {"name": "vbn_np_that_declarative_cl", "symbols": [vbn_np_that_declarative_cl], "postprocess": t("vbn_np_that_declarative_cl")},
@@ -763,7 +767,7 @@ let ParserRules = [
     {"name": "vbn_np_interrogative_cl", "symbols": [vbn_np_interrogative_cl], "postprocess": t("vbn_np_interrogative_cl")},
     {"name": "vbn_np_np", "symbols": [vbn_np_np], "postprocess": t("vbn_np_np")},
     {"name": "vbf", "symbols": [vbf], "postprocess": t("vbf")},
-    {"name": "vbf_adjp", "symbols": [vbf_adjp], "postprocess": t("vbf_adjp")},
+    {"name": "vbf_predcomp", "symbols": [vbf_predcomp], "postprocess": t("vbf_predcomp")},
     {"name": "vbf_to_inf_cl", "symbols": [vbf_to_inf_cl], "postprocess": t("vbf_to_inf_cl")},
     {"name": "vbf_bare_inf_cl", "symbols": [vbf_bare_inf_cl], "postprocess": t("vbf_bare_inf_cl")},
     {"name": "vbf_that_declarative_cl", "symbols": [vbf_that_declarative_cl], "postprocess": t("vbf_that_declarative_cl")},
@@ -773,7 +777,7 @@ let ParserRules = [
     {"name": "vbf_vbg_cl", "symbols": [vbf_vbg_cl], "postprocess": t("vbf_vbg_cl")},
     {"name": "vbf_vbn_cl", "symbols": [vbf_vbn_cl], "postprocess": t("vbf_vbn_cl")},
     {"name": "vbf_np", "symbols": [vbf_np], "postprocess": t("vbf_np")},
-    {"name": "vbf_np_adjp", "symbols": [vbf_np_adjp], "postprocess": t("vbf_np_adjp")},
+    {"name": "vbf_np_predcomp", "symbols": [vbf_np_predcomp], "postprocess": t("vbf_np_predcomp")},
     {"name": "vbf_np_to_inf_cl", "symbols": [vbf_np_to_inf_cl], "postprocess": t("vbf_np_to_inf_cl")},
     {"name": "vbf_np_bare_inf_cl", "symbols": [vbf_np_bare_inf_cl], "postprocess": t("vbf_np_bare_inf_cl")},
     {"name": "vbf_np_that_declarative_cl", "symbols": [vbf_np_that_declarative_cl], "postprocess": t("vbf_np_that_declarative_cl")},
