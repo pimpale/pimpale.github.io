@@ -478,10 +478,8 @@ adjunct_list_bare_declarative_cl_np_moved ->
 
 # allowables: exactly 1 np and 1 adjunct_np_moved, or all normal adjuncts
 adjunct_list_np_np_moved ->
-      adjunct           adjunct_list_np_np_moved               {%nt("adjunct_list_np_np_moved")%}
-    | adjunct_np_moved  adjunct_list_np                        {%nt("adjunct_list_np_np_moved")%}
-    | np                adjunct_list_np_moved                  {%nt("adjunct_list_np_np_moved")%}
-    | null                                                     {%nt("adjunct_list_np_np_moved")%}
+      np                adjunct_list_np_moved                  {%nt("adjunct_list_np_np_moved")%}
+    | adjunct_list                                             {%nt("adjunct_list_np_np_moved")%}
 
 # should allow exactly 1 element where the np is moved
 adjunct_list_np_predcomp_np_moved -> 
