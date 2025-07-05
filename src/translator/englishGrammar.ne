@@ -11,7 +11,7 @@ function isAnyOfPoS(pos_arr) {
   return {test: word => pos_arr.some(pos => (english[word]??[]).includes(pos))}
 }
 
-function isAllPoS(pos_arr) {
+function isAllOfPoS(pos_arr) {
   return {test: word => pos_arr.every(pos => (english[word]??[]).includes(pos))}
 }
 
@@ -145,12 +145,12 @@ const vbf_np_interrogative_cl = isAnyOfPoS(["vbd_np_interrogative_cl","vbp_np_in
 const vbf_np_np = isAnyOfPoS(["vbd_np_np","vbp_np_np","vbz_np_np"]);
 
 // certain core auxiliaries
-const aux_vbf_predcomp = isAllPoS(["vbf_predcomp", "aux"]);
-const aux_vbf_np = isAllPoS(["vbf_np", "aux"]);
-const aux_vbf_vbg_cl = isAllPoS(["vbf_vbg_cl", "aux"]);
-const aux_vbf_vbn_cl = isAllPoS(["vbf_vbn_cl", "aux"]);
-const aux_vbf_passive_cl = isAllPoS(["vbf_passive_cl", "aux"]);
-const aux_vbf_bare_inf_cl = isAllPoS(["vbf_bare_inf_cl", "aux"]);
+const aux_vbf_predcomp = isAllOfPoS(["vbf_predcomp", "aux"]);
+const aux_vbf_np = isAllOfPoS(["vbf_np", "aux"]);
+const aux_vbf_vbg_cl = isAllOfPoS(["vbf_vbg_cl", "aux"]);
+const aux_vbf_vbn_cl = isAllOfPoS(["vbf_vbn_cl", "aux"]);
+const aux_vbf_passive_cl = isAllOfPoS(["vbf_passive_cl", "aux"]);
+const aux_vbf_bare_inf_cl = isAllOfPoS(["vbf_bare_inf_cl", "aux"]);
 
 // certain nouns with special treatment
 const times = isPoS("times");
@@ -250,14 +250,14 @@ subj_aux_inv_cl_np_moved ->
     | aux_vbf_bare_inf_cl   np adjunct_list_bare_inf_cl_np_moved         {%nt("subj_aux_inv_cl_np_moved")%} # what [didn't you eat]?
 
 subj_aux_inv_cl_adjp_moved ->
-      modal         np adjunct_list_bare_inf_cl_adjp_moved      {%nt("subj_aux_inv_cl_adjp_moved")%} # how [can you seem]?
+      modal         np adjunct_list_bare_inf_cl_adjp_moved               {%nt("subj_aux_inv_cl_adjp_moved")%} # how [can you seem]?
 # finite (move from argument)
-    | aux_vbf_predcomp      np adjunct_list_predcomp_adjp_moved          {%nt("subj_aux_inv_cl_np_moved")%} # how [were you]? (`be` when used as a copula)
-    | aux_vbf_np            np adjunct_list_np_adjp_moved                {%nt("subj_aux_inv_cl_np_moved")%} # how [were you]? (`be` when used as an equative)
-    | aux_vbf_vbg_cl        np vbg_cl_adjp_moved                         {%nt("subj_aux_inv_cl_np_moved")%} # how [were you seeming]?
-    | aux_vbf_vbn_cl        np vbn_cl_adjp_moved                         {%nt("subj_aux_inv_cl_np_moved")%} # how [had you seemed]?
-    | aux_vbf_passive_cl    np passive_cl_adjp_moved                     {%nt("subj_aux_inv_cl_np_moved")%} # how [were you made]?
-    | aux_vbf_bare_inf_cl   np adjunct_list_bare_inf_cl_adjp_moved       {%nt("subj_aux_inv_cl_np_moved")%} # how [didn't you seem]?
+    | aux_vbf_predcomp      np adjunct_list_predcomp_adjp_moved          {%nt("subj_aux_inv_cl_adjp_moved")%} # how [were you]? (`be` when used as a copula)
+    | aux_vbf_np            np adjunct_list_np_adjp_moved                {%nt("subj_aux_inv_cl_adjp_moved")%} # how [were you]? (`be` when used as an equative)
+    | aux_vbf_vbg_cl        np vbg_cl_adjp_moved                         {%nt("subj_aux_inv_cl_adjp_moved")%} # how [were you seeming]?
+    | aux_vbf_vbn_cl        np vbn_cl_adjp_moved                         {%nt("subj_aux_inv_cl_adjp_moved")%} # how [had you seemed]?
+    | aux_vbf_passive_cl    np passive_cl_adjp_moved                     {%nt("subj_aux_inv_cl_adjp_moved")%} # how [were you made]?
+    | aux_vbf_bare_inf_cl   np adjunct_list_bare_inf_cl_adjp_moved       {%nt("subj_aux_inv_cl_adjp_moved")%} # how [didn't you seem]?
 
 
 # following constituents are flat grammars that permit core arguments + some adjuncts in any order
@@ -860,6 +860,8 @@ interrogative_cl ->
     | ip_pp                      np fin_vp                     {%nt("interrogative_cl")%} # open interrogative clause with move from the adjuncts using pied piping (ex: "to where I go")
 
 ip_advp_vp -> how advp_vp {%nt("ip_advp_vp")%}
+            | how         {%nt("ip_advp_vp")%}
+
 ip_adjp ->  how adjp      {%nt("ip_adjp")%}
 
 # a content clause with some np moved
