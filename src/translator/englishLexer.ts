@@ -3,14 +3,10 @@ import english from './english.json';
 function expandContractions(word: string): string[] {
     if (word.slice(-2) === "'s") {
         return [word.slice(0, -2), "s"];
-    } else if (word === "won't") {
-        return ["will", "not"];
-    } else if (word.slice(-3) === "n't") {
-        return [word.slice(0, -3), "not"];
     } else if (word.slice(-3) === "'re") {
         return [word.slice(0, -3), "are"];
     } else if (word === "I'm") {
-        return ["I", "am"];
+        return ["I", "are"];
     } else if (word.slice(-3) === "'ll") {
         return [word.slice(0, -3), "will"];
     } else {
