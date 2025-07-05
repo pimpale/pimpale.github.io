@@ -643,7 +643,6 @@ adjunct_list_adjp_moved -> adjunct_list {%nt("adjunct_list_adjp_moved")%}
 
 adjunct_list_predcomp_adjp_moved ->
       predcomp_adjp_moved adjunct_list    {%nt("adjunct_list_predcomp_adjp_moved")%}
-    | adjunct_list       {%nt("adjunct_list_predcomp_adjp_moved")%}
 
 adjunct_list_to_inf_cl_adjp_moved ->
       adjunct_list_to_inf_cl                                {%nt("adjunct_list_to_inf_cl_adjp_moved")%}
@@ -861,8 +860,8 @@ interrogative_cl ->
 
 ip_advp_vp -> how advp_vp {%nt("ip_advp_vp")%}
             | how         {%nt("ip_advp_vp")%}
-
-ip_adjp ->  how adjp      {%nt("ip_adjp")%}
+ip_adjp ->  how adjp      {%nt("ip_advp_vp")%}
+            | how         {%nt("ip_advp_vp")%}
 
 # a content clause with some np moved
 bare_declarative_cl_np_moved ->
