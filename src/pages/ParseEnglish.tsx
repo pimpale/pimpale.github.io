@@ -5,6 +5,9 @@ import nearley from 'nearley';
 import englishGrammar from '../translator/englishGrammar';
 import { lex } from '../translator/englishLexer';
 import katex from 'katex';
+import DragAndDropCard from '../components/DragAndDropCard';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 type TreeNode = {
     kind: string,
@@ -34,25 +37,30 @@ function parseEnglish(input: string): TreeNode[] {
     }
 }
 
+// Insert the initial example sentences as a constant that can be reused for resetting.
+const INITIAL_EXAMPLE_SENTENCES = [
+    "Who are you?",
+    "I know that you like cheese.",
+    "She walked to the store.",
+    "The box that is on the table is my favorite.",
+    "John and Mary went to the park yesterday.",
+    "The book that I read was very interesting.",
+    "Running through the forest, he felt free.",
+    "The teacher explained the concept clearly to the students.",
+    "After the rain stopped, the sun came out.",
+    "The old house on the hill looked mysterious.",
+    "They were playing tennis when it started to rain.",
+    "She hasn't yet contacted the people whose house she wants to rent.",
+    "The horse raced past the barn fell.",
+];
+
 function ParseEnglishWidget() {
     let [input, setInput] = React.useState("");
     let [output, setOutput] = React.useState<TreeNode[]>([]);
+    const [showNulls, setShowNulls] = React.useState(false);
 
-    const exampleSentences = [
-        "Who are you?",
-        "I know that you like cheese.",
-        "She walked to the store.",
-        "The box that is on the table is my favorite.",
-        "John and Mary went to the park yesterday.",
-        "The book that I read was very interesting.",
-        "Running through the forest, he felt free.",
-        "The teacher explained the concept clearly to the students.",
-        "After the rain stopped, the sun came out.",
-        "The old house on the hill looked mysterious.",
-        "They were playing tennis when it started to rain.",
-        "She hasn't yet contacted the people whose house she wants to rent.",
-        "The horse raced past the barn fell.",
-    ];
+    // Manage example sentences in state so users can mutate the list.
+    const [exampleSentences, setExampleSentences] = React.useState<string[]>(INITIAL_EXAMPLE_SENTENCES);
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.ctrlKey && e.key === 'Enter') {
@@ -65,20 +73,64 @@ function ParseEnglishWidget() {
         setOutput(parseEnglish(sentence));
     };
 
+    // Add the current input as an example sentence (if non-empty & unique)
+    const handleAddExample = () => {
+        const trimmed = input.trim();
+        if (trimmed !== "" && !exampleSentences.includes(trimmed)) {
+            setExampleSentences([...exampleSentences, trimmed]);
+        }
+    };
+
+    // Move card in list when dragged
+    const moveCard = React.useCallback((dragIndex: number, hoverIndex: number) => {
+        setExampleSentences(prevCards => {
+            const newCards = [...prevCards];
+            const [removed] = newCards.splice(dragIndex, 1);
+            newCards.splice(hoverIndex, 0, removed);
+            return newCards;
+        });
+    }, []);
+
+    // Delete the current input sentence from the examples list (if present)
+    const handleDeleteCurrentExample = () => {
+        const trimmed = input.trim();
+        if (trimmed !== "" && exampleSentences.includes(trimmed)) {
+            setExampleSentences(exampleSentences.filter(s => s !== trimmed));
+        }
+    };
+
+    // Reset the examples back to the original list
+    const handleResetExamples = () => {
+        setExampleSentences(INITIAL_EXAMPLE_SENTENCES);
+    };
+
+    // Determine whether the current list differs from the initial list
+    const isModified = exampleSentences.length !== INITIAL_EXAMPLE_SENTENCES.length || exampleSentences.some((s, i) => s !== INITIAL_EXAMPLE_SENTENCES[i]);
+
+    // Determine if we can delete the current sentence
+    const canDeleteCurrent = input.trim() !== "" && exampleSentences.includes(input.trim());
+
     return <div className="row">
         <div className="col-md-3">
-            <h5 className="mb-3">Example Sentences</h5>
-            <div style={{ maxHeight: "600px", overflowY: "auto" }}>
+            <h5 className="mb-3 d-flex justify-content-between align-items-center">
+                <span>Example Sentences</span>
+                {isModified && <button className="btn btn-sm btn-secondary" onClick={handleResetExamples}>Reset</button>}
+            </h5>
+            <div style={{  overflowY: "auto" }}>
                 <div className="list-group">
-                    {exampleSentences.map((sentence, index) => (
-                        <button
-                            key={index}
-                            className={`list-group-item list-group-item-action text-start ${sentence === input ? 'active' : ''}`}
-                            onClick={() => handleExampleClick(sentence)}
-                        >
-                            {sentence}
-                        </button>
-                    ))}
+                    <DndProvider backend={HTML5Backend}>
+                        {exampleSentences.map((sentence, index) => (
+                            <DragAndDropCard
+                                key={sentence}
+                                id={sentence}
+                                index={index}
+                                text={sentence}
+                                moveCard={moveCard}
+                                onClick={() => handleExampleClick(sentence)}
+                                isActive={sentence === input}
+                            />
+                        ))}
+                    </DndProvider>
                 </div>
             </div>
         </div>
@@ -90,12 +142,48 @@ function ParseEnglishWidget() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
             />
-            <button 
-                className="mt-2 btn btn-primary" 
-                onClick={() => setOutput(parseEnglish(input))}
-            >
-                Parse
-            </button>
+            <div className="mt-2 d-flex align-items-start">
+                <div>
+                    <button
+                        className="btn btn-primary me-2"
+                        onClick={() => setOutput(parseEnglish(input))}
+                    >
+                        Parse
+                    </button>
+                    {(() => {
+                        const trimmedInput = input.trim();
+                        if (trimmedInput !== "" && !exampleSentences.includes(trimmedInput)) {
+                            return <button
+                                className="btn btn-secondary"
+                                onClick={handleAddExample}
+                            >
+                                Add to Examples
+                            </button>;
+                        }
+                        return null;
+                    })()}
+                </div>
+                {canDeleteCurrent && (
+                    <button
+                        className="btn btn-danger ms-auto"
+                        onClick={handleDeleteCurrentExample}
+                    >
+                        Delete Example
+                    </button>
+                )}
+            </div>
+            <div className="form-check mt-2">
+                <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="showNullsCheckbox"
+                    checked={showNulls}
+                    onChange={() => setShowNulls(prev => !prev)}
+                />
+                <label className="form-check-label" htmlFor="showNullsCheckbox">
+                    Show Nulls
+                </label>
+            </div>
             {output.length === 0 ? (
                 <div className="alert alert-danger mt-3">
                     No valid parse trees found for this sentence.
@@ -112,7 +200,7 @@ function ParseEnglishWidget() {
                             {output.length > 1 && (
                                 <h3 className="mb-2">Parse {i + 1}</h3>
                             )}
-                            <SyntaxTree tree={tree} />
+                            <SyntaxTree showNulls={showNulls} tree={tree} />
                         </div>
                     )}
                 </>
@@ -131,17 +219,23 @@ type AugmentedTreeNode = {
 };
 
 // eliminate branches which have no children 
-function pruneTree(node: TreeNode): TreeNode | null {
+function pruneTree(node: TreeNode, showNulls: boolean): TreeNode | null {
     if (typeof node.children === "string") {
         return node;
     }
 
     if (node.children == null) {
+        if (showNulls) {
+            return {kind: node.kind, children: "<null>"};
+        }
         return null;
     }
 
-    let children = node.children.map(pruneTree).filter((child): child is TreeNode => child !== null);
+    let children = node.children.map(child => pruneTree(child, showNulls)).filter((child): child is TreeNode => child !== null);
     if (children.length === 0) {
+        if (showNulls) {
+            return {kind: node.kind, children: "<empty list>"};
+        }
         return null;
     }
     return { kind: node.kind, children };
@@ -217,8 +311,8 @@ function SyntaxTreeSvg(props: SyntaxTreeSvgProps) {
 }
 
 
-function SyntaxTree({ tree }: { tree: TreeNode }) {
-    let prunedTree = pruneTree(tree);
+function SyntaxTree({ showNulls, tree }: { showNulls: boolean, tree: TreeNode }) {
+    let prunedTree = pruneTree(tree, showNulls);
     if (prunedTree === null) {
         return <div>Empty tree</div>;
     }
@@ -240,6 +334,40 @@ const ParseEnglishPage = () => <ArticleLayout>{
             <h1>Parse English</h1>
             <p>Parse English is a tool that can parse English sentences into a structured format. It is built using the <a href="https://nearley.js.org/">Nearley</a> parsing toolkit.</p>
             <p>It is currently a work in progress, but you can try it out by entering a sentence below, and pressing <kbd>Ctrl+Enter</kbd> or clicking the Parse button. Make sure to insert correct punctuation.</p>
+
+            {/* Capabilities & caveats */}
+            <div className="mb-4">
+                <h4>Things it can do</h4>
+                <ul>
+                    <li>Statements (declarative sentences)</li>
+                    <li>Questions (interrogative sentences) – including complex moves</li>
+                    <li>Most common nouns and some verbs (see dictionary section below for details)</li>
+                    <li>Numbers</li>
+                    <li>Most irregular verbs</li>
+                </ul>
+
+                <h4>Things it <strong>cannot</strong> do <small className="text-muted">(but could in the future, with improvements)</small></h4>
+                <ul>
+                    <li>Imperatives</li>
+                    <li>Unknown words (all unknown words are treated as proper nouns for now)</li>
+                    <li>Fused head constructions (e.g., "the poor" treated as a noun phrase)</li>
+                    <li>Phrasal verbs (e.g., "He chatted her up")</li>
+                    <li>Passive phrases in questions or interrogative clauses (e.g., "What was he given?")</li>
+                    <li>Coordinations ("and", "or", and "but")</li>
+                    <li>Quotatives (e.g., <q>And I was like "no way!"</q>)</li>
+                </ul>
+
+                <h4>Things it probably <strong>will never</strong> do <small className="text-muted">(but could be checked in post-processing)</small></h4>
+                <ul>
+                    <li>Subject–verb agreement (e.g., rejecting <em>"I is smart."</em>)</li>
+                    <li>Polarity (e.g., rejecting <em>"I am happy whatsoever"</em>)</li>
+                    <li>Preposition agreement</li>
+                    <li>Idioms that aren't grammatical</li>
+                    <li>Sentence fragments</li>
+
+                </ul>
+            </div>
+
             <ParseEnglishWidget />
         </>
     }
