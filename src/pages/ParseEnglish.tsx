@@ -8,6 +8,7 @@ import katex from 'katex';
 import DragAndDropCard from '../components/DragAndDropCard';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import englishJsonUrl from '../translator/english.json?url';
 
 type TreeNode = {
     kind: string,
@@ -116,7 +117,7 @@ function ParseEnglishWidget() {
                 <span>Example Sentences</span>
                 {isModified && <button className="btn btn-sm btn-secondary" onClick={handleResetExamples}>Reset</button>}
             </h5>
-            <div style={{  overflowY: "auto" }}>
+            <div style={{ overflowY: "auto" }}>
                 <div className="list-group">
                     <DndProvider backend={HTML5Backend}>
                         {exampleSentences.map((sentence, index) => (
@@ -226,7 +227,7 @@ function pruneTree(node: TreeNode, showNulls: boolean): TreeNode | null {
 
     if (node.children == null) {
         if (showNulls) {
-            return {kind: node.kind, children: "<null>"};
+            return { kind: node.kind, children: "<null>" };
         }
         return null;
     }
@@ -234,7 +235,7 @@ function pruneTree(node: TreeNode, showNulls: boolean): TreeNode | null {
     let children = node.children.map(child => pruneTree(child, showNulls)).filter((child): child is TreeNode => child !== null);
     if (children.length === 0) {
         if (showNulls) {
-            return {kind: node.kind, children: "<empty list>"};
+            return { kind: node.kind, children: "<empty list>" };
         }
         return null;
     }
@@ -369,6 +370,23 @@ const ParseEnglishPage = () => <ArticleLayout>{
             </div>
 
             <ParseEnglishWidget />
+            <div className="mt-5">
+                <h4>Dictionary</h4>
+                <p>
+                    The parser uses a simple dictionary of lexical categories partially sourced from VerbNet. The other ones (all the nouns and adjectives) are manually added by me. You can view the raw file <a href={englishJsonUrl} target="_blank" rel="noopener noreferrer">here</a>.
+                </p>
+            </div>
+            <div className="mt-5">
+                <h4>Credits</h4>
+                <ul>
+                    <li>
+                        This project leverages lexical data and verb classifications from <a href="https://verbs.colorado.edu/verbnet/" target="_blank" rel="noopener noreferrer">VerbNet</a>.
+                    </li>
+                    <li>
+                        All grammatical rules are from <a href="https://archive.org/details/a-students-introduction-to-english-grammar" target="_blank" rel="noopener noreferrer"><em>A Student's Introduction to English Grammar</em></a> by Huddleston, Pullum et al.
+                    </li>
+                </ul>
+            </div>
         </>
     }
 }</ArticleLayout>
