@@ -1,4 +1,6 @@
-S0 = """@preprocessor module
+output = ""
+
+output += """@preprocessor module
 
 @{%
 import english from './english.json';
@@ -256,7 +258,7 @@ subj_aux_inv_cl_adjp_moved ->
     | aux_vbf_bare_inf_cl   np adjunct_list_bare_inf_cl_adjp_moved       {%nt("subj_aux_inv_cl_adjp_moved")%} # how [didn't you seem]?
 """
 
-S1 = """
+output += """
 # following constituents are flat grammars that permit core arguments + some adjuncts in any order
 adjunct_list -> adjunct:* {%nonterminal_unpack("adjunct_list")%}
 
@@ -348,7 +350,6 @@ adjunct_list_np_np ->
 def vp_grammar(vp_type: str):
     return f"""
 {vp_type}_vp -> 
-# complete finite verb phrase
       advp_vp? {vp_type}                        adjunct_list                          {{%nt("fin_vp")%}} # intransitive verb (ex: "I smoked")
     | advp_vp? {vp_type}_predcomp               adjunct_list_predcomp                 {{%nt("fin_vp")%}} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
     | advp_vp? {vp_type}_to_inf_cl              adjunct_list_to_inf_cl                {{%nt("fin_vp")%}} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
@@ -371,36 +372,13 @@ def vp_grammar(vp_type: str):
     | advp_vp? {vp_type}_np_np                  adjunct_list_np_np                    {{%nt("fin_vp")%}} # ditransitive verb (ex: "I gave you food")
 """
 
-def vp_grammar_np_moved(vp_type: str):
-       return f"""
-# a declarative clause but one of the noun phrases has been moved out of it
-# this happens when a declarative clause is inside an interrogative clause
-# this happens in sentences like "i know that you think that he eats the apple" -> "i know what you think that he eats"
-# finite verb phrase with a noun phrase moved
-{vp_type}_vp_np_moved ->
-# complete finite verb phrase
-      advp_vp? {vp_type}                        adjunct_list_np_moved                                  {{%nt("fin_vp_np_moved")%}} # I know who you [eat with]
-    | advp_vp? {vp_type}_predcomp               adjunct_list_predcomp_np_moved                         {{%nt("fin_vp_np_moved")%}} # I know what you [seemed good at]
-    | advp_vp? {vp_type}_to_inf_cl              adjunct_list_to_inf_cl_np_moved                        {{%nt("fin_vp_np_moved")%}} # I know what you [asked to bring]
-    | advp_vp? {vp_type}_bare_inf_cl            adjunct_list_bare_inf_cl_np_moved                      {{%nt("fin_vp_np_moved")%}} # I know what you [helped bring]
-    | advp_vp? {vp_type}_that_declarative_cl    adjunct_list_that_declarative_cl_np_moved              {{%nt("fin_vp_np_moved")%}} # I know what you [said that you bring]
-    | advp_vp? {vp_type}_bare_declarative_cl    adjunct_list_bare_declarative_cl_np_moved              {{%nt("fin_vp_np_moved")%}} # I know what you [said you bring]
+output += vp_grammar("vbf")
+output += vp_grammar("inf")
+output += vp_grammar("vbg")
+output += vp_grammar("vbn")
 
-# cant move out of interrogative or exclamative clauses
-    | advp_vp? {vp_type}_vbg_cl                 vbg_cl_np_moved                                           {{%nt("fin_vp_np_moved")%}} # I know what you [were bringing]
-    | advp_vp? {vp_type}_vbn_cl                 vbn_cl_np_moved                                           {{%nt("fin_vp_np_moved")%}} # I know what you [had brought] OR I know what you [were brought]
-    | advp_vp? {vp_type}_passive_cl             passive_cl_np_moved                                       {{%nt("fin_vp_np_moved")%}} # I know what you [had brought] OR I know what you [were brought]
-    | advp_vp? {vp_type}_np                     adjunct_list_np_np_moved                                  {{%nt("fin_vp_np_moved")%}} # I know what you [brought]
-    | advp_vp? {vp_type}_np_predcomp            adjunct_list_np_predcomp_np_moved                         {{%nt("fin_vp_np_moved")%}} # I know what you [considered Bob good at]
-    | advp_vp? {vp_type}_np_to_inf_cl           adjunct_list_np_to_inf_cl_np_moved                        {{%nt("fin_vp_np_moved")%}} # I know what you [asked Bob to bring]
-    | advp_vp? {vp_type}_np_bare_inf_cl         adjunct_list_np_bare_inf_cl_np_moved                      {{%nt("fin_vp_np_moved")%}} # I know what you [helped Bob bring]
-    | advp_vp? {vp_type}_np_that_declarative_cl adjunct_list_np_that_declarative_cl_np_moved              {{%nt("fin_vp_np_moved")%}} # I know what you [told Bob that you bring]
-    | advp_vp? {vp_type}_np_bare_declarative_cl adjunct_list_np_bare_declarative_cl_np_moved              {{%nt("fin_vp_np_moved")%}} # I know what you [told Bob that you bring]
-    | advp_vp? {vp_type}_np_exclamative_cl      adjunct_list_np_exclamative_cl_np_moved                   {{%nt("fin_vp_np_moved")%}} # I know who you [told how expensive it is]
-    | advp_vp? {vp_type}_np_interrogative_cl    adjunct_list_np_interrogative_cl_np_moved                 {{%nt("fin_vp_np_moved")%}} # I know who you [asked what Bob brings]
-    | advp_vp? {vp_type}_np_np                  adjunct_list_np_np_np_moved                               {{%nt("fin_vp_np_moved")%}} # I know what you [gave Bob]
-"""
 
+output += """
 
 # versions of the adjunct_list with an np moved out
 
@@ -498,76 +476,44 @@ adjunct_list_np_np_np_moved ->
 adjunct_list_np_do_moved -> 
       adjunct adjunct_list_np_do_moved                              {%nt("adjunct_list_np_do_moved")%}
     | to      adjunct_list                                          {%nt("adjunct_list_np_do_moved")%}
+"""
 
+def vp_grammar_np_moved(vp_type: str):
+       return f"""
+# a declarative clause but one of the noun phrases has been moved out of it
+# this happens when a declarative clause is inside an interrogative clause
+# this happens in sentences like "i know that you think that he eats the apple" -> "i know what you think that he eats"
+# finite verb phrase with a noun phrase moved
+{vp_type}_vp_np_moved ->
+# complete finite verb phrase
+      advp_vp? {vp_type}                        adjunct_list_np_moved                                  {{%nt("fin_vp_np_moved")%}} # I know who you [eat with]
+    | advp_vp? {vp_type}_predcomp               adjunct_list_predcomp_np_moved                         {{%nt("fin_vp_np_moved")%}} # I know what you [seemed good at]
+    | advp_vp? {vp_type}_to_inf_cl              adjunct_list_to_inf_cl_np_moved                        {{%nt("fin_vp_np_moved")%}} # I know what you [asked to bring]
+    | advp_vp? {vp_type}_bare_inf_cl            adjunct_list_bare_inf_cl_np_moved                      {{%nt("fin_vp_np_moved")%}} # I know what you [helped bring]
+    | advp_vp? {vp_type}_that_declarative_cl    adjunct_list_that_declarative_cl_np_moved              {{%nt("fin_vp_np_moved")%}} # I know what you [said that you bring]
+    | advp_vp? {vp_type}_bare_declarative_cl    adjunct_list_bare_declarative_cl_np_moved              {{%nt("fin_vp_np_moved")%}} # I know what you [said you bring]
 
-# non-finite verb phrase with a noun phrase moved
-inf_vp_np_moved ->
-# complete infinitve verb phrase
-      advp_vp? vb                      adjunct_list_np_moved                                       {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_predcomp                   adjunct_list_predcomp_np_moved                                    {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_to_inf_cl            adjunct_list_to_inf_cl_np_moved                             {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_bare_inf_cl          adjunct_list_bare_inf_cl_np_moved                           {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_that_declarative_cl       adjunct_list_that_declarative_cl_np_moved                        {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_bare_declarative_cl       adjunct_list_bare_declarative_cl_np_moved                        {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_vbg_cl                            vbg_cl_np_moved                                {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_vbn_cl                            vbn_cl_np_moved                                {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_passive_cl                            passive_cl_np_moved                                {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_np                   adjunct_list_np_np_moved                                    {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_np_predcomp                adjunct_list_np_predcomp_np_moved                                 {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_np_to_inf_cl         adjunct_list_np_to_inf_cl_np_moved                          {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_np_bare_inf_cl       adjunct_list_np_bare_inf_cl_np_moved                        {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_np_that_declarative_cl    adjunct_list_np_that_declarative_cl_np_moved                     {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_np_bare_declarative_cl    adjunct_list_np_bare_declarative_cl_np_moved                     {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_np_exclamative_cl    adjunct_list_np_exclamative_cl_np_moved                     {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_np_interrogative_cl  adjunct_list_np_interrogative_cl_np_moved                   {%nt("inf_vp_np_moved")%}
-    | advp_vp? vb_np_np                adjunct_list_np_np_np_moved                                 {%nt("inf_vp_np_moved")%}
+# cant move out of interrogative or exclamative clauses
+    | advp_vp? {vp_type}_vbg_cl                 vbg_cl_np_moved                                           {{%nt("fin_vp_np_moved")%}} # I know what you [were bringing]
+    | advp_vp? {vp_type}_vbn_cl                 vbn_cl_np_moved                                           {{%nt("fin_vp_np_moved")%}} # I know what you [had brought] OR I know what you [were brought]
+    | advp_vp? {vp_type}_passive_cl             passive_cl_np_moved                                       {{%nt("fin_vp_np_moved")%}} # I know what you [had brought] OR I know what you [were brought]
+    | advp_vp? {vp_type}_np                     adjunct_list_np_np_moved                                  {{%nt("fin_vp_np_moved")%}} # I know what you [brought]
+    | advp_vp? {vp_type}_np_predcomp            adjunct_list_np_predcomp_np_moved                         {{%nt("fin_vp_np_moved")%}} # I know what you [considered Bob good at]
+    | advp_vp? {vp_type}_np_to_inf_cl           adjunct_list_np_to_inf_cl_np_moved                        {{%nt("fin_vp_np_moved")%}} # I know what you [asked Bob to bring]
+    | advp_vp? {vp_type}_np_bare_inf_cl         adjunct_list_np_bare_inf_cl_np_moved                      {{%nt("fin_vp_np_moved")%}} # I know what you [helped Bob bring]
+    | advp_vp? {vp_type}_np_that_declarative_cl adjunct_list_np_that_declarative_cl_np_moved              {{%nt("fin_vp_np_moved")%}} # I know what you [told Bob that you bring]
+    | advp_vp? {vp_type}_np_bare_declarative_cl adjunct_list_np_bare_declarative_cl_np_moved              {{%nt("fin_vp_np_moved")%}} # I know what you [told Bob that you bring]
+    | advp_vp? {vp_type}_np_exclamative_cl      adjunct_list_np_exclamative_cl_np_moved                   {{%nt("fin_vp_np_moved")%}} # I know who you [told how expensive it is]
+    | advp_vp? {vp_type}_np_interrogative_cl    adjunct_list_np_interrogative_cl_np_moved                 {{%nt("fin_vp_np_moved")%}} # I know who you [asked what Bob brings]
+    | advp_vp? {vp_type}_np_np                  adjunct_list_np_np_np_moved                               {{%nt("fin_vp_np_moved")%}} # I know what you [gave Bob]
+"""
 
-# non-finite verb phrase with a noun phrase moved
-vbg_vp_np_moved ->
-# complete infinitve verb phrase
-      advp_vp? vbg                      adjunct_list_np_moved                                       {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_predcomp                   adjunct_list_predcomp_np_moved                                    {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_to_inf_cl            adjunct_list_to_inf_cl_np_moved                             {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_bare_inf_cl          adjunct_list_bare_inf_cl_np_moved                           {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_that_declarative_cl   adjunct_list_that_declarative_cl_np_moved                        {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_bare_declarative_cl   adjunct_list_bare_declarative_cl_np_moved                        {%nt("vbg_vp_np_moved ")%}
-    |       vbg_vbg_cl                            vbg_cl_np_moved                                {%nt("vbg_vp_np_moved ")%}
-    |       vbg_vbn_cl                            vbn_cl_np_moved                                {%nt("vbg_vp_np_moved ")%}
-    |       vbg_passive_cl                            passive_cl_np_moved                                {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_np                   adjunct_list_np_np_moved                                    {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_np_predcomp                adjunct_list_np_predcomp_np_moved                                 {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_np_to_inf_cl         adjunct_list_np_to_inf_cl_np_moved                          {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_np_bare_inf_cl       adjunct_list_np_bare_inf_cl_np_moved                        {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_np_that_declarative_cl adjunct_list_np_that_declarative_cl_np_moved                   {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_np_bare_declarative_cl adjunct_list_np_bare_declarative_cl_np_moved                   {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_np_exclamative_cl   adjunct_list_np_exclamative_cl_np_moved                     {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_np_interrogative_cl adjunct_list_np_interrogative_cl_np_moved                   {%nt("vbg_vp_np_moved ")%}
-    | advp_vp? vbg_np_np               adjunct_list_np_np_np_moved                                 {%nt("vbg_vp_np_moved ")%}
+output += vp_grammar_np_moved("vbf")
+output += vp_grammar_np_moved("inf")
+output += vp_grammar_np_moved("vbg")
+output += vp_grammar_np_moved("vbn")
 
-# non-finite verb phrase with a noun phrase moved
-vbn_vp_np_moved ->
-# complete infinitve verb phrase
-      advp_vp? vbn                      adjunct_list_np_moved                                       {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_predcomp                   adjunct_list_predcomp_np_moved                                    {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_to_inf_cl            adjunct_list_to_inf_cl_np_moved                             {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_bare_inf_cl          adjunct_list_bare_inf_cl_np_moved                           {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_that_declarative_cl   adjunct_list_that_declarative_cl_np_moved                        {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_bare_declarative_cl   adjunct_list_bare_declarative_cl_np_moved                        {%nt("vbn_vp_np_moved")%}
-    |       vbn_vbg_cl                            vbg_cl_np_moved                                {%nt("vbn_vp_np_moved")%}
-    |       vbn_vbn_cl                            vbn_cl_np_moved                                {%nt("vbn_vp_np_moved")%}
-    |       vbn_passive_cl                            passive_cl_np_moved                                {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_np                   adjunct_list_np_np_moved                                    {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_np_predcomp                adjunct_list_np_predcomp_np_moved                                 {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_np_to_inf_cl         adjunct_list_np_to_inf_cl_np_moved                          {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_np_bare_inf_cl       adjunct_list_np_bare_inf_cl_np_moved                        {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_np_that_declarative_cl    adjunct_list_np_bare_declarative_cl_np_moved                     {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_np_bare_declarative_cl    adjunct_list_np_bare_declarative_cl_np_moved                     {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_np_exclamative_cl    adjunct_list_np_exclamative_cl_np_moved                     {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_np_interrogative_cl  adjunct_list_np_interrogative_cl_np_moved                   {%nt("vbn_vp_np_moved")%}
-    | advp_vp? vbn_np_np                adjunct_list_np_np_np_moved                                 {%nt("vbn_vp_np_moved")%}
-
-
-
+output += """
 adjunct_list_adjp_moved -> adjunct_list {%nt("adjunct_list_adjp_moved")%}
 
 adjunct_list_predcomp_adjp_moved ->
@@ -655,7 +601,7 @@ adjunct_list_np_interrogative_cl_adjp_moved ->
 
 adjunct_list_np_np_adjp_moved ->
       adjunct_list_np_np           {%nt("adjunct_list_np_np_adjp_moved")%}
-
+"""
 
 fin_vp_adjp_moved -> 
 # modal
