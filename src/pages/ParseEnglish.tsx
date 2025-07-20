@@ -53,6 +53,12 @@ const INITIAL_EXAMPLE_SENTENCES = [
     "They were playing tennis when it started to rain.",
     "She hasn't yet contacted the people whose house she wants to rent.",
     "The horse raced past the barn fell.",
+    "I was given a book by the old man.",
+    "What I was mailed was quite interesting.",
+    "Who was this letter sent to?",
+    "The book that I was recommended by my professor turned out to be excellent.",
+    "Which student was the scholarship awarded to?",
+    "It was Mary who was chosen by the committee.",
 ];
 
 function ParseEnglishWidget() {
