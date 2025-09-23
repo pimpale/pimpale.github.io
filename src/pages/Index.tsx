@@ -225,7 +225,7 @@ const Home = () =>
         <p>Feel free to reach out to me through any of these channels:</p>
         <ul>
           <li>Email: gpimpale29 [dot] at [dot] gmail [dot] com</li>
-          <li><a href="https://calendly.com/gpimpale29/30min">Schedule a 30-minute meeting with me</a></li>
+          <li><a href="https://calendly.com/pimpale">Schedule a 30-minute meeting with me</a></li>
           <li><a href="https://github.com/pimpale/">GitHub</a></li>
           <li><a href="https://www.linkedin.com/in/govind-pimpale/">LinkedIn</a></li>
         </ul>
