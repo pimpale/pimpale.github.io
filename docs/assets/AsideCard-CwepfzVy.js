@@ -1,1 +1,0 @@
-import{j as d}from"./client-Cswx0Ar_.js";const i=e=>d.jsx("div",{className:"card mx-auto mb-4",id:e.id,style:{maxWidth:"960px"},children:d.jsxs("div",{className:"card-body",children:[d.jsx("h6",{className:"card-title text-decoration-underline",children:e.title}),d.jsx("div",{className:"card-text",children:e.children})]})});export{i as A};

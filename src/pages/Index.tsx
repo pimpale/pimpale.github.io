@@ -139,10 +139,6 @@ const Home = () =>
         <p>
           I'm currently an AI Safety researcher at <a href="https://matsprogram.org/">MATS</a> (Cohort 7.0), studying whether models are aware that they are being evaluated.
           I studied Computer Science and Engineering at UCLA (class of 2025).
-          I believe in <a
-            href="https://globalprioritiesinstitute.org/summary-the-case-for-strong-longtermism/">
-            Strong Longtermism
-          </a> and the <a href="https://suckless.org/philosophy/">Suckless philosophy</a>.
           In my free time, I enjoy recreational programming (especially in C).
         </p>
         <ul>
@@ -234,7 +230,6 @@ const Home = () =>
         <ul>
           <li>How can we forecast LLM Agent abilities</li>
           <li>Building more realistic evaluations</li>
-          <li>Starting an EA or AI Safety student group</li>
           <li>Research collaborations</li>
           <li>Computer graphics (especially ray tracing)</li>
           <li>Theorem provers</li>
