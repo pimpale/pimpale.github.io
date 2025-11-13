@@ -68,8 +68,8 @@ const inf_vbn_cl = isPoS("inf_vbn_cl");
 const inf_passive_cl = isPoS("inf_passive_cl");
 const inf_o = isPoS("inf_o");
 const inf_o_predcomp = isPoS("inf_o_predcomp");
-const inf_io_to_inf_cl = isPoS("inf_io_to_inf_cl");
-const inf_io_bare_inf_cl = isPoS("inf_io_bare_inf_cl");
+const inf_intnp_to_inf_cl = isPoS("inf_intnp_to_inf_cl");
+const inf_intnp_bare_inf_cl = isPoS("inf_intnp_bare_inf_cl");
 const inf_io_that_declarative_cl = isPoS("inf_io_that_declarative_cl");
 const inf_io_bare_declarative_cl = isPoS("inf_io_bare_declarative_cl");
 const inf_io_exclamative_cl = isPoS("inf_io_exclamative_cl");
@@ -90,8 +90,8 @@ const vbg_vbn_cl = isPoS("vbg_vbn_cl");
 const vbg_passive_cl = isPoS("vbg_passive_cl");
 const vbg_o = isPoS("vbg_o");
 const vbg_o_predcomp = isPoS("vbg_o_predcomp");
-const vbg_io_to_inf_cl = isPoS("vbg_io_to_inf_cl");
-const vbg_io_bare_inf_cl = isPoS("vbg_io_bare_inf_cl");
+const vbg_intnp_to_inf_cl = isPoS("vbg_intnp_to_inf_cl");
+const vbg_intnp_bare_inf_cl = isPoS("vbg_intnp_bare_inf_cl");
 const vbg_io_that_declarative_cl = isPoS("vbg_io_that_declarative_cl");
 const vbg_io_bare_declarative_cl = isPoS("vbg_io_bare_declarative_cl");
 const vbg_io_exclamative_cl = isPoS("vbg_io_exclamative_cl");
@@ -112,8 +112,8 @@ const vbn_vbn_cl = isPoS("vbn_vbn_cl");
 const vbn_passive_cl = isPoS("vbn_passive_cl");
 const vbn_o = isPoS("vbn_o");
 const vbn_o_predcomp = isPoS("vbn_o_predcomp");
-const vbn_io_to_inf_cl = isPoS("vbn_io_to_inf_cl");
-const vbn_io_bare_inf_cl = isPoS("vbn_io_bare_inf_cl");
+const vbn_intnp_to_inf_cl = isPoS("vbn_intnp_to_inf_cl");
+const vbn_intnp_bare_inf_cl = isPoS("vbn_intnp_bare_inf_cl");
 const vbn_io_that_declarative_cl = isPoS("vbn_io_that_declarative_cl");
 const vbn_io_bare_declarative_cl = isPoS("vbn_io_bare_declarative_cl");
 const vbn_io_exclamative_cl = isPoS("vbn_io_exclamative_cl");
@@ -134,8 +134,8 @@ const vbf_vbn_cl = isPoS("vbf_vbn_cl");
 const vbf_passive_cl = isPoS("vbf_passive_cl");
 const vbf_o = isPoS("vbf_o");
 const vbf_o_predcomp = isPoS("vbf_o_predcomp");
-const vbf_io_to_inf_cl = isPoS("vbf_io_to_inf_cl");
-const vbf_io_bare_inf_cl = isPoS("vbf_io_bare_inf_cl");
+const vbf_intnp_to_inf_cl = isPoS("vbf_intnp_to_inf_cl");
+const vbf_intnp_bare_inf_cl = isPoS("vbf_intnp_bare_inf_cl");
 const vbf_io_that_declarative_cl = isPoS("vbf_io_that_declarative_cl");
 const vbf_io_bare_declarative_cl = isPoS("vbf_io_bare_declarative_cl");
 const vbf_io_exclamative_cl = isPoS("vbf_io_exclamative_cl");
@@ -335,9 +335,6 @@ def adjunct_list_grammar(mv_type):
     out += serialize_rules(
         f"adjunct_list_that_declarative_cl{mv_suf}",
         [
-            # Ex mv_np: I know what he said quickly that you ate [gap]
-            # Ex mv_adjp: I know how happy he said quickly that you became [gap]
-            f"adjunct adjunct_list_that_declarative_cl{mv_suf}",
             # Ex mv_np: I know what he said that you ate [gap] quickly
             # Ex mv_adjp: I know how happy he said that you became [gap] quickly
             f"that_declarative_cl adjunct_list{mv_suf}",
@@ -353,9 +350,6 @@ def adjunct_list_grammar(mv_type):
     out += serialize_rules(
         f"adjunct_list_bare_declarative_cl{mv_suf}",
         [
-            # Ex mv_np: I know what he said quickly you ate [gap]
-            # Ex mv_adjp: I know how happy he said quickly you became [gap]
-            f"adjunct adjunct_list_bare_declarative_cl{mv_suf}",
             # Ex mv_np: I know what he said you ate [gap] quickly
             # Ex mv_adjp: I know how happy he said you became [gap] quickly
             f"bare_declarative_cl adjunct_list{mv_suf}",
@@ -371,9 +365,6 @@ def adjunct_list_grammar(mv_type):
     out += serialize_rules(
         f"adjunct_list_exclamative_cl{mv_suf}",
         [
-            # Ex mv_np: I know what he exclaimed loudly how much you ate [gap]
-            # Ex mv_adjp: I know how happy he exclaimed loudly how much you became [gap]
-            f"adjunct adjunct_list_exclamative_cl{mv_suf}",
             # Ex mv_np: I know what he exclaimed how much you ate [gap] loudly
             # Ex mv_adjp: I know how happy he exclaimed how much you became [gap] loudly
             f"exclamative_cl adjunct_list{mv_suf}",
@@ -455,17 +446,17 @@ def adjunct_list_grammar(mv_type):
     # on the other hand, adjuncts may sit between the np and the to inf
     # - i asked you earlier to stop talking about this very long phrase
     out += serialize_rules(
-        f"adjunct_list_o_to_inf_cl{mv_suf}",
+        f"adjunct_list_intnp_to_inf_cl{mv_suf}",
         [
             # Ex mv_np: I know what he asked you quickly to eat [gap]
             # Ex mv_adjp: I know how happy he asked you quickly to become [gap]
-            f"adjunct adjunct_list_o_to_inf_cl{mv_suf}",
+            f"adjunct adjunct_list_intnp_to_inf_cl{mv_suf}",
             # Ex mv_np: I know what he asked [gap] to eat yesterday
             # Ex mv_adjp: I know how happy he asked you to become [gap] yesterday
             f"np adjunct_list_to_inf_cl{mv_suf}",
             # Ex mv_np: I know what he asked you quickly to eat [gap] today
             # Ex mv_adjp: I know how happy he asked you quickly to become [gap] today
-            f"adjunct{mv_suf} adjunct_list_o_to_inf_cl",
+            f"adjunct{mv_suf} adjunct_list_intnp_to_inf_cl",
             # Ex mv_np: I know what he asked [gap] to eat today
             # Ex mv_adjp: I know how happy he asked you to become [gap] today
             f"np{mv_suf} adjunct_list_to_inf_cl",
@@ -477,17 +468,17 @@ def adjunct_list_grammar(mv_type):
     # however an adjunct can sit before the bare infintive
     # - i made you earlier stop talking about this very long phrase
     out += serialize_rules(
-        f"adjunct_list_o_bare_inf_cl{mv_suf}",
+        f"adjunct_list_intnp_bare_inf_cl{mv_suf}",
         [
             # Ex mv_np: I know what he made you quickly eat [gap]
             # Ex mv_adjp: I know how happy he made you quickly become [gap]
-            f"adjunct adjunct_list_o_bare_inf_cl{mv_suf}",
+            f"adjunct adjunct_list_intnp_bare_inf_cl{mv_suf}",
             # Ex mv_np: I know what he made [gap] eat yesterday
             # Ex mv_adjp: I know how happy he made you become [gap] yesterday
             f"np adjunct_list_bare_inf_cl{mv_suf}",
             # Ex mv_np: I know what he made you quickly eat [gap] today
             # Ex mv_adjp: I know how happy he made you quickly become [gap] today
-            f"adjunct{mv_suf} adjunct_list_o_bare_inf_cl",
+            f"adjunct{mv_suf} adjunct_list_intnp_bare_inf_cl",
             # Ex mv_np: I know what he made [gap] eat today
             # Ex mv_adjp: I know how happy he made you become [gap] today
             f"np{mv_suf} adjunct_list_bare_inf_cl",
@@ -784,8 +775,8 @@ def vp_grammar(vp_type: str, mv_type: str | None = None):
     | advp_vp? {vp_type}_passive_cl             passive_cl{mv_suf}                            {{%nt("{vp_type}_vp{mv_suf}")%}} # passive voice (ex: "He was eaten")
     | advp_vp? {vp_type}_o                      adjunct_list_o{mv_suf}                        {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb (ex: "I ate the apple")
     | advp_vp? {vp_type}_o_predcomp             adjunct_list_o_predcomp{mv_suf}               {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? {vp_type}_o_to_inf_cl            adjunct_list_o_to_inf_cl{mv_suf}              {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? {vp_type}_o_bare_inf_cl          adjunct_list_o_bare_inf_cl{mv_suf}            {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
+    | advp_vp? {vp_type}_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl{mv_suf}          {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
+    | advp_vp? {vp_type}_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl{mv_suf}        {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
     | advp_vp? {vp_type}_io_that_declarative_cl adjunct_list_io_that_declarative_cl{mv_suf}   {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
     | advp_vp? {vp_type}_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl{mv_suf}   {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
     | advp_vp? {vp_type}_io_exclamative_cl      adjunct_list_io_exclamative_cl{mv_suf}        {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
@@ -865,6 +856,9 @@ interrogative_cl ->
 # interrogative phrase replaces adjunct of time, place, or reason, can also be used 
     | ip_pp                      np vbf_vp                     {%nt("interrogative_cl")%} # open interrogative clause with move from the adjuncts using pied piping (ex: "to where I go")
 
+# a dative to
+dative_to -> to np {%nt("dative_to")%}
+
 ip_advp_vp -> how advp_vp {%nt("ip_advp_vp")%}
             | how         {%nt("ip_advp_vp")%}
 ip_adjp ->  how adjp      {%nt("ip_advp_vp")%}
@@ -903,6 +897,14 @@ ip_det -> which  {%nt("ip_det")%}
         | whose  {%nt("ip_det")%}
 
 np -> precorenp_modifier? core_np postcorenp_modifier? {%nt("np")%}
+
+# a noun phrase with another noun phrase moved out
+# TODO: we don't yet support moving nps from an np. I don't even know if this is possible in English.
+np_minus_np -> null {%nt("np_minus_np")%} 
+
+# a noun phrase with an adjective moved out
+# TODO: currently we don't model the effects of the missing adjective, but we should
+np_minus_adjp -> np {%nt("np_minus_adjp")%}
 
 precorenp_modifier? -> precorenp_modifier {%nt("precorenp_modifier?")%}
                      | null               {%nt("precorenp_modifier?")%}
@@ -983,6 +985,9 @@ adjunct -> pp             {%nt("adjunct")%} # a prepositional phrase adjunct (ex
 
 adjunct_minus_np ->
       pp_minus_np   {%nt("adjunct")%}
+
+adjunct_minus_adjp ->
+      null    {%nt("adjunct_minus_adjp")%}
 
 # interrogative phrase replacing a pp
 ip_pp -> where                {%nt("ip_pp")%}   
@@ -1089,8 +1094,8 @@ inf_vbn_cl -> %inf_vbn_cl {%t("inf_vbn_cl")%}
 inf_passive_cl -> %inf_passive_cl {%t("inf_passive_cl")%}
 inf_o -> %inf_o {%t("inf_o")%}
 inf_o_predcomp -> %inf_o_predcomp {%t("inf_o_predcomp")%}
-inf_io_to_inf_cl -> %inf_io_to_inf_cl {%t("inf_io_to_inf_cl")%}
-inf_io_bare_inf_cl -> %inf_io_bare_inf_cl {%t("inf_io_bare_inf_cl")%}
+inf_intnp_to_inf_cl -> %inf_intnp_to_inf_cl {%t("inf_intnp_to_inf_cl")%}
+inf_intnp_bare_inf_cl -> %inf_intnp_bare_inf_cl {%t("inf_intnp_bare_inf_cl")%}
 inf_io_that_declarative_cl -> %inf_io_that_declarative_cl {%t("inf_io_that_declarative_cl")%}
 inf_io_bare_declarative_cl -> %inf_io_bare_declarative_cl {%t("inf_io_bare_declarative_cl")%}
 inf_io_exclamative_cl -> %inf_io_exclamative_cl {%t("inf_io_exclamative_cl")%}
@@ -1109,8 +1114,8 @@ vbg_vbn_cl -> %vbg_vbn_cl {%t("vbg_vbn_cl")%}
 vbg_passive_cl -> %vbg_passive_cl {%t("vbg_passive_cl")%}
 vbg_o -> %vbg_o {%t("vbg_o")%}
 vbg_o_predcomp -> %vbg_o_predcomp {%t("vbg_o_predcomp")%}
-vbg_io_to_inf_cl -> %vbg_io_to_inf_cl {%t("vbg_io_to_inf_cl")%}
-vbg_io_bare_inf_cl -> %vbg_io_bare_inf_cl {%t("vbg_io_bare_inf_cl")%}
+vbg_intnp_to_inf_cl -> %vbg_intnp_to_inf_cl {%t("vbg_intnp_to_inf_cl")%}
+vbg_intnp_bare_inf_cl -> %vbg_intnp_bare_inf_cl {%t("vbg_intnp_bare_inf_cl")%}
 vbg_io_that_declarative_cl -> %vbg_io_that_declarative_cl {%t("vbg_io_that_declarative_cl")%}
 vbg_io_bare_declarative_cl -> %vbg_io_bare_declarative_cl {%t("vbg_io_bare_declarative_cl")%}
 vbg_io_exclamative_cl -> %vbg_io_exclamative_cl {%t("vbg_io_exclamative_cl")%}
@@ -1129,8 +1134,8 @@ vbn_vbn_cl -> %vbn_vbn_cl {%t("vbn_vbn_cl")%}
 vbn_passive_cl -> %vbn_passive_cl {%t("vbn_passive_cl")%}
 vbn_o -> %vbn_o {%t("vbn_o")%}
 vbn_o_predcomp -> %vbn_o_predcomp {%t("vbn_o_predcomp")%}
-vbn_io_to_inf_cl -> %vbn_io_to_inf_cl {%t("vbn_io_to_inf_cl")%}
-vbn_io_bare_inf_cl -> %vbn_io_bare_inf_cl {%t("vbn_io_bare_inf_cl")%}
+vbn_intnp_to_inf_cl -> %vbn_intnp_to_inf_cl {%t("vbn_intnp_to_inf_cl")%}
+vbn_intnp_bare_inf_cl -> %vbn_intnp_bare_inf_cl {%t("vbn_intnp_bare_inf_cl")%}
 vbn_io_that_declarative_cl -> %vbn_io_that_declarative_cl {%t("vbn_io_that_declarative_cl")%}
 vbn_io_bare_declarative_cl -> %vbn_io_bare_declarative_cl {%t("vbn_io_bare_declarative_cl")%}
 vbn_io_exclamative_cl -> %vbn_io_exclamative_cl {%t("vbn_io_exclamative_cl")%}
@@ -1149,8 +1154,8 @@ vbf_vbn_cl -> %vbf_vbn_cl {%t("vbf_vbn_cl")%}
 vbf_passive_cl -> %vbf_passive_cl {%t("vbf_passive_cl")%}
 vbf_o -> %vbf_o {%t("vbf_o")%}
 vbf_o_predcomp -> %vbf_o_predcomp {%t("vbf_o_predcomp")%}
-vbf_io_to_inf_cl -> %vbf_io_to_inf_cl {%t("vbf_io_to_inf_cl")%}
-vbf_io_bare_inf_cl -> %vbf_io_bare_inf_cl {%t("vbf_io_bare_inf_cl")%}
+vbf_intnp_to_inf_cl -> %vbf_intnp_to_inf_cl {%t("vbf_intnp_to_inf_cl")%}
+vbf_intnp_bare_inf_cl -> %vbf_intnp_bare_inf_cl {%t("vbf_intnp_bare_inf_cl")%}
 vbf_io_that_declarative_cl -> %vbf_io_that_declarative_cl {%t("vbf_io_that_declarative_cl")%}
 vbf_io_bare_declarative_cl -> %vbf_io_bare_declarative_cl {%t("vbf_io_bare_declarative_cl")%}
 vbf_io_exclamative_cl -> %vbf_io_exclamative_cl {%t("vbf_io_exclamative_cl")%}
