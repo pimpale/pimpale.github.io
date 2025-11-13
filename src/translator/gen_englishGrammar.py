@@ -622,128 +622,201 @@ def adjunct_list_grammar(mv_type):
     # Passive clauses
     ##################
 
-    out += serialize_rules(
-        f"adjunct_list_passive{mv_suf}",
-        [
-            f"adjunct adjunct_list_passive{mv_suf}",
-            f"adjunct_minus_np adjunct_list{mv_suf}",
-            f"adjunct{mv_suf} adjunct_list_passive",
-        ],
-    )
-
-    out += serialize_rules(
-        f"adjunct_list_passive_predcomp{mv_suf}",
-        [
-            f"predcomp adjunct_list_passive{mv_suf}",
-            f"predcomp_minus_np adjunct_list_predcomp{mv_suf}",
-            f"predcomp{mv_suf} adjunct_list_passive",
-        ],
-    )
-
-    out += serialize_rules(
-        f"adjunct_list_passive_to_inf_cl{mv_suf}",
-        [
-            f"to_inf_cl adjunct_list_passive{mv_suf}",
-            f"to_inf_cl_minus_np adjunct_list_to_inf_cl{mv_suf}",
-            f"to_inf_cl{mv_suf} adjunct_list_passive",
-        ],
-    )
-
-    out += serialize_rules(
-        f"adjunct_list_passive_bare_inf_cl{mv_suf}",
-        [
-            f"bare_inf_cl adjunct_list_passive{mv_suf}",
-            f"bare_inf_cl_minus_np adjunct_list_bare_inf_cl{mv_suf}",
-            f"bare_inf_cl{mv_suf} adjunct_list_passive",
-        ],
-    )
-
-    out += serialize_rules(
-        f"adjunct_list_passive_that_declarative_cl{mv_suf}",
-        [
-            f"that_declarative_cl adjunct_list_passive{mv_suf}",
-            f"that_declarative_cl_minus_np adjunct_list_that_declarative_cl{mv_suf}",
-            f"that_declarative_cl{mv_suf} adjunct_list_passive",
-        ],
-    )
-
-    out += serialize_rules(
-        f"adjunct_list_passive_bare_declarative_cl{mv_suf}",
-        [
-            f"bare_declarative_cl adjunct_list_passive{mv_suf}",
-            f"bare_declarative_cl_minus_np adjunct_list_bare_declarative_cl{mv_suf}",
-            f"bare_declarative_cl{mv_suf} adjunct_list_passive",
-        ],
-    )
-
-    out += serialize_rules(
-        f"adjunct_list_passive_exclamative_cl{mv_suf}",
-        [
-            f"exclamative_cl adjunct_list_passive{mv_suf}",
-        ],
-    )
-
-    out += serialize_rules(
-        f"adjunct_list_passive_interrogative_cl{mv_suf}",
-        [
-            f"interrogative_cl adjunct_list_passive{mv_suf}",
-            f"interrogative_cl_minus_np adjunct_list_interrogative_cl{mv_suf}",
-        ],
-    )
-
+    # the janitor was seen
+    # I know who the janitor was seen by
     out += serialize_rules(
         f"adjunct_list_passive_o{mv_suf}",
         [
-            f"np_minus_np adjunct_list_o{mv_suf}",
-            f"np{mv_suf} adjunct_list_passive",
+            f"adjunct_list{mv_suf}"
         ],
     )
 
     out += serialize_rules(
-        f"adjunct_list_passive_io_that_declarative_cl{mv_suf}",
+        f"adjunct_list_passive_do{mv_suf}",
         [
-            # remove indirect object
-            f"np_minus_np that_declarative_cl_adjunct_list{mv_suf}",
+            f"adjunct_list{mv_suf}"
         ],
     )
 
     out += serialize_rules(
-        f"adjunct_list_passive_io_bare_declarative_cl{mv_suf}",
+        f"adjunct_list_passive_o_predcomp{mv_suf}",
         [
-            # remove indirect object
-            f"np_minus_np bare_declarative_cl_adjunct_list{mv_suf}",
+            f"adjunct_list_predcomp{mv_suf}"
+        ],
+    )
+
+    # --- EVERYTHING BELOW NEEDS TO BE FIXED ---
+
+    out += serialize_rules(
+        f"adjunct_list_intnp_to_inf_cl{mv_suf}",
+        [
+            # Ex mv_np: I know what he asked you quickly to eat [gap]
+            # Ex mv_adjp: I know how happy he asked you quickly to become [gap]
+            f"adjunct adjunct_list_intnp_to_inf_cl{mv_suf}",
+            # Ex mv_np: I know what he asked [gap] to eat yesterday
+            # Ex mv_adjp: I know how happy he asked you to become [gap] yesterday
+            f"np adjunct_list_to_inf_cl{mv_suf}",
+            # Ex mv_np: I know what he asked you quickly to eat [gap] today
+            # Ex mv_adjp: I know how happy he asked you quickly to become [gap] today
+            f"adjunct{mv_suf} adjunct_list_intnp_to_inf_cl",
+            # Ex mv_np: I know what he asked [gap] to eat today
+            # Ex mv_adjp: I know how happy he asked you to become [gap] today
+            f"np{mv_suf} adjunct_list_to_inf_cl",
+        ],
+    )
+
+    # bare inf cannot shift with the np
+    # - *i made stumble the huge giant that killed the last hero
+    # however an adjunct can sit before the bare infintive
+    # - i made you earlier stop talking about this very long phrase
+    out += serialize_rules(
+        f"adjunct_list_intnp_bare_inf_cl{mv_suf}",
+        [
+            # Ex mv_np: I know what he made you quickly eat [gap]
+            # Ex mv_adjp: I know how happy he made you quickly become [gap]
+            f"adjunct adjunct_list_intnp_bare_inf_cl{mv_suf}",
+            # Ex mv_np: I know what he made [gap] eat yesterday
+            # Ex mv_adjp: I know how happy he made you become [gap] yesterday
+            f"np adjunct_list_bare_inf_cl{mv_suf}",
+            # Ex mv_np: I know what he made you quickly eat [gap] today
+            # Ex mv_adjp: I know how happy he made you quickly become [gap] today
+            f"adjunct{mv_suf} adjunct_list_intnp_bare_inf_cl",
+            # Ex mv_np: I know what he made [gap] eat today
+            # Ex mv_adjp: I know how happy he made you become [gap] today
+            f"np{mv_suf} adjunct_list_bare_inf_cl",
+        ],
+    )
+
+    # shifting possible, if a to is used:
+    # - I told you earlier that we are out of grammars
+    # cannot invert the declarative_cl and np tho:
+    # - *I told that I ate to the person that i saw earlier
+    # - *I told that I ate the person that i saw earlier
+    out += serialize_rules(
+        f"adjunct_list_io_that_declarative_cl{mv_suf}",
+        [
+            # Ex mv_np: I know what he told you quickly that you should eat [gap]
+            # Ex mv_adjp: I know how happy he told you quickly that you should become [gap]
+            f"adjunct adjunct_list_io_that_declarative_cl{mv_suf}",
+            # Ex mv_np: I know what he told [gap] that you should eat yesterday
+            # Ex mv_adjp: I know how happy he told you that you should become [gap] yesterday
+            f"np adjunct_list_that_declarative_cl{mv_suf}",
+            # Ex mv_np: I know what he told you quickly that you should eat [gap] today
+            # Ex mv_adjp: I know how happy he told you quickly that you should become [gap] today
+            f"adjunct{mv_suf} adjunct_list_io_that_declarative_cl",
+            # Ex mv_np: I know what he told [gap] that you should eat today
+            # Ex mv_adjp: I know how happy he told you that you should become [gap] today
+            f"np{mv_suf} adjunct_list_that_declarative_cl",
         ],
     )
 
     out += serialize_rules(
-        f"adjunct_list_passive_io_exclamative_cl{mv_suf}",
+        f"adjunct_list_io_bare_declarative_cl{mv_suf}",
         [
-            # remove indirect object
-            f"np_minus_np exclamative_cl_adjunct_list{mv_suf}",
+            # Ex mv_np: I know what he told you quickly you should eat [gap]
+            # Ex mv_adjp: I know how happy he told you quickly you should become [gap]
+            f"adjunct adjunct_list_io_bare_declarative_cl{mv_suf}",
+            # Ex mv_np: I know what he told [gap] you should eat yesterday
+            # Ex mv_adjp: I know how happy he told you you should become [gap] yesterday
+            f"np adjunct_list_bare_declarative_cl{mv_suf}",
+            # Ex mv_np: I know what he told you quickly you should eat [gap] today
+            # Ex mv_adjp: I know how happy he told you quickly you should become [gap] today
+            f"adjunct{mv_suf} adjunct_list_io_bare_declarative_cl",
+            # Ex mv_np: I know what he told [gap] you should eat today
+            # Ex mv_adjp: I know how happy he told you you should become [gap] today
+            f"np{mv_suf} adjunct_list_bare_declarative_cl",
+        ],
+    )
+
+    # ditto
+    out += serialize_rules(
+        f"adjunct_list_io_exclamative_cl{mv_suf}",
+        [
+            # Ex mv_np: I know what he told you loudly how much you should eat [gap]
+            # Ex mv_adjp: I know how happy he told you loudly how much you should become [gap]
+            f"adjunct adjunct_list_io_exclamative_cl{mv_suf}",
+            # Ex mv_np: I know what he told [gap] how much you should eat yesterday
+            # Ex mv_adjp: I know how happy he told you how much you should become [gap] yesterday
+            f"np adjunct_list_exclamative_cl{mv_suf}",
+            # Ex mv_np: I know what he told you loudly how much you should eat [gap] today
+            # Ex mv_adjp: I know how happy he told you loudly how much you should become [gap] today
+            f"adjunct{mv_suf} adjunct_list_io_exclamative_cl",
+            # Ex mv_np: I know what he told [gap] how much you should eat today
+            # Ex mv_adjp: I know how happy he told you how much you should become [gap] today
+            f"np{mv_suf} adjunct_list_exclamative_cl",
+        ],
+    )
+
+    # ditto
+    out += serialize_rules(
+        f"adjunct_list_io_interrogative_cl{mv_suf}",
+        [
+            # Ex mv_np: I know what he asked you quickly whether you should eat [gap]
+            # Ex mv_adjp: I know how happy he asked you quickly whether you should become [gap]
+            f"adjunct adjunct_list_io_interrogative_cl{mv_suf}",
+            # Ex mv_np: I know what he asked [gap] whether you should eat yesterday
+            # Ex mv_adjp: I know how happy he asked you whether you should become [gap] yesterday
+            f"np adjunct_list_interrogative_cl{mv_suf}",
+            # Ex mv_np: I know what he asked you quickly whether you should eat [gap] today
+            # Ex mv_adjp: I know how happy he asked you quickly whether you should become [gap] today
+            f"adjunct{mv_suf} adjunct_list_io_interrogative_cl",
+            # Ex mv_np: I know what he asked [gap] whether you should eat today
+            # Ex mv_adjp: I know how happy he asked you whether you should become [gap] today
+            f"np{mv_suf} adjunct_list_interrogative_cl",
         ],
     )
 
     out += serialize_rules(
-        f"adjunct_list_passive_io_interrogative_cl{mv_suf}",
+        f"adjunct_list_io_do{mv_suf}",
         [
-            # remove indirect object
-            f"np_minus_np interrogative_cl_adjunct_list{mv_suf}",
+            # Ex mv_np: I know what he gave you quickly [gap] yesterday
+            # Ex mv_adjp: I know how happy he made you [gap] yesterday (where adjp is result state)
+            f"adjunct adjunct_list_io_do{mv_suf}",
+            # Ex mv_np: I know what he gave [gap] yesterday
+            # Ex mv_adjp: I know how happy he made you [gap] yesterday
+            f"np adjunct_list_do{mv_suf}",
+            # Ex mv_np: I know what he gave you quickly [gap] today
+            # Ex mv_adjp: I know how happy he made you [gap] today
+            f"adjunct{mv_suf} adjunct_list_io_do",
+            # Ex mv_np: I know what he gave [gap] today
+            # Ex mv_adjp: I know how happy he made you [gap] today
+            f"np{mv_suf} adjunct_list_do",
         ],
     )
 
     out += serialize_rules(
-        f"adjunct_list_passive_io_do{mv_suf}",
+        f"adjunct_list_dative_to{mv_suf}",
         [
-            # remove indirect object
-            f"np_minus_np do_adjunct_list{mv_suf}",
+            # Ex mv_np: I know what he gave quickly to [gap] yesterday
+            # Ex mv_adjp: I know how happy he seemed [gap] to his mother yesterday
+            f"adjunct adjunct_list_dative_to{mv_suf}",
+            # Ex mv_np: I know what he gave quickly to [gap] today
+            # Ex mv_adjp: I know how happy he seemed [gap] to his mother today
+            f"adjunct{mv_suf} adjunct_list_dative_to",
+            # Ex mv_np: I know what he gave to [gap] yesterday
+            # Ex mv_adjp: I know how happy he seemed [gap] to his mother yesterday
+            f"dative_to{mv_suf} adjunct_list",
         ],
     )
 
     out += serialize_rules(
-        f"adjunct_list_passive_do_dative_to{mv_suf}",
+        f"adjunct_list_do_dative_to{mv_suf}",
         [
-            # remove indirect object
-            f"np_minus_np dative_to_adjunct_list{mv_suf}",
+            # Ex mv_np: I know what he gave quickly [gap] to her yesterday
+            # Ex mv_adjp: I know how happy he made [gap] to her yesterday (where adjp is result state)
+            f"adjunct_list_do_dative_to{mv_suf}",
+            # Ex mv_np: I know what he gave [gap] to her yesterday
+            # Ex mv_adjp: I know how happy he made [gap] to her yesterday
+            f"np adjunct_list_dative_to{mv_suf}",
+            # Ex mv_np: I know what he gave quickly to her [gap] yesterday
+            # Ex mv_adjp: I know how happy he made quickly to her [gap] yesterday
+            f"dative_to adjunct_list_do{mv_suf}",
+            # Ex mv_np: I know what he gave [gap] to her today
+            # Ex mv_adjp: I know how happy he made [gap] to her today
+            f"np{mv_suf} adjunct_list_dative_to",
+            # Ex mv_np: I know what he gave to her [gap] today
+            # Ex mv_adjp: I know how happy he made to her [gap] today
+            f"dative_to{mv_suf} adjunct_list_do",
         ],
     )
     return out
@@ -782,31 +855,26 @@ def vp_grammar(vp_type: str, mv_type: str | None = None):
     | advp_vp? {vp_type}_io_exclamative_cl      adjunct_list_io_exclamative_cl{mv_suf}        {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
     | advp_vp? {vp_type}_io_interrogative_cl    adjunct_list_io_interrogative_cl{mv_suf}      {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
     | advp_vp? {vp_type}_io_do                  adjunct_list_io_do{mv_suf}                    {{%nt("{vp_type}_vp{mv_suf}")%}} # ditransitive verb (ex: "I gave you food")
-    | advp_vp? {vp_type}_do_dative_to           adjunct_list_do_dative_to{mv_suf}             {{%nt("{vp_type}_vp{mv_suf}")%}} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? {vp_type}_io_do                  adjunct_list_do_dative_to{mv_suf}             {{%nt("{vp_type}_vp{mv_suf}")%}} # ditransitive verb with dative shift (ex: "I gave food to you")
 """
 
     if vp_type == "vbn":
         out += f"""
 passive_cl{mv_suf} -> 
-      advp_vp? {vp_type}                        adjunct_list_passive{mv_suf}                           {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_predcomp               adjunct_list_passive_predcomp{mv_suf}                  {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_to_inf_cl              adjunct_list_passive_to_inf_cl{mv_suf}                 {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_bare_inf_cl            adjunct_list_passive_bare_inf_cl{mv_suf}               {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_that_declarative_cl    adjunct_list_passive_that_declarative_cl{mv_suf}       {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_bare_declarative_cl    adjunct_list_passive_bare_declarative_cl{mv_suf}       {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_exclamative_cl         adjunct_list_passive_exclamative_cl{mv_suf}            {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_interrogative_cl       adjunct_list_passive_interrogative_cl{mv_suf}          {{%nt("passive_cl{mv_suf}")%}}
+# omit all the intransitive verbs
+
+
 # omit vbg_cl, as one cannot combine passive with progressive aspect *The food was been eaten
 # omit vbn_cl, as one cannot combine passive with past perfect *The food was had eaten
 # omit passive_cl, as one cannot combine passive with passive *The food was been eaten
-    | advp_vp? {vp_type}_o                      adjunct_list_passive_o{mv_suf}                         {{%nt("passive_cl{mv_suf}")%}}
+      advp_vp? {vp_type}_o                      adjunct_list_passive_o{mv_suf}                         {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_o_predcomp             adjunct_list_passive_o_predcomp{mv_suf}                {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl{mv_suf}    {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl{mv_suf}    {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl{mv_suf}         {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl{mv_suf}       {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_io_do                  adjunct_list_passive_io_do{mv_suf}                     {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_do_dative_to           adjunct_list_passive_do_dative_to{mv_suf}              {{%nt("passive_cl{mv_suf}")%}}
+    | advp_vp? {vp_type}_io_do                  adjunct_list_passive_do_dative_to{mv_suf}              {{%nt("passive_cl{mv_suf}")%}}
 
 """
     return out
@@ -858,6 +926,8 @@ interrogative_cl ->
 
 # a dative to
 dative_to -> to np {%nt("dative_to")%}
+dative_to_minus_np -> to np_minus_np {%nt("dative_to_minus_np")%}
+dative_to_minus_adjp -> to np_minus_adjp {%nt("dative_to_minus_adjp")%}
 
 ip_advp_vp -> how advp_vp {%nt("ip_advp_vp")%}
             | how         {%nt("ip_advp_vp")%}
