@@ -273,23 +273,23 @@ adjunct_list_bare_inf_cl ->
 
 
 adjunct_list_that_declarative_cl ->
-    adjunct adjunct_list_that_declarative_cl {%nt("adjunct_list_that_declarative_cl")%}
-  | that_declarative_cl adjunct_list {%nt("adjunct_list_that_declarative_cl")%}
+    that_declarative_cl adjunct_list {%nt("adjunct_list_that_declarative_cl")%}
+  | adjunct adjunct_list_that_declarative_cl {%nt("adjunct_list_that_declarative_cl")%}
 
 
 adjunct_list_bare_declarative_cl ->
-    bare_declarative_cl adjunct_list {%nt("adjunct_list_bare_declarative_cl")%}
-  | adjunct adjunct_list_bare_declarative_cl {%nt("adjunct_list_bare_declarative_cl")%}
+    adjunct adjunct_list_bare_declarative_cl {%nt("adjunct_list_bare_declarative_cl")%}
+  | bare_declarative_cl adjunct_list {%nt("adjunct_list_bare_declarative_cl")%}
 
 
 adjunct_list_exclamative_cl ->
-    adjunct adjunct_list_exclamative_cl {%nt("adjunct_list_exclamative_cl")%}
-  | exclamative_cl adjunct_list {%nt("adjunct_list_exclamative_cl")%}
+    exclamative_cl adjunct_list {%nt("adjunct_list_exclamative_cl")%}
+  | adjunct adjunct_list_exclamative_cl {%nt("adjunct_list_exclamative_cl")%}
 
 
 adjunct_list_interrogative_cl ->
-    interrogative_cl adjunct_list {%nt("adjunct_list_interrogative_cl")%}
-  | adjunct adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl")%}
+    adjunct adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl")%}
+  | interrogative_cl adjunct_list {%nt("adjunct_list_interrogative_cl")%}
 
 
 adjunct_list_o ->
@@ -311,13 +311,13 @@ adjunct_list_intnp_to_inf_cl ->
 
 
 adjunct_list_intnp_bare_inf_cl ->
-    np adjunct_list_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl")%}
-  | adjunct adjunct_list_intnp_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl")%}
+    adjunct adjunct_list_intnp_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl")%}
+  | np adjunct_list_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl")%}
 
 
 adjunct_list_io_that_declarative_cl ->
-    adjunct adjunct_list_io_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl")%}
-  | np adjunct_list_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl")%}
+    np adjunct_list_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl")%}
+  | adjunct adjunct_list_io_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl")%}
 
 
 adjunct_list_io_bare_declarative_cl ->
@@ -326,13 +326,13 @@ adjunct_list_io_bare_declarative_cl ->
 
 
 adjunct_list_io_exclamative_cl ->
-    adjunct adjunct_list_io_exclamative_cl {%nt("adjunct_list_io_exclamative_cl")%}
-  | np adjunct_list_exclamative_cl {%nt("adjunct_list_io_exclamative_cl")%}
+    np adjunct_list_exclamative_cl {%nt("adjunct_list_io_exclamative_cl")%}
+  | adjunct adjunct_list_io_exclamative_cl {%nt("adjunct_list_io_exclamative_cl")%}
 
 
 adjunct_list_io_interrogative_cl ->
-    np adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl")%}
-  | adjunct adjunct_list_io_interrogative_cl {%nt("adjunct_list_io_interrogative_cl")%}
+    adjunct adjunct_list_io_interrogative_cl {%nt("adjunct_list_io_interrogative_cl")%}
+  | np adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl")%}
 
 
 adjunct_list_io_do ->
@@ -341,8 +341,8 @@ adjunct_list_io_do ->
 
 
 adjunct_list_dative_to ->
-    dative_to adjunct_list {%nt("adjunct_list_dative_to")%}
-  | adjunct adjunct_list_dative_to {%nt("adjunct_list_dative_to")%}
+    adjunct adjunct_list_dative_to {%nt("adjunct_list_dative_to")%}
+  | dative_to adjunct_list {%nt("adjunct_list_dative_to")%}
 
 
 adjunct_list_do_dative_to ->
@@ -351,72 +351,62 @@ adjunct_list_do_dative_to ->
   | np adjunct_list_dative_to {%nt("adjunct_list_do_dative_to")%}
 
 
-adjunct_list_passive ->
-    adjunct_minus_np adjunct_list {%nt("adjunct_list_passive")%}
-  | adjunct adjunct_list_passive {%nt("adjunct_list_passive")%}
-
-
-adjunct_list_passive_predcomp ->
-    predcomp_minus_np adjunct_list_predcomp {%nt("adjunct_list_passive_predcomp")%}
-  | predcomp adjunct_list_passive {%nt("adjunct_list_passive_predcomp")%}
-
-
-adjunct_list_passive_to_inf_cl ->
-    to_inf_cl_minus_np adjunct_list_to_inf_cl {%nt("adjunct_list_passive_to_inf_cl")%}
-  | to_inf_cl adjunct_list_passive {%nt("adjunct_list_passive_to_inf_cl")%}
-
-
-adjunct_list_passive_bare_inf_cl ->
-    bare_inf_cl_minus_np adjunct_list_bare_inf_cl {%nt("adjunct_list_passive_bare_inf_cl")%}
-  | bare_inf_cl adjunct_list_passive {%nt("adjunct_list_passive_bare_inf_cl")%}
-
-
-adjunct_list_passive_that_declarative_cl ->
-    that_declarative_cl adjunct_list_passive {%nt("adjunct_list_passive_that_declarative_cl")%}
-  | that_declarative_cl_minus_np adjunct_list_that_declarative_cl {%nt("adjunct_list_passive_that_declarative_cl")%}
-
-
-adjunct_list_passive_bare_declarative_cl ->
-    bare_declarative_cl adjunct_list_passive {%nt("adjunct_list_passive_bare_declarative_cl")%}
-  | bare_declarative_cl_minus_np adjunct_list_bare_declarative_cl {%nt("adjunct_list_passive_bare_declarative_cl")%}
-
-
-adjunct_list_passive_exclamative_cl ->
-    exclamative_cl adjunct_list_passive {%nt("adjunct_list_passive_exclamative_cl")%}
-
-
-adjunct_list_passive_interrogative_cl ->
-    interrogative_cl adjunct_list_passive {%nt("adjunct_list_passive_interrogative_cl")%}
-  | interrogative_cl_minus_np adjunct_list_interrogative_cl {%nt("adjunct_list_passive_interrogative_cl")%}
-
-
 adjunct_list_passive_o ->
-    np adjunct_list_passive {%nt("adjunct_list_passive_o")%}
-  | np_minus_np adjunct_list_o {%nt("adjunct_list_passive_o")%}
+    adjunct_list {%nt("adjunct_list_passive_o")%}
 
 
-adjunct_list_passive_io_that_declarative_cl ->
-    np_minus_np that_declarative_cl_adjunct_list {%nt("adjunct_list_passive_io_that_declarative_cl")%}
+adjunct_list_passive_do ->
+    adjunct_list {%nt("adjunct_list_passive_do")%}
 
 
-adjunct_list_passive_io_bare_declarative_cl ->
-    np_minus_np bare_declarative_cl_adjunct_list {%nt("adjunct_list_passive_io_bare_declarative_cl")%}
+adjunct_list_passive_o_predcomp ->
+    adjunct_list_predcomp {%nt("adjunct_list_passive_o_predcomp")%}
 
 
-adjunct_list_passive_io_exclamative_cl ->
-    np_minus_np exclamative_cl_adjunct_list {%nt("adjunct_list_passive_io_exclamative_cl")%}
+adjunct_list_intnp_to_inf_cl ->
+    np adjunct_list_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl")%}
+  | adjunct adjunct_list_intnp_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl")%}
 
 
-adjunct_list_passive_io_interrogative_cl ->
-    np_minus_np interrogative_cl_adjunct_list {%nt("adjunct_list_passive_io_interrogative_cl")%}
+adjunct_list_intnp_bare_inf_cl ->
+    adjunct adjunct_list_intnp_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl")%}
+  | np adjunct_list_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl")%}
 
 
-adjunct_list_passive_io_do ->
-    np_minus_np do_adjunct_list {%nt("adjunct_list_passive_io_do")%}
+adjunct_list_io_that_declarative_cl ->
+    np adjunct_list_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl")%}
+  | adjunct adjunct_list_io_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl")%}
 
 
-adjunct_list_passive_do_dative_to ->
-    np_minus_np dative_to_adjunct_list {%nt("adjunct_list_passive_do_dative_to")%}
+adjunct_list_io_bare_declarative_cl ->
+    adjunct adjunct_list_io_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl")%}
+  | np adjunct_list_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl")%}
+
+
+adjunct_list_io_exclamative_cl ->
+    np adjunct_list_exclamative_cl {%nt("adjunct_list_io_exclamative_cl")%}
+  | adjunct adjunct_list_io_exclamative_cl {%nt("adjunct_list_io_exclamative_cl")%}
+
+
+adjunct_list_io_interrogative_cl ->
+    adjunct adjunct_list_io_interrogative_cl {%nt("adjunct_list_io_interrogative_cl")%}
+  | np adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl")%}
+
+
+adjunct_list_io_do ->
+    adjunct adjunct_list_io_do {%nt("adjunct_list_io_do")%}
+  | np adjunct_list_do {%nt("adjunct_list_io_do")%}
+
+
+adjunct_list_dative_to ->
+    adjunct adjunct_list_dative_to {%nt("adjunct_list_dative_to")%}
+  | dative_to adjunct_list {%nt("adjunct_list_dative_to")%}
+
+
+adjunct_list_do_dative_to ->
+    dative_to adjunct_list_do {%nt("adjunct_list_do_dative_to")%}
+  | adjunct_list_do_dative_to {%nt("adjunct_list_do_dative_to")%}
+  | np adjunct_list_dative_to {%nt("adjunct_list_do_dative_to")%}
 
 
 
@@ -543,9 +533,9 @@ adjunct_list_predcomp_minus_np ->
 
 adjunct_list_to_inf_cl_minus_np ->
     adjunct adjunct_list_to_inf_cl_minus_np {%nt("adjunct_list_to_inf_cl_minus_np")%}
-  | adjunct_minus_np adjunct_list_to_inf_cl {%nt("adjunct_list_to_inf_cl_minus_np")%}
   | to_inf_cl_minus_np adjunct_list {%nt("adjunct_list_to_inf_cl_minus_np")%}
   | to_inf_cl adjunct_list_minus_np {%nt("adjunct_list_to_inf_cl_minus_np")%}
+  | adjunct_minus_np adjunct_list_to_inf_cl {%nt("adjunct_list_to_inf_cl_minus_np")%}
 
 
 adjunct_list_bare_inf_cl_minus_np ->
@@ -554,15 +544,15 @@ adjunct_list_bare_inf_cl_minus_np ->
 
 
 adjunct_list_that_declarative_cl_minus_np ->
-    that_declarative_cl_minus_np adjunct_list {%nt("adjunct_list_that_declarative_cl_minus_np")%}
+    that_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_that_declarative_cl_minus_np")%}
   | adjunct_minus_np adjunct_list_that_declarative_cl {%nt("adjunct_list_that_declarative_cl_minus_np")%}
-  | that_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_that_declarative_cl_minus_np")%}
+  | that_declarative_cl_minus_np adjunct_list {%nt("adjunct_list_that_declarative_cl_minus_np")%}
 
 
 adjunct_list_bare_declarative_cl_minus_np ->
-    adjunct_minus_np adjunct_list_bare_declarative_cl {%nt("adjunct_list_bare_declarative_cl_minus_np")%}
+    bare_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_bare_declarative_cl_minus_np")%}
+  | adjunct_minus_np adjunct_list_bare_declarative_cl {%nt("adjunct_list_bare_declarative_cl_minus_np")%}
   | bare_declarative_cl_minus_np adjunct_list {%nt("adjunct_list_bare_declarative_cl_minus_np")%}
-  | bare_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_bare_declarative_cl_minus_np")%}
 
 
 adjunct_list_exclamative_cl_minus_np ->
@@ -572,10 +562,10 @@ adjunct_list_exclamative_cl_minus_np ->
 
 
 adjunct_list_interrogative_cl_minus_np ->
-    adjunct_minus_np adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl_minus_np")%}
+    interrogative_cl_minus_np adjunct_list {%nt("adjunct_list_interrogative_cl_minus_np")%}
   | adjunct adjunct_list_interrogative_cl_minus_np {%nt("adjunct_list_interrogative_cl_minus_np")%}
-  | interrogative_cl_minus_np adjunct_list {%nt("adjunct_list_interrogative_cl_minus_np")%}
   | interrogative_cl adjunct_list_minus_np {%nt("adjunct_list_interrogative_cl_minus_np")%}
+  | adjunct_minus_np adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl_minus_np")%}
 
 
 adjunct_list_o_minus_np ->
@@ -589,59 +579,59 @@ adjunct_list_do_minus_np ->
 
 
 adjunct_list_o_predcomp_minus_np ->
-    predcomp_minus_np adjunct_list_o {%nt("adjunct_list_o_predcomp_minus_np")%}
-  | np adjunct_list_o_predcomp_minus_np {%nt("adjunct_list_o_predcomp_minus_np")%}
-  | predcomp adjunct_list_o_minus_np {%nt("adjunct_list_o_predcomp_minus_np")%}
+    predcomp adjunct_list_o_minus_np {%nt("adjunct_list_o_predcomp_minus_np")%}
+  | predcomp_minus_np adjunct_list_o {%nt("adjunct_list_o_predcomp_minus_np")%}
   | np_minus_np adjunct_list_o_predcomp {%nt("adjunct_list_o_predcomp_minus_np")%}
+  | np adjunct_list_o_predcomp_minus_np {%nt("adjunct_list_o_predcomp_minus_np")%}
 
 
 adjunct_list_intnp_to_inf_cl_minus_np ->
-    adjunct adjunct_list_intnp_to_inf_cl_minus_np {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
-  | np_minus_np adjunct_list_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
+    np_minus_np adjunct_list_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
   | adjunct_minus_np adjunct_list_intnp_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
   | np adjunct_list_to_inf_cl_minus_np {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
+  | adjunct adjunct_list_intnp_to_inf_cl_minus_np {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
 
 
 adjunct_list_intnp_bare_inf_cl_minus_np ->
-    adjunct_minus_np adjunct_list_intnp_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
-  | adjunct adjunct_list_intnp_bare_inf_cl_minus_np {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
-  | np_minus_np adjunct_list_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
+    adjunct adjunct_list_intnp_bare_inf_cl_minus_np {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
   | np adjunct_list_bare_inf_cl_minus_np {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
+  | np_minus_np adjunct_list_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
+  | adjunct_minus_np adjunct_list_intnp_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
 
 
 adjunct_list_io_that_declarative_cl_minus_np ->
     np_minus_np adjunct_list_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_np")%}
-  | adjunct adjunct_list_io_that_declarative_cl_minus_np {%nt("adjunct_list_io_that_declarative_cl_minus_np")%}
   | adjunct_minus_np adjunct_list_io_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_np")%}
+  | adjunct adjunct_list_io_that_declarative_cl_minus_np {%nt("adjunct_list_io_that_declarative_cl_minus_np")%}
   | np adjunct_list_that_declarative_cl_minus_np {%nt("adjunct_list_io_that_declarative_cl_minus_np")%}
 
 
 adjunct_list_io_bare_declarative_cl_minus_np ->
-    adjunct adjunct_list_io_bare_declarative_cl_minus_np {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
+    adjunct_minus_np adjunct_list_io_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
   | np_minus_np adjunct_list_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
+  | adjunct adjunct_list_io_bare_declarative_cl_minus_np {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
   | np adjunct_list_bare_declarative_cl_minus_np {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
-  | adjunct_minus_np adjunct_list_io_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
 
 
 adjunct_list_io_exclamative_cl_minus_np ->
-    np adjunct_list_exclamative_cl_minus_np {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
-  | np_minus_np adjunct_list_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
+    adjunct adjunct_list_io_exclamative_cl_minus_np {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
+  | np adjunct_list_exclamative_cl_minus_np {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
   | adjunct_minus_np adjunct_list_io_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
-  | adjunct adjunct_list_io_exclamative_cl_minus_np {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
+  | np_minus_np adjunct_list_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
 
 
 adjunct_list_io_interrogative_cl_minus_np ->
-    np_minus_np adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
+    adjunct adjunct_list_io_interrogative_cl_minus_np {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
   | adjunct_minus_np adjunct_list_io_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
+  | np_minus_np adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
   | np adjunct_list_interrogative_cl_minus_np {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
-  | adjunct adjunct_list_io_interrogative_cl_minus_np {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
 
 
 adjunct_list_io_do_minus_np ->
     np_minus_np adjunct_list_do {%nt("adjunct_list_io_do_minus_np")%}
-  | adjunct_minus_np adjunct_list_io_do {%nt("adjunct_list_io_do_minus_np")%}
-  | adjunct adjunct_list_io_do_minus_np {%nt("adjunct_list_io_do_minus_np")%}
   | np adjunct_list_do_minus_np {%nt("adjunct_list_io_do_minus_np")%}
+  | adjunct adjunct_list_io_do_minus_np {%nt("adjunct_list_io_do_minus_np")%}
+  | adjunct_minus_np adjunct_list_io_do {%nt("adjunct_list_io_do_minus_np")%}
 
 
 adjunct_list_dative_to_minus_np ->
@@ -651,85 +641,86 @@ adjunct_list_dative_to_minus_np ->
 
 
 adjunct_list_do_dative_to_minus_np ->
-    np_minus_np adjunct_list_dative_to {%nt("adjunct_list_do_dative_to_minus_np")%}
-  | np adjunct_list_dative_to_minus_np {%nt("adjunct_list_do_dative_to_minus_np")%}
+    adjunct_list_do_dative_to_minus_np {%nt("adjunct_list_do_dative_to_minus_np")%}
   | dative_to adjunct_list_do_minus_np {%nt("adjunct_list_do_dative_to_minus_np")%}
-  | adjunct_list_do_dative_to_minus_np {%nt("adjunct_list_do_dative_to_minus_np")%}
+  | np adjunct_list_dative_to_minus_np {%nt("adjunct_list_do_dative_to_minus_np")%}
+  | np_minus_np adjunct_list_dative_to {%nt("adjunct_list_do_dative_to_minus_np")%}
   | dative_to_minus_np adjunct_list_do {%nt("adjunct_list_do_dative_to_minus_np")%}
 
 
-adjunct_list_passive_minus_np ->
-    adjunct_minus_np adjunct_list_minus_np {%nt("adjunct_list_passive_minus_np")%}
-  | adjunct_minus_np adjunct_list_passive {%nt("adjunct_list_passive_minus_np")%}
-  | adjunct adjunct_list_passive_minus_np {%nt("adjunct_list_passive_minus_np")%}
-
-
-adjunct_list_passive_predcomp_minus_np ->
-    predcomp_minus_np adjunct_list_predcomp_minus_np {%nt("adjunct_list_passive_predcomp_minus_np")%}
-  | predcomp adjunct_list_passive_minus_np {%nt("adjunct_list_passive_predcomp_minus_np")%}
-  | predcomp_minus_np adjunct_list_passive {%nt("adjunct_list_passive_predcomp_minus_np")%}
-
-
-adjunct_list_passive_to_inf_cl_minus_np ->
-    to_inf_cl_minus_np adjunct_list_to_inf_cl_minus_np {%nt("adjunct_list_passive_to_inf_cl_minus_np")%}
-  | to_inf_cl adjunct_list_passive_minus_np {%nt("adjunct_list_passive_to_inf_cl_minus_np")%}
-  | to_inf_cl_minus_np adjunct_list_passive {%nt("adjunct_list_passive_to_inf_cl_minus_np")%}
-
-
-adjunct_list_passive_bare_inf_cl_minus_np ->
-    bare_inf_cl_minus_np adjunct_list_bare_inf_cl_minus_np {%nt("adjunct_list_passive_bare_inf_cl_minus_np")%}
-  | bare_inf_cl_minus_np adjunct_list_passive {%nt("adjunct_list_passive_bare_inf_cl_minus_np")%}
-  | bare_inf_cl adjunct_list_passive_minus_np {%nt("adjunct_list_passive_bare_inf_cl_minus_np")%}
-
-
-adjunct_list_passive_that_declarative_cl_minus_np ->
-    that_declarative_cl_minus_np adjunct_list_passive {%nt("adjunct_list_passive_that_declarative_cl_minus_np")%}
-  | that_declarative_cl adjunct_list_passive_minus_np {%nt("adjunct_list_passive_that_declarative_cl_minus_np")%}
-  | that_declarative_cl_minus_np adjunct_list_that_declarative_cl_minus_np {%nt("adjunct_list_passive_that_declarative_cl_minus_np")%}
-
-
-adjunct_list_passive_bare_declarative_cl_minus_np ->
-    bare_declarative_cl_minus_np adjunct_list_passive {%nt("adjunct_list_passive_bare_declarative_cl_minus_np")%}
-  | bare_declarative_cl_minus_np adjunct_list_bare_declarative_cl_minus_np {%nt("adjunct_list_passive_bare_declarative_cl_minus_np")%}
-  | bare_declarative_cl adjunct_list_passive_minus_np {%nt("adjunct_list_passive_bare_declarative_cl_minus_np")%}
-
-
-adjunct_list_passive_exclamative_cl_minus_np ->
-    exclamative_cl adjunct_list_passive_minus_np {%nt("adjunct_list_passive_exclamative_cl_minus_np")%}
-
-
-adjunct_list_passive_interrogative_cl_minus_np ->
-    interrogative_cl adjunct_list_passive_minus_np {%nt("adjunct_list_passive_interrogative_cl_minus_np")%}
-  | interrogative_cl_minus_np adjunct_list_interrogative_cl_minus_np {%nt("adjunct_list_passive_interrogative_cl_minus_np")%}
-
-
 adjunct_list_passive_o_minus_np ->
-    np_minus_np adjunct_list_o_minus_np {%nt("adjunct_list_passive_o_minus_np")%}
-  | np_minus_np adjunct_list_passive {%nt("adjunct_list_passive_o_minus_np")%}
+    adjunct_list_minus_np {%nt("adjunct_list_passive_o_minus_np")%}
 
 
-adjunct_list_passive_io_that_declarative_cl_minus_np ->
-    np_minus_np that_declarative_cl_adjunct_list_minus_np {%nt("adjunct_list_passive_io_that_declarative_cl_minus_np")%}
+adjunct_list_passive_do_minus_np ->
+    adjunct_list_minus_np {%nt("adjunct_list_passive_do_minus_np")%}
 
 
-adjunct_list_passive_io_bare_declarative_cl_minus_np ->
-    np_minus_np bare_declarative_cl_adjunct_list_minus_np {%nt("adjunct_list_passive_io_bare_declarative_cl_minus_np")%}
+adjunct_list_passive_o_predcomp_minus_np ->
+    adjunct_list_predcomp_minus_np {%nt("adjunct_list_passive_o_predcomp_minus_np")%}
 
 
-adjunct_list_passive_io_exclamative_cl_minus_np ->
-    np_minus_np exclamative_cl_adjunct_list_minus_np {%nt("adjunct_list_passive_io_exclamative_cl_minus_np")%}
+adjunct_list_intnp_to_inf_cl_minus_np ->
+    np_minus_np adjunct_list_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
+  | adjunct_minus_np adjunct_list_intnp_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
+  | np adjunct_list_to_inf_cl_minus_np {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
+  | adjunct adjunct_list_intnp_to_inf_cl_minus_np {%nt("adjunct_list_intnp_to_inf_cl_minus_np")%}
 
 
-adjunct_list_passive_io_interrogative_cl_minus_np ->
-    np_minus_np interrogative_cl_adjunct_list_minus_np {%nt("adjunct_list_passive_io_interrogative_cl_minus_np")%}
+adjunct_list_intnp_bare_inf_cl_minus_np ->
+    adjunct adjunct_list_intnp_bare_inf_cl_minus_np {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
+  | np adjunct_list_bare_inf_cl_minus_np {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
+  | np_minus_np adjunct_list_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
+  | adjunct_minus_np adjunct_list_intnp_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_np")%}
 
 
-adjunct_list_passive_io_do_minus_np ->
-    np_minus_np do_adjunct_list_minus_np {%nt("adjunct_list_passive_io_do_minus_np")%}
+adjunct_list_io_that_declarative_cl_minus_np ->
+    np_minus_np adjunct_list_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_np")%}
+  | adjunct_minus_np adjunct_list_io_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_np")%}
+  | adjunct adjunct_list_io_that_declarative_cl_minus_np {%nt("adjunct_list_io_that_declarative_cl_minus_np")%}
+  | np adjunct_list_that_declarative_cl_minus_np {%nt("adjunct_list_io_that_declarative_cl_minus_np")%}
 
 
-adjunct_list_passive_do_dative_to_minus_np ->
-    np_minus_np dative_to_adjunct_list_minus_np {%nt("adjunct_list_passive_do_dative_to_minus_np")%}
+adjunct_list_io_bare_declarative_cl_minus_np ->
+    adjunct_minus_np adjunct_list_io_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
+  | np_minus_np adjunct_list_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
+  | adjunct adjunct_list_io_bare_declarative_cl_minus_np {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
+  | np adjunct_list_bare_declarative_cl_minus_np {%nt("adjunct_list_io_bare_declarative_cl_minus_np")%}
+
+
+adjunct_list_io_exclamative_cl_minus_np ->
+    adjunct adjunct_list_io_exclamative_cl_minus_np {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
+  | np adjunct_list_exclamative_cl_minus_np {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
+  | adjunct_minus_np adjunct_list_io_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
+  | np_minus_np adjunct_list_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_np")%}
+
+
+adjunct_list_io_interrogative_cl_minus_np ->
+    adjunct adjunct_list_io_interrogative_cl_minus_np {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
+  | adjunct_minus_np adjunct_list_io_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
+  | np_minus_np adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
+  | np adjunct_list_interrogative_cl_minus_np {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
+
+
+adjunct_list_io_do_minus_np ->
+    np_minus_np adjunct_list_do {%nt("adjunct_list_io_do_minus_np")%}
+  | np adjunct_list_do_minus_np {%nt("adjunct_list_io_do_minus_np")%}
+  | adjunct adjunct_list_io_do_minus_np {%nt("adjunct_list_io_do_minus_np")%}
+  | adjunct_minus_np adjunct_list_io_do {%nt("adjunct_list_io_do_minus_np")%}
+
+
+adjunct_list_dative_to_minus_np ->
+    adjunct_minus_np adjunct_list_dative_to {%nt("adjunct_list_dative_to_minus_np")%}
+  | adjunct adjunct_list_dative_to_minus_np {%nt("adjunct_list_dative_to_minus_np")%}
+  | dative_to_minus_np adjunct_list {%nt("adjunct_list_dative_to_minus_np")%}
+
+
+adjunct_list_do_dative_to_minus_np ->
+    adjunct_list_do_dative_to_minus_np {%nt("adjunct_list_do_dative_to_minus_np")%}
+  | dative_to adjunct_list_do_minus_np {%nt("adjunct_list_do_dative_to_minus_np")%}
+  | np adjunct_list_dative_to_minus_np {%nt("adjunct_list_do_dative_to_minus_np")%}
+  | np_minus_np adjunct_list_dative_to {%nt("adjunct_list_do_dative_to_minus_np")%}
+  | dative_to_minus_np adjunct_list_do {%nt("adjunct_list_do_dative_to_minus_np")%}
 
 
 
@@ -845,8 +836,8 @@ passive_cl_minus_np ->
     | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to_minus_np              {%nt("passive_cl_minus_np")%}
 
 adjunct_list_minus_adjp ->
-    adjunct adjunct_list_minus_adjp {%nt("adjunct_list_minus_adjp")%}
-  | adjunct_minus_adjp adjunct_list {%nt("adjunct_list_minus_adjp")%}
+    adjunct_minus_adjp adjunct_list {%nt("adjunct_list_minus_adjp")%}
+  | adjunct adjunct_list_minus_adjp {%nt("adjunct_list_minus_adjp")%}
 
 
 adjunct_list_predcomp_minus_adjp ->
@@ -855,10 +846,10 @@ adjunct_list_predcomp_minus_adjp ->
 
 
 adjunct_list_to_inf_cl_minus_adjp ->
-    adjunct_minus_adjp adjunct_list_to_inf_cl {%nt("adjunct_list_to_inf_cl_minus_adjp")%}
-  | adjunct adjunct_list_to_inf_cl_minus_adjp {%nt("adjunct_list_to_inf_cl_minus_adjp")%}
-  | to_inf_cl adjunct_list_minus_adjp {%nt("adjunct_list_to_inf_cl_minus_adjp")%}
+    to_inf_cl adjunct_list_minus_adjp {%nt("adjunct_list_to_inf_cl_minus_adjp")%}
   | to_inf_cl_minus_adjp adjunct_list {%nt("adjunct_list_to_inf_cl_minus_adjp")%}
+  | adjunct_minus_adjp adjunct_list_to_inf_cl {%nt("adjunct_list_to_inf_cl_minus_adjp")%}
+  | adjunct adjunct_list_to_inf_cl_minus_adjp {%nt("adjunct_list_to_inf_cl_minus_adjp")%}
 
 
 adjunct_list_bare_inf_cl_minus_adjp ->
@@ -867,28 +858,28 @@ adjunct_list_bare_inf_cl_minus_adjp ->
 
 
 adjunct_list_that_declarative_cl_minus_adjp ->
-    that_declarative_cl adjunct_list_minus_adjp {%nt("adjunct_list_that_declarative_cl_minus_adjp")%}
-  | adjunct_minus_adjp adjunct_list_that_declarative_cl {%nt("adjunct_list_that_declarative_cl_minus_adjp")%}
+    adjunct_minus_adjp adjunct_list_that_declarative_cl {%nt("adjunct_list_that_declarative_cl_minus_adjp")%}
+  | that_declarative_cl adjunct_list_minus_adjp {%nt("adjunct_list_that_declarative_cl_minus_adjp")%}
   | that_declarative_cl_minus_adjp adjunct_list {%nt("adjunct_list_that_declarative_cl_minus_adjp")%}
 
 
 adjunct_list_bare_declarative_cl_minus_adjp ->
-    bare_declarative_cl_minus_adjp adjunct_list {%nt("adjunct_list_bare_declarative_cl_minus_adjp")%}
+    bare_declarative_cl adjunct_list_minus_adjp {%nt("adjunct_list_bare_declarative_cl_minus_adjp")%}
+  | bare_declarative_cl_minus_adjp adjunct_list {%nt("adjunct_list_bare_declarative_cl_minus_adjp")%}
   | adjunct_minus_adjp adjunct_list_bare_declarative_cl {%nt("adjunct_list_bare_declarative_cl_minus_adjp")%}
-  | bare_declarative_cl adjunct_list_minus_adjp {%nt("adjunct_list_bare_declarative_cl_minus_adjp")%}
 
 
 adjunct_list_exclamative_cl_minus_adjp ->
-    exclamative_cl_minus_adjp adjunct_list {%nt("adjunct_list_exclamative_cl_minus_adjp")%}
+    adjunct_minus_adjp adjunct_list_exclamative_cl {%nt("adjunct_list_exclamative_cl_minus_adjp")%}
+  | exclamative_cl_minus_adjp adjunct_list {%nt("adjunct_list_exclamative_cl_minus_adjp")%}
   | exclamative_cl adjunct_list_minus_adjp {%nt("adjunct_list_exclamative_cl_minus_adjp")%}
-  | adjunct_minus_adjp adjunct_list_exclamative_cl {%nt("adjunct_list_exclamative_cl_minus_adjp")%}
 
 
 adjunct_list_interrogative_cl_minus_adjp ->
-    adjunct adjunct_list_interrogative_cl_minus_adjp {%nt("adjunct_list_interrogative_cl_minus_adjp")%}
-  | interrogative_cl_minus_adjp adjunct_list {%nt("adjunct_list_interrogative_cl_minus_adjp")%}
-  | adjunct_minus_adjp adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl_minus_adjp")%}
+    interrogative_cl_minus_adjp adjunct_list {%nt("adjunct_list_interrogative_cl_minus_adjp")%}
   | interrogative_cl adjunct_list_minus_adjp {%nt("adjunct_list_interrogative_cl_minus_adjp")%}
+  | adjunct adjunct_list_interrogative_cl_minus_adjp {%nt("adjunct_list_interrogative_cl_minus_adjp")%}
+  | adjunct_minus_adjp adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl_minus_adjp")%}
 
 
 adjunct_list_o_minus_adjp ->
@@ -902,59 +893,59 @@ adjunct_list_do_minus_adjp ->
 
 
 adjunct_list_o_predcomp_minus_adjp ->
-    np adjunct_list_o_predcomp_minus_adjp {%nt("adjunct_list_o_predcomp_minus_adjp")%}
-  | predcomp_minus_adjp adjunct_list_o {%nt("adjunct_list_o_predcomp_minus_adjp")%}
-  | np_minus_adjp adjunct_list_o_predcomp {%nt("adjunct_list_o_predcomp_minus_adjp")%}
+    np_minus_adjp adjunct_list_o_predcomp {%nt("adjunct_list_o_predcomp_minus_adjp")%}
+  | np adjunct_list_o_predcomp_minus_adjp {%nt("adjunct_list_o_predcomp_minus_adjp")%}
   | predcomp adjunct_list_o_minus_adjp {%nt("adjunct_list_o_predcomp_minus_adjp")%}
+  | predcomp_minus_adjp adjunct_list_o {%nt("adjunct_list_o_predcomp_minus_adjp")%}
 
 
 adjunct_list_intnp_to_inf_cl_minus_adjp ->
-    np adjunct_list_to_inf_cl_minus_adjp {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
-  | adjunct_minus_adjp adjunct_list_intnp_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
+    adjunct_minus_adjp adjunct_list_intnp_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
   | adjunct adjunct_list_intnp_to_inf_cl_minus_adjp {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
+  | np adjunct_list_to_inf_cl_minus_adjp {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
   | np_minus_adjp adjunct_list_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
 
 
 adjunct_list_intnp_bare_inf_cl_minus_adjp ->
-    adjunct_minus_adjp adjunct_list_intnp_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
-  | np adjunct_list_bare_inf_cl_minus_adjp {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
+    np_minus_adjp adjunct_list_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
   | adjunct adjunct_list_intnp_bare_inf_cl_minus_adjp {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
-  | np_minus_adjp adjunct_list_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
+  | adjunct_minus_adjp adjunct_list_intnp_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
+  | np adjunct_list_bare_inf_cl_minus_adjp {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
 
 
 adjunct_list_io_that_declarative_cl_minus_adjp ->
-    np_minus_adjp adjunct_list_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
+    adjunct_minus_adjp adjunct_list_io_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
   | adjunct adjunct_list_io_that_declarative_cl_minus_adjp {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
-  | adjunct_minus_adjp adjunct_list_io_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
+  | np_minus_adjp adjunct_list_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
   | np adjunct_list_that_declarative_cl_minus_adjp {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
 
 
 adjunct_list_io_bare_declarative_cl_minus_adjp ->
-    adjunct_minus_adjp adjunct_list_io_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
-  | np adjunct_list_bare_declarative_cl_minus_adjp {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
-  | np_minus_adjp adjunct_list_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
+    np_minus_adjp adjunct_list_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
   | adjunct adjunct_list_io_bare_declarative_cl_minus_adjp {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
+  | np adjunct_list_bare_declarative_cl_minus_adjp {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
+  | adjunct_minus_adjp adjunct_list_io_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
 
 
 adjunct_list_io_exclamative_cl_minus_adjp ->
-    np_minus_adjp adjunct_list_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
-  | adjunct_minus_adjp adjunct_list_io_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
+    adjunct_minus_adjp adjunct_list_io_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
   | np adjunct_list_exclamative_cl_minus_adjp {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
   | adjunct adjunct_list_io_exclamative_cl_minus_adjp {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
+  | np_minus_adjp adjunct_list_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
 
 
 adjunct_list_io_interrogative_cl_minus_adjp ->
-    np_minus_adjp adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
+    adjunct_minus_adjp adjunct_list_io_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
+  | np_minus_adjp adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
   | np adjunct_list_interrogative_cl_minus_adjp {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
-  | adjunct_minus_adjp adjunct_list_io_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
   | adjunct adjunct_list_io_interrogative_cl_minus_adjp {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
 
 
 adjunct_list_io_do_minus_adjp ->
-    adjunct adjunct_list_io_do_minus_adjp {%nt("adjunct_list_io_do_minus_adjp")%}
-  | np_minus_adjp adjunct_list_do {%nt("adjunct_list_io_do_minus_adjp")%}
+    np_minus_adjp adjunct_list_do {%nt("adjunct_list_io_do_minus_adjp")%}
   | adjunct_minus_adjp adjunct_list_io_do {%nt("adjunct_list_io_do_minus_adjp")%}
   | np adjunct_list_do_minus_adjp {%nt("adjunct_list_io_do_minus_adjp")%}
+  | adjunct adjunct_list_io_do_minus_adjp {%nt("adjunct_list_io_do_minus_adjp")%}
 
 
 adjunct_list_dative_to_minus_adjp ->
@@ -964,85 +955,86 @@ adjunct_list_dative_to_minus_adjp ->
 
 
 adjunct_list_do_dative_to_minus_adjp ->
-    dative_to adjunct_list_do_minus_adjp {%nt("adjunct_list_do_dative_to_minus_adjp")%}
-  | adjunct_list_do_dative_to_minus_adjp {%nt("adjunct_list_do_dative_to_minus_adjp")%}
-  | np adjunct_list_dative_to_minus_adjp {%nt("adjunct_list_do_dative_to_minus_adjp")%}
-  | np_minus_adjp adjunct_list_dative_to {%nt("adjunct_list_do_dative_to_minus_adjp")%}
+    np adjunct_list_dative_to_minus_adjp {%nt("adjunct_list_do_dative_to_minus_adjp")%}
   | dative_to_minus_adjp adjunct_list_do {%nt("adjunct_list_do_dative_to_minus_adjp")%}
-
-
-adjunct_list_passive_minus_adjp ->
-    adjunct_minus_np adjunct_list_minus_adjp {%nt("adjunct_list_passive_minus_adjp")%}
-  | adjunct_minus_adjp adjunct_list_passive {%nt("adjunct_list_passive_minus_adjp")%}
-  | adjunct adjunct_list_passive_minus_adjp {%nt("adjunct_list_passive_minus_adjp")%}
-
-
-adjunct_list_passive_predcomp_minus_adjp ->
-    predcomp_minus_adjp adjunct_list_passive {%nt("adjunct_list_passive_predcomp_minus_adjp")%}
-  | predcomp adjunct_list_passive_minus_adjp {%nt("adjunct_list_passive_predcomp_minus_adjp")%}
-  | predcomp_minus_np adjunct_list_predcomp_minus_adjp {%nt("adjunct_list_passive_predcomp_minus_adjp")%}
-
-
-adjunct_list_passive_to_inf_cl_minus_adjp ->
-    to_inf_cl_minus_np adjunct_list_to_inf_cl_minus_adjp {%nt("adjunct_list_passive_to_inf_cl_minus_adjp")%}
-  | to_inf_cl adjunct_list_passive_minus_adjp {%nt("adjunct_list_passive_to_inf_cl_minus_adjp")%}
-  | to_inf_cl_minus_adjp adjunct_list_passive {%nt("adjunct_list_passive_to_inf_cl_minus_adjp")%}
-
-
-adjunct_list_passive_bare_inf_cl_minus_adjp ->
-    bare_inf_cl adjunct_list_passive_minus_adjp {%nt("adjunct_list_passive_bare_inf_cl_minus_adjp")%}
-  | bare_inf_cl_minus_adjp adjunct_list_passive {%nt("adjunct_list_passive_bare_inf_cl_minus_adjp")%}
-  | bare_inf_cl_minus_np adjunct_list_bare_inf_cl_minus_adjp {%nt("adjunct_list_passive_bare_inf_cl_minus_adjp")%}
-
-
-adjunct_list_passive_that_declarative_cl_minus_adjp ->
-    that_declarative_cl_minus_np adjunct_list_that_declarative_cl_minus_adjp {%nt("adjunct_list_passive_that_declarative_cl_minus_adjp")%}
-  | that_declarative_cl_minus_adjp adjunct_list_passive {%nt("adjunct_list_passive_that_declarative_cl_minus_adjp")%}
-  | that_declarative_cl adjunct_list_passive_minus_adjp {%nt("adjunct_list_passive_that_declarative_cl_minus_adjp")%}
-
-
-adjunct_list_passive_bare_declarative_cl_minus_adjp ->
-    bare_declarative_cl adjunct_list_passive_minus_adjp {%nt("adjunct_list_passive_bare_declarative_cl_minus_adjp")%}
-  | bare_declarative_cl_minus_adjp adjunct_list_passive {%nt("adjunct_list_passive_bare_declarative_cl_minus_adjp")%}
-  | bare_declarative_cl_minus_np adjunct_list_bare_declarative_cl_minus_adjp {%nt("adjunct_list_passive_bare_declarative_cl_minus_adjp")%}
-
-
-adjunct_list_passive_exclamative_cl_minus_adjp ->
-    exclamative_cl adjunct_list_passive_minus_adjp {%nt("adjunct_list_passive_exclamative_cl_minus_adjp")%}
-
-
-adjunct_list_passive_interrogative_cl_minus_adjp ->
-    interrogative_cl_minus_np adjunct_list_interrogative_cl_minus_adjp {%nt("adjunct_list_passive_interrogative_cl_minus_adjp")%}
-  | interrogative_cl adjunct_list_passive_minus_adjp {%nt("adjunct_list_passive_interrogative_cl_minus_adjp")%}
+  | dative_to adjunct_list_do_minus_adjp {%nt("adjunct_list_do_dative_to_minus_adjp")%}
+  | adjunct_list_do_dative_to_minus_adjp {%nt("adjunct_list_do_dative_to_minus_adjp")%}
+  | np_minus_adjp adjunct_list_dative_to {%nt("adjunct_list_do_dative_to_minus_adjp")%}
 
 
 adjunct_list_passive_o_minus_adjp ->
-    np_minus_np adjunct_list_o_minus_adjp {%nt("adjunct_list_passive_o_minus_adjp")%}
-  | np_minus_adjp adjunct_list_passive {%nt("adjunct_list_passive_o_minus_adjp")%}
+    adjunct_list_minus_adjp {%nt("adjunct_list_passive_o_minus_adjp")%}
 
 
-adjunct_list_passive_io_that_declarative_cl_minus_adjp ->
-    np_minus_np that_declarative_cl_adjunct_list_minus_adjp {%nt("adjunct_list_passive_io_that_declarative_cl_minus_adjp")%}
+adjunct_list_passive_do_minus_adjp ->
+    adjunct_list_minus_adjp {%nt("adjunct_list_passive_do_minus_adjp")%}
 
 
-adjunct_list_passive_io_bare_declarative_cl_minus_adjp ->
-    np_minus_np bare_declarative_cl_adjunct_list_minus_adjp {%nt("adjunct_list_passive_io_bare_declarative_cl_minus_adjp")%}
+adjunct_list_passive_o_predcomp_minus_adjp ->
+    adjunct_list_predcomp_minus_adjp {%nt("adjunct_list_passive_o_predcomp_minus_adjp")%}
 
 
-adjunct_list_passive_io_exclamative_cl_minus_adjp ->
-    np_minus_np exclamative_cl_adjunct_list_minus_adjp {%nt("adjunct_list_passive_io_exclamative_cl_minus_adjp")%}
+adjunct_list_intnp_to_inf_cl_minus_adjp ->
+    adjunct_minus_adjp adjunct_list_intnp_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
+  | adjunct adjunct_list_intnp_to_inf_cl_minus_adjp {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
+  | np adjunct_list_to_inf_cl_minus_adjp {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
+  | np_minus_adjp adjunct_list_to_inf_cl {%nt("adjunct_list_intnp_to_inf_cl_minus_adjp")%}
 
 
-adjunct_list_passive_io_interrogative_cl_minus_adjp ->
-    np_minus_np interrogative_cl_adjunct_list_minus_adjp {%nt("adjunct_list_passive_io_interrogative_cl_minus_adjp")%}
+adjunct_list_intnp_bare_inf_cl_minus_adjp ->
+    np_minus_adjp adjunct_list_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
+  | adjunct adjunct_list_intnp_bare_inf_cl_minus_adjp {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
+  | adjunct_minus_adjp adjunct_list_intnp_bare_inf_cl {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
+  | np adjunct_list_bare_inf_cl_minus_adjp {%nt("adjunct_list_intnp_bare_inf_cl_minus_adjp")%}
 
 
-adjunct_list_passive_io_do_minus_adjp ->
-    np_minus_np do_adjunct_list_minus_adjp {%nt("adjunct_list_passive_io_do_minus_adjp")%}
+adjunct_list_io_that_declarative_cl_minus_adjp ->
+    adjunct_minus_adjp adjunct_list_io_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
+  | adjunct adjunct_list_io_that_declarative_cl_minus_adjp {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
+  | np_minus_adjp adjunct_list_that_declarative_cl {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
+  | np adjunct_list_that_declarative_cl_minus_adjp {%nt("adjunct_list_io_that_declarative_cl_minus_adjp")%}
 
 
-adjunct_list_passive_do_dative_to_minus_adjp ->
-    np_minus_np dative_to_adjunct_list_minus_adjp {%nt("adjunct_list_passive_do_dative_to_minus_adjp")%}
+adjunct_list_io_bare_declarative_cl_minus_adjp ->
+    np_minus_adjp adjunct_list_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
+  | adjunct adjunct_list_io_bare_declarative_cl_minus_adjp {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
+  | np adjunct_list_bare_declarative_cl_minus_adjp {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
+  | adjunct_minus_adjp adjunct_list_io_bare_declarative_cl {%nt("adjunct_list_io_bare_declarative_cl_minus_adjp")%}
+
+
+adjunct_list_io_exclamative_cl_minus_adjp ->
+    adjunct_minus_adjp adjunct_list_io_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
+  | np adjunct_list_exclamative_cl_minus_adjp {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
+  | adjunct adjunct_list_io_exclamative_cl_minus_adjp {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
+  | np_minus_adjp adjunct_list_exclamative_cl {%nt("adjunct_list_io_exclamative_cl_minus_adjp")%}
+
+
+adjunct_list_io_interrogative_cl_minus_adjp ->
+    adjunct_minus_adjp adjunct_list_io_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
+  | np_minus_adjp adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
+  | np adjunct_list_interrogative_cl_minus_adjp {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
+  | adjunct adjunct_list_io_interrogative_cl_minus_adjp {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
+
+
+adjunct_list_io_do_minus_adjp ->
+    np_minus_adjp adjunct_list_do {%nt("adjunct_list_io_do_minus_adjp")%}
+  | adjunct_minus_adjp adjunct_list_io_do {%nt("adjunct_list_io_do_minus_adjp")%}
+  | np adjunct_list_do_minus_adjp {%nt("adjunct_list_io_do_minus_adjp")%}
+  | adjunct adjunct_list_io_do_minus_adjp {%nt("adjunct_list_io_do_minus_adjp")%}
+
+
+adjunct_list_dative_to_minus_adjp ->
+    adjunct_minus_adjp adjunct_list_dative_to {%nt("adjunct_list_dative_to_minus_adjp")%}
+  | adjunct adjunct_list_dative_to_minus_adjp {%nt("adjunct_list_dative_to_minus_adjp")%}
+  | dative_to_minus_adjp adjunct_list {%nt("adjunct_list_dative_to_minus_adjp")%}
+
+
+adjunct_list_do_dative_to_minus_adjp ->
+    np adjunct_list_dative_to_minus_adjp {%nt("adjunct_list_do_dative_to_minus_adjp")%}
+  | dative_to_minus_adjp adjunct_list_do {%nt("adjunct_list_do_dative_to_minus_adjp")%}
+  | dative_to adjunct_list_do_minus_adjp {%nt("adjunct_list_do_dative_to_minus_adjp")%}
+  | adjunct_list_do_dative_to_minus_adjp {%nt("adjunct_list_do_dative_to_minus_adjp")%}
+  | np_minus_adjp adjunct_list_dative_to {%nt("adjunct_list_do_dative_to_minus_adjp")%}
 
 
 

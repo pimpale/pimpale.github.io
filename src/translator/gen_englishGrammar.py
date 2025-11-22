@@ -294,11 +294,13 @@ def adjunct_list_grammar(mv_type):
     out += serialize_rules(
         f"adjunct_list_predcomp{mv_suf}",
         [
-            # Ex mv_np: I know what you seemed [gap] to be yesterday
-            # Ex mv_adjp: I know how you seemed [gap] yesterday
+            # Ex: You seemed happy yesterday
+            # Ex mv_np: Which person should I seem happy in front of [gap]
+            # Ex mv_adjp: I know how you seemed happy [gap] yesterday
             f"predcomp adjunct_list{mv_suf}",
-            # Ex mv_np: I know what you seemed yesterday to be [gap]
-            # Ex mv_adjp: I know how [gap] you seemed yesterday
+            # Ex: You seemed happy yesterday
+            # Ex mv_np: I know who you seemed happy to meet [gap]
+            # Ex mv_adjp: I know how happy you seemed [gap]
             f"predcomp{mv_suf} adjunct_list",
         ],
     )
@@ -572,13 +574,13 @@ def adjunct_list_grammar(mv_type):
             f"adjunct adjunct_list_io_do{mv_suf}",
             # Ex mv_np: I know what he gave [gap] yesterday
             # Ex mv_adjp: I know how happy he made you [gap] yesterday
-            f"np adjunct_list_do{mv_suf}",
+            f"np adjunct_list_o{mv_suf}",
             # Ex mv_np: I know what he gave you quickly [gap] today
             # Ex mv_adjp: I know how happy he made you [gap] today
             f"adjunct{mv_suf} adjunct_list_io_do",
             # Ex mv_np: I know what he gave [gap] today
             # Ex mv_adjp: I know how happy he made you [gap] today
-            f"np{mv_suf} adjunct_list_do",
+            f"np{mv_suf} adjunct_list_o",
         ],
     )
 
@@ -608,13 +610,13 @@ def adjunct_list_grammar(mv_type):
             f"np adjunct_list_dative_to{mv_suf}",
             # Ex mv_np: I know what he gave quickly to her [gap] yesterday
             # Ex mv_adjp: I know how happy he made quickly to her [gap] yesterday
-            f"dative_to adjunct_list_do{mv_suf}",
+            f"dative_to adjunct_list_o{mv_suf}",
             # Ex mv_np: I know what he gave [gap] to her today
             # Ex mv_adjp: I know how happy he made [gap] to her today
             f"np{mv_suf} adjunct_list_dative_to",
             # Ex mv_np: I know what he gave to her [gap] today
             # Ex mv_adjp: I know how happy he made to her [gap] today
-            f"dative_to{mv_suf} adjunct_list_do",
+            f"dative_to{mv_suf} adjunct_list_o",
         ],
     )
 
@@ -622,18 +624,12 @@ def adjunct_list_grammar(mv_type):
     # Passive clauses
     ##################
 
-    # the janitor was seen
-    # I know who the janitor was seen by
     out += serialize_rules(
         f"adjunct_list_passive_o{mv_suf}",
         [
-            f"adjunct_list{mv_suf}"
-        ],
-    )
-
-    out += serialize_rules(
-        f"adjunct_list_passive_do{mv_suf}",
-        [
+            # Ex: The janitor was seen
+            # Ex mv_np: I know who the janitor was seen by [gap]
+            # Ex mv_adjp: I know how the janitor was seen [gap]
             f"adjunct_list{mv_suf}"
         ],
     )
@@ -641,27 +637,25 @@ def adjunct_list_grammar(mv_type):
     out += serialize_rules(
         f"adjunct_list_passive_o_predcomp{mv_suf}",
         [
+            # Ex: The janitor was found happy
+            # Ex mv_np: I know who the janitor was found happy by [gap]
+            # Ex mv_adjp: I know how happy the janitor was found [gap] 
             f"adjunct_list_predcomp{mv_suf}"
         ],
     )
 
-    # --- EVERYTHING BELOW NEEDS TO BE FIXED ---
-
     out += serialize_rules(
-        f"adjunct_list_intnp_to_inf_cl{mv_suf}",
+        f"adjunct_list_passive_intnp_to_inf_cl{mv_suf}",
         [
-            # Ex mv_np: I know what he asked you quickly to eat [gap]
-            # Ex mv_adjp: I know how happy he asked you quickly to become [gap]
-            f"adjunct adjunct_list_intnp_to_inf_cl{mv_suf}",
-            # Ex mv_np: I know what he asked [gap] to eat yesterday
+            # Ex mv_np: I know what you were asked quickly to eat [gap]
+            # Ex mv_adjp: I know how happy you were asked quickly to become [gap]
+            f"adjunct adjunct_list_to_inf_cl{mv_suf}",
+            # Ex mv_np: I know who he asked [gap] to work yesterday
             # Ex mv_adjp: I know how happy he asked you to become [gap] yesterday
             f"np adjunct_list_to_inf_cl{mv_suf}",
             # Ex mv_np: I know what he asked you quickly to eat [gap] today
             # Ex mv_adjp: I know how happy he asked you quickly to become [gap] today
-            f"adjunct{mv_suf} adjunct_list_intnp_to_inf_cl",
-            # Ex mv_np: I know what he asked [gap] to eat today
-            # Ex mv_adjp: I know how happy he asked you to become [gap] today
-            f"np{mv_suf} adjunct_list_to_inf_cl",
+            f"adjunct{mv_suf} adjunct_list_to_inf_cl",
         ],
     )
 
@@ -774,13 +768,13 @@ def adjunct_list_grammar(mv_type):
             f"adjunct adjunct_list_io_do{mv_suf}",
             # Ex mv_np: I know what he gave [gap] yesterday
             # Ex mv_adjp: I know how happy he made you [gap] yesterday
-            f"np adjunct_list_do{mv_suf}",
+            f"np adjunct_list_o{mv_suf}",
             # Ex mv_np: I know what he gave you quickly [gap] today
             # Ex mv_adjp: I know how happy he made you [gap] today
             f"adjunct{mv_suf} adjunct_list_io_do",
             # Ex mv_np: I know what he gave [gap] today
             # Ex mv_adjp: I know how happy he made you [gap] today
-            f"np{mv_suf} adjunct_list_do",
+            f"np{mv_suf} adjunct_list_o",
         ],
     )
 
@@ -869,6 +863,7 @@ passive_cl{mv_suf} ->
 # omit passive_cl, as one cannot combine passive with passive *The food was been eaten
       advp_vp? {vp_type}_o                      adjunct_list_passive_o{mv_suf}                         {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_o_predcomp             adjunct_list_passive_o_predcomp{mv_suf}                {{%nt("passive_cl{mv_suf}")%}}
+    | advp_vp? {vp_type}_intnp_to_inf_cl        adjunct_list_passive_intnp_to_inf_cl{mv_suf}           {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl{mv_suf}    {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl{mv_suf}    {{%nt("passive_cl{mv_suf}")%}}
     | advp_vp? {vp_type}_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl{mv_suf}         {{%nt("passive_cl{mv_suf}")%}}
@@ -969,8 +964,8 @@ ip_det -> which  {%nt("ip_det")%}
 np -> precorenp_modifier? core_np postcorenp_modifier? {%nt("np")%}
 
 # a noun phrase with another noun phrase moved out
-# TODO: we don't yet support moving nps from an np. I don't even know if this is possible in English.
-np_minus_np -> null {%nt("np_minus_np")%} 
+# Ex: I know which country she serves as [prime minister of]
+np_minus_np -> precorenp_modifier? core_np_minus_np postcorenp_modifier? {%nt("np_minus_np")%}
 
 # a noun phrase with an adjective moved out
 # TODO: currently we don't model the effects of the missing adjective, but we should
@@ -987,10 +982,15 @@ whichable_np -> adjp_list noun n_modifier_list {%nt("whichable_np")%}
 
 # a core noun phrase without peripheral modifiers
 core_np -> 
-                                                  proper_noun                               {%nt("core_np")%}  # a proper noun (ex: "John", "Mary")
-    |                                             pronoun                                   {%nt("core_np")%}  # a pronoun (ex: "I", "you", "he", "she", "it", "we", "they")
-    |                                             independent_genitive_pronoun              {%nt("core_np")%}  # a possessive pronoun (ex: "mine", "yours")
-    | predeterminer_modifier? determiner? adjp_list noun                    n_modifier_list   {%nt("core_np")%}  # determiner phrase followed by a nominal (ex: "even all the lovely food too")
+                                                    proper_noun                                  {%nt("core_np")%}  # a proper noun (ex: "John", "Mary")
+    |                                               pronoun                                      {%nt("core_np")%}  # a pronoun (ex: "I", "you", "he", "she", "it", "we", "they")
+    |                                               independent_genitive_pronoun                 {%nt("core_np")%}  # a possessive pronoun (ex: "mine", "yours")
+    | predeterminer_modifier? determiner? adjp_list noun                         n_modifier_list {%nt("core_np")%}  # determiner phrase followed by a nominal (ex: "even all the lovely food too")
+
+
+# I know which country she serves as [prime minister of]
+core_np_minus_np -> 
+      predeterminer_modifier? determiner? adjp_list noun                         n_modifier_list_minus_np {%nt("core_np_minus_np")%}  # determiner phrase followed by a nominal (ex: "even all the lovely food too")
 
 number -> digits | cardinal_number_eng {%nt("number")%}
 
@@ -1033,6 +1033,11 @@ n_modifier -> restrictive_cl           {%nt("n_modifier")%} # a relative clause 
             | passive_cl               {%nt("n_modifier")%} # a reduced object relative passive clause (ex: "the horse raced past the barn")
 
 n_modifier_list -> n_modifier:* {%nonterminal_unpack("n_modifier_list")%}
+
+
+# I know which country she serves as prime minister [of]
+# TODO: there are more cases to consider here.
+n_modifier_list_minus_np -> pp_minus_np {%nonterminal_unpack("n_modifier_list_minus_np")%}
 
 # a determiner phrase suitable for countable nouns only
 determiner? -> null                 {%nt("determiner")%} # null determiner
@@ -1094,11 +1099,11 @@ adjp ->
     | proper_noun                           {%nt("adjp")%} # a proper noun used as an adjective like "English" (TODO: kind of a hack, not sure)
 
 adjp_minus_np ->                                     
-      advp adjp_minus_np                              {%nt("adjp_minus_np")%}
-    | adj_pp             preposition                {%nt("adjp_minus_np")%}
+      advp                    adjp_minus_np                   {%nt("adjp_minus_np")%}
+    | adj_pp                  preposition                     {%nt("adjp_minus_np")%}
     | adj_that_declarative_cl that_declarative_cl_minus_np    {%nt("adjp_minus_np")%}
     | adj_bare_declarative_cl bare_declarative_cl_minus_np    {%nt("adjp_minus_np")%}
-    | adj_to_inf_cl      to_inf_cl_minus_np         {%nt("adjp_minus_np")%}
+    | adj_to_inf_cl           to_inf_cl_minus_np              {%nt("adjp_minus_np")%}
 
 # a sequence of adjps
 adjp_list -> adjp:* {%nonterminal_unpack("adjp_list")%}
