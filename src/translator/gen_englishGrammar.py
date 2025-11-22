@@ -308,14 +308,17 @@ def adjunct_list_grammar(mv_type):
     out += serialize_rules(
         f"adjunct_list_to_inf_cl{mv_suf}",
         [
-            # Ex mv_np: I know what he wanted quickly to eat [gap]
-            # Ex mv_adjp: I know how [gap] he wanted quickly to become
+            # Ex: He wanted badly to eat
+            # Ex mv_np: I know what he wanted badly to eat [gap]
+            # Ex mv_adjp: I know how happy he wanted badly to become [gap]
             f"adjunct adjunct_list_to_inf_cl{mv_suf}",
-            # Ex mv_np: I know what he wanted to eat [gap] quickly
-            # Ex mv_adjp: I know how happy he wanted to become [gap] quickly
+            # Ex: He decided to leave the country while he was in paris
+            # Ex mv_np: Which city did he decide to leave the country while he was in [gap]?
+            # Ex mv_adjp: I know how badly he wanted to eat [gap]
             f"to_inf_cl adjunct_list{mv_suf}",
-            # Ex mv_np: I know what he wanted quickly to eat [gap] today
-            # Ex mv_adjp: I know how [gap] he wanted quickly to become today
+            # Ex: He decided in paris to leave the country
+            # Ex mv_np: Which city did he decide in [gap] to leave the country
+            # Ex mv_adjp: How 
             f"adjunct{mv_suf} adjunct_list_to_inf_cl",
             # Ex mv_np: I know what he wanted to eat [gap] today
             # Ex mv_adjp: I know how happy he wanted to become [gap] today
@@ -410,17 +413,6 @@ def adjunct_list_grammar(mv_type):
         ],
     )
 
-    out += serialize_rules(
-        f"adjunct_list_do{mv_suf}",
-        [
-            # Ex mv_np: I know what you gave him [gap] yesterday
-            # Ex mv_adjp: I know how happy you made him [gap] yesterday (where adjp is secondary predicate)
-            f"np adjunct_list{mv_suf}",
-            # Ex mv_np: I know what [gap] you gave him yesterday
-            # Ex mv_adjp: I know how [gap] you made him happy yesterday
-            f"np{mv_suf} adjunct_list" if mv_type else None,
-        ],
-    )
 
     # can be out of order, not normally the case
     # normal: i found the janitor happy
@@ -467,20 +459,14 @@ def adjunct_list_grammar(mv_type):
 
     # bare inf cannot shift with the np
     # - *i made stumble the huge giant that killed the last hero
-    # however an adjunct can sit before the bare infintive
-    # - i made you earlier stop talking about this very long phrase
+    # it sounds pretty unnatural to have an adjunct before the bare infintive (even the bare infinitive is long)
+    # - *i made you earlier stop talking about this very long phrase
     out += serialize_rules(
         f"adjunct_list_intnp_bare_inf_cl{mv_suf}",
         [
-            # Ex mv_np: I know what he made you quickly eat [gap]
-            # Ex mv_adjp: I know how happy he made you quickly become [gap]
-            f"adjunct adjunct_list_intnp_bare_inf_cl{mv_suf}",
             # Ex mv_np: I know what he made [gap] eat yesterday
             # Ex mv_adjp: I know how happy he made you become [gap] yesterday
             f"np adjunct_list_bare_inf_cl{mv_suf}",
-            # Ex mv_np: I know what he made you quickly eat [gap] today
-            # Ex mv_adjp: I know how happy he made you quickly become [gap] today
-            f"adjunct{mv_suf} adjunct_list_intnp_bare_inf_cl",
             # Ex mv_np: I know what he made [gap] eat today
             # Ex mv_adjp: I know how happy he made you become [gap] today
             f"np{mv_suf} adjunct_list_bare_inf_cl",
