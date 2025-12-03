@@ -318,8 +318,9 @@ def adjunct_list_grammar(mv_type):
             f"to_inf_cl adjunct_list{mv_suf}",
             # Ex: He decided in paris to leave the country
             # Ex mv_np: Which city did he decide in [gap] to leave the country
-            # Ex mv_adjp: How 
+            # Ex mv_adjp: How badly did he want [gap] to eat?
             f"adjunct{mv_suf} adjunct_list_to_inf_cl",
+            
             # Ex mv_np: I know what he wanted to eat [gap] today
             # Ex mv_adjp: I know how happy he wanted to become [gap] today
             f"to_inf_cl{mv_suf} adjunct_list",
