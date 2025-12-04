@@ -189,9 +189,6 @@ function t(kind) {
 
 %}
 
-# a rule that always rejects (for impossible cases)
-impossible -> "<<impossible>>"
-
 text -> sentence:* {%nonterminal_unpack("text")%}
 
 sentence -> 
@@ -232,7 +229,7 @@ subj_aux_inv_cl_minus_np ->
 # modal (move from head)
       modal                 adjunct_list_bare_inf_cl                  {%nt("subj_aux_inv_cl_minus_np")%} # who [can sing]?
 # modal (move from argument)
-    | modal                 np adjunct_list_np_bare_inf_cl_minus_np      {%nt("subj_aux_inv_cl_minus_np")%} # what [can you sing]?
+    | modal                 np adjunct_list_bare_inf_cl_minus_np      {%nt("subj_aux_inv_cl_minus_np")%} # what [can you sing]?
 # finite (move from head)
     | aux_vbf_predcomp      adjunct_list_predcomp                     {%nt("subj_aux_inv_cl_minus_np")%} # who [was happy]? (`be` when used as a copula)
     | aux_vbf_o             adjunct_list_o                            {%nt("subj_aux_inv_cl_minus_np")%} # who [was a watchman]? (`be` when used as an equative)
@@ -340,6 +337,42 @@ adjunct_list_dative_to ->
 adjunct_list_do_dative_to ->
     np adjunct_list_dative_to {%nt("adjunct_list_do_dative_to")%}
   | dative_to adjunct_list_o {%nt("adjunct_list_do_dative_to")%}
+
+
+adjunct_list_passive_o ->
+    adjunct_list {%nt("adjunct_list_passive_o")%}
+
+
+adjunct_list_passive_o_predcomp ->
+    adjunct_list_predcomp {%nt("adjunct_list_passive_o_predcomp")%}
+
+
+adjunct_list_passive_intnp_to_inf_cl ->
+    adjunct_list_to_inf_cl {%nt("adjunct_list_passive_intnp_to_inf_cl")%}
+
+
+adjunct_list_passive_io_that_declarative_cl ->
+    adjunct_list_that_declarative_cl {%nt("adjunct_list_passive_io_that_declarative_cl")%}
+
+
+adjunct_list_passive_io_bare_declarative_cl ->
+    adjunct_list_bare_declarative_cl {%nt("adjunct_list_passive_io_bare_declarative_cl")%}
+
+
+adjunct_list_passive_io_exclamative_cl ->
+    adjunct_list_exclamative_cl {%nt("adjunct_list_passive_io_exclamative_cl")%}
+
+
+adjunct_list_passive_io_interrogative_cl ->
+    adjunct_list_interrogative_cl {%nt("adjunct_list_passive_io_interrogative_cl")%}
+
+
+adjunct_list_passive_io_do ->
+    adjunct_list_o {%nt("adjunct_list_passive_io_do")%}
+
+
+adjunct_list_passive_do_dative_to ->
+    adjunct_list_dative_to {%nt("adjunct_list_passive_do_dative_to")%}
 
 
 
@@ -558,6 +591,42 @@ adjunct_list_do_dative_to_minus_np ->
   | dative_to_minus_np adjunct_list_o {%nt("adjunct_list_do_dative_to_minus_np")%}
 
 
+adjunct_list_passive_o_minus_np ->
+    adjunct_list_minus_np {%nt("adjunct_list_passive_o_minus_np")%}
+
+
+adjunct_list_passive_o_predcomp_minus_np ->
+    adjunct_list_predcomp_minus_np {%nt("adjunct_list_passive_o_predcomp_minus_np")%}
+
+
+adjunct_list_passive_intnp_to_inf_cl_minus_np ->
+    adjunct_list_to_inf_cl_minus_np {%nt("adjunct_list_passive_intnp_to_inf_cl_minus_np")%}
+
+
+adjunct_list_passive_io_that_declarative_cl_minus_np ->
+    adjunct_list_that_declarative_cl_minus_np {%nt("adjunct_list_passive_io_that_declarative_cl_minus_np")%}
+
+
+adjunct_list_passive_io_bare_declarative_cl_minus_np ->
+    adjunct_list_bare_declarative_cl_minus_np {%nt("adjunct_list_passive_io_bare_declarative_cl_minus_np")%}
+
+
+adjunct_list_passive_io_exclamative_cl_minus_np ->
+    adjunct_list_exclamative_cl_minus_np {%nt("adjunct_list_passive_io_exclamative_cl_minus_np")%}
+
+
+adjunct_list_passive_io_interrogative_cl_minus_np ->
+    adjunct_list_interrogative_cl_minus_np {%nt("adjunct_list_passive_io_interrogative_cl_minus_np")%}
+
+
+adjunct_list_passive_io_do_minus_np ->
+    adjunct_list_o_minus_np {%nt("adjunct_list_passive_io_do_minus_np")%}
+
+
+adjunct_list_passive_do_dative_to_minus_np ->
+    adjunct_list_dative_to_minus_np {%nt("adjunct_list_passive_do_dative_to_minus_np")%}
+
+
 
 # modals can only appear in the position of a finite verb (they cannot be conjugated as an infinitive or a participle *to can)
 vbf_vp_minus_np -> advp_vp? modal bare_inf_cl_minus_np {%nt("vbf_vp_minus_np")%}
@@ -769,6 +838,36 @@ adjunct_list_do_dative_to_minus_adjp ->
   | np_minus_adjp adjunct_list_dative_to {%nt("adjunct_list_do_dative_to_minus_adjp")%}
   | dative_to_minus_adjp adjunct_list_o {%nt("adjunct_list_do_dative_to_minus_adjp")%}
 
+
+adjunct_list_passive_o_minus_adjp -> impossible
+
+adjunct_list_passive_o_predcomp_minus_adjp ->
+    adjunct_list_predcomp_minus_adjp {%nt("adjunct_list_passive_o_predcomp_minus_adjp")%}
+
+
+adjunct_list_passive_intnp_to_inf_cl_minus_adjp ->
+    adjunct_list_to_inf_cl_minus_adjp {%nt("adjunct_list_passive_intnp_to_inf_cl_minus_adjp")%}
+
+
+adjunct_list_passive_io_that_declarative_cl_minus_adjp ->
+    adjunct_list_that_declarative_cl_minus_adjp {%nt("adjunct_list_passive_io_that_declarative_cl_minus_adjp")%}
+
+
+adjunct_list_passive_io_bare_declarative_cl_minus_adjp ->
+    adjunct_list_bare_declarative_cl_minus_adjp {%nt("adjunct_list_passive_io_bare_declarative_cl_minus_adjp")%}
+
+
+adjunct_list_passive_io_exclamative_cl_minus_adjp ->
+    adjunct_list_exclamative_cl_minus_adjp {%nt("adjunct_list_passive_io_exclamative_cl_minus_adjp")%}
+
+
+adjunct_list_passive_io_interrogative_cl_minus_adjp ->
+    adjunct_list_interrogative_cl_minus_adjp {%nt("adjunct_list_passive_io_interrogative_cl_minus_adjp")%}
+
+
+adjunct_list_passive_io_do_minus_adjp -> impossible
+
+adjunct_list_passive_do_dative_to_minus_adjp -> impossible
 
 
 # modals can only appear in the position of a finite verb (they cannot be conjugated as an infinitive or a participle *to can)
@@ -1130,6 +1229,9 @@ not? -> not         {%nt("not?")%}
       | null        {%nt("not?")%}
 
 # terminals
+
+# a rule that always rejects (for impossible cases)
+impossible -> "<<impossible>>" {%t("impossible")%}
 
 determinative -> %determinative {%t("determinative")%}
 dp_modifier -> %dp_modifier {%t("dp_modifier")%}

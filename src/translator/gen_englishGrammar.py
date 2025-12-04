@@ -191,9 +191,6 @@ function t(kind) {
 
 %}
 
-# a rule that always rejects (for impossible cases)
-impossible -> "<<impossible>>"
-
 text -> sentence:* {%nonterminal_unpack("text")%}
 
 sentence -> 
@@ -234,7 +231,7 @@ subj_aux_inv_cl_minus_np ->
 # modal (move from head)
       modal                 adjunct_list_bare_inf_cl                  {%nt("subj_aux_inv_cl_minus_np")%} # who [can sing]?
 # modal (move from argument)
-    | modal                 np adjunct_list_np_bare_inf_cl_minus_np      {%nt("subj_aux_inv_cl_minus_np")%} # what [can you sing]?
+    | modal                 np adjunct_list_bare_inf_cl_minus_np      {%nt("subj_aux_inv_cl_minus_np")%} # what [can you sing]?
 # finite (move from head)
     | aux_vbf_predcomp      adjunct_list_predcomp                     {%nt("subj_aux_inv_cl_minus_np")%} # who [was happy]? (`be` when used as a copula)
     | aux_vbf_o             adjunct_list_o                            {%nt("subj_aux_inv_cl_minus_np")%} # who [was a watchman]? (`be` when used as an equative)
@@ -612,28 +609,118 @@ def adjunct_list_grammar(mv_type):
     )
 
     # ##################
-    # # Passive clauses
+    # Passive clauses
     # ##################
+    # In passive voice, the original object is promoted to subject.
+    # What remains after the verb is whatever was left after removing the promoted NP.
 
-    # out += serialize_rules(
-    #     f"adjunct_list_passive_o{mv_suf}",
-    #     [
-    #         # Ex: The janitor was seen
-    #         # Ex mv_np: I know who the janitor was seen by [gap]
-    #         # Ex mv_adjp: I know how the janitor was seen [gap]
-    #         f"adjunct_list{mv_suf}"
-    #     ],
-    # )
+    out += serialize_rules(
+        f"adjunct_list_passive_o{mv_suf}",
+        [
+            # Active: They saw the janitor → Passive: The janitor was seen
+            # The DO is promoted to subject, only adjuncts remain
+            # Ex: The janitor was seen on tuesday
+            # Ex mv_np: I know what day the janitor was seen on [gap]
+            # (marginal/rare) Ex mv_adjp: ADJP extraction from post-verb adjuncts is very marginal
+            f"adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+        ],
+    )
 
-    # out += serialize_rules(
-    #     f"adjunct_list_passive_o_predcomp{mv_suf}",
-    #     [
-    #         # Ex: The janitor was found happy
-    #         # Ex mv_np: I know who the janitor was found happy by [gap]
-    #         # Ex mv_adjp: I know how happy the janitor was found [gap] 
-    #         f"adjunct_list_predcomp{mv_suf}"
-    #     ],
-    # )
+    out += serialize_rules(
+        f"adjunct_list_passive_o_predcomp{mv_suf}",
+        [
+            # Active: They found the janitor happy → Passive: The janitor was found happy
+            # The DO is promoted to subject, the predcomp + adjuncts remain
+            # Ex: The janitor was found guilty on tuesday
+            # Ex mv_np: I know what day the janitor was found guilty on [gap]
+            # Ex mv_adjp: I know how guilty the janitor was found [gap] on tuesday
+            f"adjunct_list_predcomp{mv_suf}",
+        ],
+    )
+
+    out += serialize_rules(
+        f"adjunct_list_passive_intnp_to_inf_cl{mv_suf}",
+        [
+            # Active: They asked you to leave → Passive: You were asked to leave
+            # The NP is promoted to subject, the to-infinitive + adjuncts remain
+            # Ex: You were asked to leave on tuesday
+            # Ex mv_np: I know what day you were asked to leave on [gap]
+            # Ex mv_adjp: I know how happy you were asked to become [gap] on tuesday
+            f"adjunct_list_to_inf_cl{mv_suf}",
+        ],
+    )
+
+    out += serialize_rules(
+        f"adjunct_list_passive_io_that_declarative_cl{mv_suf}",
+        [
+            # Active: They told you that the suspect was Joe → Passive: You were told that the suspect was Joe
+            # The IO is promoted to subject, the that-clause + adjuncts remain
+            # Ex: You were told that the suspect was Joe on tuesday
+            # Ex mv_np: I know what day you were told that the suspect was Joe on [gap]
+            # Ex mv_adjp: I know how confidently you were told that the suspect was Joe [gap] on tuesday
+            f"adjunct_list_that_declarative_cl{mv_suf}",
+        ],
+    )
+
+    out += serialize_rules(
+        f"adjunct_list_passive_io_bare_declarative_cl{mv_suf}",
+        [
+            # Active: They told you the suspect was Joe → Passive: You were told the suspect was Joe
+            # The IO is promoted to subject, the bare declarative clause + adjuncts remain
+            # Ex: You were told the suspect was Joe on tuesday
+            # Ex mv_np: I know what day you were told the suspect was Joe on [gap]
+            # Ex mv_adjp: I know how confidently you were told the suspect was Joe [gap] on tuesday
+            f"adjunct_list_bare_declarative_cl{mv_suf}",
+        ],
+    )
+
+    out += serialize_rules(
+        f"adjunct_list_passive_io_exclamative_cl{mv_suf}",
+        [
+            # Active: They told you how tall she was → Passive: You were told how tall she was
+            # The IO is promoted to subject, the exclamative clause + adjuncts remain
+            # Ex: You were told how tall she was on tuesday
+            # Ex mv_np: I know what day you were told how tall she was on [gap]
+            # Ex mv_adjp: I know how loudly you were told how tall she was [gap] on tuesday
+            f"adjunct_list_exclamative_cl{mv_suf}",
+        ],
+    )
+
+    out += serialize_rules(
+        f"adjunct_list_passive_io_interrogative_cl{mv_suf}",
+        [
+            # Active: They asked you whether Joe left → Passive: You were asked whether Joe left
+            # The IO is promoted to subject, the interrogative clause + adjuncts remain
+            # Ex: You were asked whether Joe left on tuesday
+            # Ex mv_np: I know what day you were asked whether Joe left on [gap]
+            # Ex mv_adjp: I know how loudly you were asked whether Joe left [gap] on tuesday
+            f"adjunct_list_interrogative_cl{mv_suf}",
+        ],
+    )
+
+    out += serialize_rules(
+        f"adjunct_list_passive_io_do{mv_suf}",
+        [
+            # Active: They gave you food → Passive: You were given food
+            # The IO is promoted to subject, the DO + adjuncts remain
+            # Ex: You were given food on tuesday
+            # Ex mv_np: I know what you were given [gap] on tuesday
+            # (marginal/rare) Ex mv_adjp: ADJP extraction from post-object adjuncts is very marginal
+            f"adjunct_list_o{mv_suf}" if mv_type != "adjp" else None,
+        ],
+    )
+
+    out += serialize_rules(
+        f"adjunct_list_passive_do_dative_to{mv_suf}",
+        [
+            # Active: They gave food to you → Passive: Food was given to you
+            # The DO is promoted to subject, the dative PP + adjuncts remain
+            # Ex: Food was given to you on tuesday
+            # Ex mv_np: I know who food was given to [gap] on tuesday
+            # (marginal/rare) Ex mv_adjp: ADJP extraction from dative constructions is very marginal
+            f"adjunct_list_dative_to{mv_suf}" if mv_type != "adjp" else None,
+        ],
+    )
 
     return out
 
@@ -949,6 +1036,9 @@ not? -> not         {%nt("not?")%}
       | null        {%nt("not?")%}
 
 # terminals
+
+# a rule that always rejects (for impossible cases)
+impossible -> "<<impossible>>" {%t("impossible")%}
 
 determinative -> %determinative {%t("determinative")%}
 dp_modifier -> %dp_modifier {%t("dp_modifier")%}
