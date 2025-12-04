@@ -1021,6 +1021,13 @@ interrogative_cl ->
 # interrogative phrase replaces adjunct of time, place, or reason, can also be used 
     | ip_pp                      np vbf_vp                     {%nt("interrogative_cl")%} # open interrogative clause with move from the adjuncts using pied piping (ex: "to where I go")
 
+# fused relative clause
+# TODO: note that `who` is usually not preferred in fused relative clauses, it should be `whoever` instead
+# *who killed bob is evil -> whoever killed bob is evil
+fused_relative_clause -> 
+      ip_np                          vbf_vp                    {%nt("fused_relative_clause")%} # whoever mailed me
+    | ip_np                       np vbf_vp_minus_np           {%nt("fused_relative_clause")%} # what he was mailed
+
 # a dative to
 dative_to -> to np {%nt("dative_to")%}
 dative_to_minus_np -> to np_minus_np {%nt("dative_to_minus_np")%}
@@ -1089,6 +1096,7 @@ core_np ->
     |                                               pronoun                                      {%nt("core_np")%}  # a pronoun (ex: "I", "you", "he", "she", "it", "we", "they")
     |                                               independent_genitive_pronoun                 {%nt("core_np")%}  # a possessive pronoun (ex: "mine", "yours")
     | predeterminer_modifier? determiner? adjp_list noun                         n_modifier_list {%nt("core_np")%}  # determiner phrase followed by a nominal (ex: "even all the lovely food too")
+    |                                               fused_relative_clause                        {%nt("core_np")%}  # a fused relative clause (ex: "what i was mailed")
 
 
 # I know which country she serves as [prime minister of]
