@@ -17,6 +17,8 @@ function expandContractions(word: string): string[] {
 function seperatePunctuation(word: string): string[] {
     if (word.length === 0) {
         return [];
+    } else if (word.length === 1) {
+        return [word];
     }
     
     const lastChar = word[word.length - 1];

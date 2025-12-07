@@ -31,6 +31,9 @@ const preposition_bare_declarative_cl = isPoS("preposition_bare_declarative_cl")
 const preposition_pp = isPoS("preposition_pp");
 const preposition_advp = isPoS("preposition_advp");
 
+// coordinators
+const coordinator = isPoS("coordinator");
+const binary_coordinator = isPoS("binary_coordinator");
 
 // particles
 const to = isPoS("to");
@@ -48,10 +51,10 @@ const when = isPoS("when");
 const which = isPoS("which");
 
 // punctuation
-const period = {test: x => x == "." };
-const question_mark = { test: x => x == "?" };
-const exclamation_mark = { test: x => x == "!" };
-const comma = { test: x => x == "," };
+const period = isPoS("period");
+const question_mark = isPoS("question_mark");
+const exclamation_mark = isPoS("exclamation_mark");
+const comma = isPoS("comma");
 
 // verbs
 
@@ -701,8 +704,16 @@ def vp_grammar(vp_type: str, mv_type: str | None = None):
 """
 
     out += f"""
-{vp_type}_vp{mv_suf} -> 
-      advp_vp? {vp_type}                        adjunct_list{mv_suf}                          {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb (ex: "I smoked")
+# [sang, danced,]
+{vp_type}_vp{mv_suf}_coordlist ->  {vp_type}_vp{mv_suf}_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_coordlist")%}}
+{vp_type}_vp{mv_suf}_coordlist_item -> {vp_type}_vp{mv_suf} comma {{%nt("{vp_type}_vp{mv_suf}_coordlist_item")%}}
+
+{vp_type}_vp{mv_suf} ->
+    # coordinations
+      {vp_type}_vp{mv_suf}_coordlist coordinator {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}} # coordination: "We [sang, danced, and laughed]"
+    | {vp_type}_vp{mv_suf} binary_coordinator {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}} # coordination: "We [sang and danced]"
+    # terminal rules
+    | advp_vp? {vp_type}                        adjunct_list{mv_suf}                          {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb (ex: "I smoked")
     | advp_vp? {vp_type}_predcomp               adjunct_list_predcomp{mv_suf}                 {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
     | advp_vp? {vp_type}_to_inf_cl              adjunct_list_to_inf_cl{mv_suf}                {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
     | advp_vp? {vp_type}_bare_inf_cl            adjunct_list_bare_inf_cl{mv_suf}              {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
@@ -729,8 +740,6 @@ def vp_grammar(vp_type: str, mv_type: str | None = None):
         out += f"""
 passive_cl{mv_suf} -> 
 # omit all the intransitive verbs
-
-
 # omit vbg_cl, as one cannot combine passive with progressive aspect *The food was been eaten
 # omit vbn_cl, as one cannot combine passive with past perfect *The food was had eaten
 # omit passive_cl, as one cannot combine passive with passive *The food was been eaten
@@ -885,6 +894,11 @@ ip_det -> which  {%nt("ip_det")%}
 np -> np_sg {%nt("np")%}
     | np_pl {%nt("np")%}
 
+
+# core noun phrase (either singular or plural)
+core_np -> core_np_sg {%nt("core_np")%}
+    | core_np_pl {%nt("core_np")%}
+
 # singular noun phrase
 np_sg -> precorenp_modifier? core_np_sg postcorenp_modifier? {%nt("np_sg")%}
 
@@ -907,17 +921,32 @@ precorenp_modifier? -> precorenp_modifier {%nt("precorenp_modifier?")%}
 postcorenp_modifier? -> postcorenp_modifier {%nt("postcorenp_modifier?")%}
                       | null                {%nt("postcorenp_modifier?")%}
 
+core_np_sg_coordlist -> core_np_sg_coordlist_item:+ {%nonterminal_unpack("core_np_sg_coordlist")%}
+core_np_sg_coordlist_item -> core_np_sg comma {%nt("core_np_sg_coordlist_item")%}
+
 # a core singular noun phrase without peripheral modifiers
 core_np_sg -> 
-                                                    proper_noun_sg                                  {%nt("core_np_sg")%}  # a singular proper noun (ex: "John", "Mary")
+# coordinations
+      core_np_sg_coordlist coordinator core_np_sg {%nt("core_np_sg")%} # coordination: "Either [John, Mary, or Peter] is here."
+    | core_np_sg binary_coordinator core_np_sg {%nt("core_np_sg")%} # coordination: "Either [John or Mary] is here."
+# terminal rules
+    |                                               proper_noun_sg                                  {%nt("core_np_sg")%}  # a singular proper noun (ex: "John", "Mary")
     |                                               pronoun_sg                                      {%nt("core_np_sg")%}  # a singular pronoun (ex: "he", "she", "it")
     |                                               independent_genitive_pronoun                    {%nt("core_np_sg")%}  # a possessive pronoun (ex: "mine", "yours")
     | predeterminer_modifier? determiner? adjp_list noun_sg                      n_modifier_list_sg {%nt("core_np_sg")%}  # determiner phrase followed by a singular nominal (ex: "the lovely apple")
     |                                               fused_relative_clause_sg                        {%nt("core_np_sg")%}  # a singular fused relative clause (ex: "what i was mailed")
 
+core_np_pl_coordlist -> core_np_pl_coordlist_item:+ {%nonterminal_unpack("core_np_pl_coordlist")%}
+core_np_pl_coordlist_item -> core_np comma {%nt("core_np_pl_coordlist_item")%}
+
 # a core plural noun phrase without peripheral modifiers
+# note that core_np_pl can consist of many singular noun phrases: "Bob, Alice and Carol are here."
 core_np_pl -> 
-                                                    proper_noun_pl                                  {%nt("core_np_pl")%}  # a plural proper noun (ex: "the Smiths")
+# coordinations
+      core_np_pl_coordlist coordinator core_np {%nt("core_np_pl")%} # coordination: "Bob, Alice and Carol are here."
+    | core_np binary_coordinator core_np {%nt("core_np_pl")%} # coordination: "Bob and Alice are here."
+# terminal rules
+    |                                               proper_noun_pl                                  {%nt("core_np_pl")%}  # a plural proper noun (ex: "the Smiths")
     |                                               pronoun_pl                                      {%nt("core_np_pl")%}  # a plural pronoun (ex: "we", "they")
     |                                               independent_genitive_pronoun                    {%nt("core_np_pl")%}  # a possessive pronoun (ex: "mine", "yours")
     | predeterminer_modifier? determiner? adjp_list noun_pl                      n_modifier_list_pl {%nt("core_np_pl")%}  # determiner phrase followed by a plural nominal (ex: "the lovely apples")
@@ -1009,8 +1038,16 @@ dp -> dp_modifier? core_dp {%nt("dp")%}
 core_dp -> determinative {%nt("core_dp")%}
          | number        {%nt("core_dp")%}
 
-adjunct -> pp             {%nt("adjunct")%} # a prepositional phrase adjunct (ex: "in the house")
-         | advp_vp        {%nt("adjunct")%} # an adverb phrase adjunct compatible with verb use (ex: "quickly")
+adjunct_coordlist -> adjunct_coordlist_item:+ {%nonterminal_unpack("adjunct_coordlist")%}
+adjunct_coordlist_item -> adjunct comma {%nt("adjunct_coordlist_item")%}
+
+adjunct -> 
+# coordinations
+      adjunct_coordlist coordinator adjunct {%nt("adjunct")%}
+    | adjunct binary_coordinator adjunct {%nt("adjunct")%}
+# terminal rules
+    | pp             {%nt("adjunct")%} # a prepositional phrase adjunct (ex: "in the house")
+    | advp_vp        {%nt("adjunct")%} # an adverb phrase adjunct compatible with verb use (ex: "quickly")
 
 adjunct_minus_np ->
       pp_minus_np   {%nt("adjunct")%}
@@ -1036,7 +1073,15 @@ pp -> preposition                                         {%nt("pp")%}
 pp_minus_np ->      preposition_np             {%nt("pp_minus_np")%}
 
 # a predcomp
-predcomp -> adjp {%nt("predcomp")%}
+predcomp_coordlist -> predcomp_coordlist_item:+ {%nonterminal_unpack("predcomp_coordlist")%}
+predcomp_coordlist_item -> predcomp comma {%nt("predcomp_coordlist_item")%}
+
+predcomp -> 
+# coordinations
+      predcomp coordinator predcomp {%nt("predcomp")%}
+    | predcomp_coordlist binary_coordinator predcomp {%nt("predcomp")%}
+# terminal rules
+    | adjp {%nt("predcomp")%} # an adjective phrase (ex: "happy")
 
 predcomp_minus_np -> adjp_minus_np {%nt("predcomp_minus_np")%}
 
@@ -1168,6 +1213,8 @@ postcorenp_modifier -> %postcorenp_modifier {%t("postcorenp_modifier")%}
 precore_emphatic_modifier -> %precore_emphatic_modifier {%t("precore_emphatic_modifier")%}
 precore_emphatic_modifier_adjp  -> %precore_emphatic_modifier_adjp  {%t("precore_emphatic_modifier_adjp ")%}
 quantificational_modifier -> %quantificational_modifier {%t("quantificational_modifier")%}
+coordinator -> %coordinator {%t("coordinator")%}
+binary_coordinator -> %binary_coordinator {%t("binary_coordinator")%}
 period -> %period {%t("period")%}
 question_mark -> %question_mark {%t("question_mark")%}
 exclamation_mark -> %exclamation_mark {%t("exclamation_mark")%}
