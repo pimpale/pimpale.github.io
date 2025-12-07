@@ -49,6 +49,7 @@ const which = isPoS("which");
 const period = {test: x => x == "." };
 const question_mark = { test: x => x == "?" };
 const exclamation_mark = { test: x => x == "!" };
+const comma = { test: x => x == "," };
 
 // verbs
 
@@ -227,8 +228,11 @@ sentence ->
     | question_cl question_mark {%nt("sentence")%}
 
 # a declarative finite clause
-fin_cl -> adjunct_list np_sg vbf_sg_vp {%nt("fin_cl")%}
-        | adjunct_list np_pl vbf_pl_vp {%nt("fin_cl")%}
+fin_cl -> precl_adjunct_list np_sg vbf_sg_vp {%nt("fin_cl")%}
+        | precl_adjunct_list np_pl vbf_pl_vp {%nt("fin_cl")%}
+
+precl_adjunct_list -> adjunct_list          {%nt("precl_adjunct_list")%}
+                    | adjunct_list comma    {%nt("precl_adjunct_list")%}
 
 # a question clause
 question_cl ->
@@ -1603,3 +1607,4 @@ quantificational_modifier -> %quantificational_modifier {%t("quantificational_mo
 period -> %period {%t("period")%}
 question_mark -> %question_mark {%t("question_mark")%}
 exclamation_mark -> %exclamation_mark {%t("exclamation_mark")%}
+comma -> %comma {%t("comma")%}

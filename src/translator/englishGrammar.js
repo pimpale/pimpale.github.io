@@ -50,6 +50,7 @@ const which = isPoS("which");
 const period = {test: x => x == "." };
 const question_mark = { test: x => x == "?" };
 const exclamation_mark = { test: x => x == "!" };
+const comma = { test: x => x == "," };
 
 // verbs
 
@@ -226,8 +227,10 @@ let ParserRules = [
     {"name": "sentence", "symbols": ["fin_cl", "period"], "postprocess": nt("sentence")},
     {"name": "sentence", "symbols": ["fin_cl", "exclamation_mark"], "postprocess": nt("sentence")},
     {"name": "sentence", "symbols": ["question_cl", "question_mark"], "postprocess": nt("sentence")},
-    {"name": "fin_cl", "symbols": ["adjunct_list", "np_sg", "vbf_sg_vp"], "postprocess": nt("fin_cl")},
-    {"name": "fin_cl", "symbols": ["adjunct_list", "np_pl", "vbf_pl_vp"], "postprocess": nt("fin_cl")},
+    {"name": "fin_cl", "symbols": ["precl_adjunct_list", "np_sg", "vbf_sg_vp"], "postprocess": nt("fin_cl")},
+    {"name": "fin_cl", "symbols": ["precl_adjunct_list", "np_pl", "vbf_pl_vp"], "postprocess": nt("fin_cl")},
+    {"name": "precl_adjunct_list", "symbols": ["adjunct_list"], "postprocess": nt("precl_adjunct_list")},
+    {"name": "precl_adjunct_list", "symbols": ["adjunct_list", "comma"], "postprocess": nt("precl_adjunct_list")},
     {"name": "question_cl", "symbols": ["subj_aux_inv_cl"], "postprocess": nt("question_cl")},
     {"name": "question_cl", "symbols": ["ip_np", "subj_aux_inv_cl_minus_np"], "postprocess": nt("question_cl")},
     {"name": "question_cl", "symbols": ["ip_np_sg", "vbf_sg_vp"], "postprocess": nt("question_cl")},
@@ -1096,7 +1099,8 @@ let ParserRules = [
     {"name": "quantificational_modifier", "symbols": [quantificational_modifier], "postprocess": t("quantificational_modifier")},
     {"name": "period", "symbols": [period], "postprocess": t("period")},
     {"name": "question_mark", "symbols": [question_mark], "postprocess": t("question_mark")},
-    {"name": "exclamation_mark", "symbols": [exclamation_mark], "postprocess": t("exclamation_mark")}
+    {"name": "exclamation_mark", "symbols": [exclamation_mark], "postprocess": t("exclamation_mark")},
+    {"name": "comma", "symbols": [comma], "postprocess": t("comma")}
 ];
 let ParserStart = "text";
 export default { Lexer, ParserRules, ParserStart };

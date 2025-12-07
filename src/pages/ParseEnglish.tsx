@@ -48,7 +48,7 @@ const INITIAL_EXAMPLE_SENTENCES = [
     "The book that I read was very interesting.",
     "Running through the forest, he felt free.",
     "The teacher explained the concept clearly to the students.",
-    "After the rain stopped, the sun came out.",
+    "After the rain stopped, the sun emerged.",
     "The old house on the hill looked mysterious.",
     "They were playing tennis when it started to rain.",
     "She hasn't yet contacted the people whose house she wants to rent.",
