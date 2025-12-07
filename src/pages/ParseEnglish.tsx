@@ -351,6 +351,7 @@ const ParseEnglishPage = () => <ArticleLayout>{
                     <li>Most common nouns and some verbs (see dictionary section below for details)</li>
                     <li>Numbers</li>
                     <li>Most irregular verbs</li>
+                    <li>Passive phrases in questions or interrogative clauses (e.g., "What was he given?")</li>
                 </ul>
 
                 <h4>Things it <strong>cannot</strong> do <small className="text-muted">(but could in the future, with improvements)</small></h4>
@@ -359,7 +360,6 @@ const ParseEnglishPage = () => <ArticleLayout>{
                     <li>Unknown words (all unknown words are treated as proper nouns for now)</li>
                     <li>Fused head constructions (e.g., "the poor" treated as a noun phrase)</li>
                     <li>Phrasal verbs (e.g., "He chatted her up")</li>
-                    <li>Passive phrases in questions or interrogative clauses (e.g., "What was he given?")</li>
                     <li>Coordinations ("and", "or", and "but")</li>
                     <li>Quotatives (e.g., <q>And I was like "no way!"</q>)</li>
                 </ul>

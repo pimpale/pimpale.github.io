@@ -204,8 +204,8 @@ question_cl ->
 # yes no qs
                                     subj_aux_inv_cl            {%nt("question_cl")%} # are you happy?
 # interrogative phrase replaces np
-    | ip_np                         vbf_vp                     {%nt("question_cl")%} # who ate that?
     | ip_np                         subj_aux_inv_cl_minus_np   {%nt("question_cl")%} # what did you eat?
+    | ip_np                         vbf_vp                     {%nt("question_cl")%} # what ate you?
 # interrogative phrase replaces adjunct of time, place or reason, also can be used if a preposition is frontend
     | ip_pp                         subj_aux_inv_cl            {%nt("question_cl")%} # where did you eat? / why did you eat? / after which class will you be free?
 # interrogative phrase replaces advp_vp 
@@ -224,19 +224,10 @@ subj_aux_inv_cl ->
     | aux_vbf_passive_cl  np passive_cl                    {%nt("subj_aux_inv_cl")%} # were you eaten? (`be` when used to mark passive voice)
     | aux_vbf_bare_inf_cl np adjunct_list_bare_inf_cl      {%nt("subj_aux_inv_cl")%} # did you eat?
 
-
+# note, no moves from head here
 subj_aux_inv_cl_minus_np ->
-# modal (move from head)
-      modal                 adjunct_list_bare_inf_cl                  {%nt("subj_aux_inv_cl_minus_np")%} # who [can sing]?
 # modal (move from argument)
-    | modal                 np adjunct_list_bare_inf_cl_minus_np      {%nt("subj_aux_inv_cl_minus_np")%} # what [can you sing]?
-# finite (move from head)
-    | aux_vbf_predcomp      adjunct_list_predcomp                     {%nt("subj_aux_inv_cl_minus_np")%} # who [was happy]? (`be` when used as a copula)
-    | aux_vbf_o             adjunct_list_o                            {%nt("subj_aux_inv_cl_minus_np")%} # who [was a watchman]? (`be` when used as an equative)
-    | aux_vbf_vbg_cl        vbg_cl                                    {%nt("subj_aux_inv_cl_minus_np")%} # who [was eating]?
-    | aux_vbf_vbn_cl        vbn_cl                                    {%nt("subj_aux_inv_cl_minus_np")%} # who [had eaten]?
-    | aux_vbf_passive_cl    passive_cl                                {%nt("subj_aux_inv_cl_minus_np")%} # who [was given the book]?
-    | aux_vbf_bare_inf_cl   adjunct_list_bare_inf_cl                  {%nt("subj_aux_inv_cl_minus_np")%} # who [didn't eat the bread]?
+      modal                 np adjunct_list_bare_inf_cl_minus_np      {%nt("subj_aux_inv_cl_minus_np")%} # what [can you sing]?
 # finite (move from argument)
     | aux_vbf_predcomp      np adjunct_list_predcomp_minus_np            {%nt("subj_aux_inv_cl_minus_np")%} # what [were you happy to be]? (`be` when used as a copula)
     | aux_vbf_o             np adjunct_list_o_minus_np                   {%nt("subj_aux_inv_cl_minus_np")%} # what [were you]? (`be` when used as an equative)
@@ -1024,6 +1015,7 @@ interrogative_cl ->
 # fused relative clause
 # TODO: note that `who` is usually not preferred in fused relative clauses, it should be `whoever` instead
 # *who killed bob is evil -> whoever killed bob is evil
+# TODO: also note that you can often use "else" after the ip_np, which you cannot in interrogative clauses
 fused_relative_clause -> 
       ip_np                          vbf_vp                    {%nt("fused_relative_clause")%} # whoever mailed me
     | ip_np                       np vbf_vp_minus_np           {%nt("fused_relative_clause")%} # what he was mailed
