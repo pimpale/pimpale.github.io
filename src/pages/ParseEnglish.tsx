@@ -347,11 +347,12 @@ const ParseEnglishPage = () => <ArticleLayout>{
                 <h4>Things it can do</h4>
                 <ul>
                     <li>Statements (declarative sentences)</li>
-                    <li>Questions (interrogative sentences) – including complex moves</li>
+                    <li>Questions (interrogative sentences) - including complex moves</li>
                     <li>Most common nouns and some verbs (see dictionary section below for details)</li>
                     <li>Numbers</li>
                     <li>Most irregular verbs</li>
                     <li>Passive phrases in questions or interrogative clauses (e.g., "What was he given?")</li>
+                    <li>Subject-verb agreement (e.g., rejecting <em>"I is smart."</em>)</li>
                 </ul>
 
                 <h4>Things it <strong>cannot</strong> do <small className="text-muted">(but could in the future, with improvements)</small></h4>
@@ -362,16 +363,14 @@ const ParseEnglishPage = () => <ArticleLayout>{
                     <li>Phrasal verbs (e.g., "He chatted her up")</li>
                     <li>Coordinations ("and", "or", and "but")</li>
                     <li>Quotatives (e.g., <q>And I was like "no way!"</q>)</li>
+                    <li>Polarity (e.g., rejecting <em>"I am happy whatsoever"</em>)</li>
                 </ul>
 
                 <h4>Things it probably <strong>will never</strong> do <small className="text-muted">(but could be checked in post-processing)</small></h4>
                 <ul>
-                    <li>Subject–verb agreement (e.g., rejecting <em>"I is smart."</em>)</li>
-                    <li>Polarity (e.g., rejecting <em>"I am happy whatsoever"</em>)</li>
                     <li>Preposition agreement</li>
                     <li>Idioms that aren't grammatical</li>
                     <li>Sentence fragments</li>
-
                 </ul>
             </div>
 

@@ -33,8 +33,12 @@ function seperatePunctuation(word: string): string[] {
 
 function normalizeBe(word: string): string {
     if (word === "am") {
+        // we don't want to handle am specially, since it's literally just for I. 
+        // we just treat I as a plural pronoun
         return "are";
     } else if (word === "was") {
+        // `was` is interesting. `be` is the only word to have a singular preterite.
+        // we normalize it to `were` to match the precedent of other verbs.
         return "were";
     } else {
         return word;
