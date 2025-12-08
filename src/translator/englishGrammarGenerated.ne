@@ -230,9 +230,18 @@ sentence ->
     | fin_cl exclamation_mark {%nt("sentence")%}
     | question_cl question_mark {%nt("sentence")%}
 
+
+fin_cl_coordlist -> fin_cl_coordlist_item:+ {%nonterminal_unpack("fin_cl_coordlist")%}
+fin_cl_coordlist_item -> fin_cl comma {%nt("fin_cl_coordlist_item")%}
+
 # a declarative finite clause
-fin_cl -> precl_adjunct_list np_sg vbf_sg_vp {%nt("fin_cl")%}
-        | precl_adjunct_list np_pl vbf_pl_vp {%nt("fin_cl")%}
+fin_cl -> 
+# coordinations
+      fin_cl_coordlist coordinator fin_cl {%nt("fin_cl")%}
+    | fin_cl binary_coordinator fin_cl {%nt("fin_cl")%}
+# terminal rules
+    | precl_adjunct_list np_sg vbf_sg_vp {%nt("fin_cl")%}
+    | precl_adjunct_list np_pl vbf_pl_vp {%nt("fin_cl")%}
 
 precl_adjunct_list -> adjunct_list          {%nt("precl_adjunct_list")%}
                     | adjunct_list comma    {%nt("precl_adjunct_list")%}

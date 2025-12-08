@@ -43,7 +43,7 @@ const INITIAL_EXAMPLE_SENTENCES = [
     "Who are you?",
     "I know that you like cheese.",
     "She walked to the store.",
-    "The box that is on the table is my favorite.",
+    "I went to the garden and played with the dog.",
     "John and Mary went to the park yesterday.",
     "The book that I read was very interesting.",
     "Running through the forest, he felt free.",
@@ -353,15 +353,16 @@ const ParseEnglishPage = () => <ArticleLayout>{
                     <li>Most irregular verbs</li>
                     <li>Passive phrases in questions or interrogative clauses (e.g., "What was he given?")</li>
                     <li>Subject-verb agreement (e.g., rejecting <em>"I is smart."</em>)</li>
+                    <li>Basic coordinations ("and", "or", and "but") of like types (e.g. "John and Mary", "I sang and danced.", but not "I was smiling and in the park.")</li>
                 </ul>
 
                 <h4>Things it <strong>cannot</strong> do <small className="text-muted">(but could in the future, with improvements)</small></h4>
                 <ul>
                     <li>Imperatives</li>
+                    <li>Vocabulary. We're missing a lot of adjectives and adverbs especially.</li>
                     <li>Unknown words (all unknown words are treated as proper nouns for now)</li>
                     <li>Fused head constructions (e.g., "the poor" treated as a noun phrase)</li>
                     <li>Phrasal verbs (e.g., "He chatted her up")</li>
-                    <li>Coordinations ("and", "or", and "but")</li>
                     <li>Quotatives (e.g., <q>And I was like "no way!"</q>)</li>
                     <li>Polarity (e.g., rejecting <em>"I am happy whatsoever"</em>)</li>
                 </ul>
