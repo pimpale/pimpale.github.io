@@ -86,6 +86,9 @@ precision highp sampler2DArray;
 // the texture atlas for the blocks
 uniform sampler2DArray u_textureAtlas;
 
+// 1D texture mapping block ID -> emissive value (0.0 or 1.0)
+uniform sampler2D u_blockEmissive;
+
 // Shared between all chunks
 uniform sampler2DArray u_lightDepthArr;
 uniform sampler2DArray u_lightDataArr;
@@ -108,7 +111,11 @@ out vec4 v_outColor;
 void main() {
   vec4 color = texture(u_textureAtlas, v_tuv);
 
-  float lightSum = 0.2;
+  // Derive block ID from texture layer index (layer = blockId * 6 + face)
+  int blockId = int(v_tuv.z) / 6;
+  float emissive = texelFetch(u_blockEmissive, ivec2(blockId, 0), 0).r;
+
+  float lightSum = 0.2 + emissive;
 
   int nLights = textureSize(u_lightIndexes, 0).x;
   for(int c = 0; c < nLights; c++) {
@@ -181,6 +188,8 @@ class World {
   private readonly TUV_LOC = 2;
 
   private textureAtlas: WebGLTexture;
+  // 1D texture mapping block ID -> emissive value
+  private blockEmissiveTex: WebGLTexture;
 
   // Texture array containing an array of all the light shadow maps
   private shadowTexArr: WebGLTexture;
@@ -194,6 +203,7 @@ class World {
   private renderProgram: WebGLProgram;
   private renderMvpMatLoc: WebGLUniformLocation;
   private renderTextureAtlasLoc: WebGLUniformLocation;
+  private renderBlockEmissiveLoc: WebGLUniformLocation;
   private renderLightDepthArrLoc: WebGLUniformLocation;
   private renderLightDataArrLoc: WebGLUniformLocation;
   private renderLightIndexesLoc: WebGLUniformLocation;
@@ -239,6 +249,9 @@ class World {
     // create texture atlas
     this.textureAtlas = this.blockManager.buildTextureAtlas(this.gl);
 
+    // create emissive lookup texture (1D texture: block ID -> emissive value)
+    this.blockEmissiveTex = this.blockManager.buildEmissiveTexture(this.gl);
+
     this.renderProgram = createProgram(
       this.gl,
       [
@@ -258,18 +271,21 @@ class World {
     // retrieve uniforms
     this.renderMvpMatLoc = this.gl.getUniformLocation(this.renderProgram, "u_mvpMat")!;
     this.renderTextureAtlasLoc = this.gl.getUniformLocation(this.renderProgram, "u_textureAtlas")!;
+    this.renderBlockEmissiveLoc = this.gl.getUniformLocation(this.renderProgram, "u_blockEmissive")!;
     this.renderLightDepthArrLoc = this.gl.getUniformLocation(this.renderProgram, "u_lightDepthArr")!;
     this.renderLightDataArrLoc = this.gl.getUniformLocation(this.renderProgram, "u_lightDataArr")!;
     this.renderLightIndexesLoc = this.gl.getUniformLocation(this.renderProgram, "u_lightIndexes")!;
 
     // Tell the shader to get the textureAtlas texture from texture unit 0
     this.gl.uniform1i(this.renderTextureAtlasLoc, 0);
-    // tell the shader to get its light depth textures from texutre unit 1
-    this.gl.uniform1i(this.renderLightDepthArrLoc, 1);
-    // tell the shader to get its textures from this from texture unit 2
-    this.gl.uniform1i(this.renderLightDataArrLoc, 2);
+    // tell the shader to get block emissive lookup from texture unit 1
+    this.gl.uniform1i(this.renderBlockEmissiveLoc, 1);
+    // tell the shader to get its light depth textures from texture unit 2
+    this.gl.uniform1i(this.renderLightDepthArrLoc, 2);
     // tell the shader to get its textures from this from texture unit 3
-    this.gl.uniform1i(this.renderLightIndexesLoc, 3);
+    this.gl.uniform1i(this.renderLightDataArrLoc, 3);
+    // tell the shader to get its textures from this from texture unit 4
+    this.gl.uniform1i(this.renderLightIndexesLoc, 4);
 
     // create program
     this.shadowProgram = createProgram(
@@ -862,12 +878,16 @@ class World {
     this.gl.activeTexture(this.gl.TEXTURE0);
     this.gl.bindTexture(this.gl.TEXTURE_2D_ARRAY, this.textureAtlas);
 
-    // bind the texture 1 to shadow
+    // bind the texture 1 to block emissive lookup
     this.gl.activeTexture(this.gl.TEXTURE1);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.blockEmissiveTex);
+
+    // bind the texture 2 to shadow
+    this.gl.activeTexture(this.gl.TEXTURE2);
     this.gl.bindTexture(this.gl.TEXTURE_2D_ARRAY, this.shadowTexArr);
 
-    // bind this light data to tex 2
-    this.gl.activeTexture(this.gl.TEXTURE2);
+    // bind this light data to tex 3
+    this.gl.activeTexture(this.gl.TEXTURE3);
     this.gl.bindTexture(this.gl.TEXTURE_2D_ARRAY, this.lightDataTexArr);
 
     for (const chunk of this.chunk_map.values()) {
@@ -875,8 +895,8 @@ class World {
         // bind this chunk's vertex array
         this.gl.bindVertexArray(chunk.graphics.solid.vao);
 
-        // bind light index to texture 3
-        this.gl.activeTexture(this.gl.TEXTURE3);
+        // bind light index to texture 4
+        this.gl.activeTexture(this.gl.TEXTURE4);
         this.gl.bindTexture(this.gl.TEXTURE_2D, chunk.completeLighting.data.lightIndexesTex);
 
         // draw arrays

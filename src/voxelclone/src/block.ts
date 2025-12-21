@@ -129,5 +129,30 @@ export class BlockManager {
 
     return tex;
   }
+
+  buildEmissiveTexture = (gl: WebGL2RenderingContext) => {
+    const emissiveData = new Float32Array(this.defs.length);
+    for (let i = 0; i < this.defs.length; i++) {
+      emissiveData[i] = this.defs[i].light ? 1.0 : 0.0;
+    }
+
+    const tex = gl.createTexture()!;
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.R32F,
+      this.defs.length,
+      1,
+      0,
+      gl.RED,
+      gl.FLOAT,
+      emissiveData
+    );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+    return tex;
+  }
 }
 

@@ -11,16 +11,16 @@
     "@types/chroma-js": "^3.1.2",
     "@types/color-convert": "^2.0.4",
     "@types/geojson": "^7946.0.16",
-    "@types/react": "^19.2.4",
+    "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@types/react-plotly.js": "^2.6.3",
+    "@types/react-plotly.js": "^2.6.4",
     "@types/react-syntax-highlighter": "^15.5.13",
     "bootstrap": "^5.3.8",
-    "chroma-js": "^3.1.2",
+    "chroma-js": "^3.2.0",
     "date-fns": "^4.1.0",
     "gl-matrix": "^3.4.4",
     "immutability-helper": "^3.1.1",
-    "katex": "^0.16.25",
+    "katex": "^0.16.27",
     "nearley": "^2.20.1",
     "onnxruntime-web": "^1.23.2",
     "open-simplex-noise": "^2.5.0",
@@ -34,7 +34,7 @@
     "react-plotly.js": "^2.6.0",
     "react-responsive": "^10.0.1",
     "react-syntax-highlighter": "^16.1.0",
-    "sass": "^1.94.0",
+    "sass": "^1.97.1",
     "typescript": "^5.9.3"
   },
   "scripts": {
@@ -60,10 +60,10 @@
   "devDependencies": {
     "@types/katex": "^0.16.7",
     "@types/nearley": "^2.11.5",
-    "@vitejs/plugin-react": "^5.1.1",
-    "glob": "^11.0.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "glob": "^13.0.0",
     "path": "^0.12.7",
-    "vite": "^7.2.2",
+    "vite": "^7.3.0",
     "vite-plugin-static-copy": "^3.1.4"
   }
 }

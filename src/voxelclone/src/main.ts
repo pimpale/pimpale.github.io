@@ -33,7 +33,7 @@ async function main() {
     { name: "stone", pointable: true, light: false, transparent: false, textures: await getImgs("stone"), },
     { name: "glass", pointable: true, light: false, transparent: true, textures: await getImgs("glass"), },
     { name: "lamp", pointable: true, light: true, transparent: false, textures: await getImgs("lamp"), },
-    { name: "selector", pointable: true, light: false, transparent: false, textures: await getImgs("selector"), },
+    { name: "selector", pointable: true, light: true, transparent: false, textures: await getImgs("selector"), },
   ]);
 
   // make game from canvas
