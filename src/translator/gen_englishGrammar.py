@@ -157,16 +157,19 @@ sentence ->
     | question_cl question_mark {%nt("sentence")%}
 
 
-# comma-separated list for syndetic coordination: "X, Y,"
-fin_cl_coordlist -> fin_cl_coordlist_item:+ {%nonterminal_unpack("fin_cl_coordlist")%}
+# comma-separated list for syndetic coordination: "X, Y," (requires 2+ items to avoid ambiguity with binary)
+fin_cl_coordlist -> fin_cl_coordlist_item fin_cl_coordlist_ {%nt("fin_cl_coordlist")%}
+fin_cl_coordlist_ -> fin_cl_coordlist_item:+ {%nonterminal_unpack("fin_cl_coordlist_")%}
 fin_cl_coordlist_item -> fin_cl comma {%nt("fin_cl_coordlist_item")%}
 
 # and-separated list for polysyndetic and: "X and Y and" (requires 2+ items to avoid ambiguity with binary)
-fin_cl_and_coordlist -> fin_cl_and_coordlist_item fin_cl_and_coordlist_item:+ {%nonterminal_unpack("fin_cl_and_coordlist")%}
+fin_cl_and_coordlist -> fin_cl_and_coordlist_item fin_cl_and_coordlist_ {%nt("fin_cl_and_coordlist")%}
+fin_cl_and_coordlist_ -> fin_cl_and_coordlist_item:+ {%nonterminal_unpack("fin_cl_and_coordlist_")%}
 fin_cl_and_coordlist_item -> fin_cl and {%nt("fin_cl_and_coordlist_item")%}
 
 # or-separated list for polysyndetic or: "X or Y or" (requires 2+ items to avoid ambiguity with binary)
-fin_cl_or_coordlist -> fin_cl_or_coordlist_item fin_cl_or_coordlist_item:+ {%nonterminal_unpack("fin_cl_or_coordlist")%}
+fin_cl_or_coordlist -> fin_cl_or_coordlist_item fin_cl_or_coordlist_ {%nt("fin_cl_or_coordlist")%}
+fin_cl_or_coordlist_ -> fin_cl_or_coordlist_item:+ {%nonterminal_unpack("fin_cl_or_coordlist_")%}
 fin_cl_or_coordlist_item -> fin_cl or {%nt("fin_cl_or_coordlist_item")%}
 
 # a declarative finite clause
@@ -774,16 +777,19 @@ def vp_grammar(vp_type: str, mv_type: str | None = None):
 """
 
     out += f"""
-# comma-separated list for syndetic coordination: [sang, danced,]
-{vp_type}_vp{mv_suf}_coordlist ->  {vp_type}_vp{mv_suf}_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_coordlist")%}}
+# comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
+{vp_type}_vp{mv_suf}_coordlist ->  {vp_type}_vp{mv_suf}_coordlist_item {vp_type}_vp{mv_suf}_coordlist_ {{%nt("{vp_type}_vp{mv_suf}_coordlist")%}}
+{vp_type}_vp{mv_suf}_coordlist_ -> {vp_type}_vp{mv_suf}_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_coordlist_")%}}
 {vp_type}_vp{mv_suf}_coordlist_item -> {vp_type}_vp{mv_suf} comma {{%nt("{vp_type}_vp{mv_suf}_coordlist_item")%}}
 
 # and-separated list for polysyndetic and: [sang and danced and] (requires 2+ items to avoid ambiguity with binary)
-{vp_type}_vp{mv_suf}_and_coordlist ->  {vp_type}_vp{mv_suf}_and_coordlist_item {vp_type}_vp{mv_suf}_and_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_and_coordlist")%}}
+{vp_type}_vp{mv_suf}_and_coordlist ->  {vp_type}_vp{mv_suf}_and_coordlist_item {vp_type}_vp{mv_suf}_and_coordlist_ {{%nt("{vp_type}_vp{mv_suf}_and_coordlist")%}}
+{vp_type}_vp{mv_suf}_and_coordlist_ -> {vp_type}_vp{mv_suf}_and_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_and_coordlist_")%}}
 {vp_type}_vp{mv_suf}_and_coordlist_item -> {vp_type}_vp{mv_suf} and {{%nt("{vp_type}_vp{mv_suf}_and_coordlist_item")%}}
 
 # or-separated list for polysyndetic or: [sang or danced or] (requires 2+ items to avoid ambiguity with binary)
-{vp_type}_vp{mv_suf}_or_coordlist ->  {vp_type}_vp{mv_suf}_or_coordlist_item {vp_type}_vp{mv_suf}_or_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_or_coordlist")%}}
+{vp_type}_vp{mv_suf}_or_coordlist ->  {vp_type}_vp{mv_suf}_or_coordlist_item {vp_type}_vp{mv_suf}_or_coordlist_ {{%nt("{vp_type}_vp{mv_suf}_or_coordlist")%}}
+{vp_type}_vp{mv_suf}_or_coordlist_ -> {vp_type}_vp{mv_suf}_or_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_or_coordlist_")%}}
 {vp_type}_vp{mv_suf}_or_coordlist_item -> {vp_type}_vp{mv_suf} or {{%nt("{vp_type}_vp{mv_suf}_or_coordlist_item")%}}
 
 {vp_type}_vp{mv_suf} ->
@@ -1042,20 +1048,24 @@ precorenp_modifier? -> precorenp_modifier {%nt("precorenp_modifier?")%}
 postcorenp_modifier? -> postcorenp_modifier {%nt("postcorenp_modifier?")%}
                       | null                {%nt("postcorenp_modifier?")%}
 
-# comma-separated list for syndetic coordination
-core_np_coordlist -> core_np_coordlist_item:+ {%nonterminal_unpack("core_np_coordlist")%}
+# comma-separated list for syndetic coordination (requires 2+ items to avoid ambiguity with binary)
+core_np_coordlist -> core_np_coordlist_item core_np_coordlist_ {%nt("core_np_coordlist")%}
+core_np_coordlist_ -> core_np_coordlist_item:+ {%nonterminal_unpack("core_np_coordlist_")%}
 core_np_coordlist_item -> core_np comma {%nt("core_np_coordlist_item")%}
 
 # and-separated list for polysyndetic and (requires 2+ items to avoid ambiguity with binary)
-core_np_and_coordlist -> core_np_and_coordlist_item core_np_and_coordlist_item:+ {%nonterminal_unpack("core_np_and_coordlist")%}
+core_np_and_coordlist -> core_np_and_coordlist_item core_np_and_coordlist_ {%nt("core_np_and_coordlist")%}
+core_np_and_coordlist_ -> core_np_and_coordlist_item:+ {%nonterminal_unpack("core_np_and_coordlist_")%}
 core_np_and_coordlist_item -> core_np and {%nt("core_np_and_coordlist_item")%}
 
 # or-separated list for polysyndetic or ending in singular (requires 2+ items)
-core_np_or_sg_coordlist -> core_np_or_coordlist_item core_np_or_sg_coordlist_item:+ {%nonterminal_unpack("core_np_or_sg_coordlist")%}
+core_np_or_sg_coordlist -> core_np_or_coordlist_item core_np_or_sg_coordlist_ {%nt("core_np_or_sg_coordlist")%}
+core_np_or_sg_coordlist_ -> core_np_or_sg_coordlist_item:+ {%nonterminal_unpack("core_np_or_sg_coordlist_")%}
 core_np_or_sg_coordlist_item -> core_np_sg or {%nt("core_np_or_sg_coordlist_item")%}
 
 # or-separated list for polysyndetic or ending in plural (requires 2+ items)
-core_np_or_pl_coordlist -> core_np_or_coordlist_item core_np_or_pl_coordlist_item:+ {%nonterminal_unpack("core_np_or_pl_coordlist")%}
+core_np_or_pl_coordlist -> core_np_or_coordlist_item core_np_or_pl_coordlist_ {%nt("core_np_or_pl_coordlist")%}
+core_np_or_pl_coordlist_ -> core_np_or_pl_coordlist_item:+ {%nonterminal_unpack("core_np_or_pl_coordlist_")%}
 core_np_or_pl_coordlist_item -> core_np_pl or {%nt("core_np_or_pl_coordlist_item")%}
 
 # generic or-separated item (for the non-final items which don't affect agreement)
@@ -1240,16 +1250,19 @@ dp -> dp_modifier? core_dp {%nt("dp")%}
 core_dp -> determinative {%nt("core_dp")%}
          | number        {%nt("core_dp")%}
 
-# comma-separated list for syndetic coordination
-adjunct_coordlist -> adjunct_coordlist_item:+ {%nonterminal_unpack("adjunct_coordlist")%}
+# comma-separated list for syndetic coordination (requires 2+ items to avoid ambiguity with binary)
+adjunct_coordlist -> adjunct_coordlist_item adjunct_coordlist_ {%nt("adjunct_coordlist")%}
+adjunct_coordlist_ -> adjunct_coordlist_item:+ {%nonterminal_unpack("adjunct_coordlist_")%}
 adjunct_coordlist_item -> adjunct comma {%nt("adjunct_coordlist_item")%}
 
 # and-separated list for polysyndetic and (requires 2+ items to avoid ambiguity with binary)
-adjunct_and_coordlist -> adjunct_and_coordlist_item adjunct_and_coordlist_item:+ {%nonterminal_unpack("adjunct_and_coordlist")%}
+adjunct_and_coordlist -> adjunct_and_coordlist_item adjunct_and_coordlist_ {%nt("adjunct_and_coordlist")%}
+adjunct_and_coordlist_ -> adjunct_and_coordlist_item:+ {%nonterminal_unpack("adjunct_and_coordlist_")%}
 adjunct_and_coordlist_item -> adjunct and {%nt("adjunct_and_coordlist_item")%}
 
 # or-separated list for polysyndetic or (requires 2+ items to avoid ambiguity with binary)
-adjunct_or_coordlist -> adjunct_or_coordlist_item adjunct_or_coordlist_item:+ {%nonterminal_unpack("adjunct_or_coordlist")%}
+adjunct_or_coordlist -> adjunct_or_coordlist_item adjunct_or_coordlist_ {%nt("adjunct_or_coordlist")%}
+adjunct_or_coordlist_ -> adjunct_or_coordlist_item:+ {%nonterminal_unpack("adjunct_or_coordlist_")%}
 adjunct_or_coordlist_item -> adjunct or {%nt("adjunct_or_coordlist_item")%}
 
 adjunct -> 
@@ -1326,16 +1339,19 @@ pp -> preposition                                         {%nt("pp")%}
 pp_minus_np ->      preposition_np             {%nt("pp_minus_np")%}
 
 # a predcomp (predicative complement)
-# comma-separated list for syndetic coordination
-predcomp_coordlist -> predcomp_coordlist_item:+ {%nonterminal_unpack("predcomp_coordlist")%}
+# comma-separated list for syndetic coordination (requires 2+ items to avoid ambiguity with binary)
+predcomp_coordlist -> predcomp_coordlist_item predcomp_coordlist_ {%nt("predcomp_coordlist")%}
+predcomp_coordlist_ -> predcomp_coordlist_item:+ {%nonterminal_unpack("predcomp_coordlist_")%}
 predcomp_coordlist_item -> predcomp comma {%nt("predcomp_coordlist_item")%}
 
 # and-separated list for polysyndetic and (requires 2+ items to avoid ambiguity with binary)
-predcomp_and_coordlist -> predcomp_and_coordlist_item predcomp_and_coordlist_item:+ {%nonterminal_unpack("predcomp_and_coordlist")%}
+predcomp_and_coordlist -> predcomp_and_coordlist_item predcomp_and_coordlist_ {%nt("predcomp_and_coordlist")%}
+predcomp_and_coordlist_ -> predcomp_and_coordlist_item:+ {%nonterminal_unpack("predcomp_and_coordlist_")%}
 predcomp_and_coordlist_item -> predcomp and {%nt("predcomp_and_coordlist_item")%}
 
 # or-separated list for polysyndetic or (requires 2+ items to avoid ambiguity with binary)
-predcomp_or_coordlist -> predcomp_or_coordlist_item predcomp_or_coordlist_item:+ {%nonterminal_unpack("predcomp_or_coordlist")%}
+predcomp_or_coordlist -> predcomp_or_coordlist_item predcomp_or_coordlist_ {%nt("predcomp_or_coordlist")%}
+predcomp_or_coordlist_ -> predcomp_or_coordlist_item:+ {%nonterminal_unpack("predcomp_or_coordlist_")%}
 predcomp_or_coordlist_item -> predcomp or {%nt("predcomp_or_coordlist_item")%}
 
 predcomp -> 
