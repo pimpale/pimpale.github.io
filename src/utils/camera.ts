@@ -21,6 +21,10 @@ export type TrackballCameraOptions = {
   ortho?: Ortho,
   rotation?: quat,
   dampingFactor?: number,
+  enableZoom?: boolean,
+  zoomSpeed?: number,
+  minZoom?: number,
+  maxZoom?: number,
 }
 
 type Ortho = {
@@ -48,6 +52,13 @@ export class TrackballCamera {
   private rotationQ;
   // how much to damp the rotation at each step
   private dampingFactor: number;
+
+  // zoom options
+  private enableZoom: boolean;
+  private zoomSpeed: number;
+  private minZoom: number;
+  private maxZoom: number;
+  private zoomLevel: number = 1;
 
   private canvas: HTMLElement;
 
@@ -142,6 +153,18 @@ export class TrackballCamera {
 
   discardTouchEvent = (e: TouchEvent) => e.preventDefault();
 
+  handleWheel = (e: WheelEvent) => {
+    if (!this.enableZoom) return;
+    e.preventDefault();
+    
+    // deltaY is positive when scrolling down (zoom out), negative when scrolling up (zoom in)
+    const delta = e.deltaY > 0 ? -1 : 1;
+    this.zoomLevel *= 1 + delta * this.zoomSpeed;
+    
+    // Clamp zoom level
+    this.zoomLevel = Math.max(this.minZoom, Math.min(this.maxZoom, this.zoomLevel));
+  }
+
   constructor(ctx: HTMLElement, options: TrackballCameraOptions) {
     if (options.ortho) {
       this.ortho = options.ortho;
@@ -168,12 +191,20 @@ export class TrackballCamera {
         this.dampingFactor = 0.9;
     }
 
+    // Zoom options (off by default)
+    this.enableZoom = options.enableZoom ?? false;
+    this.zoomSpeed = options.zoomSpeed ?? 0.1;
+    this.minZoom = options.minZoom ?? 0.1;
+    this.maxZoom = options.maxZoom ?? 10;
 
     this.canvas = ctx;
 
     this.canvas.addEventListener('pointerdown', this.handleMouseDown);
     window.addEventListener('pointermove', this.handleMouseMove);
     window.addEventListener('pointerup', this.handleMouseUp);
+
+    // zoom via wheel
+    this.canvas.addEventListener('wheel', this.handleWheel, { passive: false });
 
     // disable touch movements
     this.canvas.addEventListener("touchstart",  this.discardTouchEvent)
@@ -187,6 +218,9 @@ export class TrackballCamera {
     this.canvas.removeEventListener('pointerdown', this.handleMouseDown);
     window.removeEventListener('pointermove', this.handleMouseMove);
     window.removeEventListener('pointerup', this.handleMouseUp);
+
+    // remove wheel listener
+    this.canvas.removeEventListener('wheel', this.handleWheel);
 
     // reenable touch movements
     this.canvas.removeEventListener("touchstart",  this.discardTouchEvent)
@@ -212,7 +246,9 @@ export class TrackballCamera {
 
     const proj = mat4.create();
     const b = this.ortho;
-    mat4.ortho(proj, b.left, b.right, b.bottom, b.top, b.near, b.far);
+    // Apply zoom by scaling the ortho bounds (larger zoom = smaller bounds = objects appear larger)
+    const z = this.zoomLevel;
+    mat4.ortho(proj, b.left / z, b.right / z, b.bottom / z, b.top / z, b.near, b.far);
 
     const out = mat4.create();
     mat4.mul(out, proj, view);

@@ -130,5 +130,13 @@ export const articleData: Map<string, Article> = new Map([
     published: parse("26 May 2025", "d MMM y", new Date()),
     listed: true,
     fiction: true,
+  }],
+  ["celshading", {
+    name: "Cel Shading: Exploring Edge Coloring Algorithms",
+    incipit: "We demo the differences between several different cel-shading and edge coloring algorithms.",
+    url: '../celshading.html',
+    published: parse("20 Dec 2025", "d MMM y", new Date()),
+    listed: true,
+    fiction: false,
   }]
 ]);

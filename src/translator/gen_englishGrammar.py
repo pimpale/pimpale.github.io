@@ -31,14 +31,22 @@ const preposition_bare_declarative_cl = isPoS("preposition_bare_declarative_cl")
 const preposition_pp = isPoS("preposition_pp");
 const preposition_advp = isPoS("preposition_advp");
 
+// correlatives
+const either = isPoS("either");
+const neither = isPoS("neither");
+const both = isPoS("both");
+
 // coordinators
-const coordinator = isPoS("coordinator");
-const binary_coordinator = isPoS("binary_coordinator");
+const and = isPoS("and");
+const or = isPoS("or");
+const but = isPoS("but");
+const nor = isPoS("nor");
 
 // particles
 const to = isPoS("to");
 const s = isPoS("s");
 const not = isPoS("not");
+const not_onlyable = isPoS("not_onlyable");
 const that = isPoS("that");
 const interrogative_subordinator = isPoS("interrogative_subordinator");
 const how = isPoS("how");
@@ -149,15 +157,68 @@ sentence ->
     | question_cl question_mark {%nt("sentence")%}
 
 
+# comma-separated list for syndetic coordination: "X, Y,"
 fin_cl_coordlist -> fin_cl_coordlist_item:+ {%nonterminal_unpack("fin_cl_coordlist")%}
 fin_cl_coordlist_item -> fin_cl comma {%nt("fin_cl_coordlist_item")%}
 
+# and-separated list for polysyndetic and: "X and Y and" (requires 2+ items to avoid ambiguity with binary)
+fin_cl_and_coordlist -> fin_cl_and_coordlist_item fin_cl_and_coordlist_item:+ {%nonterminal_unpack("fin_cl_and_coordlist")%}
+fin_cl_and_coordlist_item -> fin_cl and {%nt("fin_cl_and_coordlist_item")%}
+
+# or-separated list for polysyndetic or: "X or Y or" (requires 2+ items to avoid ambiguity with binary)
+fin_cl_or_coordlist -> fin_cl_or_coordlist_item fin_cl_or_coordlist_item:+ {%nonterminal_unpack("fin_cl_or_coordlist")%}
+fin_cl_or_coordlist_item -> fin_cl or {%nt("fin_cl_or_coordlist_item")%}
+
 # a declarative finite clause
 fin_cl -> 
-# coordinations
-      fin_cl_coordlist coordinator fin_cl {%nt("fin_cl")%}
-    | fin_cl binary_coordinator fin_cl {%nt("fin_cl")%}
-# terminal rules
+# ===== 1. AND =====
+# 1a. asyndetic (no coordinator): "I came, I saw, I conquered"
+      fin_cl_coordlist fin_cl {%nt("fin_cl")%}
+# 1b. syndetic
+#   1b-i. binary: "X and Y"
+    | fin_cl and fin_cl {%nt("fin_cl")%}
+#   1b-ii. list: "X, Y, and Z"
+    | fin_cl_coordlist and fin_cl {%nt("fin_cl")%}
+# 1c. polysyndetic
+#   1c-i. list: "X and Y and Z"
+    | fin_cl_and_coordlist fin_cl {%nt("fin_cl")%}
+# ===== 2. BOTH-AND (not allowed for main clauses) =====
+# *both he overslept and his bus arrived late
+# ===== 3. OR =====
+# 3b. syndetic
+#   3b-i. binary: "X or Y"
+    | fin_cl or fin_cl {%nt("fin_cl")%}
+#   3b-ii. list: "X, Y, or Z"
+    | fin_cl_coordlist or fin_cl {%nt("fin_cl")%}
+# 3c. polysyndetic
+#   3c-i. list: "X or Y or Z"
+    | fin_cl_or_coordlist fin_cl {%nt("fin_cl")%}
+# ===== 4. EITHER-OR =====
+# 4b. syndetic
+#   4b-i. binary: "either X or Y"
+    | either fin_cl or fin_cl {%nt("fin_cl")%}
+#   4b-ii. list: "either X, Y, or Z"
+    | either fin_cl_coordlist or fin_cl {%nt("fin_cl")%}
+# 4c. polysyndetic
+#   4c-i. list: "either X or Y or Z"
+    | either fin_cl_or_coordlist fin_cl {%nt("fin_cl")%}
+# ===== 5. NOR (requires inversion) =====
+# 5b. syndetic
+#   5b-i. binary: "He won't go, nor will I"
+    | fin_cl comma nor subj_aux_inv_cl {%nt("fin_cl")%}
+# ===== 6. NEITHER-NOR (not allowed for main clauses) =====
+# *neither he overslept nor his bus arrived late
+# ===== 7. BUT =====
+# 7b. syndetic
+#   7b-i. binary only: "X but Y"
+    | fin_cl but fin_cl {%nt("fin_cl")%}
+# ===== 8. NOT ONLY - (BUT) (requires inversion after "not only", "but" is optional) =====
+# 8b. syndetic
+#   8b-i. binary: "Not only did he oversleep, but his bus arrived late"
+#                 "Not only was he incompetent, he was also corrupt" (unknown whether this is asyndetic or just a case of juxtaposition. See CGEL 15.2.7 for more details.)
+    | not_only subj_aux_inv_cl comma but fin_cl {%nt("fin_cl")%}
+    | not_only subj_aux_inv_cl comma fin_cl {%nt("fin_cl")%}
+# ===== terminal rules =====
     | precl_adjunct_list np_sg vbf_sg_vp {%nt("fin_cl")%}
     | precl_adjunct_list np_pl vbf_pl_vp {%nt("fin_cl")%}
 
@@ -713,15 +774,66 @@ def vp_grammar(vp_type: str, mv_type: str | None = None):
 """
 
     out += f"""
-# [sang, danced,]
+# comma-separated list for syndetic coordination: [sang, danced,]
 {vp_type}_vp{mv_suf}_coordlist ->  {vp_type}_vp{mv_suf}_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_coordlist")%}}
 {vp_type}_vp{mv_suf}_coordlist_item -> {vp_type}_vp{mv_suf} comma {{%nt("{vp_type}_vp{mv_suf}_coordlist_item")%}}
 
+# and-separated list for polysyndetic and: [sang and danced and] (requires 2+ items to avoid ambiguity with binary)
+{vp_type}_vp{mv_suf}_and_coordlist ->  {vp_type}_vp{mv_suf}_and_coordlist_item {vp_type}_vp{mv_suf}_and_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_and_coordlist")%}}
+{vp_type}_vp{mv_suf}_and_coordlist_item -> {vp_type}_vp{mv_suf} and {{%nt("{vp_type}_vp{mv_suf}_and_coordlist_item")%}}
+
+# or-separated list for polysyndetic or: [sang or danced or] (requires 2+ items to avoid ambiguity with binary)
+{vp_type}_vp{mv_suf}_or_coordlist ->  {vp_type}_vp{mv_suf}_or_coordlist_item {vp_type}_vp{mv_suf}_or_coordlist_item:+ {{%nonterminal_unpack("{vp_type}_vp{mv_suf}_or_coordlist")%}}
+{vp_type}_vp{mv_suf}_or_coordlist_item -> {vp_type}_vp{mv_suf} or {{%nt("{vp_type}_vp{mv_suf}_or_coordlist_item")%}}
+
 {vp_type}_vp{mv_suf} ->
-    # coordinations
-      {vp_type}_vp{mv_suf}_coordlist coordinator {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}} # coordination: "We [sang, danced, and laughed]"
-    | {vp_type}_vp{mv_suf} binary_coordinator {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}} # coordination: "We [sang and danced]"
-    # terminal rules
+# ===== 1. AND =====
+# 1a. asyndetic (no coordinator): "sang, danced, laughed"
+      {vp_type}_vp{mv_suf}_coordlist {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# 1b. syndetic
+#   1b-i. binary: "sang and danced"
+    | {vp_type}_vp{mv_suf} and {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+#   1b-ii. list: "sang, danced, and laughed"
+    | {vp_type}_vp{mv_suf}_coordlist and {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# 1c. polysyndetic
+#   1c-i. list: "sang and danced and laughed"
+    | {vp_type}_vp{mv_suf}_and_coordlist {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# ===== 2. BOTH-AND (binary only - "both" implies exactly two) =====
+# 2b. syndetic
+#   2b-i. binary: "both sang and danced"
+    | both {vp_type}_vp{mv_suf} and {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# ===== 3. OR =====
+# 3b. syndetic
+#   3b-i. binary: "sang or danced"
+    | {vp_type}_vp{mv_suf} or {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+#   3b-ii. list: "sang, danced, or laughed"
+    | {vp_type}_vp{mv_suf}_coordlist or {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# 3c. polysyndetic
+#   3c-i. list: "sang or danced or laughed"
+    | {vp_type}_vp{mv_suf}_or_coordlist {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# ===== 4. EITHER-OR =====
+# 4b. syndetic
+#   4b-i. binary: "either sang or danced"
+    | either {vp_type}_vp{mv_suf} or {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+#   4b-ii. list: "either sang, danced, or laughed"
+    | either {vp_type}_vp{mv_suf}_coordlist or {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# 4c. polysyndetic
+#   4c-i. list: "either sang or danced or laughed"
+    | either {vp_type}_vp{mv_suf}_or_coordlist {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# ===== 5. NOR (not available for VP without neither) =====
+# ===== 6. NEITHER-NOR =====
+# 6b. syndetic
+    #   6b-i. binary: "neither sang nor danced"
+    | neither {vp_type}_vp{mv_suf} nor {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# ===== 7. BUT =====
+# 7b. syndetic
+#   7b-i. binary only: "tried but failed"
+    | {vp_type}_vp{mv_suf} but {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# ===== 8. NOT ONLY - BUT (binary only, like both-and) =====
+# 8b. syndetic
+#   8b-i. binary: "not only sang but danced"
+    | not_only {vp_type}_vp{mv_suf} but {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
+# ===== terminal rules =====
     | advp_vp? {vp_type}                        adjunct_list{mv_suf}                          {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb (ex: "I smoked")
     | advp_vp? {vp_type}_predcomp               adjunct_list_predcomp{mv_suf}                 {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
     | advp_vp? {vp_type}_to_inf_cl              adjunct_list_to_inf_cl{mv_suf}                {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
@@ -930,31 +1042,112 @@ precorenp_modifier? -> precorenp_modifier {%nt("precorenp_modifier?")%}
 postcorenp_modifier? -> postcorenp_modifier {%nt("postcorenp_modifier?")%}
                       | null                {%nt("postcorenp_modifier?")%}
 
-core_np_sg_coordlist -> core_np_sg_coordlist_item:+ {%nonterminal_unpack("core_np_sg_coordlist")%}
-core_np_sg_coordlist_item -> core_np_sg comma {%nt("core_np_sg_coordlist_item")%}
+# comma-separated list for syndetic coordination
+core_np_coordlist -> core_np_coordlist_item:+ {%nonterminal_unpack("core_np_coordlist")%}
+core_np_coordlist_item -> core_np comma {%nt("core_np_coordlist_item")%}
+
+# and-separated list for polysyndetic and (requires 2+ items to avoid ambiguity with binary)
+core_np_and_coordlist -> core_np_and_coordlist_item core_np_and_coordlist_item:+ {%nonterminal_unpack("core_np_and_coordlist")%}
+core_np_and_coordlist_item -> core_np and {%nt("core_np_and_coordlist_item")%}
+
+# or-separated list for polysyndetic or ending in singular (requires 2+ items)
+core_np_or_sg_coordlist -> core_np_or_coordlist_item core_np_or_sg_coordlist_item:+ {%nonterminal_unpack("core_np_or_sg_coordlist")%}
+core_np_or_sg_coordlist_item -> core_np_sg or {%nt("core_np_or_sg_coordlist_item")%}
+
+# or-separated list for polysyndetic or ending in plural (requires 2+ items)
+core_np_or_pl_coordlist -> core_np_or_coordlist_item core_np_or_pl_coordlist_item:+ {%nonterminal_unpack("core_np_or_pl_coordlist")%}
+core_np_or_pl_coordlist_item -> core_np_pl or {%nt("core_np_or_pl_coordlist_item")%}
+
+# generic or-separated item (for the non-final items which don't affect agreement)
+core_np_or_coordlist_item -> core_np or {%nt("core_np_or_coordlist_item")%}
 
 # a core singular noun phrase without peripheral modifiers
+# Note: only OR-type coordination can produce singular (proximity agreement with rightmost)
+# AND-coordination always produces plural, so it's in core_np_pl
 core_np_sg -> 
-# coordinations
-      core_np_sg_coordlist coordinator core_np_sg {%nt("core_np_sg")%} # coordination: "Either [John, Mary, or Peter] is here."
-    | core_np_sg binary_coordinator core_np_sg {%nt("core_np_sg")%} # coordination: "Either [John or Mary] is here."
-# terminal rules
+# ===== 3. OR (rightmost conjunct is singular → singular) =====
+# 3b. syndetic
+#   3b-i. binary: "the cat or the dog" (sg)
+      core_np or core_np_sg {%nt("core_np_sg")%}
+#   3b-ii. list: "the cat, the bird, or the dog" (sg)
+    | core_np_coordlist or core_np_sg {%nt("core_np_sg")%}
+# 3c. polysyndetic
+#   3c-i. list: "the cat or the bird or the dog" (sg)
+    | core_np_or_sg_coordlist core_np_sg {%nt("core_np_sg")%}
+# ===== 4. EITHER-OR (rightmost conjunct is singular → singular) =====
+# 4b. syndetic
+#   4b-i. binary: "either John or Mary" (sg)
+    | either core_np or core_np_sg {%nt("core_np_sg")%}
+#   4b-ii. list: "either John, Bob, or Mary" (sg)
+    | either core_np_coordlist or core_np_sg {%nt("core_np_sg")%}
+# 4c. polysyndetic
+#   4c-i. list: "either John or Bob or Mary" (sg)
+    | either core_np_or_sg_coordlist core_np_sg {%nt("core_np_sg")%}
+# ===== 6. NEITHER-NOR (rightmost conjunct is singular → singular) =====
+# 6b. syndetic
+#   6b-i. binary: "neither John nor Mary" (sg)
+    | neither core_np nor core_np_sg {%nt("core_np_sg")%}
+# ===== 7. BUT NOT (first conjunct is singular → singular) =====
+# 7b. syndetic
+#   7b-i. binary: "John but not Mary" (sg, agrees with first)
+    | core_np_sg but not core_np {%nt("core_np_sg")%}
+# ===== terminal rules =====
     |                                               proper_noun_sg                                  {%nt("core_np_sg")%}  # a singular proper noun (ex: "John", "Mary")
     |                                               pronoun_sg                                      {%nt("core_np_sg")%}  # a singular pronoun (ex: "he", "she", "it")
     |                                               independent_genitive_pronoun                    {%nt("core_np_sg")%}  # a possessive pronoun (ex: "mine", "yours")
     | predeterminer_modifier? determiner? adjp_list noun_sg                      n_modifier_list_sg {%nt("core_np_sg")%}  # determiner phrase followed by a singular nominal (ex: "the lovely apple")
     |                                               fused_relative_clause_sg                        {%nt("core_np_sg")%}  # a singular fused relative clause (ex: "what i was mailed")
 
-core_np_pl_coordlist -> core_np_pl_coordlist_item:+ {%nonterminal_unpack("core_np_pl_coordlist")%}
-core_np_pl_coordlist_item -> core_np comma {%nt("core_np_pl_coordlist_item")%}
-
 # a core plural noun phrase without peripheral modifiers
 # note that core_np_pl can consist of many singular noun phrases: "Bob, Alice and Carol are here."
+# AND-coordination always produces plural regardless of input number
 core_np_pl -> 
-# coordinations
-      core_np_pl_coordlist coordinator core_np {%nt("core_np_pl")%} # coordination: "Bob, Alice and Carol are here."
-    | core_np binary_coordinator core_np {%nt("core_np_pl")%} # coordination: "Bob and Alice are here."
-# terminal rules
+# ===== 1. AND (always plural) =====
+# 1a. asyndetic (no coordinator): "the cat, the dog, the bird" (implies conjunction)
+      core_np_coordlist core_np {%nt("core_np_pl")%}
+# 1b. syndetic
+#   1b-i. binary: "John and Mary" (pl)
+    | core_np and core_np {%nt("core_np_pl")%}
+#   1b-ii. list: "John, Mary, and Bob" (pl)
+    | core_np_coordlist and core_np {%nt("core_np_pl")%}
+# 1c. polysyndetic
+#   1c-i. list: "John and Mary and Bob" (pl)
+    | core_np_and_coordlist core_np {%nt("core_np_pl")%}
+# ===== 2. BOTH-AND (always plural, binary only) =====
+# 2b. syndetic
+#   2b-i. binary: "both John and Mary" (pl)
+    | both core_np and core_np {%nt("core_np_pl")%}
+# ===== 3. OR (rightmost conjunct is plural → plural) =====
+# 3b. syndetic
+#   3b-i. binary: "the cat or the dogs" (pl)
+    | core_np or core_np_pl {%nt("core_np_pl")%}
+#   3b-ii. list: "the cat, the bird, or the dogs" (pl)
+    | core_np_coordlist or core_np_pl {%nt("core_np_pl")%}
+# 3c. polysyndetic
+#   3c-i. list: "the cat or the bird or the dogs" (pl)
+    | core_np_or_pl_coordlist core_np_pl {%nt("core_np_pl")%}
+# ===== 4. EITHER-OR (rightmost conjunct is plural → plural) =====
+# 4b. syndetic
+#   4b-i. binary: "either John or the Smiths" (pl)
+    | either core_np or core_np_pl {%nt("core_np_pl")%}
+#   4b-ii. list: "either John, Mary, or the Smiths" (pl)
+    | either core_np_coordlist or core_np_pl {%nt("core_np_pl")%}
+# 4c. polysyndetic
+#   4c-i. list: "either John or Mary or the Smiths" (pl)
+    | either core_np_or_pl_coordlist core_np_pl {%nt("core_np_pl")%}
+# ===== 6. NEITHER-NOR (rightmost conjunct is plural → plural) =====
+# 6b. syndetic
+#   6b-i. binary: "neither John nor the Smiths" (pl)
+    | neither core_np nor core_np_pl {%nt("core_np_pl")%}
+# ===== 7. BUT NOT (first conjunct is plural → plural) =====
+# 7b. syndetic
+#   7b-i. binary: "the cats but not the dog" (pl, agrees with first)
+    | core_np_pl but not core_np {%nt("core_np_pl")%}
+# ===== 8. NOT ONLY - BUT (always plural, binary only) =====
+# 8b. syndetic
+#   8b-i. binary: "not only John but Mary" (pl)
+    | not_only core_np but core_np {%nt("core_np_pl")%}
+# ===== terminal rules =====
     |                                               proper_noun_pl                                  {%nt("core_np_pl")%}  # a plural proper noun (ex: "the Smiths")
     |                                               pronoun_pl                                      {%nt("core_np_pl")%}  # a plural pronoun (ex: "we", "they")
     |                                               independent_genitive_pronoun                    {%nt("core_np_pl")%}  # a possessive pronoun (ex: "mine", "yours")
@@ -1047,14 +1240,65 @@ dp -> dp_modifier? core_dp {%nt("dp")%}
 core_dp -> determinative {%nt("core_dp")%}
          | number        {%nt("core_dp")%}
 
+# comma-separated list for syndetic coordination
 adjunct_coordlist -> adjunct_coordlist_item:+ {%nonterminal_unpack("adjunct_coordlist")%}
 adjunct_coordlist_item -> adjunct comma {%nt("adjunct_coordlist_item")%}
 
+# and-separated list for polysyndetic and (requires 2+ items to avoid ambiguity with binary)
+adjunct_and_coordlist -> adjunct_and_coordlist_item adjunct_and_coordlist_item:+ {%nonterminal_unpack("adjunct_and_coordlist")%}
+adjunct_and_coordlist_item -> adjunct and {%nt("adjunct_and_coordlist_item")%}
+
+# or-separated list for polysyndetic or (requires 2+ items to avoid ambiguity with binary)
+adjunct_or_coordlist -> adjunct_or_coordlist_item adjunct_or_coordlist_item:+ {%nonterminal_unpack("adjunct_or_coordlist")%}
+adjunct_or_coordlist_item -> adjunct or {%nt("adjunct_or_coordlist_item")%}
+
 adjunct -> 
-# coordinations
-      adjunct_coordlist coordinator adjunct {%nt("adjunct")%}
-    | adjunct binary_coordinator adjunct {%nt("adjunct")%}
-# terminal rules
+# ===== 1. AND =====
+# 1a. asyndetic (no coordinator): "in the house, in the garden, in the park"
+      adjunct_coordlist adjunct {%nt("adjunct")%}
+# 1b. syndetic
+#   1b-i. binary: "in the house and in the garden"
+    | adjunct and adjunct {%nt("adjunct")%}
+#   1b-ii. list: "in the house, in the garden, and in the park"
+    | adjunct_coordlist and adjunct {%nt("adjunct")%}
+# 1c. polysyndetic
+#   1c-i. list: "in the house and in the garden and in the park"
+    | adjunct_and_coordlist adjunct {%nt("adjunct")%}
+# ===== 2. BOTH-AND (binary only) =====
+# 2b. syndetic
+#   2b-i. binary: "both in the house and in the garden"
+    | both adjunct and adjunct {%nt("adjunct")%}
+# ===== 3. OR =====
+# 3b. syndetic
+#   3b-i. binary: "in the house or in the garden"
+    | adjunct or adjunct {%nt("adjunct")%}
+#   3b-ii. list: "in the house, in the garden, or in the park"
+    | adjunct_coordlist or adjunct {%nt("adjunct")%}
+# 3c. polysyndetic
+#   3c-i. list: "in the house or in the garden or in the park"
+    | adjunct_or_coordlist adjunct {%nt("adjunct")%}
+# ===== 4. EITHER-OR =====
+# 4b. syndetic
+#   4b-i. binary: "either in the house or in the garden"
+    | either adjunct or adjunct {%nt("adjunct")%}
+#   4b-ii. list: "either in the house, in the garden, or in the park"
+    | either adjunct_coordlist or adjunct {%nt("adjunct")%}
+# 4c. polysyndetic
+#   4c-i. list: "either in the house or in the garden or in the park"
+    | either adjunct_or_coordlist adjunct {%nt("adjunct")%}
+# ===== 6. NEITHER-NOR (binary only) =====
+# 6b. syndetic
+#   6b-i. binary: "neither in the house nor in the garden"
+    | neither adjunct nor adjunct {%nt("adjunct")%}
+# ===== 7. BUT (binary only) =====
+# 7b. syndetic
+#   7b-i. binary: "quickly but carefully"
+    | adjunct but adjunct {%nt("adjunct")%}
+# ===== 8. NOT ONLY - BUT (binary only) =====
+# 8b. syndetic
+#   8b-i. binary: "not only in the house but in the garden"
+    | not_only adjunct but adjunct {%nt("adjunct")%}
+# ===== terminal rules =====
     | pp             {%nt("adjunct")%} # a prepositional phrase adjunct (ex: "in the house")
     | advp_vp        {%nt("adjunct")%} # an adverb phrase adjunct compatible with verb use (ex: "quickly")
 
@@ -1081,15 +1325,66 @@ pp -> preposition                                         {%nt("pp")%}
 # NOTE: you cannot move out of prepositional clauses: https://en.wikipedia.org/wiki/Wh-movement#Extraction_islands
 pp_minus_np ->      preposition_np             {%nt("pp_minus_np")%}
 
-# a predcomp
+# a predcomp (predicative complement)
+# comma-separated list for syndetic coordination
 predcomp_coordlist -> predcomp_coordlist_item:+ {%nonterminal_unpack("predcomp_coordlist")%}
 predcomp_coordlist_item -> predcomp comma {%nt("predcomp_coordlist_item")%}
 
+# and-separated list for polysyndetic and (requires 2+ items to avoid ambiguity with binary)
+predcomp_and_coordlist -> predcomp_and_coordlist_item predcomp_and_coordlist_item:+ {%nonterminal_unpack("predcomp_and_coordlist")%}
+predcomp_and_coordlist_item -> predcomp and {%nt("predcomp_and_coordlist_item")%}
+
+# or-separated list for polysyndetic or (requires 2+ items to avoid ambiguity with binary)
+predcomp_or_coordlist -> predcomp_or_coordlist_item predcomp_or_coordlist_item:+ {%nonterminal_unpack("predcomp_or_coordlist")%}
+predcomp_or_coordlist_item -> predcomp or {%nt("predcomp_or_coordlist_item")%}
+
 predcomp -> 
-# coordinations
-      predcomp coordinator predcomp {%nt("predcomp")%}
-    | predcomp_coordlist binary_coordinator predcomp {%nt("predcomp")%}
-# terminal rules
+# ===== 1. AND =====
+# 1a. asyndetic (no coordinator): "happy, tired, hungry"
+      predcomp_coordlist predcomp {%nt("predcomp")%}
+# 1b. syndetic
+#   1b-i. binary: "happy and tired"
+    | predcomp and predcomp {%nt("predcomp")%}
+#   1b-ii. list: "happy, tired, and hungry"
+    | predcomp_coordlist and predcomp {%nt("predcomp")%}
+# 1c. polysyndetic
+#   1c-i. list: "happy and tired and hungry"
+    | predcomp_and_coordlist predcomp {%nt("predcomp")%}
+# ===== 2. BOTH-AND (binary only) =====
+# 2b. syndetic
+#   2b-i. binary: "both happy and tired"
+    | both predcomp and predcomp {%nt("predcomp")%}
+# ===== 3. OR =====
+# 3b. syndetic
+#   3b-i. binary: "happy or tired"
+    | predcomp or predcomp {%nt("predcomp")%}
+#   3b-ii. list: "happy, tired, or hungry"
+    | predcomp_coordlist or predcomp {%nt("predcomp")%}
+# 3c. polysyndetic
+#   3c-i. list: "happy or tired or hungry"
+    | predcomp_or_coordlist predcomp {%nt("predcomp")%}
+# ===== 4. EITHER-OR =====
+# 4b. syndetic
+#   4b-i. binary: "either happy or tired"
+    | either predcomp or predcomp {%nt("predcomp")%}
+#   4b-ii. list: "either happy, tired, or hungry"
+    | either predcomp_coordlist or predcomp {%nt("predcomp")%}
+# 4c. polysyndetic
+#   4c-i. list: "either happy or tired or hungry"
+    | either predcomp_or_coordlist predcomp {%nt("predcomp")%}
+# ===== 6. NEITHER-NOR (binary only) =====
+# 6b. syndetic
+#   6b-i. binary: "neither happy nor tired"
+    | neither predcomp nor predcomp {%nt("predcomp")%}
+# ===== 7. BUT (binary only) =====
+# 7b. syndetic
+#   7b-i. binary: "tired but happy"
+    | predcomp but predcomp {%nt("predcomp")%}
+# ===== 8. NOT ONLY - BUT (binary only) =====
+# 8b. syndetic
+#   8b-i. binary: "not only happy but tired"
+    | not_only predcomp but predcomp {%nt("predcomp")%}
+# ===== terminal rules =====
     | adjp {%nt("predcomp")%} # an adjective phrase (ex: "happy")
 
 predcomp_minus_np -> adjp_minus_np {%nt("predcomp_minus_np")%}
@@ -1131,6 +1426,11 @@ advp? -> advp       {%nt("advp?")%}
 
 not? -> not         {%nt("not?")%}
       | null        {%nt("not?")%}
+
+# idioms / poly-words
+
+# not only / not just / not merely
+not_only -> not not_onlyable {%nt("not_only")%}
 
 # terminals
 
@@ -1222,8 +1522,14 @@ postcorenp_modifier -> %postcorenp_modifier {%t("postcorenp_modifier")%}
 precore_emphatic_modifier -> %precore_emphatic_modifier {%t("precore_emphatic_modifier")%}
 precore_emphatic_modifier_adjp  -> %precore_emphatic_modifier_adjp  {%t("precore_emphatic_modifier_adjp ")%}
 quantificational_modifier -> %quantificational_modifier {%t("quantificational_modifier")%}
-coordinator -> %coordinator {%t("coordinator")%}
-binary_coordinator -> %binary_coordinator {%t("binary_coordinator")%}
+either -> %either {%t("either")%}
+neither -> %neither {%t("neither")%}
+both -> %both {%t("both")%}
+and -> %and {%t("and")%}
+or -> %or {%t("or")%}
+but -> %but {%t("but")%}
+nor -> %nor {%t("nor")%}
+not_onlyable -> %not_onlyable {%t("not_onlyable")%}
 period -> %period {%t("period")%}
 question_mark -> %question_mark {%t("question_mark")%}
 exclamation_mark -> %exclamation_mark {%t("exclamation_mark")%}
