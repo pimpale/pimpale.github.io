@@ -29,6 +29,8 @@ const preposition_bare_declarative_cl = isPoS("preposition_bare_declarative_cl")
 const preposition_pp = isPoS("preposition_pp");
 const preposition_advp = isPoS("preposition_advp");
 
+const particle = isPoS("particle");
+
 // correlatives
 const either = isPoS("either");
 const neither = isPoS("neither");
@@ -78,8 +80,19 @@ const inf_interrogative_cl = isPoS("inf_interrogative_cl");
 const inf_vbg_cl = isPoS("inf_vbg_cl");
 const inf_vbn_cl = isPoS("inf_vbn_cl");
 const inf_passive_cl = isPoS("inf_passive_cl");
+const inf_prt = isPoS("inf_prt");
+const inf_prt_predcomp = isPoS("inf_prt_predcomp");
+const inf_prt_to_inf_cl = isPoS("inf_prt_to_inf_cl");
+const inf_prt_vbg_cl = isPoS("inf_prt_vbg_cl");
+const inf_prt_that_declarative_cl = isPoS("inf_prt_that_declarative_cl");
+const inf_prt_bare_declarative_cl = isPoS("inf_prt_bare_declarative_cl");
+const inf_prt_interrogative_cl = isPoS("inf_prt_interrogative_cl");
 const inf_o = isPoS("inf_o");
 const inf_o_predcomp = isPoS("inf_o_predcomp");
+const inf_prt_o = isPoS("inf_prt_o");
+const inf_o_prt_predcomp = isPoS("inf_o_prt_predcomp");
+const inf_o_prt_that_declarative_cl = isPoS("inf_o_prt_that_declarative_cl");
+const inf_o_prt_bare_declarative_cl = isPoS("inf_o_prt_bare_declarative_cl");
 const inf_intnp_to_inf_cl = isPoS("inf_intnp_to_inf_cl");
 const inf_intnp_bare_inf_cl = isPoS("inf_intnp_bare_inf_cl");
 const inf_io_that_declarative_cl = isPoS("inf_io_that_declarative_cl");
@@ -87,6 +100,7 @@ const inf_io_bare_declarative_cl = isPoS("inf_io_bare_declarative_cl");
 const inf_io_exclamative_cl = isPoS("inf_io_exclamative_cl");
 const inf_io_interrogative_cl = isPoS("inf_io_interrogative_cl");
 const inf_io_do = isPoS("inf_io_do");
+const inf_o_prt_o = isPoS("inf_o_prt_o");
 
 
 const vbg = isPoS("vbg");
@@ -100,8 +114,19 @@ const vbg_interrogative_cl = isPoS("vbg_interrogative_cl");
 const vbg_vbg_cl = isPoS("vbg_vbg_cl");
 const vbg_vbn_cl = isPoS("vbg_vbn_cl");
 const vbg_passive_cl = isPoS("vbg_passive_cl");
+const vbg_prt = isPoS("vbg_prt");
+const vbg_prt_predcomp = isPoS("vbg_prt_predcomp");
+const vbg_prt_to_inf_cl = isPoS("vbg_prt_to_inf_cl");
+const vbg_prt_vbg_cl = isPoS("vbg_prt_vbg_cl");
+const vbg_prt_that_declarative_cl = isPoS("vbg_prt_that_declarative_cl");
+const vbg_prt_bare_declarative_cl = isPoS("vbg_prt_bare_declarative_cl");
+const vbg_prt_interrogative_cl = isPoS("vbg_prt_interrogative_cl");
 const vbg_o = isPoS("vbg_o");
 const vbg_o_predcomp = isPoS("vbg_o_predcomp");
+const vbg_prt_o = isPoS("vbg_prt_o");
+const vbg_o_prt_predcomp = isPoS("vbg_o_prt_predcomp");
+const vbg_o_prt_that_declarative_cl = isPoS("vbg_o_prt_that_declarative_cl");
+const vbg_o_prt_bare_declarative_cl = isPoS("vbg_o_prt_bare_declarative_cl");
 const vbg_intnp_to_inf_cl = isPoS("vbg_intnp_to_inf_cl");
 const vbg_intnp_bare_inf_cl = isPoS("vbg_intnp_bare_inf_cl");
 const vbg_io_that_declarative_cl = isPoS("vbg_io_that_declarative_cl");
@@ -109,6 +134,7 @@ const vbg_io_bare_declarative_cl = isPoS("vbg_io_bare_declarative_cl");
 const vbg_io_exclamative_cl = isPoS("vbg_io_exclamative_cl");
 const vbg_io_interrogative_cl = isPoS("vbg_io_interrogative_cl");
 const vbg_io_do = isPoS("vbg_io_do");
+const vbg_o_prt_o = isPoS("vbg_o_prt_o");
 
 
 const vbn = isPoS("vbn");
@@ -122,8 +148,19 @@ const vbn_interrogative_cl = isPoS("vbn_interrogative_cl");
 const vbn_vbg_cl = isPoS("vbn_vbg_cl");
 const vbn_vbn_cl = isPoS("vbn_vbn_cl");
 const vbn_passive_cl = isPoS("vbn_passive_cl");
+const vbn_prt = isPoS("vbn_prt");
+const vbn_prt_predcomp = isPoS("vbn_prt_predcomp");
+const vbn_prt_to_inf_cl = isPoS("vbn_prt_to_inf_cl");
+const vbn_prt_vbg_cl = isPoS("vbn_prt_vbg_cl");
+const vbn_prt_that_declarative_cl = isPoS("vbn_prt_that_declarative_cl");
+const vbn_prt_bare_declarative_cl = isPoS("vbn_prt_bare_declarative_cl");
+const vbn_prt_interrogative_cl = isPoS("vbn_prt_interrogative_cl");
 const vbn_o = isPoS("vbn_o");
 const vbn_o_predcomp = isPoS("vbn_o_predcomp");
+const vbn_prt_o = isPoS("vbn_prt_o");
+const vbn_o_prt_predcomp = isPoS("vbn_o_prt_predcomp");
+const vbn_o_prt_that_declarative_cl = isPoS("vbn_o_prt_that_declarative_cl");
+const vbn_o_prt_bare_declarative_cl = isPoS("vbn_o_prt_bare_declarative_cl");
 const vbn_intnp_to_inf_cl = isPoS("vbn_intnp_to_inf_cl");
 const vbn_intnp_bare_inf_cl = isPoS("vbn_intnp_bare_inf_cl");
 const vbn_io_that_declarative_cl = isPoS("vbn_io_that_declarative_cl");
@@ -131,6 +168,7 @@ const vbn_io_bare_declarative_cl = isPoS("vbn_io_bare_declarative_cl");
 const vbn_io_exclamative_cl = isPoS("vbn_io_exclamative_cl");
 const vbn_io_interrogative_cl = isPoS("vbn_io_interrogative_cl");
 const vbn_io_do = isPoS("vbn_io_do");
+const vbn_o_prt_o = isPoS("vbn_o_prt_o");
 
 
 const vbf_sg = isPoS("vbf_sg");
@@ -144,8 +182,19 @@ const vbf_sg_interrogative_cl = isPoS("vbf_sg_interrogative_cl");
 const vbf_sg_vbg_cl = isPoS("vbf_sg_vbg_cl");
 const vbf_sg_vbn_cl = isPoS("vbf_sg_vbn_cl");
 const vbf_sg_passive_cl = isPoS("vbf_sg_passive_cl");
+const vbf_sg_prt = isPoS("vbf_sg_prt");
+const vbf_sg_prt_predcomp = isPoS("vbf_sg_prt_predcomp");
+const vbf_sg_prt_to_inf_cl = isPoS("vbf_sg_prt_to_inf_cl");
+const vbf_sg_prt_vbg_cl = isPoS("vbf_sg_prt_vbg_cl");
+const vbf_sg_prt_that_declarative_cl = isPoS("vbf_sg_prt_that_declarative_cl");
+const vbf_sg_prt_bare_declarative_cl = isPoS("vbf_sg_prt_bare_declarative_cl");
+const vbf_sg_prt_interrogative_cl = isPoS("vbf_sg_prt_interrogative_cl");
 const vbf_sg_o = isPoS("vbf_sg_o");
 const vbf_sg_o_predcomp = isPoS("vbf_sg_o_predcomp");
+const vbf_sg_prt_o = isPoS("vbf_sg_prt_o");
+const vbf_sg_o_prt_predcomp = isPoS("vbf_sg_o_prt_predcomp");
+const vbf_sg_o_prt_that_declarative_cl = isPoS("vbf_sg_o_prt_that_declarative_cl");
+const vbf_sg_o_prt_bare_declarative_cl = isPoS("vbf_sg_o_prt_bare_declarative_cl");
 const vbf_sg_intnp_to_inf_cl = isPoS("vbf_sg_intnp_to_inf_cl");
 const vbf_sg_intnp_bare_inf_cl = isPoS("vbf_sg_intnp_bare_inf_cl");
 const vbf_sg_io_that_declarative_cl = isPoS("vbf_sg_io_that_declarative_cl");
@@ -153,6 +202,7 @@ const vbf_sg_io_bare_declarative_cl = isPoS("vbf_sg_io_bare_declarative_cl");
 const vbf_sg_io_exclamative_cl = isPoS("vbf_sg_io_exclamative_cl");
 const vbf_sg_io_interrogative_cl = isPoS("vbf_sg_io_interrogative_cl");
 const vbf_sg_io_do = isPoS("vbf_sg_io_do");
+const vbf_sg_o_prt_o = isPoS("vbf_sg_o_prt_o");
 
 
 const vbf_pl = isPoS("vbf_pl");
@@ -166,8 +216,19 @@ const vbf_pl_interrogative_cl = isPoS("vbf_pl_interrogative_cl");
 const vbf_pl_vbg_cl = isPoS("vbf_pl_vbg_cl");
 const vbf_pl_vbn_cl = isPoS("vbf_pl_vbn_cl");
 const vbf_pl_passive_cl = isPoS("vbf_pl_passive_cl");
+const vbf_pl_prt = isPoS("vbf_pl_prt");
+const vbf_pl_prt_predcomp = isPoS("vbf_pl_prt_predcomp");
+const vbf_pl_prt_to_inf_cl = isPoS("vbf_pl_prt_to_inf_cl");
+const vbf_pl_prt_vbg_cl = isPoS("vbf_pl_prt_vbg_cl");
+const vbf_pl_prt_that_declarative_cl = isPoS("vbf_pl_prt_that_declarative_cl");
+const vbf_pl_prt_bare_declarative_cl = isPoS("vbf_pl_prt_bare_declarative_cl");
+const vbf_pl_prt_interrogative_cl = isPoS("vbf_pl_prt_interrogative_cl");
 const vbf_pl_o = isPoS("vbf_pl_o");
 const vbf_pl_o_predcomp = isPoS("vbf_pl_o_predcomp");
+const vbf_pl_prt_o = isPoS("vbf_pl_prt_o");
+const vbf_pl_o_prt_predcomp = isPoS("vbf_pl_o_prt_predcomp");
+const vbf_pl_o_prt_that_declarative_cl = isPoS("vbf_pl_o_prt_that_declarative_cl");
+const vbf_pl_o_prt_bare_declarative_cl = isPoS("vbf_pl_o_prt_bare_declarative_cl");
 const vbf_pl_intnp_to_inf_cl = isPoS("vbf_pl_intnp_to_inf_cl");
 const vbf_pl_intnp_bare_inf_cl = isPoS("vbf_pl_intnp_bare_inf_cl");
 const vbf_pl_io_that_declarative_cl = isPoS("vbf_pl_io_that_declarative_cl");
@@ -175,6 +236,7 @@ const vbf_pl_io_bare_declarative_cl = isPoS("vbf_pl_io_bare_declarative_cl");
 const vbf_pl_io_exclamative_cl = isPoS("vbf_pl_io_exclamative_cl");
 const vbf_pl_io_interrogative_cl = isPoS("vbf_pl_io_interrogative_cl");
 const vbf_pl_io_do = isPoS("vbf_pl_io_do");
+const vbf_pl_o_prt_o = isPoS("vbf_pl_o_prt_o");
 
 
 const aux_vbf_sg_predcomp = isAllOfPoS(["vbf_sg_predcomp", "aux"]);
@@ -416,6 +478,34 @@ adjunct_list_interrogative_cl ->
   | adjunct adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl")%}
 
 
+adjunct_list_prt ->
+    particle adjunct_list {%nt("adjunct_list_prt")%}
+
+
+adjunct_list_prt_predcomp ->
+    particle predcomp adjunct_list {%nt("adjunct_list_prt_predcomp")%}
+
+
+adjunct_list_prt_to_inf_cl ->
+    particle to_inf_cl adjunct_list {%nt("adjunct_list_prt_to_inf_cl")%}
+
+
+adjunct_list_prt_vbg_cl ->
+    particle vbg_cl adjunct_list {%nt("adjunct_list_prt_vbg_cl")%}
+
+
+adjunct_list_prt_that_declarative_cl ->
+    particle that_declarative_cl adjunct_list {%nt("adjunct_list_prt_that_declarative_cl")%}
+
+
+adjunct_list_prt_bare_declarative_cl ->
+    particle bare_declarative_cl adjunct_list {%nt("adjunct_list_prt_bare_declarative_cl")%}
+
+
+adjunct_list_prt_interrogative_cl ->
+    particle interrogative_cl adjunct_list {%nt("adjunct_list_prt_interrogative_cl")%}
+
+
 adjunct_list_o ->
     np adjunct_list {%nt("adjunct_list_o")%}
 
@@ -449,6 +539,23 @@ adjunct_list_io_interrogative_cl ->
     np adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl")%}
 
 
+adjunct_list_prt_o ->
+    particle np adjunct_list {%nt("adjunct_list_prt_o")%}
+  | np particle adjunct_list {%nt("adjunct_list_prt_o")%}
+
+
+adjunct_list_o_prt_predcomp ->
+    np particle predcomp adjunct_list {%nt("adjunct_list_o_prt_predcomp")%}
+
+
+adjunct_list_o_prt_that_declarative_cl ->
+    np particle that_declarative_cl adjunct_list {%nt("adjunct_list_o_prt_that_declarative_cl")%}
+
+
+adjunct_list_o_prt_bare_declarative_cl ->
+    np particle bare_declarative_cl adjunct_list {%nt("adjunct_list_o_prt_bare_declarative_cl")%}
+
+
 adjunct_list_io_do ->
     np adjunct_list_o {%nt("adjunct_list_io_do")%}
 
@@ -461,6 +568,10 @@ adjunct_list_dative_to ->
 adjunct_list_do_dative_to ->
     np adjunct_list_dative_to {%nt("adjunct_list_do_dative_to")%}
   | dative_to adjunct_list_o {%nt("adjunct_list_do_dative_to")%}
+
+
+adjunct_list_o_prt_o ->
+    np particle np adjunct_list {%nt("adjunct_list_o_prt_o")%}
 
 
 adjunct_list_passive_o ->
@@ -501,6 +612,26 @@ adjunct_list_passive_do_dative_to ->
 
 adjunct_list_passive_pp ->
     preposition_np adjunct_list {%nt("adjunct_list_passive_pp")%}
+
+
+adjunct_list_passive_prt_o ->
+    particle adjunct_list {%nt("adjunct_list_passive_prt_o")%}
+
+
+adjunct_list_passive_o_prt_predcomp ->
+    particle predcomp adjunct_list {%nt("adjunct_list_passive_o_prt_predcomp")%}
+
+
+adjunct_list_passive_o_prt_that_declarative_cl ->
+    particle that_declarative_cl adjunct_list {%nt("adjunct_list_passive_o_prt_that_declarative_cl")%}
+
+
+adjunct_list_passive_o_prt_bare_declarative_cl ->
+    particle bare_declarative_cl adjunct_list {%nt("adjunct_list_passive_o_prt_bare_declarative_cl")%}
+
+
+adjunct_list_passive_o_prt_o ->
+    particle np adjunct_list {%nt("adjunct_list_passive_o_prt_o")%}
 
 
 
@@ -570,27 +701,42 @@ vbf_sg_vp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbf_sg_vp but vbf_sg_vp {%nt("vbf_sg_vp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbf_sg                        adjunct_list                          {%nt("vbf_sg_vp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbf_sg_predcomp               adjunct_list_predcomp                 {%nt("vbf_sg_vp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbf_sg_to_inf_cl              adjunct_list_to_inf_cl                {%nt("vbf_sg_vp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbf_sg_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("vbf_sg_vp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbf_sg_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("vbf_sg_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbf_sg_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("vbf_sg_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbf_sg_exclamative_cl         adjunct_list_exclamative_cl           {%nt("vbf_sg_vp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbf_sg_interrogative_cl       adjunct_list_interrogative_cl         {%nt("vbf_sg_vp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbf_sg_vbg_cl                 vbg_cl                                {%nt("vbf_sg_vp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbf_sg_vbn_cl                 vbn_cl                                {%nt("vbf_sg_vp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbf_sg_predcomp               adjunct_list_predcomp                 {%nt("vbf_sg_vp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbf_sg_to_inf_cl              adjunct_list_to_inf_cl                {%nt("vbf_sg_vp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbf_sg_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("vbf_sg_vp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbf_sg_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("vbf_sg_vp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbf_sg_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("vbf_sg_vp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbf_sg_exclamative_cl         adjunct_list_exclamative_cl           {%nt("vbf_sg_vp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbf_sg_interrogative_cl       adjunct_list_interrogative_cl         {%nt("vbf_sg_vp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbf_sg_vbg_cl                 vbg_cl                                {%nt("vbf_sg_vp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbf_sg_vbn_cl                 vbn_cl                                {%nt("vbf_sg_vp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbf_sg_passive_cl             passive_cl                            {%nt("vbf_sg_vp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbf_sg_o                      adjunct_list_o                        {%nt("vbf_sg_vp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbf_sg_o_predcomp             adjunct_list_o_predcomp               {%nt("vbf_sg_vp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbf_sg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("vbf_sg_vp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbf_sg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("vbf_sg_vp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbf_sg_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("vbf_sg_vp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbf_sg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("vbf_sg_vp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbf_sg_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("vbf_sg_vp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbf_sg_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("vbf_sg_vp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbf_sg_prt                    adjunct_list_prt                      {%nt("vbf_sg_vp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbf_sg_prt_predcomp           adjunct_list_prt_predcomp             {%nt("vbf_sg_vp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbf_sg_prt_to_inf_cl          adjunct_list_prt_to_inf_cl            {%nt("vbf_sg_vp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbf_sg_prt_vbg_cl             adjunct_list_prt_vbg_cl               {%nt("vbf_sg_vp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbf_sg_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl {%nt("vbf_sg_vp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbf_sg_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl {%nt("vbf_sg_vp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbf_sg_prt_interrogative_cl   adjunct_list_prt_interrogative_cl     {%nt("vbf_sg_vp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbf_sg_o                      adjunct_list_o                        {%nt("vbf_sg_vp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbf_sg_o_predcomp             adjunct_list_o_predcomp               {%nt("vbf_sg_vp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbf_sg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("vbf_sg_vp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbf_sg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("vbf_sg_vp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbf_sg_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("vbf_sg_vp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbf_sg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("vbf_sg_vp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbf_sg_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("vbf_sg_vp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbf_sg_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("vbf_sg_vp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbf_sg_prt_o                  adjunct_list_prt_o                    {%nt("vbf_sg_vp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbf_sg_o_prt_predcomp         adjunct_list_o_prt_predcomp           {%nt("vbf_sg_vp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbf_sg_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl {%nt("vbf_sg_vp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbf_sg_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl {%nt("vbf_sg_vp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbf_sg_io_do                  adjunct_list_io_do                    {%nt("vbf_sg_vp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbf_sg_io_do                  adjunct_list_do_dative_to             {%nt("vbf_sg_vp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbf_sg_o_prt_o                adjunct_list_o_prt_o                  {%nt("vbf_sg_vp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # modals can only appear in the position of a finite verb (they cannot be conjugated as an infinitive or a participle *to can)
 vbf_pl_vp -> advp_vp? modal bare_inf_cl {%nt("vbf_pl_vp")%}
@@ -658,27 +804,42 @@ vbf_pl_vp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbf_pl_vp but vbf_pl_vp {%nt("vbf_pl_vp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbf_pl                        adjunct_list                          {%nt("vbf_pl_vp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbf_pl_predcomp               adjunct_list_predcomp                 {%nt("vbf_pl_vp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbf_pl_to_inf_cl              adjunct_list_to_inf_cl                {%nt("vbf_pl_vp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbf_pl_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("vbf_pl_vp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbf_pl_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("vbf_pl_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbf_pl_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("vbf_pl_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbf_pl_exclamative_cl         adjunct_list_exclamative_cl           {%nt("vbf_pl_vp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbf_pl_interrogative_cl       adjunct_list_interrogative_cl         {%nt("vbf_pl_vp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbf_pl_vbg_cl                 vbg_cl                                {%nt("vbf_pl_vp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbf_pl_vbn_cl                 vbn_cl                                {%nt("vbf_pl_vp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbf_pl_predcomp               adjunct_list_predcomp                 {%nt("vbf_pl_vp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbf_pl_to_inf_cl              adjunct_list_to_inf_cl                {%nt("vbf_pl_vp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbf_pl_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("vbf_pl_vp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbf_pl_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("vbf_pl_vp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbf_pl_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("vbf_pl_vp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbf_pl_exclamative_cl         adjunct_list_exclamative_cl           {%nt("vbf_pl_vp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbf_pl_interrogative_cl       adjunct_list_interrogative_cl         {%nt("vbf_pl_vp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbf_pl_vbg_cl                 vbg_cl                                {%nt("vbf_pl_vp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbf_pl_vbn_cl                 vbn_cl                                {%nt("vbf_pl_vp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbf_pl_passive_cl             passive_cl                            {%nt("vbf_pl_vp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbf_pl_o                      adjunct_list_o                        {%nt("vbf_pl_vp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbf_pl_o_predcomp             adjunct_list_o_predcomp               {%nt("vbf_pl_vp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbf_pl_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("vbf_pl_vp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbf_pl_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("vbf_pl_vp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbf_pl_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("vbf_pl_vp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbf_pl_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("vbf_pl_vp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbf_pl_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("vbf_pl_vp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbf_pl_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("vbf_pl_vp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbf_pl_prt                    adjunct_list_prt                      {%nt("vbf_pl_vp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbf_pl_prt_predcomp           adjunct_list_prt_predcomp             {%nt("vbf_pl_vp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbf_pl_prt_to_inf_cl          adjunct_list_prt_to_inf_cl            {%nt("vbf_pl_vp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbf_pl_prt_vbg_cl             adjunct_list_prt_vbg_cl               {%nt("vbf_pl_vp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbf_pl_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl {%nt("vbf_pl_vp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbf_pl_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl {%nt("vbf_pl_vp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbf_pl_prt_interrogative_cl   adjunct_list_prt_interrogative_cl     {%nt("vbf_pl_vp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbf_pl_o                      adjunct_list_o                        {%nt("vbf_pl_vp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbf_pl_o_predcomp             adjunct_list_o_predcomp               {%nt("vbf_pl_vp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbf_pl_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("vbf_pl_vp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbf_pl_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("vbf_pl_vp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbf_pl_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("vbf_pl_vp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbf_pl_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("vbf_pl_vp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbf_pl_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("vbf_pl_vp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbf_pl_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("vbf_pl_vp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbf_pl_prt_o                  adjunct_list_prt_o                    {%nt("vbf_pl_vp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbf_pl_o_prt_predcomp         adjunct_list_o_prt_predcomp           {%nt("vbf_pl_vp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbf_pl_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl {%nt("vbf_pl_vp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbf_pl_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl {%nt("vbf_pl_vp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbf_pl_io_do                  adjunct_list_io_do                    {%nt("vbf_pl_vp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbf_pl_io_do                  adjunct_list_do_dative_to             {%nt("vbf_pl_vp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbf_pl_o_prt_o                adjunct_list_o_prt_o                  {%nt("vbf_pl_vp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
 inf_vp_coordlist ->  inf_vp_coordlist_item inf_vp_coordlist_ {%nt("inf_vp_coordlist")%}
@@ -743,27 +904,42 @@ inf_vp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only inf_vp but inf_vp {%nt("inf_vp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? inf                        adjunct_list                          {%nt("inf_vp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? inf_predcomp               adjunct_list_predcomp                 {%nt("inf_vp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? inf_to_inf_cl              adjunct_list_to_inf_cl                {%nt("inf_vp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? inf_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("inf_vp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? inf_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("inf_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? inf_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("inf_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? inf_exclamative_cl         adjunct_list_exclamative_cl           {%nt("inf_vp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? inf_interrogative_cl       adjunct_list_interrogative_cl         {%nt("inf_vp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? inf_vbg_cl                 vbg_cl                                {%nt("inf_vp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? inf_vbn_cl                 vbn_cl                                {%nt("inf_vp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? inf_predcomp               adjunct_list_predcomp                 {%nt("inf_vp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? inf_to_inf_cl              adjunct_list_to_inf_cl                {%nt("inf_vp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? inf_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("inf_vp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? inf_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("inf_vp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? inf_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("inf_vp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? inf_exclamative_cl         adjunct_list_exclamative_cl           {%nt("inf_vp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? inf_interrogative_cl       adjunct_list_interrogative_cl         {%nt("inf_vp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? inf_vbg_cl                 vbg_cl                                {%nt("inf_vp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? inf_vbn_cl                 vbn_cl                                {%nt("inf_vp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? inf_passive_cl             passive_cl                            {%nt("inf_vp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? inf_o                      adjunct_list_o                        {%nt("inf_vp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? inf_o_predcomp             adjunct_list_o_predcomp               {%nt("inf_vp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? inf_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("inf_vp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? inf_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("inf_vp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? inf_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("inf_vp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? inf_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("inf_vp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? inf_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("inf_vp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? inf_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("inf_vp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? inf_prt                    adjunct_list_prt                      {%nt("inf_vp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? inf_prt_predcomp           adjunct_list_prt_predcomp             {%nt("inf_vp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? inf_prt_to_inf_cl          adjunct_list_prt_to_inf_cl            {%nt("inf_vp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? inf_prt_vbg_cl             adjunct_list_prt_vbg_cl               {%nt("inf_vp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? inf_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl {%nt("inf_vp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? inf_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl {%nt("inf_vp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? inf_prt_interrogative_cl   adjunct_list_prt_interrogative_cl     {%nt("inf_vp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? inf_o                      adjunct_list_o                        {%nt("inf_vp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? inf_o_predcomp             adjunct_list_o_predcomp               {%nt("inf_vp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? inf_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("inf_vp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? inf_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("inf_vp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? inf_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("inf_vp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? inf_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("inf_vp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? inf_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("inf_vp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? inf_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("inf_vp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? inf_prt_o                  adjunct_list_prt_o                    {%nt("inf_vp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? inf_o_prt_predcomp         adjunct_list_o_prt_predcomp           {%nt("inf_vp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? inf_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl {%nt("inf_vp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? inf_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl {%nt("inf_vp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? inf_io_do                  adjunct_list_io_do                    {%nt("inf_vp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? inf_io_do                  adjunct_list_do_dative_to             {%nt("inf_vp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? inf_o_prt_o                adjunct_list_o_prt_o                  {%nt("inf_vp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
 vbg_vp_coordlist ->  vbg_vp_coordlist_item vbg_vp_coordlist_ {%nt("vbg_vp_coordlist")%}
@@ -828,27 +1004,42 @@ vbg_vp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbg_vp but vbg_vp {%nt("vbg_vp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbg                        adjunct_list                          {%nt("vbg_vp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbg_predcomp               adjunct_list_predcomp                 {%nt("vbg_vp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbg_to_inf_cl              adjunct_list_to_inf_cl                {%nt("vbg_vp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbg_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("vbg_vp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbg_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("vbg_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbg_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("vbg_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbg_exclamative_cl         adjunct_list_exclamative_cl           {%nt("vbg_vp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbg_interrogative_cl       adjunct_list_interrogative_cl         {%nt("vbg_vp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbg_vbg_cl                 vbg_cl                                {%nt("vbg_vp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbg_vbn_cl                 vbn_cl                                {%nt("vbg_vp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbg_predcomp               adjunct_list_predcomp                 {%nt("vbg_vp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbg_to_inf_cl              adjunct_list_to_inf_cl                {%nt("vbg_vp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbg_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("vbg_vp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbg_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("vbg_vp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbg_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("vbg_vp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbg_exclamative_cl         adjunct_list_exclamative_cl           {%nt("vbg_vp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbg_interrogative_cl       adjunct_list_interrogative_cl         {%nt("vbg_vp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbg_vbg_cl                 vbg_cl                                {%nt("vbg_vp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbg_vbn_cl                 vbn_cl                                {%nt("vbg_vp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbg_passive_cl             passive_cl                            {%nt("vbg_vp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbg_o                      adjunct_list_o                        {%nt("vbg_vp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbg_o_predcomp             adjunct_list_o_predcomp               {%nt("vbg_vp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("vbg_vp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("vbg_vp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbg_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("vbg_vp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("vbg_vp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbg_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("vbg_vp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbg_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("vbg_vp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbg_prt                    adjunct_list_prt                      {%nt("vbg_vp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbg_prt_predcomp           adjunct_list_prt_predcomp             {%nt("vbg_vp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbg_prt_to_inf_cl          adjunct_list_prt_to_inf_cl            {%nt("vbg_vp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbg_prt_vbg_cl             adjunct_list_prt_vbg_cl               {%nt("vbg_vp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbg_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl {%nt("vbg_vp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbg_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl {%nt("vbg_vp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbg_prt_interrogative_cl   adjunct_list_prt_interrogative_cl     {%nt("vbg_vp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbg_o                      adjunct_list_o                        {%nt("vbg_vp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbg_o_predcomp             adjunct_list_o_predcomp               {%nt("vbg_vp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("vbg_vp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("vbg_vp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbg_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("vbg_vp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("vbg_vp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbg_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("vbg_vp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbg_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("vbg_vp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbg_prt_o                  adjunct_list_prt_o                    {%nt("vbg_vp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbg_o_prt_predcomp         adjunct_list_o_prt_predcomp           {%nt("vbg_vp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbg_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl {%nt("vbg_vp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbg_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl {%nt("vbg_vp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbg_io_do                  adjunct_list_io_do                    {%nt("vbg_vp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbg_io_do                  adjunct_list_do_dative_to             {%nt("vbg_vp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbg_o_prt_o                adjunct_list_o_prt_o                  {%nt("vbg_vp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
 vbn_vp_coordlist ->  vbn_vp_coordlist_item vbn_vp_coordlist_ {%nt("vbn_vp_coordlist")%}
@@ -913,45 +1104,66 @@ vbn_vp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbn_vp but vbn_vp {%nt("vbn_vp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbn                        adjunct_list                          {%nt("vbn_vp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbn_predcomp               adjunct_list_predcomp                 {%nt("vbn_vp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbn_to_inf_cl              adjunct_list_to_inf_cl                {%nt("vbn_vp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbn_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("vbn_vp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbn_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("vbn_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbn_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("vbn_vp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbn_exclamative_cl         adjunct_list_exclamative_cl           {%nt("vbn_vp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbn_interrogative_cl       adjunct_list_interrogative_cl         {%nt("vbn_vp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbn_vbg_cl                 vbg_cl                                {%nt("vbn_vp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbn_vbn_cl                 vbn_cl                                {%nt("vbn_vp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbn_predcomp               adjunct_list_predcomp                 {%nt("vbn_vp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbn_to_inf_cl              adjunct_list_to_inf_cl                {%nt("vbn_vp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbn_bare_inf_cl            adjunct_list_bare_inf_cl              {%nt("vbn_vp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbn_that_declarative_cl    adjunct_list_that_declarative_cl      {%nt("vbn_vp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbn_bare_declarative_cl    adjunct_list_bare_declarative_cl      {%nt("vbn_vp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbn_exclamative_cl         adjunct_list_exclamative_cl           {%nt("vbn_vp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbn_interrogative_cl       adjunct_list_interrogative_cl         {%nt("vbn_vp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbn_vbg_cl                 vbg_cl                                {%nt("vbn_vp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbn_vbn_cl                 vbn_cl                                {%nt("vbn_vp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbn_passive_cl             passive_cl                            {%nt("vbn_vp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbn_o                      adjunct_list_o                        {%nt("vbn_vp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbn_o_predcomp             adjunct_list_o_predcomp               {%nt("vbn_vp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("vbn_vp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbn_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("vbn_vp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbn_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("vbn_vp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("vbn_vp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbn_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("vbn_vp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbn_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("vbn_vp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbn_prt                    adjunct_list_prt                      {%nt("vbn_vp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbn_prt_predcomp           adjunct_list_prt_predcomp             {%nt("vbn_vp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbn_prt_to_inf_cl          adjunct_list_prt_to_inf_cl            {%nt("vbn_vp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbn_prt_vbg_cl             adjunct_list_prt_vbg_cl               {%nt("vbn_vp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbn_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl {%nt("vbn_vp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbn_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl {%nt("vbn_vp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbn_prt_interrogative_cl   adjunct_list_prt_interrogative_cl     {%nt("vbn_vp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbn_o                      adjunct_list_o                        {%nt("vbn_vp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbn_o_predcomp             adjunct_list_o_predcomp               {%nt("vbn_vp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl          {%nt("vbn_vp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbn_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl        {%nt("vbn_vp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbn_io_that_declarative_cl adjunct_list_io_that_declarative_cl   {%nt("vbn_vp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl   {%nt("vbn_vp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbn_io_exclamative_cl      adjunct_list_io_exclamative_cl        {%nt("vbn_vp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbn_io_interrogative_cl    adjunct_list_io_interrogative_cl      {%nt("vbn_vp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbn_prt_o                  adjunct_list_prt_o                    {%nt("vbn_vp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbn_o_prt_predcomp         adjunct_list_o_prt_predcomp           {%nt("vbn_vp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbn_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl {%nt("vbn_vp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbn_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl {%nt("vbn_vp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbn_io_do                  adjunct_list_io_do                    {%nt("vbn_vp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbn_io_do                  adjunct_list_do_dative_to             {%nt("vbn_vp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbn_o_prt_o                adjunct_list_o_prt_o                  {%nt("vbn_vp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 passive_cl -> 
 # omit all the intransitive verbs
 # omit vbg_cl, as one cannot combine passive with progressive aspect *The food was been eaten
 # omit vbn_cl, as one cannot combine passive with past perfect *The food was had eaten
 # omit passive_cl, as one cannot combine passive with passive *The food was been eaten
-      advp_vp? vbn_o                      adjunct_list_passive_o                         {%nt("passive_cl")%}
-    | advp_vp? vbn_o_predcomp             adjunct_list_passive_o_predcomp                {%nt("passive_cl")%}
-    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_passive_intnp_to_inf_cl           {%nt("passive_cl")%}
-    | advp_vp? vbn_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl    {%nt("passive_cl")%}
-    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl    {%nt("passive_cl")%}
-    | advp_vp? vbn_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl         {%nt("passive_cl")%}
-    | advp_vp? vbn_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl       {%nt("passive_cl")%}
-    | advp_vp? vbn_io_do                  adjunct_list_passive_io_do                     {%nt("passive_cl")%}
-    | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to              {%nt("passive_cl")%}
-    # Prepositional passive: The book was referred to
-    # Any intransitive verb can combine with a stranded preposition (post-filter for validity)
-    | advp_vp? vbn                        adjunct_list_passive_pp                        {%nt("passive_cl")%}
+# --- prepositional passive (intransitive verb + stranded preposition) ---
+      advp_vp? vbn                        adjunct_list_passive_pp                        {%nt("passive_cl")%} # prepositional passive (ex: "The book was referred to")
+# --- passive of transitive verbs ---
+    | advp_vp? vbn_o                      adjunct_list_passive_o                         {%nt("passive_cl")%} # monotransitive passive (ex: "The apple was eaten")
+    | advp_vp? vbn_o_predcomp             adjunct_list_passive_o_predcomp                {%nt("passive_cl")%} # complex-transitive passive (ex: "He was found guilty")
+    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_passive_intnp_to_inf_cl           {%nt("passive_cl")%} # raised object + to-inf passive (ex: "You were asked to leave")
+    | advp_vp? vbn_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl    {%nt("passive_cl")%} # IO + that-clause passive (ex: "You were told that...")
+    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl    {%nt("passive_cl")%} # IO + bare declarative passive (ex: "You were told...")
+    | advp_vp? vbn_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl         {%nt("passive_cl")%} # IO + exclamative passive (ex: "You were told how...")
+    | advp_vp? vbn_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl       {%nt("passive_cl")%} # IO + interrogative passive (ex: "You were asked whether...")
+    | advp_vp? vbn_prt_o                  adjunct_list_passive_prt_o                     {%nt("passive_cl")%} # Structure II passive (ex: "The label was taken off")
+    | advp_vp? vbn_o_prt_predcomp         adjunct_list_passive_o_prt_predcomp            {%nt("passive_cl")%} # Structure VII passive (ex: "He was shown up as spineless")
+    | advp_vp? vbn_o_prt_that_declarative_cl adjunct_list_passive_o_prt_that_declarative_cl {%nt("passive_cl")%} # O + particle + that-clause passive (ex: "He was tipped off that...")
+    | advp_vp? vbn_o_prt_bare_declarative_cl adjunct_list_passive_o_prt_bare_declarative_cl {%nt("passive_cl")%} # O + particle + bare declarative passive (ex: "He was tipped off...")
+# --- passive of ditransitive verbs ---
+    | advp_vp? vbn_io_do                  adjunct_list_passive_io_do                     {%nt("passive_cl")%} # IO promoted passive (ex: "You were given food")
+    | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to              {%nt("passive_cl")%} # DO promoted passive (ex: "Food was given to you")
+    | advp_vp? vbn_o_prt_o                adjunct_list_passive_o_prt_o                   {%nt("passive_cl")%} # Structure III passive (ex: "He was run off another copy")
 
 adjunct_list_minus_np ->
     adjunct adjunct_list_minus_np {%nt("adjunct_list_minus_np")%}
@@ -996,6 +1208,38 @@ adjunct_list_interrogative_cl_minus_np ->
   | adjunct_minus_np adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl_minus_np")%}
 
 
+adjunct_list_prt_minus_np ->
+    particle adjunct_list_minus_np {%nt("adjunct_list_prt_minus_np")%}
+
+
+adjunct_list_prt_predcomp_minus_np ->
+    particle predcomp adjunct_list_minus_np {%nt("adjunct_list_prt_predcomp_minus_np")%}
+  | particle predcomp_minus_np adjunct_list {%nt("adjunct_list_prt_predcomp_minus_np")%}
+
+
+adjunct_list_prt_to_inf_cl_minus_np ->
+    particle to_inf_cl adjunct_list_minus_np {%nt("adjunct_list_prt_to_inf_cl_minus_np")%}
+  | particle to_inf_cl_minus_np adjunct_list {%nt("adjunct_list_prt_to_inf_cl_minus_np")%}
+
+
+adjunct_list_prt_vbg_cl_minus_np ->
+    particle vbg_cl adjunct_list_minus_np {%nt("adjunct_list_prt_vbg_cl_minus_np")%}
+  | particle vbg_cl_minus_np adjunct_list {%nt("adjunct_list_prt_vbg_cl_minus_np")%}
+
+
+adjunct_list_prt_that_declarative_cl_minus_np ->
+    particle that_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_prt_that_declarative_cl_minus_np")%}
+
+
+adjunct_list_prt_bare_declarative_cl_minus_np ->
+    particle bare_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_prt_bare_declarative_cl_minus_np")%}
+  | particle bare_declarative_cl_minus_np adjunct_list {%nt("adjunct_list_prt_bare_declarative_cl_minus_np")%}
+
+
+adjunct_list_prt_interrogative_cl_minus_np ->
+    particle interrogative_cl adjunct_list_minus_np {%nt("adjunct_list_prt_interrogative_cl_minus_np")%}
+
+
 adjunct_list_o_minus_np ->
     np adjunct_list_minus_np {%nt("adjunct_list_o_minus_np")%}
   | np_minus_np adjunct_list {%nt("adjunct_list_o_minus_np")%}
@@ -1038,6 +1282,29 @@ adjunct_list_io_interrogative_cl_minus_np ->
   | np_minus_np adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_np")%}
 
 
+adjunct_list_prt_o_minus_np ->
+    particle np adjunct_list_minus_np {%nt("adjunct_list_prt_o_minus_np")%}
+  | particle np_minus_np adjunct_list {%nt("adjunct_list_prt_o_minus_np")%}
+  | np particle adjunct_list_minus_np {%nt("adjunct_list_prt_o_minus_np")%}
+  | np_minus_np particle adjunct_list {%nt("adjunct_list_prt_o_minus_np")%}
+
+
+adjunct_list_o_prt_predcomp_minus_np ->
+    np particle predcomp adjunct_list_minus_np {%nt("adjunct_list_o_prt_predcomp_minus_np")%}
+  | np particle predcomp_minus_np adjunct_list {%nt("adjunct_list_o_prt_predcomp_minus_np")%}
+  | np_minus_np particle predcomp adjunct_list {%nt("adjunct_list_o_prt_predcomp_minus_np")%}
+
+
+adjunct_list_o_prt_that_declarative_cl_minus_np ->
+    np particle that_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_o_prt_that_declarative_cl_minus_np")%}
+  | np_minus_np particle that_declarative_cl adjunct_list {%nt("adjunct_list_o_prt_that_declarative_cl_minus_np")%}
+
+
+adjunct_list_o_prt_bare_declarative_cl_minus_np ->
+    np particle bare_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_o_prt_bare_declarative_cl_minus_np")%}
+  | np_minus_np particle bare_declarative_cl adjunct_list {%nt("adjunct_list_o_prt_bare_declarative_cl_minus_np")%}
+
+
 adjunct_list_io_do_minus_np ->
     np adjunct_list_o_minus_np {%nt("adjunct_list_io_do_minus_np")%}
   | np_minus_np adjunct_list_o {%nt("adjunct_list_io_do_minus_np")%}
@@ -1054,6 +1321,12 @@ adjunct_list_do_dative_to_minus_np ->
   | dative_to adjunct_list_o_minus_np {%nt("adjunct_list_do_dative_to_minus_np")%}
   | np_minus_np adjunct_list_dative_to {%nt("adjunct_list_do_dative_to_minus_np")%}
   | dative_to_minus_np adjunct_list_o {%nt("adjunct_list_do_dative_to_minus_np")%}
+
+
+adjunct_list_o_prt_o_minus_np ->
+    np particle np adjunct_list_minus_np {%nt("adjunct_list_o_prt_o_minus_np")%}
+  | np particle np_minus_np adjunct_list {%nt("adjunct_list_o_prt_o_minus_np")%}
+  | np_minus_np particle np adjunct_list {%nt("adjunct_list_o_prt_o_minus_np")%}
 
 
 adjunct_list_passive_o_minus_np ->
@@ -1094,6 +1367,28 @@ adjunct_list_passive_do_dative_to_minus_np ->
 
 adjunct_list_passive_pp_minus_np ->
     preposition_np adjunct_list_minus_np {%nt("adjunct_list_passive_pp_minus_np")%}
+
+
+adjunct_list_passive_prt_o_minus_np ->
+    particle adjunct_list_minus_np {%nt("adjunct_list_passive_prt_o_minus_np")%}
+
+
+adjunct_list_passive_o_prt_predcomp_minus_np ->
+    particle predcomp adjunct_list_minus_np {%nt("adjunct_list_passive_o_prt_predcomp_minus_np")%}
+  | particle predcomp_minus_np adjunct_list {%nt("adjunct_list_passive_o_prt_predcomp_minus_np")%}
+
+
+adjunct_list_passive_o_prt_that_declarative_cl_minus_np ->
+    particle that_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_passive_o_prt_that_declarative_cl_minus_np")%}
+
+
+adjunct_list_passive_o_prt_bare_declarative_cl_minus_np ->
+    particle bare_declarative_cl adjunct_list_minus_np {%nt("adjunct_list_passive_o_prt_bare_declarative_cl_minus_np")%}
+
+
+adjunct_list_passive_o_prt_o_minus_np ->
+    particle np adjunct_list_minus_np {%nt("adjunct_list_passive_o_prt_o_minus_np")%}
+  | particle np_minus_np adjunct_list {%nt("adjunct_list_passive_o_prt_o_minus_np")%}
 
 
 
@@ -1163,27 +1458,42 @@ vbf_sg_vp_minus_np ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbf_sg_vp_minus_np but vbf_sg_vp_minus_np {%nt("vbf_sg_vp_minus_np")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbf_sg                        adjunct_list_minus_np                          {%nt("vbf_sg_vp_minus_np")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbf_sg_predcomp               adjunct_list_predcomp_minus_np                 {%nt("vbf_sg_vp_minus_np")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbf_sg_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("vbf_sg_vp_minus_np")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbf_sg_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("vbf_sg_vp_minus_np")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbf_sg_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("vbf_sg_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbf_sg_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("vbf_sg_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbf_sg_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("vbf_sg_vp_minus_np")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbf_sg_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("vbf_sg_vp_minus_np")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbf_sg_vbg_cl                 vbg_cl_minus_np                                {%nt("vbf_sg_vp_minus_np")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbf_sg_vbn_cl                 vbn_cl_minus_np                                {%nt("vbf_sg_vp_minus_np")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbf_sg_predcomp               adjunct_list_predcomp_minus_np                 {%nt("vbf_sg_vp_minus_np")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbf_sg_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("vbf_sg_vp_minus_np")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbf_sg_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("vbf_sg_vp_minus_np")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbf_sg_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("vbf_sg_vp_minus_np")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbf_sg_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("vbf_sg_vp_minus_np")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbf_sg_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("vbf_sg_vp_minus_np")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbf_sg_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("vbf_sg_vp_minus_np")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbf_sg_vbg_cl                 vbg_cl_minus_np                                {%nt("vbf_sg_vp_minus_np")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbf_sg_vbn_cl                 vbn_cl_minus_np                                {%nt("vbf_sg_vp_minus_np")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbf_sg_passive_cl             passive_cl_minus_np                            {%nt("vbf_sg_vp_minus_np")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbf_sg_o                      adjunct_list_o_minus_np                        {%nt("vbf_sg_vp_minus_np")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbf_sg_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("vbf_sg_vp_minus_np")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbf_sg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("vbf_sg_vp_minus_np")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbf_sg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("vbf_sg_vp_minus_np")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbf_sg_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("vbf_sg_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbf_sg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("vbf_sg_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbf_sg_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("vbf_sg_vp_minus_np")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbf_sg_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("vbf_sg_vp_minus_np")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbf_sg_prt                    adjunct_list_prt_minus_np                      {%nt("vbf_sg_vp_minus_np")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbf_sg_prt_predcomp           adjunct_list_prt_predcomp_minus_np             {%nt("vbf_sg_vp_minus_np")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbf_sg_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_np            {%nt("vbf_sg_vp_minus_np")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbf_sg_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_np               {%nt("vbf_sg_vp_minus_np")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbf_sg_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_np {%nt("vbf_sg_vp_minus_np")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbf_sg_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_np {%nt("vbf_sg_vp_minus_np")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbf_sg_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_np     {%nt("vbf_sg_vp_minus_np")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbf_sg_o                      adjunct_list_o_minus_np                        {%nt("vbf_sg_vp_minus_np")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbf_sg_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("vbf_sg_vp_minus_np")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbf_sg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("vbf_sg_vp_minus_np")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbf_sg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("vbf_sg_vp_minus_np")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbf_sg_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("vbf_sg_vp_minus_np")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbf_sg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("vbf_sg_vp_minus_np")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbf_sg_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("vbf_sg_vp_minus_np")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbf_sg_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("vbf_sg_vp_minus_np")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbf_sg_prt_o                  adjunct_list_prt_o_minus_np                    {%nt("vbf_sg_vp_minus_np")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbf_sg_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_np           {%nt("vbf_sg_vp_minus_np")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbf_sg_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_np {%nt("vbf_sg_vp_minus_np")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbf_sg_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_np {%nt("vbf_sg_vp_minus_np")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbf_sg_io_do                  adjunct_list_io_do_minus_np                    {%nt("vbf_sg_vp_minus_np")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbf_sg_io_do                  adjunct_list_do_dative_to_minus_np             {%nt("vbf_sg_vp_minus_np")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbf_sg_o_prt_o                adjunct_list_o_prt_o_minus_np                  {%nt("vbf_sg_vp_minus_np")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # modals can only appear in the position of a finite verb (they cannot be conjugated as an infinitive or a participle *to can)
 vbf_pl_vp_minus_np -> advp_vp? modal bare_inf_cl_minus_np {%nt("vbf_pl_vp_minus_np")%}
@@ -1251,27 +1561,42 @@ vbf_pl_vp_minus_np ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbf_pl_vp_minus_np but vbf_pl_vp_minus_np {%nt("vbf_pl_vp_minus_np")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbf_pl                        adjunct_list_minus_np                          {%nt("vbf_pl_vp_minus_np")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbf_pl_predcomp               adjunct_list_predcomp_minus_np                 {%nt("vbf_pl_vp_minus_np")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbf_pl_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("vbf_pl_vp_minus_np")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbf_pl_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("vbf_pl_vp_minus_np")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbf_pl_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("vbf_pl_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbf_pl_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("vbf_pl_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbf_pl_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("vbf_pl_vp_minus_np")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbf_pl_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("vbf_pl_vp_minus_np")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbf_pl_vbg_cl                 vbg_cl_minus_np                                {%nt("vbf_pl_vp_minus_np")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbf_pl_vbn_cl                 vbn_cl_minus_np                                {%nt("vbf_pl_vp_minus_np")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbf_pl_predcomp               adjunct_list_predcomp_minus_np                 {%nt("vbf_pl_vp_minus_np")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbf_pl_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("vbf_pl_vp_minus_np")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbf_pl_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("vbf_pl_vp_minus_np")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbf_pl_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("vbf_pl_vp_minus_np")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbf_pl_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("vbf_pl_vp_minus_np")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbf_pl_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("vbf_pl_vp_minus_np")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbf_pl_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("vbf_pl_vp_minus_np")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbf_pl_vbg_cl                 vbg_cl_minus_np                                {%nt("vbf_pl_vp_minus_np")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbf_pl_vbn_cl                 vbn_cl_minus_np                                {%nt("vbf_pl_vp_minus_np")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbf_pl_passive_cl             passive_cl_minus_np                            {%nt("vbf_pl_vp_minus_np")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbf_pl_o                      adjunct_list_o_minus_np                        {%nt("vbf_pl_vp_minus_np")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbf_pl_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("vbf_pl_vp_minus_np")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbf_pl_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("vbf_pl_vp_minus_np")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbf_pl_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("vbf_pl_vp_minus_np")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbf_pl_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("vbf_pl_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbf_pl_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("vbf_pl_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbf_pl_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("vbf_pl_vp_minus_np")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbf_pl_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("vbf_pl_vp_minus_np")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbf_pl_prt                    adjunct_list_prt_minus_np                      {%nt("vbf_pl_vp_minus_np")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbf_pl_prt_predcomp           adjunct_list_prt_predcomp_minus_np             {%nt("vbf_pl_vp_minus_np")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbf_pl_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_np            {%nt("vbf_pl_vp_minus_np")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbf_pl_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_np               {%nt("vbf_pl_vp_minus_np")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbf_pl_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_np {%nt("vbf_pl_vp_minus_np")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbf_pl_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_np {%nt("vbf_pl_vp_minus_np")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbf_pl_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_np     {%nt("vbf_pl_vp_minus_np")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbf_pl_o                      adjunct_list_o_minus_np                        {%nt("vbf_pl_vp_minus_np")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbf_pl_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("vbf_pl_vp_minus_np")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbf_pl_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("vbf_pl_vp_minus_np")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbf_pl_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("vbf_pl_vp_minus_np")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbf_pl_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("vbf_pl_vp_minus_np")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbf_pl_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("vbf_pl_vp_minus_np")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbf_pl_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("vbf_pl_vp_minus_np")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbf_pl_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("vbf_pl_vp_minus_np")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbf_pl_prt_o                  adjunct_list_prt_o_minus_np                    {%nt("vbf_pl_vp_minus_np")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbf_pl_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_np           {%nt("vbf_pl_vp_minus_np")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbf_pl_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_np {%nt("vbf_pl_vp_minus_np")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbf_pl_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_np {%nt("vbf_pl_vp_minus_np")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbf_pl_io_do                  adjunct_list_io_do_minus_np                    {%nt("vbf_pl_vp_minus_np")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbf_pl_io_do                  adjunct_list_do_dative_to_minus_np             {%nt("vbf_pl_vp_minus_np")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbf_pl_o_prt_o                adjunct_list_o_prt_o_minus_np                  {%nt("vbf_pl_vp_minus_np")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
 inf_vp_minus_np_coordlist ->  inf_vp_minus_np_coordlist_item inf_vp_minus_np_coordlist_ {%nt("inf_vp_minus_np_coordlist")%}
@@ -1336,27 +1661,42 @@ inf_vp_minus_np ->
 #   8b-i. binary: "not only sang but danced"
     | not_only inf_vp_minus_np but inf_vp_minus_np {%nt("inf_vp_minus_np")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? inf                        adjunct_list_minus_np                          {%nt("inf_vp_minus_np")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? inf_predcomp               adjunct_list_predcomp_minus_np                 {%nt("inf_vp_minus_np")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? inf_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("inf_vp_minus_np")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? inf_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("inf_vp_minus_np")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? inf_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("inf_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? inf_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("inf_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? inf_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("inf_vp_minus_np")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? inf_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("inf_vp_minus_np")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? inf_vbg_cl                 vbg_cl_minus_np                                {%nt("inf_vp_minus_np")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? inf_vbn_cl                 vbn_cl_minus_np                                {%nt("inf_vp_minus_np")%} # past perfect (ex: "He had eaten")
+    | advp_vp? inf_predcomp               adjunct_list_predcomp_minus_np                 {%nt("inf_vp_minus_np")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? inf_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("inf_vp_minus_np")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? inf_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("inf_vp_minus_np")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? inf_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("inf_vp_minus_np")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? inf_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("inf_vp_minus_np")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? inf_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("inf_vp_minus_np")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? inf_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("inf_vp_minus_np")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? inf_vbg_cl                 vbg_cl_minus_np                                {%nt("inf_vp_minus_np")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? inf_vbn_cl                 vbn_cl_minus_np                                {%nt("inf_vp_minus_np")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? inf_passive_cl             passive_cl_minus_np                            {%nt("inf_vp_minus_np")%} # passive voice (ex: "He was eaten")
-    | advp_vp? inf_o                      adjunct_list_o_minus_np                        {%nt("inf_vp_minus_np")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? inf_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("inf_vp_minus_np")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? inf_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("inf_vp_minus_np")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? inf_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("inf_vp_minus_np")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? inf_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("inf_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? inf_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("inf_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? inf_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("inf_vp_minus_np")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? inf_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("inf_vp_minus_np")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? inf_prt                    adjunct_list_prt_minus_np                      {%nt("inf_vp_minus_np")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? inf_prt_predcomp           adjunct_list_prt_predcomp_minus_np             {%nt("inf_vp_minus_np")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? inf_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_np            {%nt("inf_vp_minus_np")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? inf_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_np               {%nt("inf_vp_minus_np")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? inf_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_np {%nt("inf_vp_minus_np")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? inf_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_np {%nt("inf_vp_minus_np")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? inf_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_np     {%nt("inf_vp_minus_np")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? inf_o                      adjunct_list_o_minus_np                        {%nt("inf_vp_minus_np")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? inf_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("inf_vp_minus_np")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? inf_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("inf_vp_minus_np")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? inf_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("inf_vp_minus_np")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? inf_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("inf_vp_minus_np")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? inf_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("inf_vp_minus_np")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? inf_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("inf_vp_minus_np")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? inf_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("inf_vp_minus_np")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? inf_prt_o                  adjunct_list_prt_o_minus_np                    {%nt("inf_vp_minus_np")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? inf_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_np           {%nt("inf_vp_minus_np")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? inf_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_np {%nt("inf_vp_minus_np")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? inf_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_np {%nt("inf_vp_minus_np")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? inf_io_do                  adjunct_list_io_do_minus_np                    {%nt("inf_vp_minus_np")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? inf_io_do                  adjunct_list_do_dative_to_minus_np             {%nt("inf_vp_minus_np")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? inf_o_prt_o                adjunct_list_o_prt_o_minus_np                  {%nt("inf_vp_minus_np")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
 vbg_vp_minus_np_coordlist ->  vbg_vp_minus_np_coordlist_item vbg_vp_minus_np_coordlist_ {%nt("vbg_vp_minus_np_coordlist")%}
@@ -1421,27 +1761,42 @@ vbg_vp_minus_np ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbg_vp_minus_np but vbg_vp_minus_np {%nt("vbg_vp_minus_np")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbg                        adjunct_list_minus_np                          {%nt("vbg_vp_minus_np")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbg_predcomp               adjunct_list_predcomp_minus_np                 {%nt("vbg_vp_minus_np")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbg_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("vbg_vp_minus_np")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbg_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("vbg_vp_minus_np")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbg_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("vbg_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbg_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("vbg_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbg_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("vbg_vp_minus_np")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbg_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("vbg_vp_minus_np")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbg_vbg_cl                 vbg_cl_minus_np                                {%nt("vbg_vp_minus_np")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbg_vbn_cl                 vbn_cl_minus_np                                {%nt("vbg_vp_minus_np")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbg_predcomp               adjunct_list_predcomp_minus_np                 {%nt("vbg_vp_minus_np")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbg_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("vbg_vp_minus_np")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbg_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("vbg_vp_minus_np")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbg_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("vbg_vp_minus_np")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbg_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("vbg_vp_minus_np")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbg_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("vbg_vp_minus_np")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbg_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("vbg_vp_minus_np")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbg_vbg_cl                 vbg_cl_minus_np                                {%nt("vbg_vp_minus_np")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbg_vbn_cl                 vbn_cl_minus_np                                {%nt("vbg_vp_minus_np")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbg_passive_cl             passive_cl_minus_np                            {%nt("vbg_vp_minus_np")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbg_o                      adjunct_list_o_minus_np                        {%nt("vbg_vp_minus_np")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbg_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("vbg_vp_minus_np")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("vbg_vp_minus_np")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("vbg_vp_minus_np")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbg_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("vbg_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("vbg_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbg_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("vbg_vp_minus_np")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbg_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("vbg_vp_minus_np")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbg_prt                    adjunct_list_prt_minus_np                      {%nt("vbg_vp_minus_np")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbg_prt_predcomp           adjunct_list_prt_predcomp_minus_np             {%nt("vbg_vp_minus_np")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbg_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_np            {%nt("vbg_vp_minus_np")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbg_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_np               {%nt("vbg_vp_minus_np")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbg_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_np {%nt("vbg_vp_minus_np")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbg_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_np {%nt("vbg_vp_minus_np")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbg_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_np     {%nt("vbg_vp_minus_np")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbg_o                      adjunct_list_o_minus_np                        {%nt("vbg_vp_minus_np")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbg_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("vbg_vp_minus_np")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("vbg_vp_minus_np")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("vbg_vp_minus_np")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbg_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("vbg_vp_minus_np")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("vbg_vp_minus_np")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbg_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("vbg_vp_minus_np")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbg_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("vbg_vp_minus_np")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbg_prt_o                  adjunct_list_prt_o_minus_np                    {%nt("vbg_vp_minus_np")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbg_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_np           {%nt("vbg_vp_minus_np")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbg_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_np {%nt("vbg_vp_minus_np")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbg_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_np {%nt("vbg_vp_minus_np")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbg_io_do                  adjunct_list_io_do_minus_np                    {%nt("vbg_vp_minus_np")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbg_io_do                  adjunct_list_do_dative_to_minus_np             {%nt("vbg_vp_minus_np")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbg_o_prt_o                adjunct_list_o_prt_o_minus_np                  {%nt("vbg_vp_minus_np")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
 vbn_vp_minus_np_coordlist ->  vbn_vp_minus_np_coordlist_item vbn_vp_minus_np_coordlist_ {%nt("vbn_vp_minus_np_coordlist")%}
@@ -1506,45 +1861,66 @@ vbn_vp_minus_np ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbn_vp_minus_np but vbn_vp_minus_np {%nt("vbn_vp_minus_np")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbn                        adjunct_list_minus_np                          {%nt("vbn_vp_minus_np")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbn_predcomp               adjunct_list_predcomp_minus_np                 {%nt("vbn_vp_minus_np")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbn_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("vbn_vp_minus_np")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbn_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("vbn_vp_minus_np")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbn_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("vbn_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbn_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("vbn_vp_minus_np")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbn_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("vbn_vp_minus_np")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbn_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("vbn_vp_minus_np")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbn_vbg_cl                 vbg_cl_minus_np                                {%nt("vbn_vp_minus_np")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbn_vbn_cl                 vbn_cl_minus_np                                {%nt("vbn_vp_minus_np")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbn_predcomp               adjunct_list_predcomp_minus_np                 {%nt("vbn_vp_minus_np")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbn_to_inf_cl              adjunct_list_to_inf_cl_minus_np                {%nt("vbn_vp_minus_np")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbn_bare_inf_cl            adjunct_list_bare_inf_cl_minus_np              {%nt("vbn_vp_minus_np")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbn_that_declarative_cl    adjunct_list_that_declarative_cl_minus_np      {%nt("vbn_vp_minus_np")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbn_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_np      {%nt("vbn_vp_minus_np")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbn_exclamative_cl         adjunct_list_exclamative_cl_minus_np           {%nt("vbn_vp_minus_np")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbn_interrogative_cl       adjunct_list_interrogative_cl_minus_np         {%nt("vbn_vp_minus_np")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbn_vbg_cl                 vbg_cl_minus_np                                {%nt("vbn_vp_minus_np")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbn_vbn_cl                 vbn_cl_minus_np                                {%nt("vbn_vp_minus_np")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbn_passive_cl             passive_cl_minus_np                            {%nt("vbn_vp_minus_np")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbn_o                      adjunct_list_o_minus_np                        {%nt("vbn_vp_minus_np")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbn_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("vbn_vp_minus_np")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("vbn_vp_minus_np")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbn_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("vbn_vp_minus_np")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbn_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("vbn_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("vbn_vp_minus_np")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbn_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("vbn_vp_minus_np")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbn_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("vbn_vp_minus_np")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbn_prt                    adjunct_list_prt_minus_np                      {%nt("vbn_vp_minus_np")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbn_prt_predcomp           adjunct_list_prt_predcomp_minus_np             {%nt("vbn_vp_minus_np")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbn_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_np            {%nt("vbn_vp_minus_np")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbn_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_np               {%nt("vbn_vp_minus_np")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbn_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_np {%nt("vbn_vp_minus_np")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbn_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_np {%nt("vbn_vp_minus_np")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbn_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_np     {%nt("vbn_vp_minus_np")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbn_o                      adjunct_list_o_minus_np                        {%nt("vbn_vp_minus_np")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbn_o_predcomp             adjunct_list_o_predcomp_minus_np               {%nt("vbn_vp_minus_np")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_np          {%nt("vbn_vp_minus_np")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbn_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_np        {%nt("vbn_vp_minus_np")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbn_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_np   {%nt("vbn_vp_minus_np")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_np   {%nt("vbn_vp_minus_np")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbn_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_np        {%nt("vbn_vp_minus_np")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbn_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_np      {%nt("vbn_vp_minus_np")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbn_prt_o                  adjunct_list_prt_o_minus_np                    {%nt("vbn_vp_minus_np")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbn_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_np           {%nt("vbn_vp_minus_np")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbn_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_np {%nt("vbn_vp_minus_np")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbn_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_np {%nt("vbn_vp_minus_np")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbn_io_do                  adjunct_list_io_do_minus_np                    {%nt("vbn_vp_minus_np")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbn_io_do                  adjunct_list_do_dative_to_minus_np             {%nt("vbn_vp_minus_np")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbn_o_prt_o                adjunct_list_o_prt_o_minus_np                  {%nt("vbn_vp_minus_np")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 passive_cl_minus_np -> 
 # omit all the intransitive verbs
 # omit vbg_cl, as one cannot combine passive with progressive aspect *The food was been eaten
 # omit vbn_cl, as one cannot combine passive with past perfect *The food was had eaten
 # omit passive_cl, as one cannot combine passive with passive *The food was been eaten
-      advp_vp? vbn_o                      adjunct_list_passive_o_minus_np                         {%nt("passive_cl_minus_np")%}
-    | advp_vp? vbn_o_predcomp             adjunct_list_passive_o_predcomp_minus_np                {%nt("passive_cl_minus_np")%}
-    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_passive_intnp_to_inf_cl_minus_np           {%nt("passive_cl_minus_np")%}
-    | advp_vp? vbn_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl_minus_np    {%nt("passive_cl_minus_np")%}
-    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl_minus_np    {%nt("passive_cl_minus_np")%}
-    | advp_vp? vbn_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl_minus_np         {%nt("passive_cl_minus_np")%}
-    | advp_vp? vbn_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl_minus_np       {%nt("passive_cl_minus_np")%}
-    | advp_vp? vbn_io_do                  adjunct_list_passive_io_do_minus_np                     {%nt("passive_cl_minus_np")%}
-    | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to_minus_np              {%nt("passive_cl_minus_np")%}
-    # Prepositional passive: The book was referred to
-    # Any intransitive verb can combine with a stranded preposition (post-filter for validity)
-    | advp_vp? vbn                        adjunct_list_passive_pp_minus_np                        {%nt("passive_cl_minus_np")%}
+# --- prepositional passive (intransitive verb + stranded preposition) ---
+      advp_vp? vbn                        adjunct_list_passive_pp_minus_np                        {%nt("passive_cl_minus_np")%} # prepositional passive (ex: "The book was referred to")
+# --- passive of transitive verbs ---
+    | advp_vp? vbn_o                      adjunct_list_passive_o_minus_np                         {%nt("passive_cl_minus_np")%} # monotransitive passive (ex: "The apple was eaten")
+    | advp_vp? vbn_o_predcomp             adjunct_list_passive_o_predcomp_minus_np                {%nt("passive_cl_minus_np")%} # complex-transitive passive (ex: "He was found guilty")
+    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_passive_intnp_to_inf_cl_minus_np           {%nt("passive_cl_minus_np")%} # raised object + to-inf passive (ex: "You were asked to leave")
+    | advp_vp? vbn_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl_minus_np    {%nt("passive_cl_minus_np")%} # IO + that-clause passive (ex: "You were told that...")
+    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl_minus_np    {%nt("passive_cl_minus_np")%} # IO + bare declarative passive (ex: "You were told...")
+    | advp_vp? vbn_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl_minus_np         {%nt("passive_cl_minus_np")%} # IO + exclamative passive (ex: "You were told how...")
+    | advp_vp? vbn_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl_minus_np       {%nt("passive_cl_minus_np")%} # IO + interrogative passive (ex: "You were asked whether...")
+    | advp_vp? vbn_prt_o                  adjunct_list_passive_prt_o_minus_np                     {%nt("passive_cl_minus_np")%} # Structure II passive (ex: "The label was taken off")
+    | advp_vp? vbn_o_prt_predcomp         adjunct_list_passive_o_prt_predcomp_minus_np            {%nt("passive_cl_minus_np")%} # Structure VII passive (ex: "He was shown up as spineless")
+    | advp_vp? vbn_o_prt_that_declarative_cl adjunct_list_passive_o_prt_that_declarative_cl_minus_np {%nt("passive_cl_minus_np")%} # O + particle + that-clause passive (ex: "He was tipped off that...")
+    | advp_vp? vbn_o_prt_bare_declarative_cl adjunct_list_passive_o_prt_bare_declarative_cl_minus_np {%nt("passive_cl_minus_np")%} # O + particle + bare declarative passive (ex: "He was tipped off...")
+# --- passive of ditransitive verbs ---
+    | advp_vp? vbn_io_do                  adjunct_list_passive_io_do_minus_np                     {%nt("passive_cl_minus_np")%} # IO promoted passive (ex: "You were given food")
+    | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to_minus_np              {%nt("passive_cl_minus_np")%} # DO promoted passive (ex: "Food was given to you")
+    | advp_vp? vbn_o_prt_o                adjunct_list_passive_o_prt_o_minus_np                   {%nt("passive_cl_minus_np")%} # Structure III passive (ex: "He was run off another copy")
 
 adjunct_list_minus_adjp ->
     adjunct adjunct_list_minus_adjp {%nt("adjunct_list_minus_adjp")%}
@@ -1589,6 +1965,38 @@ adjunct_list_interrogative_cl_minus_adjp ->
   | adjunct_minus_adjp adjunct_list_interrogative_cl {%nt("adjunct_list_interrogative_cl_minus_adjp")%}
 
 
+adjunct_list_prt_minus_adjp ->
+    particle adjunct_list_minus_adjp {%nt("adjunct_list_prt_minus_adjp")%}
+
+
+adjunct_list_prt_predcomp_minus_adjp ->
+    particle predcomp adjunct_list_minus_adjp {%nt("adjunct_list_prt_predcomp_minus_adjp")%}
+  | particle predcomp_minus_adjp adjunct_list {%nt("adjunct_list_prt_predcomp_minus_adjp")%}
+
+
+adjunct_list_prt_to_inf_cl_minus_adjp ->
+    particle to_inf_cl adjunct_list_minus_adjp {%nt("adjunct_list_prt_to_inf_cl_minus_adjp")%}
+  | particle to_inf_cl_minus_adjp adjunct_list {%nt("adjunct_list_prt_to_inf_cl_minus_adjp")%}
+
+
+adjunct_list_prt_vbg_cl_minus_adjp ->
+    particle vbg_cl adjunct_list_minus_adjp {%nt("adjunct_list_prt_vbg_cl_minus_adjp")%}
+  | particle vbg_cl_minus_adjp adjunct_list {%nt("adjunct_list_prt_vbg_cl_minus_adjp")%}
+
+
+adjunct_list_prt_that_declarative_cl_minus_adjp ->
+    particle that_declarative_cl adjunct_list_minus_adjp {%nt("adjunct_list_prt_that_declarative_cl_minus_adjp")%}
+
+
+adjunct_list_prt_bare_declarative_cl_minus_adjp ->
+    particle bare_declarative_cl adjunct_list_minus_adjp {%nt("adjunct_list_prt_bare_declarative_cl_minus_adjp")%}
+  | particle bare_declarative_cl_minus_adjp adjunct_list {%nt("adjunct_list_prt_bare_declarative_cl_minus_adjp")%}
+
+
+adjunct_list_prt_interrogative_cl_minus_adjp ->
+    particle interrogative_cl adjunct_list_minus_adjp {%nt("adjunct_list_prt_interrogative_cl_minus_adjp")%}
+
+
 adjunct_list_o_minus_adjp -> impossible
 
 adjunct_list_o_predcomp_minus_adjp ->
@@ -1627,6 +2035,16 @@ adjunct_list_io_interrogative_cl_minus_adjp ->
   | np_minus_adjp adjunct_list_interrogative_cl {%nt("adjunct_list_io_interrogative_cl_minus_adjp")%}
 
 
+adjunct_list_prt_o_minus_adjp -> impossible
+
+adjunct_list_o_prt_predcomp_minus_adjp ->
+    np particle predcomp_minus_adjp adjunct_list {%nt("adjunct_list_o_prt_predcomp_minus_adjp")%}
+
+
+adjunct_list_o_prt_that_declarative_cl_minus_adjp -> impossible
+
+adjunct_list_o_prt_bare_declarative_cl_minus_adjp -> impossible
+
 adjunct_list_io_do_minus_adjp ->
     np adjunct_list_o_minus_adjp {%nt("adjunct_list_io_do_minus_adjp")%}
   | np_minus_adjp adjunct_list_o {%nt("adjunct_list_io_do_minus_adjp")%}
@@ -1644,6 +2062,8 @@ adjunct_list_do_dative_to_minus_adjp ->
   | np_minus_adjp adjunct_list_dative_to {%nt("adjunct_list_do_dative_to_minus_adjp")%}
   | dative_to_minus_adjp adjunct_list_o {%nt("adjunct_list_do_dative_to_minus_adjp")%}
 
+
+adjunct_list_o_prt_o_minus_adjp -> impossible
 
 adjunct_list_passive_o_minus_adjp -> impossible
 
@@ -1676,6 +2096,18 @@ adjunct_list_passive_io_do_minus_adjp -> impossible
 adjunct_list_passive_do_dative_to_minus_adjp -> impossible
 
 adjunct_list_passive_pp_minus_adjp -> impossible
+
+adjunct_list_passive_prt_o_minus_adjp -> impossible
+
+adjunct_list_passive_o_prt_predcomp_minus_adjp ->
+    particle predcomp_minus_adjp adjunct_list {%nt("adjunct_list_passive_o_prt_predcomp_minus_adjp")%}
+
+
+adjunct_list_passive_o_prt_that_declarative_cl_minus_adjp -> impossible
+
+adjunct_list_passive_o_prt_bare_declarative_cl_minus_adjp -> impossible
+
+adjunct_list_passive_o_prt_o_minus_adjp -> impossible
 
 
 # modals can only appear in the position of a finite verb (they cannot be conjugated as an infinitive or a participle *to can)
@@ -1744,27 +2176,42 @@ vbf_sg_vp_minus_adjp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbf_sg_vp_minus_adjp but vbf_sg_vp_minus_adjp {%nt("vbf_sg_vp_minus_adjp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbf_sg                        adjunct_list_minus_adjp                          {%nt("vbf_sg_vp_minus_adjp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbf_sg_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("vbf_sg_vp_minus_adjp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbf_sg_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("vbf_sg_vp_minus_adjp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbf_sg_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("vbf_sg_vp_minus_adjp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbf_sg_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("vbf_sg_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbf_sg_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("vbf_sg_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbf_sg_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("vbf_sg_vp_minus_adjp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbf_sg_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("vbf_sg_vp_minus_adjp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbf_sg_vbg_cl                 vbg_cl_minus_adjp                                {%nt("vbf_sg_vp_minus_adjp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbf_sg_vbn_cl                 vbn_cl_minus_adjp                                {%nt("vbf_sg_vp_minus_adjp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbf_sg_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("vbf_sg_vp_minus_adjp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbf_sg_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("vbf_sg_vp_minus_adjp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbf_sg_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("vbf_sg_vp_minus_adjp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbf_sg_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("vbf_sg_vp_minus_adjp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbf_sg_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("vbf_sg_vp_minus_adjp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbf_sg_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("vbf_sg_vp_minus_adjp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbf_sg_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("vbf_sg_vp_minus_adjp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbf_sg_vbg_cl                 vbg_cl_minus_adjp                                {%nt("vbf_sg_vp_minus_adjp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbf_sg_vbn_cl                 vbn_cl_minus_adjp                                {%nt("vbf_sg_vp_minus_adjp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbf_sg_passive_cl             passive_cl_minus_adjp                            {%nt("vbf_sg_vp_minus_adjp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbf_sg_o                      adjunct_list_o_minus_adjp                        {%nt("vbf_sg_vp_minus_adjp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbf_sg_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("vbf_sg_vp_minus_adjp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbf_sg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("vbf_sg_vp_minus_adjp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbf_sg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("vbf_sg_vp_minus_adjp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbf_sg_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("vbf_sg_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbf_sg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("vbf_sg_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbf_sg_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("vbf_sg_vp_minus_adjp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbf_sg_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("vbf_sg_vp_minus_adjp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbf_sg_prt                    adjunct_list_prt_minus_adjp                      {%nt("vbf_sg_vp_minus_adjp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbf_sg_prt_predcomp           adjunct_list_prt_predcomp_minus_adjp             {%nt("vbf_sg_vp_minus_adjp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbf_sg_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_adjp            {%nt("vbf_sg_vp_minus_adjp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbf_sg_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_adjp               {%nt("vbf_sg_vp_minus_adjp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbf_sg_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_adjp {%nt("vbf_sg_vp_minus_adjp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbf_sg_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_adjp {%nt("vbf_sg_vp_minus_adjp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbf_sg_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_adjp     {%nt("vbf_sg_vp_minus_adjp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbf_sg_o                      adjunct_list_o_minus_adjp                        {%nt("vbf_sg_vp_minus_adjp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbf_sg_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("vbf_sg_vp_minus_adjp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbf_sg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("vbf_sg_vp_minus_adjp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbf_sg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("vbf_sg_vp_minus_adjp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbf_sg_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("vbf_sg_vp_minus_adjp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbf_sg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("vbf_sg_vp_minus_adjp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbf_sg_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("vbf_sg_vp_minus_adjp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbf_sg_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("vbf_sg_vp_minus_adjp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbf_sg_prt_o                  adjunct_list_prt_o_minus_adjp                    {%nt("vbf_sg_vp_minus_adjp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbf_sg_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_adjp           {%nt("vbf_sg_vp_minus_adjp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbf_sg_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_adjp {%nt("vbf_sg_vp_minus_adjp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbf_sg_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_adjp {%nt("vbf_sg_vp_minus_adjp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbf_sg_io_do                  adjunct_list_io_do_minus_adjp                    {%nt("vbf_sg_vp_minus_adjp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbf_sg_io_do                  adjunct_list_do_dative_to_minus_adjp             {%nt("vbf_sg_vp_minus_adjp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbf_sg_o_prt_o                adjunct_list_o_prt_o_minus_adjp                  {%nt("vbf_sg_vp_minus_adjp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # modals can only appear in the position of a finite verb (they cannot be conjugated as an infinitive or a participle *to can)
 vbf_pl_vp_minus_adjp -> advp_vp? modal bare_inf_cl_minus_adjp {%nt("vbf_pl_vp_minus_adjp")%}
@@ -1832,27 +2279,42 @@ vbf_pl_vp_minus_adjp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbf_pl_vp_minus_adjp but vbf_pl_vp_minus_adjp {%nt("vbf_pl_vp_minus_adjp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbf_pl                        adjunct_list_minus_adjp                          {%nt("vbf_pl_vp_minus_adjp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbf_pl_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("vbf_pl_vp_minus_adjp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbf_pl_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("vbf_pl_vp_minus_adjp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbf_pl_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("vbf_pl_vp_minus_adjp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbf_pl_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("vbf_pl_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbf_pl_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("vbf_pl_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbf_pl_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("vbf_pl_vp_minus_adjp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbf_pl_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("vbf_pl_vp_minus_adjp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbf_pl_vbg_cl                 vbg_cl_minus_adjp                                {%nt("vbf_pl_vp_minus_adjp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbf_pl_vbn_cl                 vbn_cl_minus_adjp                                {%nt("vbf_pl_vp_minus_adjp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbf_pl_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("vbf_pl_vp_minus_adjp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbf_pl_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("vbf_pl_vp_minus_adjp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbf_pl_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("vbf_pl_vp_minus_adjp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbf_pl_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("vbf_pl_vp_minus_adjp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbf_pl_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("vbf_pl_vp_minus_adjp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbf_pl_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("vbf_pl_vp_minus_adjp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbf_pl_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("vbf_pl_vp_minus_adjp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbf_pl_vbg_cl                 vbg_cl_minus_adjp                                {%nt("vbf_pl_vp_minus_adjp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbf_pl_vbn_cl                 vbn_cl_minus_adjp                                {%nt("vbf_pl_vp_minus_adjp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbf_pl_passive_cl             passive_cl_minus_adjp                            {%nt("vbf_pl_vp_minus_adjp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbf_pl_o                      adjunct_list_o_minus_adjp                        {%nt("vbf_pl_vp_minus_adjp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbf_pl_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("vbf_pl_vp_minus_adjp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbf_pl_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("vbf_pl_vp_minus_adjp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbf_pl_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("vbf_pl_vp_minus_adjp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbf_pl_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("vbf_pl_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbf_pl_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("vbf_pl_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbf_pl_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("vbf_pl_vp_minus_adjp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbf_pl_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("vbf_pl_vp_minus_adjp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbf_pl_prt                    adjunct_list_prt_minus_adjp                      {%nt("vbf_pl_vp_minus_adjp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbf_pl_prt_predcomp           adjunct_list_prt_predcomp_minus_adjp             {%nt("vbf_pl_vp_minus_adjp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbf_pl_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_adjp            {%nt("vbf_pl_vp_minus_adjp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbf_pl_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_adjp               {%nt("vbf_pl_vp_minus_adjp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbf_pl_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_adjp {%nt("vbf_pl_vp_minus_adjp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbf_pl_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_adjp {%nt("vbf_pl_vp_minus_adjp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbf_pl_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_adjp     {%nt("vbf_pl_vp_minus_adjp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbf_pl_o                      adjunct_list_o_minus_adjp                        {%nt("vbf_pl_vp_minus_adjp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbf_pl_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("vbf_pl_vp_minus_adjp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbf_pl_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("vbf_pl_vp_minus_adjp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbf_pl_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("vbf_pl_vp_minus_adjp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbf_pl_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("vbf_pl_vp_minus_adjp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbf_pl_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("vbf_pl_vp_minus_adjp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbf_pl_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("vbf_pl_vp_minus_adjp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbf_pl_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("vbf_pl_vp_minus_adjp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbf_pl_prt_o                  adjunct_list_prt_o_minus_adjp                    {%nt("vbf_pl_vp_minus_adjp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbf_pl_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_adjp           {%nt("vbf_pl_vp_minus_adjp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbf_pl_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_adjp {%nt("vbf_pl_vp_minus_adjp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbf_pl_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_adjp {%nt("vbf_pl_vp_minus_adjp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbf_pl_io_do                  adjunct_list_io_do_minus_adjp                    {%nt("vbf_pl_vp_minus_adjp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbf_pl_io_do                  adjunct_list_do_dative_to_minus_adjp             {%nt("vbf_pl_vp_minus_adjp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbf_pl_o_prt_o                adjunct_list_o_prt_o_minus_adjp                  {%nt("vbf_pl_vp_minus_adjp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
 inf_vp_minus_adjp_coordlist ->  inf_vp_minus_adjp_coordlist_item inf_vp_minus_adjp_coordlist_ {%nt("inf_vp_minus_adjp_coordlist")%}
@@ -1917,27 +2379,42 @@ inf_vp_minus_adjp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only inf_vp_minus_adjp but inf_vp_minus_adjp {%nt("inf_vp_minus_adjp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? inf                        adjunct_list_minus_adjp                          {%nt("inf_vp_minus_adjp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? inf_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("inf_vp_minus_adjp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? inf_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("inf_vp_minus_adjp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? inf_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("inf_vp_minus_adjp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? inf_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("inf_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? inf_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("inf_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? inf_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("inf_vp_minus_adjp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? inf_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("inf_vp_minus_adjp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? inf_vbg_cl                 vbg_cl_minus_adjp                                {%nt("inf_vp_minus_adjp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? inf_vbn_cl                 vbn_cl_minus_adjp                                {%nt("inf_vp_minus_adjp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? inf_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("inf_vp_minus_adjp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? inf_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("inf_vp_minus_adjp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? inf_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("inf_vp_minus_adjp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? inf_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("inf_vp_minus_adjp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? inf_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("inf_vp_minus_adjp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? inf_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("inf_vp_minus_adjp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? inf_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("inf_vp_minus_adjp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? inf_vbg_cl                 vbg_cl_minus_adjp                                {%nt("inf_vp_minus_adjp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? inf_vbn_cl                 vbn_cl_minus_adjp                                {%nt("inf_vp_minus_adjp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? inf_passive_cl             passive_cl_minus_adjp                            {%nt("inf_vp_minus_adjp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? inf_o                      adjunct_list_o_minus_adjp                        {%nt("inf_vp_minus_adjp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? inf_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("inf_vp_minus_adjp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? inf_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("inf_vp_minus_adjp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? inf_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("inf_vp_minus_adjp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? inf_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("inf_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? inf_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("inf_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? inf_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("inf_vp_minus_adjp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? inf_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("inf_vp_minus_adjp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? inf_prt                    adjunct_list_prt_minus_adjp                      {%nt("inf_vp_minus_adjp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? inf_prt_predcomp           adjunct_list_prt_predcomp_minus_adjp             {%nt("inf_vp_minus_adjp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? inf_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_adjp            {%nt("inf_vp_minus_adjp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? inf_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_adjp               {%nt("inf_vp_minus_adjp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? inf_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_adjp {%nt("inf_vp_minus_adjp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? inf_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_adjp {%nt("inf_vp_minus_adjp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? inf_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_adjp     {%nt("inf_vp_minus_adjp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? inf_o                      adjunct_list_o_minus_adjp                        {%nt("inf_vp_minus_adjp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? inf_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("inf_vp_minus_adjp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? inf_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("inf_vp_minus_adjp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? inf_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("inf_vp_minus_adjp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? inf_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("inf_vp_minus_adjp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? inf_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("inf_vp_minus_adjp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? inf_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("inf_vp_minus_adjp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? inf_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("inf_vp_minus_adjp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? inf_prt_o                  adjunct_list_prt_o_minus_adjp                    {%nt("inf_vp_minus_adjp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? inf_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_adjp           {%nt("inf_vp_minus_adjp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? inf_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_adjp {%nt("inf_vp_minus_adjp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? inf_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_adjp {%nt("inf_vp_minus_adjp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? inf_io_do                  adjunct_list_io_do_minus_adjp                    {%nt("inf_vp_minus_adjp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? inf_io_do                  adjunct_list_do_dative_to_minus_adjp             {%nt("inf_vp_minus_adjp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? inf_o_prt_o                adjunct_list_o_prt_o_minus_adjp                  {%nt("inf_vp_minus_adjp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
 vbg_vp_minus_adjp_coordlist ->  vbg_vp_minus_adjp_coordlist_item vbg_vp_minus_adjp_coordlist_ {%nt("vbg_vp_minus_adjp_coordlist")%}
@@ -2002,27 +2479,42 @@ vbg_vp_minus_adjp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbg_vp_minus_adjp but vbg_vp_minus_adjp {%nt("vbg_vp_minus_adjp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbg                        adjunct_list_minus_adjp                          {%nt("vbg_vp_minus_adjp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbg_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("vbg_vp_minus_adjp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbg_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("vbg_vp_minus_adjp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbg_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("vbg_vp_minus_adjp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbg_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("vbg_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbg_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("vbg_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbg_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("vbg_vp_minus_adjp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbg_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("vbg_vp_minus_adjp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbg_vbg_cl                 vbg_cl_minus_adjp                                {%nt("vbg_vp_minus_adjp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbg_vbn_cl                 vbn_cl_minus_adjp                                {%nt("vbg_vp_minus_adjp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbg_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("vbg_vp_minus_adjp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbg_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("vbg_vp_minus_adjp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbg_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("vbg_vp_minus_adjp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbg_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("vbg_vp_minus_adjp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbg_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("vbg_vp_minus_adjp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbg_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("vbg_vp_minus_adjp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbg_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("vbg_vp_minus_adjp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbg_vbg_cl                 vbg_cl_minus_adjp                                {%nt("vbg_vp_minus_adjp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbg_vbn_cl                 vbn_cl_minus_adjp                                {%nt("vbg_vp_minus_adjp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbg_passive_cl             passive_cl_minus_adjp                            {%nt("vbg_vp_minus_adjp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbg_o                      adjunct_list_o_minus_adjp                        {%nt("vbg_vp_minus_adjp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbg_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("vbg_vp_minus_adjp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("vbg_vp_minus_adjp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("vbg_vp_minus_adjp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbg_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("vbg_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("vbg_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbg_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("vbg_vp_minus_adjp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbg_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("vbg_vp_minus_adjp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbg_prt                    adjunct_list_prt_minus_adjp                      {%nt("vbg_vp_minus_adjp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbg_prt_predcomp           adjunct_list_prt_predcomp_minus_adjp             {%nt("vbg_vp_minus_adjp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbg_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_adjp            {%nt("vbg_vp_minus_adjp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbg_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_adjp               {%nt("vbg_vp_minus_adjp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbg_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_adjp {%nt("vbg_vp_minus_adjp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbg_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_adjp {%nt("vbg_vp_minus_adjp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbg_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_adjp     {%nt("vbg_vp_minus_adjp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbg_o                      adjunct_list_o_minus_adjp                        {%nt("vbg_vp_minus_adjp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbg_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("vbg_vp_minus_adjp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbg_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("vbg_vp_minus_adjp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbg_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("vbg_vp_minus_adjp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbg_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("vbg_vp_minus_adjp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbg_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("vbg_vp_minus_adjp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbg_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("vbg_vp_minus_adjp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbg_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("vbg_vp_minus_adjp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbg_prt_o                  adjunct_list_prt_o_minus_adjp                    {%nt("vbg_vp_minus_adjp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbg_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_adjp           {%nt("vbg_vp_minus_adjp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbg_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_adjp {%nt("vbg_vp_minus_adjp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbg_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_adjp {%nt("vbg_vp_minus_adjp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbg_io_do                  adjunct_list_io_do_minus_adjp                    {%nt("vbg_vp_minus_adjp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbg_io_do                  adjunct_list_do_dative_to_minus_adjp             {%nt("vbg_vp_minus_adjp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbg_o_prt_o                adjunct_list_o_prt_o_minus_adjp                  {%nt("vbg_vp_minus_adjp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 # comma-separated list for syndetic coordination: [sang, danced,] (requires 2+ items to avoid ambiguity with binary)
 vbn_vp_minus_adjp_coordlist ->  vbn_vp_minus_adjp_coordlist_item vbn_vp_minus_adjp_coordlist_ {%nt("vbn_vp_minus_adjp_coordlist")%}
@@ -2087,45 +2579,66 @@ vbn_vp_minus_adjp ->
 #   8b-i. binary: "not only sang but danced"
     | not_only vbn_vp_minus_adjp but vbn_vp_minus_adjp {%nt("vbn_vp_minus_adjp")%}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? vbn                        adjunct_list_minus_adjp                          {%nt("vbn_vp_minus_adjp")%} # intransitive verb (ex: "I smoked")
-    | advp_vp? vbn_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("vbn_vp_minus_adjp")%} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? vbn_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("vbn_vp_minus_adjp")%} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? vbn_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("vbn_vp_minus_adjp")%} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? vbn_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("vbn_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? vbn_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("vbn_vp_minus_adjp")%} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? vbn_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("vbn_vp_minus_adjp")%} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? vbn_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("vbn_vp_minus_adjp")%} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? vbn_vbg_cl                 vbg_cl_minus_adjp                                {%nt("vbn_vp_minus_adjp")%} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? vbn_vbn_cl                 vbn_cl_minus_adjp                                {%nt("vbn_vp_minus_adjp")%} # past perfect (ex: "He had eaten")
+    | advp_vp? vbn_predcomp               adjunct_list_predcomp_minus_adjp                 {%nt("vbn_vp_minus_adjp")%} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? vbn_to_inf_cl              adjunct_list_to_inf_cl_minus_adjp                {%nt("vbn_vp_minus_adjp")%} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? vbn_bare_inf_cl            adjunct_list_bare_inf_cl_minus_adjp              {%nt("vbn_vp_minus_adjp")%} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? vbn_that_declarative_cl    adjunct_list_that_declarative_cl_minus_adjp      {%nt("vbn_vp_minus_adjp")%} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? vbn_bare_declarative_cl    adjunct_list_bare_declarative_cl_minus_adjp      {%nt("vbn_vp_minus_adjp")%} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? vbn_exclamative_cl         adjunct_list_exclamative_cl_minus_adjp           {%nt("vbn_vp_minus_adjp")%} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? vbn_interrogative_cl       adjunct_list_interrogative_cl_minus_adjp         {%nt("vbn_vp_minus_adjp")%} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? vbn_vbg_cl                 vbg_cl_minus_adjp                                {%nt("vbn_vp_minus_adjp")%} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? vbn_vbn_cl                 vbn_cl_minus_adjp                                {%nt("vbn_vp_minus_adjp")%} # perfect aspect (ex: "He had eaten")
     | advp_vp? vbn_passive_cl             passive_cl_minus_adjp                            {%nt("vbn_vp_minus_adjp")%} # passive voice (ex: "He was eaten")
-    | advp_vp? vbn_o                      adjunct_list_o_minus_adjp                        {%nt("vbn_vp_minus_adjp")%} # transitive verb (ex: "I ate the apple")
-    | advp_vp? vbn_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("vbn_vp_minus_adjp")%} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("vbn_vp_minus_adjp")%} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? vbn_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("vbn_vp_minus_adjp")%} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? vbn_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("vbn_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("vbn_vp_minus_adjp")%} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? vbn_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("vbn_vp_minus_adjp")%} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? vbn_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("vbn_vp_minus_adjp")%} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? vbn_prt                    adjunct_list_prt_minus_adjp                      {%nt("vbn_vp_minus_adjp")%} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? vbn_prt_predcomp           adjunct_list_prt_predcomp_minus_adjp             {%nt("vbn_vp_minus_adjp")%} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? vbn_prt_to_inf_cl          adjunct_list_prt_to_inf_cl_minus_adjp            {%nt("vbn_vp_minus_adjp")%} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? vbn_prt_vbg_cl             adjunct_list_prt_vbg_cl_minus_adjp               {%nt("vbn_vp_minus_adjp")%} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? vbn_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl_minus_adjp {%nt("vbn_vp_minus_adjp")%} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? vbn_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl_minus_adjp {%nt("vbn_vp_minus_adjp")%} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? vbn_prt_interrogative_cl   adjunct_list_prt_interrogative_cl_minus_adjp     {%nt("vbn_vp_minus_adjp")%} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? vbn_o                      adjunct_list_o_minus_adjp                        {%nt("vbn_vp_minus_adjp")%} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? vbn_o_predcomp             adjunct_list_o_predcomp_minus_adjp               {%nt("vbn_vp_minus_adjp")%} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl_minus_adjp          {%nt("vbn_vp_minus_adjp")%} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? vbn_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl_minus_adjp        {%nt("vbn_vp_minus_adjp")%} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? vbn_io_that_declarative_cl adjunct_list_io_that_declarative_cl_minus_adjp   {%nt("vbn_vp_minus_adjp")%} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl_minus_adjp   {%nt("vbn_vp_minus_adjp")%} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? vbn_io_exclamative_cl      adjunct_list_io_exclamative_cl_minus_adjp        {%nt("vbn_vp_minus_adjp")%} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? vbn_io_interrogative_cl    adjunct_list_io_interrogative_cl_minus_adjp      {%nt("vbn_vp_minus_adjp")%} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? vbn_prt_o                  adjunct_list_prt_o_minus_adjp                    {%nt("vbn_vp_minus_adjp")%} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? vbn_o_prt_predcomp         adjunct_list_o_prt_predcomp_minus_adjp           {%nt("vbn_vp_minus_adjp")%} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? vbn_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl_minus_adjp {%nt("vbn_vp_minus_adjp")%} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? vbn_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl_minus_adjp {%nt("vbn_vp_minus_adjp")%} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? vbn_io_do                  adjunct_list_io_do_minus_adjp                    {%nt("vbn_vp_minus_adjp")%} # ditransitive verb (ex: "I gave you food")
     | advp_vp? vbn_io_do                  adjunct_list_do_dative_to_minus_adjp             {%nt("vbn_vp_minus_adjp")%} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? vbn_o_prt_o                adjunct_list_o_prt_o_minus_adjp                  {%nt("vbn_vp_minus_adjp")%} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 
 passive_cl_minus_adjp -> 
 # omit all the intransitive verbs
 # omit vbg_cl, as one cannot combine passive with progressive aspect *The food was been eaten
 # omit vbn_cl, as one cannot combine passive with past perfect *The food was had eaten
 # omit passive_cl, as one cannot combine passive with passive *The food was been eaten
-      advp_vp? vbn_o                      adjunct_list_passive_o_minus_adjp                         {%nt("passive_cl_minus_adjp")%}
-    | advp_vp? vbn_o_predcomp             adjunct_list_passive_o_predcomp_minus_adjp                {%nt("passive_cl_minus_adjp")%}
-    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_passive_intnp_to_inf_cl_minus_adjp           {%nt("passive_cl_minus_adjp")%}
-    | advp_vp? vbn_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl_minus_adjp    {%nt("passive_cl_minus_adjp")%}
-    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl_minus_adjp    {%nt("passive_cl_minus_adjp")%}
-    | advp_vp? vbn_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl_minus_adjp         {%nt("passive_cl_minus_adjp")%}
-    | advp_vp? vbn_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl_minus_adjp       {%nt("passive_cl_minus_adjp")%}
-    | advp_vp? vbn_io_do                  adjunct_list_passive_io_do_minus_adjp                     {%nt("passive_cl_minus_adjp")%}
-    | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to_minus_adjp              {%nt("passive_cl_minus_adjp")%}
-    # Prepositional passive: The book was referred to
-    # Any intransitive verb can combine with a stranded preposition (post-filter for validity)
-    | advp_vp? vbn                        adjunct_list_passive_pp_minus_adjp                        {%nt("passive_cl_minus_adjp")%}
+# --- prepositional passive (intransitive verb + stranded preposition) ---
+      advp_vp? vbn                        adjunct_list_passive_pp_minus_adjp                        {%nt("passive_cl_minus_adjp")%} # prepositional passive (ex: "The book was referred to")
+# --- passive of transitive verbs ---
+    | advp_vp? vbn_o                      adjunct_list_passive_o_minus_adjp                         {%nt("passive_cl_minus_adjp")%} # monotransitive passive (ex: "The apple was eaten")
+    | advp_vp? vbn_o_predcomp             adjunct_list_passive_o_predcomp_minus_adjp                {%nt("passive_cl_minus_adjp")%} # complex-transitive passive (ex: "He was found guilty")
+    | advp_vp? vbn_intnp_to_inf_cl        adjunct_list_passive_intnp_to_inf_cl_minus_adjp           {%nt("passive_cl_minus_adjp")%} # raised object + to-inf passive (ex: "You were asked to leave")
+    | advp_vp? vbn_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl_minus_adjp    {%nt("passive_cl_minus_adjp")%} # IO + that-clause passive (ex: "You were told that...")
+    | advp_vp? vbn_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl_minus_adjp    {%nt("passive_cl_minus_adjp")%} # IO + bare declarative passive (ex: "You were told...")
+    | advp_vp? vbn_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl_minus_adjp         {%nt("passive_cl_minus_adjp")%} # IO + exclamative passive (ex: "You were told how...")
+    | advp_vp? vbn_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl_minus_adjp       {%nt("passive_cl_minus_adjp")%} # IO + interrogative passive (ex: "You were asked whether...")
+    | advp_vp? vbn_prt_o                  adjunct_list_passive_prt_o_minus_adjp                     {%nt("passive_cl_minus_adjp")%} # Structure II passive (ex: "The label was taken off")
+    | advp_vp? vbn_o_prt_predcomp         adjunct_list_passive_o_prt_predcomp_minus_adjp            {%nt("passive_cl_minus_adjp")%} # Structure VII passive (ex: "He was shown up as spineless")
+    | advp_vp? vbn_o_prt_that_declarative_cl adjunct_list_passive_o_prt_that_declarative_cl_minus_adjp {%nt("passive_cl_minus_adjp")%} # O + particle + that-clause passive (ex: "He was tipped off that...")
+    | advp_vp? vbn_o_prt_bare_declarative_cl adjunct_list_passive_o_prt_bare_declarative_cl_minus_adjp {%nt("passive_cl_minus_adjp")%} # O + particle + bare declarative passive (ex: "He was tipped off...")
+# --- passive of ditransitive verbs ---
+    | advp_vp? vbn_io_do                  adjunct_list_passive_io_do_minus_adjp                     {%nt("passive_cl_minus_adjp")%} # IO promoted passive (ex: "You were given food")
+    | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to_minus_adjp              {%nt("passive_cl_minus_adjp")%} # DO promoted passive (ex: "Food was given to you")
+    | advp_vp? vbn_o_prt_o                adjunct_list_passive_o_prt_o_minus_adjp                   {%nt("passive_cl_minus_adjp")%} # Structure III passive (ex: "He was run off another copy")
 
 
 # infintive clauses
@@ -2707,6 +3220,7 @@ preposition_predcomp -> %preposition_predcomp {%t("preposition_predcomp")%}
 preposition_pp ->  %preposition_pp {%t("preposition_pp")%}
 preposition_advp ->  %preposition_advp {%t("preposition_advp")%}
 preposition_bare_declarative_cl -> %preposition_bare_declarative_cl {%t("preposition_bare_declarative_cl")%}
+particle -> %particle {%t("particle")%}
 to -> %to {%t("to")%}
 s -> %s {%t("s")%}
 not -> %not {%t("not")%}
@@ -2738,6 +3252,18 @@ inf_io_bare_declarative_cl -> %inf_io_bare_declarative_cl {%t("inf_io_bare_decla
 inf_io_exclamative_cl -> %inf_io_exclamative_cl {%t("inf_io_exclamative_cl")%}
 inf_io_interrogative_cl -> %inf_io_interrogative_cl {%t("inf_io_interrogative_cl")%}
 inf_io_do -> %inf_io_do {%t("inf_io_do")%}
+inf_prt -> %inf_prt {%t("inf_prt")%}
+inf_prt_predcomp -> %inf_prt_predcomp {%t("inf_prt_predcomp")%}
+inf_prt_to_inf_cl -> %inf_prt_to_inf_cl {%t("inf_prt_to_inf_cl")%}
+inf_prt_vbg_cl -> %inf_prt_vbg_cl {%t("inf_prt_vbg_cl")%}
+inf_prt_that_declarative_cl -> %inf_prt_that_declarative_cl {%t("inf_prt_that_declarative_cl")%}
+inf_prt_bare_declarative_cl -> %inf_prt_bare_declarative_cl {%t("inf_prt_bare_declarative_cl")%}
+inf_prt_interrogative_cl -> %inf_prt_interrogative_cl {%t("inf_prt_interrogative_cl")%}
+inf_prt_o -> %inf_prt_o {%t("inf_prt_o")%}
+inf_o_prt_predcomp -> %inf_o_prt_predcomp {%t("inf_o_prt_predcomp")%}
+inf_o_prt_that_declarative_cl -> %inf_o_prt_that_declarative_cl {%t("inf_o_prt_that_declarative_cl")%}
+inf_o_prt_bare_declarative_cl -> %inf_o_prt_bare_declarative_cl {%t("inf_o_prt_bare_declarative_cl")%}
+inf_o_prt_o -> %inf_o_prt_o {%t("inf_o_prt_o")%}
 
 vbg -> %vbg {%t("vbg")%}
 vbg_predcomp -> %vbg_predcomp {%t("vbg_predcomp")%}
@@ -2759,6 +3285,18 @@ vbg_io_bare_declarative_cl -> %vbg_io_bare_declarative_cl {%t("vbg_io_bare_decla
 vbg_io_exclamative_cl -> %vbg_io_exclamative_cl {%t("vbg_io_exclamative_cl")%}
 vbg_io_interrogative_cl -> %vbg_io_interrogative_cl {%t("vbg_io_interrogative_cl")%}
 vbg_io_do -> %vbg_io_do {%t("vbg_io_do")%}
+vbg_prt -> %vbg_prt {%t("vbg_prt")%}
+vbg_prt_predcomp -> %vbg_prt_predcomp {%t("vbg_prt_predcomp")%}
+vbg_prt_to_inf_cl -> %vbg_prt_to_inf_cl {%t("vbg_prt_to_inf_cl")%}
+vbg_prt_vbg_cl -> %vbg_prt_vbg_cl {%t("vbg_prt_vbg_cl")%}
+vbg_prt_that_declarative_cl -> %vbg_prt_that_declarative_cl {%t("vbg_prt_that_declarative_cl")%}
+vbg_prt_bare_declarative_cl -> %vbg_prt_bare_declarative_cl {%t("vbg_prt_bare_declarative_cl")%}
+vbg_prt_interrogative_cl -> %vbg_prt_interrogative_cl {%t("vbg_prt_interrogative_cl")%}
+vbg_prt_o -> %vbg_prt_o {%t("vbg_prt_o")%}
+vbg_o_prt_predcomp -> %vbg_o_prt_predcomp {%t("vbg_o_prt_predcomp")%}
+vbg_o_prt_that_declarative_cl -> %vbg_o_prt_that_declarative_cl {%t("vbg_o_prt_that_declarative_cl")%}
+vbg_o_prt_bare_declarative_cl -> %vbg_o_prt_bare_declarative_cl {%t("vbg_o_prt_bare_declarative_cl")%}
+vbg_o_prt_o -> %vbg_o_prt_o {%t("vbg_o_prt_o")%}
 
 vbn -> %vbn {%t("vbn")%}
 vbn_predcomp -> %vbn_predcomp {%t("vbn_predcomp")%}
@@ -2780,6 +3318,18 @@ vbn_io_bare_declarative_cl -> %vbn_io_bare_declarative_cl {%t("vbn_io_bare_decla
 vbn_io_exclamative_cl -> %vbn_io_exclamative_cl {%t("vbn_io_exclamative_cl")%}
 vbn_io_interrogative_cl -> %vbn_io_interrogative_cl {%t("vbn_io_interrogative_cl")%}
 vbn_io_do -> %vbn_io_do {%t("vbn_io_do")%}
+vbn_prt -> %vbn_prt {%t("vbn_prt")%}
+vbn_prt_predcomp -> %vbn_prt_predcomp {%t("vbn_prt_predcomp")%}
+vbn_prt_to_inf_cl -> %vbn_prt_to_inf_cl {%t("vbn_prt_to_inf_cl")%}
+vbn_prt_vbg_cl -> %vbn_prt_vbg_cl {%t("vbn_prt_vbg_cl")%}
+vbn_prt_that_declarative_cl -> %vbn_prt_that_declarative_cl {%t("vbn_prt_that_declarative_cl")%}
+vbn_prt_bare_declarative_cl -> %vbn_prt_bare_declarative_cl {%t("vbn_prt_bare_declarative_cl")%}
+vbn_prt_interrogative_cl -> %vbn_prt_interrogative_cl {%t("vbn_prt_interrogative_cl")%}
+vbn_prt_o -> %vbn_prt_o {%t("vbn_prt_o")%}
+vbn_o_prt_predcomp -> %vbn_o_prt_predcomp {%t("vbn_o_prt_predcomp")%}
+vbn_o_prt_that_declarative_cl -> %vbn_o_prt_that_declarative_cl {%t("vbn_o_prt_that_declarative_cl")%}
+vbn_o_prt_bare_declarative_cl -> %vbn_o_prt_bare_declarative_cl {%t("vbn_o_prt_bare_declarative_cl")%}
+vbn_o_prt_o -> %vbn_o_prt_o {%t("vbn_o_prt_o")%}
 
 vbf_sg -> %vbf_sg {%t("vbf_sg")%}
 vbf_sg_predcomp -> %vbf_sg_predcomp {%t("vbf_sg_predcomp")%}
@@ -2801,6 +3351,18 @@ vbf_sg_io_bare_declarative_cl -> %vbf_sg_io_bare_declarative_cl {%t("vbf_sg_io_b
 vbf_sg_io_exclamative_cl -> %vbf_sg_io_exclamative_cl {%t("vbf_sg_io_exclamative_cl")%}
 vbf_sg_io_interrogative_cl -> %vbf_sg_io_interrogative_cl {%t("vbf_sg_io_interrogative_cl")%}
 vbf_sg_io_do -> %vbf_sg_io_do {%t("vbf_sg_io_do")%}
+vbf_sg_prt -> %vbf_sg_prt {%t("vbf_sg_prt")%}
+vbf_sg_prt_predcomp -> %vbf_sg_prt_predcomp {%t("vbf_sg_prt_predcomp")%}
+vbf_sg_prt_to_inf_cl -> %vbf_sg_prt_to_inf_cl {%t("vbf_sg_prt_to_inf_cl")%}
+vbf_sg_prt_vbg_cl -> %vbf_sg_prt_vbg_cl {%t("vbf_sg_prt_vbg_cl")%}
+vbf_sg_prt_that_declarative_cl -> %vbf_sg_prt_that_declarative_cl {%t("vbf_sg_prt_that_declarative_cl")%}
+vbf_sg_prt_bare_declarative_cl -> %vbf_sg_prt_bare_declarative_cl {%t("vbf_sg_prt_bare_declarative_cl")%}
+vbf_sg_prt_interrogative_cl -> %vbf_sg_prt_interrogative_cl {%t("vbf_sg_prt_interrogative_cl")%}
+vbf_sg_prt_o -> %vbf_sg_prt_o {%t("vbf_sg_prt_o")%}
+vbf_sg_o_prt_predcomp -> %vbf_sg_o_prt_predcomp {%t("vbf_sg_o_prt_predcomp")%}
+vbf_sg_o_prt_that_declarative_cl -> %vbf_sg_o_prt_that_declarative_cl {%t("vbf_sg_o_prt_that_declarative_cl")%}
+vbf_sg_o_prt_bare_declarative_cl -> %vbf_sg_o_prt_bare_declarative_cl {%t("vbf_sg_o_prt_bare_declarative_cl")%}
+vbf_sg_o_prt_o -> %vbf_sg_o_prt_o {%t("vbf_sg_o_prt_o")%}
 
 vbf_pl -> %vbf_pl {%t("vbf_pl")%}
 vbf_pl_predcomp -> %vbf_pl_predcomp {%t("vbf_pl_predcomp")%}
@@ -2822,6 +3384,18 @@ vbf_pl_io_bare_declarative_cl -> %vbf_pl_io_bare_declarative_cl {%t("vbf_pl_io_b
 vbf_pl_io_exclamative_cl -> %vbf_pl_io_exclamative_cl {%t("vbf_pl_io_exclamative_cl")%}
 vbf_pl_io_interrogative_cl -> %vbf_pl_io_interrogative_cl {%t("vbf_pl_io_interrogative_cl")%}
 vbf_pl_io_do -> %vbf_pl_io_do {%t("vbf_pl_io_do")%}
+vbf_pl_prt -> %vbf_pl_prt {%t("vbf_pl_prt")%}
+vbf_pl_prt_predcomp -> %vbf_pl_prt_predcomp {%t("vbf_pl_prt_predcomp")%}
+vbf_pl_prt_to_inf_cl -> %vbf_pl_prt_to_inf_cl {%t("vbf_pl_prt_to_inf_cl")%}
+vbf_pl_prt_vbg_cl -> %vbf_pl_prt_vbg_cl {%t("vbf_pl_prt_vbg_cl")%}
+vbf_pl_prt_that_declarative_cl -> %vbf_pl_prt_that_declarative_cl {%t("vbf_pl_prt_that_declarative_cl")%}
+vbf_pl_prt_bare_declarative_cl -> %vbf_pl_prt_bare_declarative_cl {%t("vbf_pl_prt_bare_declarative_cl")%}
+vbf_pl_prt_interrogative_cl -> %vbf_pl_prt_interrogative_cl {%t("vbf_pl_prt_interrogative_cl")%}
+vbf_pl_prt_o -> %vbf_pl_prt_o {%t("vbf_pl_prt_o")%}
+vbf_pl_o_prt_predcomp -> %vbf_pl_o_prt_predcomp {%t("vbf_pl_o_prt_predcomp")%}
+vbf_pl_o_prt_that_declarative_cl -> %vbf_pl_o_prt_that_declarative_cl {%t("vbf_pl_o_prt_that_declarative_cl")%}
+vbf_pl_o_prt_bare_declarative_cl -> %vbf_pl_o_prt_bare_declarative_cl {%t("vbf_pl_o_prt_bare_declarative_cl")%}
+vbf_pl_o_prt_o -> %vbf_pl_o_prt_o {%t("vbf_pl_o_prt_o")%}
 
 aux_vbf_sg_predcomp -> %aux_vbf_sg_predcomp {%t("aux_vbf_sg_predcomp")%}
 aux_vbf_sg_o -> %aux_vbf_sg_o {%t("aux_vbf_sg_o")%}
