@@ -2,13 +2,10 @@ import React from 'react';
 import ArticleLayout from '../components/ArticleLayout';
 
 import nearley from 'nearley';
-import englishGrammar from '../translator/englishGrammar';
-import { lex } from '../translator/englishLexer';
-import katex from 'katex';
+import { lex, grammar } from '@pimpale/cgel';
 import DragAndDropCard from '../components/DragAndDropCard';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import englishJsonUrl from '../translator/english.json?url';
 
 type TreeNode = {
     kind: string,
@@ -18,7 +15,7 @@ type TreeNode = {
 
 function parseEnglish(input: string): TreeNode[] {
     try {
-        const parser = new nearley.Parser(nearley.Grammar.fromCompiled(englishGrammar as any));
+        const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 
         // lex input into tokens
         const tokens = lex(input);
@@ -380,7 +377,7 @@ const ParseEnglishPage = () => <ArticleLayout>{
             <div className="mt-5">
                 <h4>Dictionary</h4>
                 <p>
-                    The parser uses a simple dictionary of lexical categories partially sourced from VerbNet. The other ones (all the nouns and adjectives) are manually added by me. You can view the raw file <a href={englishJsonUrl} target="_blank" rel="noopener noreferrer">here</a>.
+                    {/* The parser uses a simple dictionary of lexical categories partially sourced from VerbNet. The other ones (all the nouns and adjectives) are manually added by me. You can view the raw file <a href={englishJsonUrl} target="_blank" rel="noopener noreferrer">here</a>. */}
                 </p>
             </div>
             <div className="mt-5">

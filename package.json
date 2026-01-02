@@ -9,6 +9,7 @@
     "@loaders.gl/core": "^4.3.4",
     "@loaders.gl/gltf": "^4.3.4",
     "@matejmazur/react-katex": "^3.1.3",
+    "@pimpale/cgel": "github:pimpale/cgel",
     "@popperjs/core": "^2.11.8",
     "@types/chroma-js": "^3.1.2",
     "@types/color-convert": "^2.0.4",
