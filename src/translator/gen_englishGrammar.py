@@ -31,6 +31,8 @@ const preposition_bare_declarative_cl = isPoS("preposition_bare_declarative_cl")
 const preposition_pp = isPoS("preposition_pp");
 const preposition_advp = isPoS("preposition_advp");
 
+const particle = isPoS("particle");
+
 // correlatives
 const either = isPoS("either");
 const neither = isPoS("neither");
@@ -84,8 +86,19 @@ const {vp_type}_interrogative_cl = isPoS("{vp_type}_interrogative_cl");
 const {vp_type}_vbg_cl = isPoS("{vp_type}_vbg_cl");
 const {vp_type}_vbn_cl = isPoS("{vp_type}_vbn_cl");
 const {vp_type}_passive_cl = isPoS("{vp_type}_passive_cl");
+const {vp_type}_prt = isPoS("{vp_type}_prt");
+const {vp_type}_prt_predcomp = isPoS("{vp_type}_prt_predcomp");
+const {vp_type}_prt_to_inf_cl = isPoS("{vp_type}_prt_to_inf_cl");
+const {vp_type}_prt_vbg_cl = isPoS("{vp_type}_prt_vbg_cl");
+const {vp_type}_prt_that_declarative_cl = isPoS("{vp_type}_prt_that_declarative_cl");
+const {vp_type}_prt_bare_declarative_cl = isPoS("{vp_type}_prt_bare_declarative_cl");
+const {vp_type}_prt_interrogative_cl = isPoS("{vp_type}_prt_interrogative_cl");
 const {vp_type}_o = isPoS("{vp_type}_o");
 const {vp_type}_o_predcomp = isPoS("{vp_type}_o_predcomp");
+const {vp_type}_prt_o = isPoS("{vp_type}_prt_o");
+const {vp_type}_o_prt_predcomp = isPoS("{vp_type}_o_prt_predcomp");
+const {vp_type}_o_prt_that_declarative_cl = isPoS("{vp_type}_o_prt_that_declarative_cl");
+const {vp_type}_o_prt_bare_declarative_cl = isPoS("{vp_type}_o_prt_bare_declarative_cl");
 const {vp_type}_intnp_to_inf_cl = isPoS("{vp_type}_intnp_to_inf_cl");
 const {vp_type}_intnp_bare_inf_cl = isPoS("{vp_type}_intnp_bare_inf_cl");
 const {vp_type}_io_that_declarative_cl = isPoS("{vp_type}_io_that_declarative_cl");
@@ -93,6 +106,7 @@ const {vp_type}_io_bare_declarative_cl = isPoS("{vp_type}_io_bare_declarative_cl
 const {vp_type}_io_exclamative_cl = isPoS("{vp_type}_io_exclamative_cl");
 const {vp_type}_io_interrogative_cl = isPoS("{vp_type}_io_interrogative_cl");
 const {vp_type}_io_do = isPoS("{vp_type}_io_do");
+const {vp_type}_o_prt_o = isPoS("{vp_type}_o_prt_o");
 
 """
 
@@ -447,6 +461,86 @@ def adjunct_list_grammar(mv_type):
         ],
     )
 
+    # ##################
+    # CGEL 6.3.2 Structure I + IV: intransitive particle constructions
+    # ##################
+
+    out += serialize_rules(
+        f"adjunct_list_prt{mv_suf}",
+        [
+            # Ex: He gave in yesterday
+            # Ex mv_np: I know what he gave in to [gap] (PP complement in adjunct)
+            f"particle adjunct_list{mv_suf}",
+        ],
+    )
+
+    # CGEL 6.3.2 Structure VI: verb – particle – PC
+    out += serialize_rules(
+        f"adjunct_list_prt_predcomp{mv_suf}",
+        [
+            # Ex: She ended up happy
+            # Ex mv_np: I know who she ended up with [gap] (PP in adjunct)
+            # Ex mv_adjp: I know how happy she ended up [gap]
+            f"particle predcomp adjunct_list{mv_suf}",
+            f"particle predcomp{mv_suf} adjunct_list",
+        ],
+    )
+
+    # verb – particle – to-infinitive clause
+    out += serialize_rules(
+        f"adjunct_list_prt_to_inf_cl{mv_suf}",
+        [
+            # Ex: It turned out to be wrong
+            # Ex mv_np: I know what it turned out to be [gap]
+            # Ex mv_adjp: I know how wrong it turned out to be [gap]
+            f"particle to_inf_cl adjunct_list{mv_suf}",
+            f"particle to_inf_cl{mv_suf} adjunct_list",
+        ],
+    )
+
+    # verb – particle – gerund clause
+    out += serialize_rules(
+        f"adjunct_list_prt_vbg_cl{mv_suf}",
+        [
+            # Ex: She kept on working
+            # Ex mv_np: I know what she kept on doing [gap] (extraction from gerund)
+            f"particle vbg_cl adjunct_list{mv_suf}",
+            f"particle vbg_cl{mv_suf} adjunct_list",
+        ],
+    )
+
+    # verb – particle – that-declarative clause
+    out += serialize_rules(
+        f"adjunct_list_prt_that_declarative_cl{mv_suf}",
+        [
+            # Ex: It turned out that he was lying
+            # Extraction from that-clause is limited (island)
+            f"particle that_declarative_cl adjunct_list{mv_suf}",
+        ],
+    )
+
+    # verb – particle – bare declarative clause
+    out += serialize_rules(
+        f"adjunct_list_prt_bare_declarative_cl{mv_suf}",
+        [
+            # Ex: He made out he was sick
+            # Ex mv_np: I know what he made out [gap] was broken
+            f"particle bare_declarative_cl adjunct_list{mv_suf}",
+            f"particle bare_declarative_cl{mv_suf} adjunct_list",
+        ],
+    )
+
+    # verb – particle – interrogative clause
+    out += serialize_rules(
+        f"adjunct_list_prt_interrogative_cl{mv_suf}",
+        [
+            # Ex: I figured out what he meant
+            # Ex: She worked out how to do it
+            # Interrogative clauses are islands, so no extraction from inside
+            f"particle interrogative_cl adjunct_list{mv_suf}",
+        ],
+    )
+
     # cannot be shifted: *I saw quickly the janitor
     out += serialize_rules(
         f"adjunct_list_o{mv_suf}",
@@ -592,6 +686,59 @@ def adjunct_list_grammar(mv_type):
         ],
     )
 
+
+    # verb – particle – O (allows particle movement: "take off the label" / "take the label off")
+    out += serialize_rules(
+        f"adjunct_list_prt_o{mv_suf}",
+        [
+            # Particle-first order: take off the label
+            # Ex: She took off the label yesterday
+            # Ex mv_np: I know what she took off [gap] yesterday
+            f"particle np adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+            f"particle np{mv_suf} adjunct_list" if mv_type != "adjp" else None,
+            # Particle-after order: take the label off
+            # Ex: She took the label off yesterday
+            # Ex mv_np: I know what she took [gap] off yesterday
+            f"np particle adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+            f"np{mv_suf} particle adjunct_list" if mv_type != "adjp" else None,
+        ],
+    )
+
+    # CGEL 6.3.2 Structure VII: verb – O – particle – PC
+    out += serialize_rules(
+        f"adjunct_list_o_prt_predcomp{mv_suf}",
+        [
+            # Ex: This showed him up as spineless
+            # Ex mv_np: I know who this showed [gap] up as spineless
+            # Ex mv_adjp: I know how spineless this showed him up as [gap]
+            f"np particle predcomp adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+            f"np particle predcomp{mv_suf} adjunct_list",
+            f"np{mv_suf} particle predcomp adjunct_list" if mv_type != "adjp" else None,
+        ],
+    )
+
+    # verb – O – particle – that-declarative clause
+    out += serialize_rules(
+        f"adjunct_list_o_prt_that_declarative_cl{mv_suf}",
+        [
+            # Ex: She tipped him off that the police were coming
+            # Ex mv_np: I know who she tipped [gap] off that...
+            f"np particle that_declarative_cl adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+            f"np{mv_suf} particle that_declarative_cl adjunct_list" if mv_type != "adjp" else None,
+        ],
+    )
+
+    # verb – O – particle – bare declarative clause
+    out += serialize_rules(
+        f"adjunct_list_o_prt_bare_declarative_cl{mv_suf}",
+        [
+            # Ex: She tipped him off the police were coming
+            # Ex mv_np: I know who she tipped [gap] off the police were coming
+            f"np particle bare_declarative_cl adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+            f"np{mv_suf} particle bare_declarative_cl adjunct_list" if mv_type != "adjp" else None,
+        ],
+    )
+
     # Note: adjuncts CANNOT appear before the IO: *He gave quickly you the book
     out += serialize_rules(
         f"adjunct_list_io_do{mv_suf}",
@@ -645,6 +792,23 @@ def adjunct_list_grammar(mv_type):
             # Ex mv_np: I know who he gave the book to [gap] today
             # (marginal/rare) Ex mv_adjp: ADJP extraction here is marginal
             f"dative_to{mv_suf} adjunct_list_o",
+        ],
+    )
+
+    # ##################
+    # CGEL 6.3.2 Structure III: ditransitive particle construction
+    # ##################
+
+    # verb – O – particle – O (two objects with particle between)
+    out += serialize_rules(
+        f"adjunct_list_o_prt_o{mv_suf}",
+        [
+            # Ex: I ran him off another copy
+            # Ex mv_np: I know what I ran him off [gap]
+            f"np particle np adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+            f"np particle np{mv_suf} adjunct_list" if mv_type != "adjp" else None,
+            # First NP extracted (rare but possible)
+            f"np{mv_suf} particle np adjunct_list" if mv_type != "adjp" else None,
         ],
     )
 
@@ -762,6 +926,79 @@ def adjunct_list_grammar(mv_type):
         ],
     )
 
+    out += serialize_rules(
+        f"adjunct_list_passive_pp{mv_suf}",
+        [
+            # Prepositional passive: They referred to the book → The book was referred to
+            # The object of the preposition is promoted to subject, stranded preposition + adjuncts remain
+            # Ex: The book was referred to on tuesday
+            # Ex mv_np: I know what day the book was referred to on [gap]
+            # (marginal/rare) Ex mv_adjp: ADJP extraction from post-preposition adjuncts is very marginal
+            f"preposition_np adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+        ],
+    )
+
+    # Passive of Structure II: verb – particle – O
+    # Active: She took off the label → Passive: The label was taken off
+    out += serialize_rules(
+        f"adjunct_list_passive_prt_o{mv_suf}",
+        [
+            # The object is promoted to subject, particle + adjuncts remain
+            # Ex: The label was taken off yesterday
+            # Ex mv_np: I know what day the label was taken off on [gap]
+            f"particle adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+        ],
+    )
+
+    # Passive of Structure VII: verb – O – particle – PC
+    # Active: This showed him up as spineless → Passive: He was shown up as spineless
+    out += serialize_rules(
+        f"adjunct_list_passive_o_prt_predcomp{mv_suf}",
+        [
+            # The object is promoted to subject, particle + PC + adjuncts remain
+            # Ex: He was shown up as spineless yesterday
+            # Ex mv_np: I know what day he was shown up as spineless on [gap]
+            # Ex mv_adjp: I know how spineless he was shown up as [gap]
+            f"particle predcomp adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+            f"particle predcomp{mv_suf} adjunct_list",
+        ],
+    )
+
+    # Passive of verb – O – particle – that-declarative clause
+    # Active: She tipped him off that... → Passive: He was tipped off that...
+    out += serialize_rules(
+        f"adjunct_list_passive_o_prt_that_declarative_cl{mv_suf}",
+        [
+            # The object is promoted to subject, particle + that-clause + adjuncts remain
+            # Ex: He was tipped off that the police were coming
+            f"particle that_declarative_cl adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+        ],
+    )
+
+    # Passive of verb – O – particle – bare declarative clause
+    # Active: She tipped him off the police were coming → Passive: He was tipped off the police were coming
+    out += serialize_rules(
+        f"adjunct_list_passive_o_prt_bare_declarative_cl{mv_suf}",
+        [
+            # The object is promoted to subject, particle + bare declarative + adjuncts remain
+            # Ex: He was tipped off the police were coming
+            f"particle bare_declarative_cl adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+        ],
+    )
+
+    # Passive of Structure III: verb – O – particle – O
+    # Active: I ran him off another copy → Passive: He was run off another copy
+    out += serialize_rules(
+        f"adjunct_list_passive_o_prt_o{mv_suf}",
+        [
+            # The first object is promoted to subject, particle + second object + adjuncts remain
+            # Ex: He was run off another copy
+            # Ex mv_np: I know what he was run off [gap]
+            f"particle np adjunct_list{mv_suf}" if mv_type != "adjp" else None,
+            f"particle np{mv_suf} adjunct_list" if mv_type != "adjp" else None,
+        ],
+    )
+
     return out
 
 
@@ -840,27 +1077,42 @@ def vp_grammar(vp_type: str, mv_type: str | None = None):
 #   8b-i. binary: "not only sang but danced"
     | not_only {vp_type}_vp{mv_suf} but {vp_type}_vp{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}}
 # ===== terminal rules =====
+# --- intransitive verbs (no object) ---
     | advp_vp? {vp_type}                        adjunct_list{mv_suf}                          {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb (ex: "I smoked")
-    | advp_vp? {vp_type}_predcomp               adjunct_list_predcomp{mv_suf}                 {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with adjective phrase argument (ex: "You seemed happy")
-    | advp_vp? {vp_type}_to_inf_cl              adjunct_list_to_inf_cl{mv_suf}                {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with infinitive clause argument (ex: "I wanted to bring the book")
-    | advp_vp? {vp_type}_bare_inf_cl            adjunct_list_bare_inf_cl{mv_suf}              {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with bare infinitive clause argument (ex: "I helped clean")
-    | advp_vp? {vp_type}_that_declarative_cl    adjunct_list_that_declarative_cl{mv_suf}      {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with declarative content clause argument (ex: "I knew that you eat")
-    | advp_vp? {vp_type}_bare_declarative_cl    adjunct_list_bare_declarative_cl{mv_suf}      {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with declarative content clause argument (ex: "I knew you eat")
-    | advp_vp? {vp_type}_exclamative_cl         adjunct_list_exclamative_cl{mv_suf}           {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with exclamative content clause argument (ex: "I said how expensive it was.")
-    | advp_vp? {vp_type}_interrogative_cl       adjunct_list_interrogative_cl{mv_suf}         {{%nt("{vp_type}_vp{mv_suf}")%}} # intransitive verb with interrogative clause argument (ex: "I knew what you eat")
-    | advp_vp? {vp_type}_vbg_cl                 vbg_cl{mv_suf}                                {{%nt("{vp_type}_vp{mv_suf}")%}} # progressive aspect (ex: "We are eating") or intransitive verb with vbg argument ("we started eating")
-    | advp_vp? {vp_type}_vbn_cl                 vbn_cl{mv_suf}                                {{%nt("{vp_type}_vp{mv_suf}")%}} # past perfect (ex: "He had eaten")
+    | advp_vp? {vp_type}_predcomp               adjunct_list_predcomp{mv_suf}                 {{%nt("{vp_type}_vp{mv_suf}")%}} # copular verb with predicative complement (ex: "You seemed happy")
+    | advp_vp? {vp_type}_to_inf_cl              adjunct_list_to_inf_cl{mv_suf}                {{%nt("{vp_type}_vp{mv_suf}")%}} # catenative verb with to-infinitive (ex: "I wanted to bring the book")
+    | advp_vp? {vp_type}_bare_inf_cl            adjunct_list_bare_inf_cl{mv_suf}              {{%nt("{vp_type}_vp{mv_suf}")%}} # catenative verb with bare infinitive (ex: "I helped clean")
+    | advp_vp? {vp_type}_that_declarative_cl    adjunct_list_that_declarative_cl{mv_suf}      {{%nt("{vp_type}_vp{mv_suf}")%}} # verb with that-clause (ex: "I knew that you eat")
+    | advp_vp? {vp_type}_bare_declarative_cl    adjunct_list_bare_declarative_cl{mv_suf}      {{%nt("{vp_type}_vp{mv_suf}")%}} # verb with bare declarative clause (ex: "I knew you eat")
+    | advp_vp? {vp_type}_exclamative_cl         adjunct_list_exclamative_cl{mv_suf}           {{%nt("{vp_type}_vp{mv_suf}")%}} # verb with exclamative clause (ex: "I said how expensive it was")
+    | advp_vp? {vp_type}_interrogative_cl       adjunct_list_interrogative_cl{mv_suf}         {{%nt("{vp_type}_vp{mv_suf}")%}} # verb with interrogative clause (ex: "I knew what you eat")
+    | advp_vp? {vp_type}_vbg_cl                 vbg_cl{mv_suf}                                {{%nt("{vp_type}_vp{mv_suf}")%}} # progressive aspect or catenative with gerund (ex: "We are eating", "we started eating")
+    | advp_vp? {vp_type}_vbn_cl                 vbn_cl{mv_suf}                                {{%nt("{vp_type}_vp{mv_suf}")%}} # perfect aspect (ex: "He had eaten")
     | advp_vp? {vp_type}_passive_cl             passive_cl{mv_suf}                            {{%nt("{vp_type}_vp{mv_suf}")%}} # passive voice (ex: "He was eaten")
-    | advp_vp? {vp_type}_o                      adjunct_list_o{mv_suf}                        {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb (ex: "I ate the apple")
-    | advp_vp? {vp_type}_o_predcomp             adjunct_list_o_predcomp{mv_suf}               {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with adjective phrase argument (ex: "I found you happy")
-    | advp_vp? {vp_type}_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl{mv_suf}          {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with infinitive verb argument (ex: "I asked you to eat the apple")
-    | advp_vp? {vp_type}_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl{mv_suf}        {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with bare infinitive verb argument (ex: "I made you eat the apple")
-    | advp_vp? {vp_type}_io_that_declarative_cl adjunct_list_io_that_declarative_cl{mv_suf}   {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with declarative content clause argument (ex: "I told you that you eat the apple")
-    | advp_vp? {vp_type}_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl{mv_suf}   {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with declarative content clause argument (ex: "I told you you eat the apple")
-    | advp_vp? {vp_type}_io_exclamative_cl      adjunct_list_io_exclamative_cl{mv_suf}        {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with exclamative content clause argument (ex: "I told you how expensive it was")
-    | advp_vp? {vp_type}_io_interrogative_cl    adjunct_list_io_interrogative_cl{mv_suf}      {{%nt("{vp_type}_vp{mv_suf}")%}} # transitive verb with interrogative clause argument (ex: "I asked you what you eat")
+    | advp_vp? {vp_type}_prt                    adjunct_list_prt{mv_suf}                      {{%nt("{vp_type}_vp{mv_suf}")%}} # CGEL 6.3.2 I + IV: verb + particle (ex: "He gave in", "She looked forward to the visit")
+    | advp_vp? {vp_type}_prt_predcomp           adjunct_list_prt_predcomp{mv_suf}             {{%nt("{vp_type}_vp{mv_suf}")%}} # CGEL 6.3.2 VI: verb + particle + PC (ex: "She ended up happy", "It turned out fine")
+    | advp_vp? {vp_type}_prt_to_inf_cl          adjunct_list_prt_to_inf_cl{mv_suf}            {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + particle + to-infinitive (ex: "It turned out to be wrong", "He set out to prove it")
+    | advp_vp? {vp_type}_prt_vbg_cl             adjunct_list_prt_vbg_cl{mv_suf}               {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + particle + gerund (ex: "She kept on working", "He ended up leaving")
+    | advp_vp? {vp_type}_prt_that_declarative_cl adjunct_list_prt_that_declarative_cl{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + particle + that-clause (ex: "It turned out that he was lying")
+    | advp_vp? {vp_type}_prt_bare_declarative_cl adjunct_list_prt_bare_declarative_cl{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + particle + bare declarative (ex: "He made out he was sick")
+    | advp_vp? {vp_type}_prt_interrogative_cl   adjunct_list_prt_interrogative_cl{mv_suf}     {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + particle + interrogative (ex: "I figured out what he meant", "She worked out how to do it")
+# --- transitive verbs (one object) ---
+    | advp_vp? {vp_type}_o                      adjunct_list_o{mv_suf}                        {{%nt("{vp_type}_vp{mv_suf}")%}} # monotransitive verb (ex: "I ate the apple")
+    | advp_vp? {vp_type}_o_predcomp             adjunct_list_o_predcomp{mv_suf}               {{%nt("{vp_type}_vp{mv_suf}")%}} # complex-transitive with PC (ex: "I found you happy")
+    | advp_vp? {vp_type}_intnp_to_inf_cl        adjunct_list_intnp_to_inf_cl{mv_suf}          {{%nt("{vp_type}_vp{mv_suf}")%}} # catenative with raised object + to-infinitive (ex: "I asked you to eat the apple")
+    | advp_vp? {vp_type}_intnp_bare_inf_cl      adjunct_list_intnp_bare_inf_cl{mv_suf}        {{%nt("{vp_type}_vp{mv_suf}")%}} # catenative with raised object + bare infinitive (ex: "I made you eat the apple")
+    | advp_vp? {vp_type}_io_that_declarative_cl adjunct_list_io_that_declarative_cl{mv_suf}   {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + IO + that-clause (ex: "I told you that you eat the apple")
+    | advp_vp? {vp_type}_io_bare_declarative_cl adjunct_list_io_bare_declarative_cl{mv_suf}   {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + IO + bare declarative (ex: "I told you you eat the apple")
+    | advp_vp? {vp_type}_io_exclamative_cl      adjunct_list_io_exclamative_cl{mv_suf}        {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + IO + exclamative (ex: "I told you how expensive it was")
+    | advp_vp? {vp_type}_io_interrogative_cl    adjunct_list_io_interrogative_cl{mv_suf}      {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + IO + interrogative (ex: "I asked you what you eat")
+    | advp_vp? {vp_type}_prt_o                  adjunct_list_prt_o{mv_suf}                    {{%nt("{vp_type}_vp{mv_suf}")%}} # CGEL 6.3.2 II + V: verb + particle + O (ex: "She took off the label" / "She took the label off" / "I let her in on the secret")
+    | advp_vp? {vp_type}_o_prt_predcomp         adjunct_list_o_prt_predcomp{mv_suf}           {{%nt("{vp_type}_vp{mv_suf}")%}} # CGEL 6.3.2 VII: verb + O + particle + PC (ex: "This showed him up as spineless")
+    | advp_vp? {vp_type}_o_prt_that_declarative_cl adjunct_list_o_prt_that_declarative_cl{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + O + particle + that-clause (ex: "She tipped him off that the police were coming")
+    | advp_vp? {vp_type}_o_prt_bare_declarative_cl adjunct_list_o_prt_bare_declarative_cl{mv_suf} {{%nt("{vp_type}_vp{mv_suf}")%}} # verb + O + particle + bare declarative (ex: "She tipped him off the police were coming")
+# --- ditransitive verbs (two objects) ---
     | advp_vp? {vp_type}_io_do                  adjunct_list_io_do{mv_suf}                    {{%nt("{vp_type}_vp{mv_suf}")%}} # ditransitive verb (ex: "I gave you food")
     | advp_vp? {vp_type}_io_do                  adjunct_list_do_dative_to{mv_suf}             {{%nt("{vp_type}_vp{mv_suf}")%}} # ditransitive verb with dative shift (ex: "I gave food to you")
+    | advp_vp? {vp_type}_o_prt_o                adjunct_list_o_prt_o{mv_suf}                  {{%nt("{vp_type}_vp{mv_suf}")%}} # CGEL 6.3.2 III: verb + O + particle + O (ex: "I ran him off another copy")
 """
 
     if vp_type == "vbn":
@@ -870,15 +1122,24 @@ passive_cl{mv_suf} ->
 # omit vbg_cl, as one cannot combine passive with progressive aspect *The food was been eaten
 # omit vbn_cl, as one cannot combine passive with past perfect *The food was had eaten
 # omit passive_cl, as one cannot combine passive with passive *The food was been eaten
-      advp_vp? {vp_type}_o                      adjunct_list_passive_o{mv_suf}                         {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_o_predcomp             adjunct_list_passive_o_predcomp{mv_suf}                {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_intnp_to_inf_cl        adjunct_list_passive_intnp_to_inf_cl{mv_suf}           {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl{mv_suf}    {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl{mv_suf}    {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl{mv_suf}         {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl{mv_suf}       {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_io_do                  adjunct_list_passive_io_do{mv_suf}                     {{%nt("passive_cl{mv_suf}")%}}
-    | advp_vp? {vp_type}_io_do                  adjunct_list_passive_do_dative_to{mv_suf}              {{%nt("passive_cl{mv_suf}")%}}
+# --- prepositional passive (intransitive verb + stranded preposition) ---
+      advp_vp? {vp_type}                        adjunct_list_passive_pp{mv_suf}                        {{%nt("passive_cl{mv_suf}")%}} # prepositional passive (ex: "The book was referred to")
+# --- passive of transitive verbs ---
+    | advp_vp? {vp_type}_o                      adjunct_list_passive_o{mv_suf}                         {{%nt("passive_cl{mv_suf}")%}} # monotransitive passive (ex: "The apple was eaten")
+    | advp_vp? {vp_type}_o_predcomp             adjunct_list_passive_o_predcomp{mv_suf}                {{%nt("passive_cl{mv_suf}")%}} # complex-transitive passive (ex: "He was found guilty")
+    | advp_vp? {vp_type}_intnp_to_inf_cl        adjunct_list_passive_intnp_to_inf_cl{mv_suf}           {{%nt("passive_cl{mv_suf}")%}} # raised object + to-inf passive (ex: "You were asked to leave")
+    | advp_vp? {vp_type}_io_that_declarative_cl adjunct_list_passive_io_that_declarative_cl{mv_suf}    {{%nt("passive_cl{mv_suf}")%}} # IO + that-clause passive (ex: "You were told that...")
+    | advp_vp? {vp_type}_io_bare_declarative_cl adjunct_list_passive_io_bare_declarative_cl{mv_suf}    {{%nt("passive_cl{mv_suf}")%}} # IO + bare declarative passive (ex: "You were told...")
+    | advp_vp? {vp_type}_io_exclamative_cl      adjunct_list_passive_io_exclamative_cl{mv_suf}         {{%nt("passive_cl{mv_suf}")%}} # IO + exclamative passive (ex: "You were told how...")
+    | advp_vp? {vp_type}_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl{mv_suf}       {{%nt("passive_cl{mv_suf}")%}} # IO + interrogative passive (ex: "You were asked whether...")
+    | advp_vp? {vp_type}_prt_o                  adjunct_list_passive_prt_o{mv_suf}                     {{%nt("passive_cl{mv_suf}")%}} # Structure II passive (ex: "The label was taken off")
+    | advp_vp? {vp_type}_o_prt_predcomp         adjunct_list_passive_o_prt_predcomp{mv_suf}            {{%nt("passive_cl{mv_suf}")%}} # Structure VII passive (ex: "He was shown up as spineless")
+    | advp_vp? {vp_type}_o_prt_that_declarative_cl adjunct_list_passive_o_prt_that_declarative_cl{mv_suf} {{%nt("passive_cl{mv_suf}")%}} # O + particle + that-clause passive (ex: "He was tipped off that...")
+    | advp_vp? {vp_type}_o_prt_bare_declarative_cl adjunct_list_passive_o_prt_bare_declarative_cl{mv_suf} {{%nt("passive_cl{mv_suf}")%}} # O + particle + bare declarative passive (ex: "He was tipped off...")
+# --- passive of ditransitive verbs ---
+    | advp_vp? {vp_type}_io_do                  adjunct_list_passive_io_do{mv_suf}                     {{%nt("passive_cl{mv_suf}")%}} # IO promoted passive (ex: "You were given food")
+    | advp_vp? {vp_type}_io_do                  adjunct_list_passive_do_dative_to{mv_suf}              {{%nt("passive_cl{mv_suf}")%}} # DO promoted passive (ex: "Food was given to you")
+    | advp_vp? {vp_type}_o_prt_o                adjunct_list_passive_o_prt_o{mv_suf}                   {{%nt("passive_cl{mv_suf}")%}} # Structure III passive (ex: "He was run off another copy")
 
 """
     return out
@@ -1469,6 +1730,7 @@ preposition_predcomp -> %preposition_predcomp {%t("preposition_predcomp")%}
 preposition_pp ->  %preposition_pp {%t("preposition_pp")%}
 preposition_advp ->  %preposition_advp {%t("preposition_advp")%}
 preposition_bare_declarative_cl -> %preposition_bare_declarative_cl {%t("preposition_bare_declarative_cl")%}
+particle -> %particle {%t("particle")%}
 to -> %to {%t("to")%}
 s -> %s {%t("s")%}
 not -> %not {%t("not")%}
@@ -1504,6 +1766,18 @@ for vp_type in ["inf", "vbg", "vbn", "vbf_sg", "vbf_pl"]:
 {vp_type}_io_exclamative_cl -> %{vp_type}_io_exclamative_cl {{%t("{vp_type}_io_exclamative_cl")%}}
 {vp_type}_io_interrogative_cl -> %{vp_type}_io_interrogative_cl {{%t("{vp_type}_io_interrogative_cl")%}}
 {vp_type}_io_do -> %{vp_type}_io_do {{%t("{vp_type}_io_do")%}}
+{vp_type}_prt -> %{vp_type}_prt {{%t("{vp_type}_prt")%}}
+{vp_type}_prt_predcomp -> %{vp_type}_prt_predcomp {{%t("{vp_type}_prt_predcomp")%}}
+{vp_type}_prt_to_inf_cl -> %{vp_type}_prt_to_inf_cl {{%t("{vp_type}_prt_to_inf_cl")%}}
+{vp_type}_prt_vbg_cl -> %{vp_type}_prt_vbg_cl {{%t("{vp_type}_prt_vbg_cl")%}}
+{vp_type}_prt_that_declarative_cl -> %{vp_type}_prt_that_declarative_cl {{%t("{vp_type}_prt_that_declarative_cl")%}}
+{vp_type}_prt_bare_declarative_cl -> %{vp_type}_prt_bare_declarative_cl {{%t("{vp_type}_prt_bare_declarative_cl")%}}
+{vp_type}_prt_interrogative_cl -> %{vp_type}_prt_interrogative_cl {{%t("{vp_type}_prt_interrogative_cl")%}}
+{vp_type}_prt_o -> %{vp_type}_prt_o {{%t("{vp_type}_prt_o")%}}
+{vp_type}_o_prt_predcomp -> %{vp_type}_o_prt_predcomp {{%t("{vp_type}_o_prt_predcomp")%}}
+{vp_type}_o_prt_that_declarative_cl -> %{vp_type}_o_prt_that_declarative_cl {{%t("{vp_type}_o_prt_that_declarative_cl")%}}
+{vp_type}_o_prt_bare_declarative_cl -> %{vp_type}_o_prt_bare_declarative_cl {{%t("{vp_type}_o_prt_bare_declarative_cl")%}}
+{vp_type}_o_prt_o -> %{vp_type}_o_prt_o {{%t("{vp_type}_o_prt_o")%}}
 """
 
 # auxiliary verb terminals (only for finite verbs)

@@ -499,6 +499,10 @@ adjunct_list_passive_do_dative_to ->
     adjunct_list_dative_to {%nt("adjunct_list_passive_do_dative_to")%}
 
 
+adjunct_list_passive_pp ->
+    preposition_np adjunct_list {%nt("adjunct_list_passive_pp")%}
+
+
 
 # modals can only appear in the position of a finite verb (they cannot be conjugated as an infinitive or a participle *to can)
 vbf_sg_vp -> advp_vp? modal bare_inf_cl {%nt("vbf_sg_vp")%}
@@ -945,6 +949,9 @@ passive_cl ->
     | advp_vp? vbn_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl       {%nt("passive_cl")%}
     | advp_vp? vbn_io_do                  adjunct_list_passive_io_do                     {%nt("passive_cl")%}
     | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to              {%nt("passive_cl")%}
+    # Prepositional passive: The book was referred to
+    # Any intransitive verb can combine with a stranded preposition (post-filter for validity)
+    | advp_vp? vbn                        adjunct_list_passive_pp                        {%nt("passive_cl")%}
 
 adjunct_list_minus_np ->
     adjunct adjunct_list_minus_np {%nt("adjunct_list_minus_np")%}
@@ -1083,6 +1090,10 @@ adjunct_list_passive_io_do_minus_np ->
 
 adjunct_list_passive_do_dative_to_minus_np ->
     adjunct_list_dative_to_minus_np {%nt("adjunct_list_passive_do_dative_to_minus_np")%}
+
+
+adjunct_list_passive_pp_minus_np ->
+    preposition_np adjunct_list_minus_np {%nt("adjunct_list_passive_pp_minus_np")%}
 
 
 
@@ -1531,6 +1542,9 @@ passive_cl_minus_np ->
     | advp_vp? vbn_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl_minus_np       {%nt("passive_cl_minus_np")%}
     | advp_vp? vbn_io_do                  adjunct_list_passive_io_do_minus_np                     {%nt("passive_cl_minus_np")%}
     | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to_minus_np              {%nt("passive_cl_minus_np")%}
+    # Prepositional passive: The book was referred to
+    # Any intransitive verb can combine with a stranded preposition (post-filter for validity)
+    | advp_vp? vbn                        adjunct_list_passive_pp_minus_np                        {%nt("passive_cl_minus_np")%}
 
 adjunct_list_minus_adjp ->
     adjunct adjunct_list_minus_adjp {%nt("adjunct_list_minus_adjp")%}
@@ -1660,6 +1674,8 @@ adjunct_list_passive_io_interrogative_cl_minus_adjp ->
 adjunct_list_passive_io_do_minus_adjp -> impossible
 
 adjunct_list_passive_do_dative_to_minus_adjp -> impossible
+
+adjunct_list_passive_pp_minus_adjp -> impossible
 
 
 # modals can only appear in the position of a finite verb (they cannot be conjugated as an infinitive or a participle *to can)
@@ -2107,6 +2123,9 @@ passive_cl_minus_adjp ->
     | advp_vp? vbn_io_interrogative_cl    adjunct_list_passive_io_interrogative_cl_minus_adjp       {%nt("passive_cl_minus_adjp")%}
     | advp_vp? vbn_io_do                  adjunct_list_passive_io_do_minus_adjp                     {%nt("passive_cl_minus_adjp")%}
     | advp_vp? vbn_io_do                  adjunct_list_passive_do_dative_to_minus_adjp              {%nt("passive_cl_minus_adjp")%}
+    # Prepositional passive: The book was referred to
+    # Any intransitive verb can combine with a stranded preposition (post-filter for validity)
+    | advp_vp? vbn                        adjunct_list_passive_pp_minus_adjp                        {%nt("passive_cl_minus_adjp")%}
 
 
 # infintive clauses

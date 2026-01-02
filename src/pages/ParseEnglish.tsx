@@ -59,6 +59,7 @@ const INITIAL_EXAMPLE_SENTENCES = [
     "The book that I was recommended by my professor turned out to be excellent.",
     "Which student was the scholarship awarded to?",
     "It was Mary who was chosen by the committee.",
+    "The issue was talked about at length.",
 ];
 
 function ParseEnglishWidget() {
