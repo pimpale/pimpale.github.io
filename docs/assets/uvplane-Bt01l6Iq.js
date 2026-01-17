@@ -1,0 +1,1 @@
+import{f as r}from"./vec2-BNC97LRR.js";function h(n,o){if(!n)throw new Error(o)}function i(n,o){h(n>0),h(o>0);let t=[];for(let s=0;s<n;s++){const f=s/n,p=(s+1)/n;for(let u=0;u<o;u++){const a=u/o,e=(u+1)/o;t.push(r(f,a)),t.push(r(p,a)),t.push(r(f,e)),t.push(r(p,a)),t.push(r(p,e)),t.push(r(f,e))}}return t}export{h as a,i as g};

@@ -1,4 +1,4 @@
-import"./modulepreload-polyfill-B5Qt9EMX.js";import{R as o,j as t,c as f}from"./client-DdPLZftV.js";import{i as g,j as m,u as _,l as v,m as T,a as l,b as i,c as E}from"./webgl-BxJ6eXGr.js";import{c as u}from"./math-BinNTQH2.js";import{c as b}from"./noise-BQ__T8YF.js";import{g as R}from"./uvplane-9GMPwJ0d.js";import{T as A}from"./camera-BBAdUkak.js";import{C as y}from"./canvas-CKFiyhQ_.js";import"./bootstrap-Ba_QWTmA.js";import"./mod-DNNc6KTn.js";import"./vec2-6LmhsPgH.js";import"./quat-DJbwnImp.js";const a=`#version 300 es
+import"./modulepreload-polyfill-B5Qt9EMX.js";import{R as o,j as t,c as f}from"./client-DdPLZftV.js";import{i as g,j as m,u as _,l as v,m as T,a as l,b as i,c as E}from"./webgl-BxJ6eXGr.js";import{c as u}from"./math-BinNTQH2.js";import{c as b}from"./noise-BQ__T8YF.js";import{g as R}from"./uvplane-Bt01l6Iq.js";import{T as A}from"./camera-CY7KAysO.js";import{C as y}from"./canvas-CKFiyhQ_.js";import"./bootstrap-Ba_QWTmA.js";import"./mod-DNNc6KTn.js";import"./vec2-BNC97LRR.js";import"./quat-BTiemoqx.js";const a=`#version 300 es
 in vec2 c_position;
 out vec2 v_texCoord;
 
