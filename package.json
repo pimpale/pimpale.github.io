@@ -6,15 +6,15 @@
   "dependencies": {
     "@fontsource/literata": "^5.2.8",
     "@fontsource/permanent-marker": "^5.2.7",
-    "@loaders.gl/core": "^4.3.4",
-    "@loaders.gl/gltf": "^4.3.4",
+    "@loaders.gl/core": "^4.4.1",
+    "@loaders.gl/gltf": "^4.4.1",
     "@matejmazur/react-katex": "^3.1.3",
     "@pimpale/cgel": "github:pimpale/cgel",
     "@popperjs/core": "^2.11.8",
     "@types/chroma-js": "^3.1.2",
-    "@types/color-convert": "^2.0.4",
+    "@types/color-convert": "^3.0.1",
     "@types/geojson": "^7946.0.16",
-    "@types/react": "^19.2.8",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-plotly.js": "^2.6.4",
     "@types/react-syntax-highlighter": "^15.5.13",
@@ -23,9 +23,9 @@
     "date-fns": "^4.1.0",
     "gl-matrix": "^3.4.4",
     "immutability-helper": "^3.1.1",
-    "katex": "^0.16.27",
+    "katex": "^0.16.45",
     "nearley": "^2.20.1",
-    "onnxruntime-web": "^1.23.2",
+    "onnxruntime-web": "^1.24.3",
     "open-simplex-noise": "^2.5.0",
     "outdent": "^0.8.0",
     "react": "^19",
@@ -36,9 +36,9 @@
     "react-dom": "^19",
     "react-plotly.js": "^2.6.0",
     "react-responsive": "^10.0.1",
-    "react-syntax-highlighter": "^16.1.0",
-    "sass": "^1.97.2",
-    "typescript": "^5.9.3"
+    "react-syntax-highlighter": "^16.1.1",
+    "sass": "^1.99.0",
+    "typescript": "^6.0.2"
   },
   "scripts": {
     "dev": "vite",
@@ -63,10 +63,10 @@
   "devDependencies": {
     "@types/katex": "^0.16.8",
     "@types/nearley": "^2.11.5",
-    "@vitejs/plugin-react": "^5.1.2",
-    "glob": "^13.0.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "glob": "^13.0.6",
     "path": "^0.12.7",
-    "vite": "^7.3.1",
-    "vite-plugin-static-copy": "^3.1.4"
+    "vite": "^8.0.8",
+    "vite-plugin-static-copy": "^4.0.1"
   }
 }

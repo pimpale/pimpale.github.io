@@ -1,0 +1,1 @@
+async function e(e){return await(await fetch(e)).text()}export{e as t};
