@@ -1,0 +1,17 @@
+diff --git a/source/blender/makesdna/DNA_node_types.h b/source/blender/makesdna/DNA_node_types.h
+index bc6ead068ab..df6be025e81 100644
+--- a/source/blender/makesdna/DNA_node_types.h
++++ b/source/blender/makesdna/DNA_node_types.h
+@@ -3154,6 +3154,12 @@ struct NodeGeometryMergeByDistance {
+   uint8_t mode = 0;
+ };
+
++struct NodeGeometryPizza {
++  DNA_DEFINE_CXX_METHODS(NodeGeometryPizza)
++
++  uint8_t olive_count = 0;
++};
++
+ struct NodeGeometryMeshLine {
+   DNA_DEFINE_CXX_METHODS(NodeGeometryMeshLine)
+

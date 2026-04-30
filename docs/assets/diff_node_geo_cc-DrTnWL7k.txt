@@ -1,0 +1,12 @@
+diff --git a/source/blender/nodes/geometry/CMakeLists.txt b/source/blender/nodes/geometry/CMakeLists.txt
+index b2e96e03acf..df5d21da680 100644
+--- a/source/blender/nodes/geometry/CMakeLists.txt
++++ b/source/blender/nodes/geometry/CMakeLists.txt
+@@ -203,6 +203,7 @@ set(SRC
+   nodes/node_geo_mouse_position.cc
+   nodes/node_geo_object_info.cc
+   nodes/node_geo_offset_point_in_curve.cc
++  nodes/node_geo_pizza.cc
+   nodes/node_geo_points.cc
+   nodes/node_geo_points_to_curves.cc
+   nodes/node_geo_points_to_sdf_grid.cc

@@ -1,0 +1,12 @@
+diff --git a/source/blender/makesrna/intern/rna_nodetree.cc b/source/blender/makesrna/intern/rna_nodetree.cc
+index eff5df1289e..97c2cbda949 100644
+--- a/source/blender/makesrna/intern/rna_nodetree.cc
++++ b/source/blender/makesrna/intern/rna_nodetree.cc
+@@ -10544,6 +10557,7 @@ static void rna_def_nodes(BlenderRNA *brna)
+   define("GeometryNode", "GeometryNodeObjectInfo");
+   define("GeometryNode", "GeometryNodeOffsetCornerInFace");
+   define("GeometryNode", "GeometryNodeOffsetPointInCurve");
++  define("GeometryNode", "GeometryNodePizza", def_geo_pizza);
+   define("GeometryNode", "GeometryNodePoints");
+   define("GeometryNode", "GeometryNodePointsOfCurve");
+   define("GeometryNode", "GeometryNodePointsToCurves");

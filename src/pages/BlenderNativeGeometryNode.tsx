@@ -6,8 +6,18 @@ import ArticleLayout from '../components/ArticleLayout';
 
 import AsideCard from '../components/AsideCard';
 
+import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
+import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 import GitDiffUrl from "../assets/blendernativegeometrynode/gitdiff.txt?url";
+import DiffCMakeUrl from "../assets/blendernativegeometrynode/diff_node_geo_cc.txt?url";
+import DiffDnaUrl from "../assets/blendernativegeometrynode/diff_dna_node_types.txt?url";
+import DiffRnaDefUrl from "../assets/blendernativegeometrynode/diff_rna_nodetree_def.txt?url";
+import DiffRnaRegisterUrl from "../assets/blendernativegeometrynode/diff_rna_nodetree_register.txt?url";
+import DiffMenuUrl from "../assets/blendernativegeometrynode/diff_node_add_menu.txt?url";
+import DiffPizzaUrl from "../assets/blendernativegeometrynode/diff_node_geo_pizza.txt?url";
 import ResultImgUrl from "../assets/blendernativegeometrynode/result.png"
+import PizzaNodeImgUrl from "../assets/blendernativegeometrynode/pizza_node.png"
 
 const BlenderNativeGeometryNodePage = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>
@@ -85,7 +95,9 @@ const BlenderNativeGeometryNodePage = () => <ArticleLayout>{
         Unfortunately, it's out of date, having been written for Blender 3.1. We are now on Blender 5.2, and many things have changed.
         This article will discuss the necessary steps to add a new node in Blender 5.2.
       </p>
-
+      <div className='d-flex justify-content-center'>
+        <img src={PizzaNodeImgUrl} alt="Rendering of the Pizza with Selection and Pizza Set" />
+      </div>
       <h4>Overview of Steps</h4>
       <p>
         There are 5 places where you need to add or change code to add a new Node.
@@ -127,6 +139,45 @@ const BlenderNativeGeometryNodePage = () => <ArticleLayout>{
         <li>No need to edit <code>source/blender/blenkernel/intern/node.cc</code> or <code>source/blender/nodes/NOD_geometry.h</code> to register the geometry node. It will be registered automatically if you add the <code>NOD_REGISTER_NODE(node_register)</code> macro in the node geometry file.</li>
         <li>No need to edit <code>source/blender/blenkernel/BKE_node.h</code> (which turned into <code>/source/blender/blenkernel/BKE_node_legacy_types.hh</code>) to define a node ID. Node ids are legacy and not needed for new geometry nodes.</li>
       </ul>
+      <h4>In Depth</h4>
+      <h4><code>source/blender/nodes/geometry/CMakeLists.txt</code></h4>
+      <p>
+        Register the new <code>.cc</code> source file with the build so it gets compiled into Blender.
+      </p>
+      <CodeBlock lang="diff" url={DiffCMakeUrl} />
+
+      <h4><code>source/blender/makesdna/DNA_node_types.h</code></h4>
+      <p>
+        Declare the storage struct that holds the node's persistent properties (here, the olive count) on disk and in memory.
+      </p>
+      <CodeBlock lang="diff" url={DiffDnaUrl} />
+
+      <h4><code>source/blender/makesrna/intern/rna_nodetree.cc</code></h4>
+      <p>
+        Define a <code>def_geo_pizza</code> function that exposes the storage struct's fields to RNA, so they're accessible from Python and bindable to UI controls.
+      </p>
+      <CodeBlock lang="diff" url={DiffRnaDefUrl} />
+
+      <p>
+        Register the node type itself inside <code>rna_def_nodes</code>, passing <code>def_geo_pizza</code> so the property definitions get attached.
+      </p>
+      <CodeBlock lang="diff" url={DiffRnaRegisterUrl} />
+
+      <h4><code>scripts/startup/bl_ui/node_add_menu_geometry.py</code></h4>
+      <p>
+        Add the node to the geometry-nodes Add menu so users can actually find and insert it.
+      </p>
+      <CodeBlock lang="diff" url={DiffMenuUrl} />
+
+      <h4><code>source/blender/nodes/geometry/nodes/node_geo_pizza.cc</code></h4>
+      <p>
+        The actual node implementation: socket declaration, UI layout, and the mesh-generation code that runs when the node executes. Collapsed by default since it's long.
+      </p>
+      <details className="mx-5 mb-3">
+        <summary>Show diff</summary>
+        <CodeBlock lang="diff" url={DiffPizzaUrl} />
+      </details>
+
       <h4>Results</h4>
       <div className='d-flex justify-content-center'>
         <img src={ResultImgUrl} alt="Rendering of the Pizza with Selection and Pizza Set" />
@@ -134,6 +185,18 @@ const BlenderNativeGeometryNodePage = () => <ArticleLayout>{
 
 
       <h4>Full Git Diff</h4>
+      <p>
+        Download the patch and apply it to a Blender source checkout with <code>git apply</code>:
+      </p>
+      <p>
+        <a className="btn btn-primary" href={GitDiffUrl} download="blender_pizza_node.patch">Download Patch</a>
+      </p>
+      <SyntaxHighligher className="mx-5 mb-5" language="bash" style={a11yDark}>
+        {"git apply blender_pizza_node.patch"}
+      </SyntaxHighligher>
+      <p>
+        The full patch is shown below for convenience:
+      </p>
       <CodeBlock lang="diff" url={GitDiffUrl} />
     </Section>
   </>
