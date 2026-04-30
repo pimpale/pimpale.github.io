@@ -125,18 +125,34 @@ export const articleData: Map<string, Article> = new Map([
   }],
   ["logos-post", {
     name: "The Logos",
-    incipit: "A meditation on language, reason, and the shared lineage of humans and large language models.",
+    incipit: "Fiction written from the perspective of an LLM.",
     url: '../logospost.html',
     published: parse("26 May 2025", "d MMM y", new Date()),
     listed: true,
     fiction: true,
   }],
-  ["celshading", {
-    name: "Cel Shading: Exploring Edge Coloring Algorithms",
-    incipit: "We demo the differences between several different cel-shading and edge coloring algorithms.",
-    url: '../celshading.html',
-    published: parse("20 Dec 2025", "d MMM y", new Date()),
+  // ["celshading", {
+  //   name: "Cel Shading: Exploring Edge Coloring Algorithms",
+  //   incipit: "We demo the differences between several different cel-shading and edge coloring algorithms.",
+  //   url: '../celshading.html',
+  //   published: parse("20 Dec 2025", "d MMM y", new Date()),
+  //   listed: true,
+  //   fiction: false,
+  // }]
+  ["blender-native-geometry-node", {
+    name: "Blender Native Geometry Node",
+    incipit: "Adding a new Native Geometry Node to Blender in version 5.2",
+    url: '../blender_native_geometry_node.html',
+    published: parse("29 Apr 2026", "d MMM y", new Date()),
     listed: true,
     fiction: false,
-  }]
+  }],
+    ["paleo-hebrew-font", {
+    name: "Paleo Hebrew Font",
+    incipit: "Visualizing different fonts for Phonecian/Paleo Hebrew",
+    url: '../paleohebrewfont.html',
+    published: parse("29 Apr 2026", "d MMM y", new Date()),
+    listed: true,
+    fiction: false,
+  }],
 ]);

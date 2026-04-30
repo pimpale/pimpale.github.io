@@ -39,6 +39,16 @@ $container-max-widths: (
 );
 
 
+@font-face {
+  font-family: 'Noto Sans Phoenician Local';
+  src: url('../assets/paleohebrewfonts/NotoSansPhoenicianRegular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
 @import "@fontsource/literata/latin";
 @import "@fontsource/permanent-marker/latin";
 

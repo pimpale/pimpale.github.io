@@ -1,1 +1,0 @@
-var e=`/assets/lasagna-DCpdR4Dm.png`;export{e as t};

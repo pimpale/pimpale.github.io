@@ -3,15 +3,10 @@ import ArticleLayout from '../components/ArticleLayout';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 
-import { Async } from 'react-async';
-import { fetchText } from '../utils/load';
-
 import Tex from '@matejmazur/react-katex';
 
 import AsideCard from '../components/AsideCard';
 
-import { Prism as SyntaxHighligher } from 'react-syntax-highlighter';
-import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import WebGL2SetupDemo from '../components/WebGL2SetupDemo';
 import WebGL2HeatEqnDemo from '../components/WebGL2HeatEqnDemo';
@@ -32,32 +27,8 @@ import PingPongImgUrl from '../assets/fluid1/pingpong.png';
 
 import { ArticleLink } from '../components/Articles';
 import { articleData } from '../components/ArticleData';
+import { CodeBlock } from '../components/CodeBlock';
 
-type CodeBlockProps = {
-  url: string,
-  lang: string
-}
-
-function CodeBlock(props: CodeBlockProps) {
-  return <Async promise={fetchText(props.url)}>
-    <Async.Pending>
-      <div className="spinner-border" role="status" />
-    </Async.Pending>
-    <Async.Fulfilled<string>>{code =>
-      <SyntaxHighligher
-        className="mx-5 mb-5"
-        language={props.lang}
-        showLineNumbers
-        style={a11yDark}
-        children={code}
-      />
-    }</Async.Fulfilled>
-    <Async.Rejected>
-      {/* TODO: put error here */}
-      <div className="spinner-border" role="status" />
-    </Async.Rejected>
-  </Async>
-}
 
 const Fluid1 = () => <ArticleLayout>{
   ({ Citation, CitationBank }) => <>

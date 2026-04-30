@@ -1,0 +1,307 @@
+diff --git a/scripts/startup/bl_ui/node_add_menu_geometry.py b/scripts/startup/bl_ui/node_add_menu_geometry.py
+index ef9ab262b02..77c9f83c835 100644
+--- a/scripts/startup/bl_ui/node_add_menu_geometry.py
++++ b/scripts/startup/bl_ui/node_add_menu_geometry.py
+@@ -567,6 +567,7 @@ class NODE_MT_gn_mesh_primitives_base(node_add_menu.NodeMenu):
+         self.node_operator(layout, "GeometryNodeMeshCircle")
+         self.node_operator(layout, "GeometryNodeMeshLine")
+         self.node_operator(layout, "GeometryNodeMeshUVSphere")
++        self.node_operator(layout, "GeometryNodePizza")
+ 
+         self.draw_assets_for_catalog(layout, self.menu_path)
+ 
+diff --git a/source/blender/makesdna/DNA_node_types.h b/source/blender/makesdna/DNA_node_types.h
+index bc6ead068ab..df6be025e81 100644
+--- a/source/blender/makesdna/DNA_node_types.h
++++ b/source/blender/makesdna/DNA_node_types.h
+@@ -3154,6 +3154,12 @@ struct NodeGeometryMergeByDistance {
+   uint8_t mode = 0;
+ };
+ 
++struct NodeGeometryPizza {
++  DNA_DEFINE_CXX_METHODS(NodeGeometryPizza)
++
++  uint8_t olive_count = 0;
++};
++
+ struct NodeGeometryMeshLine {
+   DNA_DEFINE_CXX_METHODS(NodeGeometryMeshLine)
+ 
+diff --git a/source/blender/makesrna/intern/rna_nodetree.cc b/source/blender/makesrna/intern/rna_nodetree.cc
+index eff5df1289e..97c2cbda949 100644
+--- a/source/blender/makesrna/intern/rna_nodetree.cc
++++ b/source/blender/makesrna/intern/rna_nodetree.cc
+@@ -7288,6 +7288,19 @@ static void def_geo_curve_sample(BlenderRNA * /*brna*/, StructRNA *srna)
+   RNA_def_property_update(prop, NC_NODE | NA_EDITED, "rna_Node_socket_update");
+ }
+ 
++static void def_geo_pizza(BlenderRNA * /*brna*/, StructRNA *srna)
++{
++  PropertyRNA *prop;
++
++  RNA_def_struct_sdna_from(srna, "NodeGeometryPizza", "storage");
++
++  prop = RNA_def_property(srna, "olive_count", PROP_INT, PROP_NONE);
++  RNA_def_property_int_sdna(prop, nullptr, "olive_count");
++  RNA_def_property_range(prop, 0, 255);
++  RNA_def_property_ui_text(prop, "Olive Count", "Number of olives topping the pizza");
++  RNA_def_property_update(prop, NC_NODE | NA_EDITED, "rna_Node_update");
++}
++
+ static void def_fn_random_value(BlenderRNA * /*brna*/, StructRNA *srna)
+ {
+   PropertyRNA *prop;
+@@ -10544,6 +10557,7 @@ static void rna_def_nodes(BlenderRNA *brna)
+   define("GeometryNode", "GeometryNodeObjectInfo");
+   define("GeometryNode", "GeometryNodeOffsetCornerInFace");
+   define("GeometryNode", "GeometryNodeOffsetPointInCurve");
++  define("GeometryNode", "GeometryNodePizza", def_geo_pizza);
+   define("GeometryNode", "GeometryNodePoints");
+   define("GeometryNode", "GeometryNodePointsOfCurve");
+   define("GeometryNode", "GeometryNodePointsToCurves");
+diff --git a/source/blender/nodes/geometry/CMakeLists.txt b/source/blender/nodes/geometry/CMakeLists.txt
+index b2e96e03acf..df5d21da680 100644
+--- a/source/blender/nodes/geometry/CMakeLists.txt
++++ b/source/blender/nodes/geometry/CMakeLists.txt
+@@ -203,6 +203,7 @@ set(SRC
+   nodes/node_geo_mouse_position.cc
+   nodes/node_geo_object_info.cc
+   nodes/node_geo_offset_point_in_curve.cc
++  nodes/node_geo_pizza.cc
+   nodes/node_geo_points.cc
+   nodes/node_geo_points_to_curves.cc
+   nodes/node_geo_points_to_sdf_grid.cc
+diff --git a/source/blender/nodes/geometry/nodes/node_geo_pizza.cc b/source/blender/nodes/geometry/nodes/node_geo_pizza.cc
+new file mode 100644
+index 00000000000..564ca136f32
+--- /dev/null
++++ b/source/blender/nodes/geometry/nodes/node_geo_pizza.cc
+@@ -0,0 +1,228 @@
++/* SPDX-FileCopyrightText: 2026 Blender Authors
++ *
++ * SPDX-License-Identifier: GPL-2.0-or-later */
++
++#include "BKE_attribute.hh"
++#include "BKE_material.hh"
++#include "BKE_mesh.hh"
++
++#include "UI_interface_layout.hh"
++#include "UI_resources.hh"
++
++#include "node_geometry_util.hh"
++
++namespace blender::nodes::node_geo_pizza_cc {
++
++NODE_STORAGE_FUNCS(NodeGeometryPizza)
++
++static constexpr int base_segments = 32;
++
++static void node_declare(NodeDeclarationBuilder &b)
++{
++  b.add_input<decl::Float>("Radius"_ustr)
++      .default_value(1.0f)
++      .min(0.0f)
++      .subtype(PROP_DISTANCE)
++      .description("Size of the pizza");
++  b.add_output<decl::Geometry>("Mesh"_ustr);
++  b.add_output<decl::Bool>("Base"_ustr).field_on_all();
++  b.add_output<decl::Bool>("Olives"_ustr).field_on_all();
++}
++
++static void node_init(bNodeTree * /*tree*/, bNode *node)
++{
++  NodeGeometryPizza *data = MEM_new<NodeGeometryPizza>(__func__);
++  data->olive_count = 5;
++  node->storage = data;
++}
++
++static void node_layout(ui::Layout &layout, bContext * /*C*/, PointerRNA *ptr)
++{
++  layout.use_property_split_set(true);
++  layout.use_property_decorate_set(false);
++  layout.prop(ptr, "olive_count", UI_ITEM_NONE, std::nullopt, ICON_NONE);
++}
++
++static Mesh *create_pizza_mesh(const int olive_count,
++                               const float radius,
++                               IndexRange &r_base_faces,
++                               IndexRange &r_olive_faces)
++{
++  /* Base: one center vertex plus a ring of `base_segments` rim vertices, joined by spokes
++   * to form `base_segments` triangles. Each olive: a small quad (4 verts, 4 edges, 1 face). */
++  const int base_verts_num = 1 + base_segments;
++  const int base_edges_num = 2 * base_segments;
++  const int base_faces_num = base_segments;
++  const int base_corners_num = 3 * base_segments;
++
++  const int olive_verts_num = olive_count * 4;
++  const int olive_edges_num = olive_count * 4;
++  const int olive_faces_num = olive_count;
++  const int olive_corners_num = olive_count * 4;
++
++  const int verts_num = base_verts_num + olive_verts_num;
++  const int edges_num = base_edges_num + olive_edges_num;
++  const int faces_num = base_faces_num + olive_faces_num;
++  const int corners_num = base_corners_num + olive_corners_num;
++
++  Mesh *mesh = BKE_mesh_new_nomain(verts_num, edges_num, faces_num, corners_num);
++  MutableSpan<float3> positions = mesh->vert_positions_for_write();
++  MutableSpan<int2> edges = mesh->edges_for_write();
++  MutableSpan<int> face_offsets = mesh->face_offsets_for_write();
++  MutableSpan<int> corner_verts = mesh->corner_verts_for_write();
++  MutableSpan<int> corner_edges = mesh->corner_edges_for_write();
++
++  /* --- Base disc --- */
++  positions[0] = float3(0.0f, 0.0f, 0.0f);
++  for (const int i : IndexRange(base_segments)) {
++    const float angle = 2.0f * float(M_PI) * float(i) / float(base_segments);
++    positions[1 + i] = float3(std::cos(angle) * radius, std::sin(angle) * radius, 0.0f);
++  }
++
++  /* Rim edges: ring around the perimeter. */
++  for (const int i : IndexRange(base_segments)) {
++    const int a = 1 + i;
++    const int b = 1 + (i + 1) % base_segments;
++    edges[i] = int2(a, b);
++  }
++  /* Spoke edges: from center to each rim vert. */
++  for (const int i : IndexRange(base_segments)) {
++    edges[base_segments + i] = int2(0, 1 + i);
++  }
++
++  /* Base triangles, each with 3 corners: center, rim[i], rim[i+1]. */
++  for (const int i : IndexRange(base_segments)) {
++    const int corner = i * 3;
++    face_offsets[i] = corner;
++
++    const int rim_a = 1 + i;
++    const int rim_b = 1 + (i + 1) % base_segments;
++    const int spoke_a = base_segments + i;
++    const int spoke_b = base_segments + (i + 1) % base_segments;
++    const int rim_edge = i;
++
++    corner_verts[corner + 0] = 0;
++    corner_verts[corner + 1] = rim_a;
++    corner_verts[corner + 2] = rim_b;
++
++    corner_edges[corner + 0] = spoke_a;
++    corner_edges[corner + 1] = rim_edge;
++    corner_edges[corner + 2] = spoke_b;
++  }
++
++  /* --- Olives --- */
++  const float olive_ring_radius = radius * 0.6f;
++  const float olive_size = std::min(radius * 0.05f, olive_ring_radius * 0.5f);
++  /* Lift olives slightly above the base to avoid z-fighting with the disc. */
++  const float olive_z = radius * 0.001f;
++  const int olive_vert_start = base_verts_num;
++  const int olive_edge_start = base_edges_num;
++  const int olive_face_start = base_faces_num;
++  const int olive_corner_start = base_corners_num;
++
++  for (const int i : IndexRange(olive_count)) {
++    const float angle = 2.0f * float(M_PI) * float(i) / float(std::max(olive_count, 1));
++    const float cx = std::cos(angle) * olive_ring_radius;
++    const float cy = std::sin(angle) * olive_ring_radius;
++
++    const int v0 = olive_vert_start + i * 4 + 0;
++    const int v1 = olive_vert_start + i * 4 + 1;
++    const int v2 = olive_vert_start + i * 4 + 2;
++    const int v3 = olive_vert_start + i * 4 + 3;
++    positions[v0] = float3(cx - olive_size, cy - olive_size, olive_z);
++    positions[v1] = float3(cx + olive_size, cy - olive_size, olive_z);
++    positions[v2] = float3(cx + olive_size, cy + olive_size, olive_z);
++    positions[v3] = float3(cx - olive_size, cy + olive_size, olive_z);
++
++    const int e0 = olive_edge_start + i * 4 + 0;
++    const int e1 = olive_edge_start + i * 4 + 1;
++    const int e2 = olive_edge_start + i * 4 + 2;
++    const int e3 = olive_edge_start + i * 4 + 3;
++    edges[e0] = int2(v0, v1);
++    edges[e1] = int2(v1, v2);
++    edges[e2] = int2(v2, v3);
++    edges[e3] = int2(v3, v0);
++
++    const int corner = olive_corner_start + i * 4;
++    face_offsets[olive_face_start + i] = corner;
++    corner_verts[corner + 0] = v0;
++    corner_verts[corner + 1] = v1;
++    corner_verts[corner + 2] = v2;
++    corner_verts[corner + 3] = v3;
++    corner_edges[corner + 0] = e0;
++    corner_edges[corner + 1] = e1;
++    corner_edges[corner + 2] = e2;
++    corner_edges[corner + 3] = e3;
++  }
++
++  /* `BKE_mesh_new_nomain` leaves the trailing offset value uninitialized. */
++  face_offsets[faces_num] = corners_num;
++
++  mesh->tag_loose_verts_none();
++  mesh->tag_loose_edges_none();
++  mesh->tag_overlapping_none();
++  mesh->bounds_set_eager(
++      {float3(-radius, -radius, 0.0f), float3(radius, radius, radius * 0.001f)});
++
++  r_base_faces = IndexRange(0, base_faces_num);
++  r_olive_faces = IndexRange(base_faces_num, olive_faces_num);
++  return mesh;
++}
++
++static void write_face_selection(Mesh &mesh,
++                                 const StringRef attribute_id,
++                                 const IndexRange selected_faces)
++{
++  bke::SpanAttributeWriter<bool> attribute =
++      mesh.attributes_for_write().lookup_or_add_for_write_only_span<bool>(
++          attribute_id, bke::AttrDomain::Face);
++  attribute.span.fill(false);
++  attribute.span.slice(selected_faces).fill(true);
++  attribute.finish();
++}
++
++static void node_geo_exec(GeoNodeExecParams params)
++{
++  const NodeGeometryPizza &storage = node_storage(params.node());
++  const int olive_count = storage.olive_count;
++  const float radius = params.extract_input<float>("Radius"_ustr);
++
++  IndexRange base_faces;
++  IndexRange olive_faces;
++  Mesh *mesh = create_pizza_mesh(olive_count, radius, base_faces, olive_faces);
++  BKE_id_material_eval_ensure_default_slot(&mesh->id);
++
++  if (std::optional<std::string> base_id = params.get_output_anonymous_attribute_id_if_needed(
++          "Base"_ustr))
++  {
++    write_face_selection(*mesh, *base_id, base_faces);
++  }
++  if (std::optional<std::string> olives_id = params.get_output_anonymous_attribute_id_if_needed(
++          "Olives"_ustr))
++  {
++    write_face_selection(*mesh, *olives_id, olive_faces);
++  }
++
++  params.set_output("Mesh"_ustr, GeometrySet::from_mesh(mesh));
++}
++
++static void node_register()
++{
++  static bke::bNodeType ntype;
++
++  geo_node_type_base(&ntype, "GeometryNodePizza"_ustr);
++  ntype.ui_name = "Pizza";
++  ntype.ui_description = "Generate a pizza-shaped mesh with a configurable number of olives";
++  ntype.enum_name_legacy = "PIZZA";
++  ntype.nclass = NODE_CLASS_GEOMETRY;
++  ntype.declare = node_declare;
++  ntype.initfunc = node_init;
++  bke::node_type_storage(
++      ntype, "NodeGeometryPizza", node_free_standard_storage, node_copy_standard_storage);
++  ntype.geometry_node_execute = node_geo_exec;
++  ntype.draw_buttons = node_layout;
++  bke::node_register_type(ntype);
++}
++NOD_REGISTER_NODE(node_register)
++
++}  // namespace blender::nodes::node_geo_pizza_cc
