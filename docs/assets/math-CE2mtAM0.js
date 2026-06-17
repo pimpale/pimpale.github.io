@@ -1,0 +1,1 @@
+function e(e,t){return(e%t+t)%t}function t(e,t,n){return Math.max(Math.min(e,n),t)}function n(e){let t=Math.max(...e),n=e.map(e=>Math.exp(e-t)),r=n.reduce((e,t)=>e+t);return n.map(e=>e/r)}export{e as n,n as r,t};
