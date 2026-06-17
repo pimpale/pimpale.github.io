@@ -1,1 +1,0 @@
-var e=class{constructor(e){this.visiblilityCache=!1,this.observer=new IntersectionObserver((e,t)=>this.callback(e[0].isIntersecting),{}),this.observer.observe(e)}callback(e){this.visiblilityCache=e}isVisible(){return this.visiblilityCache}cleanup(){this.observer.disconnect()}};export{e as t};

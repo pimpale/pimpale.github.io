@@ -13,7 +13,7 @@ const TRANSLITERATION: Record<string, string> = {
     'h': '\u{10904}', // HE
     'w': '\u{10905}', // WAU
     'z': '\u{10906}', // ZAYIN
-    'H': '\u{10907}', // HET
+    'x': '\u{10907}', // HET
     'T': '\u{10908}', // TET
     'y': '\u{10909}', // YOD
     'k': '\u{1090A}', // KAF
@@ -38,20 +38,43 @@ const TRANSLITERATION: Record<string, string> = {
     '1': '\u0307', // COMBINING DOT ABOVE
     '2': '\u0308', // COMBINING DIAERESIS
     '3': '\u1AB4', // COMBINING TRIPLE DOT
-    '4': '\u064E', // ARABIC FATHA
-    '5': '\u0650', // ARABIC KASRA
-    '6': '\u064F', // ARABIC DAMMA
-    '7': '\u05B7', // HEBREW PATACH
-    '8': '\u05B4', // HEBREW HIRIQ
-    '9': '\u05BB', // HEBREW QUBUTS
+    '1a': '\u064E', // ARABIC FATHA
+    '2a': '\u0650', // ARABIC KASRA
+    '3a': '\u064F', // ARABIC DAMMA
+    '1h': '\u05B7', // HEBREW PATACH
+    '2h': '\u05B4', // HEBREW HIRIQ
+    '3h': '\u05BB', // HEBREW QUBUTS
+    'v': '\u030C', // COMBINING CARON
+    '^': '\u0302', // COMBINING CIRCUMFLEX ACCENT
+    '_': '\u0331', // COMBINING MACRON BELOW
     '|': '\u{1091F}', // PHOENICIAN WORD SEPARATOR
     '-': '\u0304', // COMBINING MACRON
 };
 
+// Longest matching key length (so multi-char keys like "1a" win over "1").
+const MAX_KEY_LEN = Math.max(...Object.keys(TRANSLITERATION).map((k) => k.length));
+
 function transliterate(input: string): string {
-    return Array.from(input)
-        .map((ch) => TRANSLITERATION[ch] ?? ch)
-        .join('');
+    const chars = Array.from(input);
+    let out = '';
+    let i = 0;
+    while (i < chars.length) {
+        let matched = false;
+        for (let len = MAX_KEY_LEN; len >= 1; len--) {
+            const token = chars.slice(i, i + len).join('');
+            if (token in TRANSLITERATION) {
+                out += TRANSLITERATION[token];
+                i += len;
+                matched = true;
+                break;
+            }
+        }
+        if (!matched) {
+            out += chars[i];
+            i++;
+        }
+    }
+    return out;
 }
 
 const FONTS = [
@@ -73,6 +96,10 @@ export default function PaleoHebrewWidget() {
     const [input, setInput] = useState('');
     const [fontSize, setFontSize] = useState(48);
     const [direction, setDirection] = useState<Direction>('default');
+    const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+
+    const toggleCollapsed = (label: string) =>
+        setCollapsed((prev) => ({ ...prev, [label]: !prev[label] }));
 
     const phoenician = useMemo(() => transliterate(input), [input]);
 
@@ -102,7 +129,7 @@ export default function PaleoHebrewWidget() {
                 <input
                     type="range"
                     className="form-range flex-grow-1"
-                    min={16}
+                    min={12}
                     max={128}
                     value={fontSize}
                     onChange={(e) => setFontSize(Number(e.target.value))}
@@ -131,34 +158,45 @@ export default function PaleoHebrewWidget() {
             </div>
 
             <div className="row g-3">
-                {FONTS.map(({ label, family }) => (
-                    <div className="col-12" key={label}>
-                        <div className="card">
-                            <div className="card-header">
-                                <code>{label}</code>
-                            </div>
-                            <div
-                                className="card-body"
-                                style={{
-                                    fontFamily: family,
-                                    fontSize: `${fontSize}px`,
-                                    lineHeight: 1.6,
-                                    overflowX: 'auto',
-                                    minHeight: '4rem',
-                                    wordBreak: 'break-all',
-                                    whiteSpace: 'pre-wrap',
-                                    ...dirStyle,
-                                }}
-                            >
-                                {phoenician || (
-                                    <span className="text-muted" style={{ fontSize: '1rem' }}>
-                                        type something above…
-                                    </span>
+                {FONTS.map(({ label, family }) => {
+                    const isCollapsed = collapsed[label];
+                    return (
+                        <div className="col-12" key={label}>
+                            <div className="card">
+                                <button
+                                    type="button"
+                                    className="card-header d-flex justify-content-between align-items-center w-100 border-0 bg-transparent text-start"
+                                    onClick={() => toggleCollapsed(label)}
+                                    aria-expanded={!isCollapsed}
+                                >
+                                    <code>{label}</code>
+                                    <span className="text-muted">{isCollapsed ? '▸' : '▾'}</span>
+                                </button>
+                                {!isCollapsed && (
+                                    <div
+                                        className="card-body"
+                                        style={{
+                                            fontFamily: family,
+                                            fontSize: `${fontSize}px`,
+                                            lineHeight: 1.6,
+                                            overflowX: 'auto',
+                                            minHeight: '4rem',
+                                            wordBreak: 'break-all',
+                                            whiteSpace: 'pre-wrap',
+                                            ...dirStyle,
+                                        }}
+                                    >
+                                        {phoenician || (
+                                            <span className="text-muted" style={{ fontSize: '1rem' }}>
+                                                type something above…
+                                            </span>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             <h3>Transliteration reference</h3>
@@ -167,7 +205,7 @@ export default function PaleoHebrewWidget() {
                     <h6>Consonants</h6>
                     <pre className="mb-0">{`'  → 𐤀 ALF       b → 𐤁 BET       g → 𐤂 GAML
 d  → 𐤃 DELT      h → 𐤄 HE        w → 𐤅 WAU
-z  → 𐤆 ZAYIN     H → 𐤇 HET       T → 𐤈 TET
+z  → 𐤆 ZAYIN     x → 𐤇 HET       T → 𐤈 TET
 y  → 𐤉 YOD       k → 𐤊 KAF       l → 𐤋 LAMD
 m  → 𐤌 MEM       n → 𐤍 NUN       s → 𐤎 SEMK
 A  → 𐤏 AIN       p → 𐤐 PE        S → 𐤑 SADE
@@ -183,18 +221,21 @@ o → 𐤙 HUNDRED`}</pre>
                 </div>
                 <div className="col-md-3">
                     <h6>Diacritics</h6>
-                    <pre className="mb-0">{`0 → ◌̣  DOT BELOW
-1 → ◌̇  DOT ABOVE
-2 → ◌̈  DIAERESIS
-3 → ◌᪴  TRIPLE DOT
-- → ◌̄  MACRON
-4 → ◌َ  FATHA
-5 → ◌ِ  KASRA
-6 → ◌ُ  DAMMA
-7 → ◌ַ  PATACH
-8 → ◌ִ  HIRIQ
-9 → ◌ֻ  QUBUTS
-| → 𐤟  WORD SEP`}</pre>
+                    <pre className="mb-0">{`0  → ◌̣  DOT BELOW
+1  → ◌̇  DOT ABOVE
+2  → ◌̈  DIAERESIS
+3  → ◌᪴  TRIPLE DOT
+-  → ◌̄  MACRON
+_  → ◌̱  UNDERMACRON
+v  → ◌̌  CARON
+^  → ◌̂  CIRCUMFLEX
+1a → ◌َ  FATHA
+2a → ◌ِ  KASRA
+3a → ◌ُ  DAMMA
+1h → ◌ַ  PATACH
+2h → ◌ִ  HIRIQ
+3h → ◌ֻ  QUBUTS
+|  → 𐤟  WORD SEP`}</pre>
                 </div>
             </div>
         </div>
