@@ -1,1 +1,0 @@
-import{n as e}from"./client-B2ZttNiV.js";var t=e();function n(e){return(0,t.jsx)(`a`,{className:e.className,id:e.className,href:e.href,children:e.href})}export{n as t};
