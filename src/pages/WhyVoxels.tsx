@@ -5,6 +5,7 @@ import TeX from '@matejmazur/react-katex';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 import ArticleLayout from '../components/ArticleLayout';
+import { Citation, CitationBank } from '../components/CitationManager';
 
 import { Attribution, License } from '../components/Attribution';
 
@@ -25,8 +26,8 @@ import RhombicDodecahedronGif from "../assets/whyvoxels/RhombicDodecahedronGif.g
 import ConstructingRhombicDodecahedron from "../assets/whyvoxels/ConstructingRhombicDodecahedron.gif"
 import RhombicDodecahedra from "../assets/whyvoxels/Rhombic_dodecahedra.png"
 
-const WhyVoxelsPage = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const WhyVoxelsPage = () => <ArticleLayout>
+  <>
     <Section name="Why are all voxels cubes?" id="why_voxels">
       <p>
         If you've ever played Minecraft, you'll notice that the world is (mostly) made up of cubes.
@@ -448,7 +449,7 @@ const WhyVoxelsPage = () => <ArticleLayout>{
       <CitationBank />
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import { createRoot } from 'react-dom/client';
 

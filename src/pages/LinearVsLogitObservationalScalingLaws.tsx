@@ -3,6 +3,7 @@ import React from 'react';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 import ArticleLayout from '../components/ArticleLayout';
+import { Citation, CitationBank } from '../components/CitationManager';
 
 import AsideCard from '../components/AsideCard';
 
@@ -14,8 +15,8 @@ import outdent from 'outdent';
 import { ArticleLink } from '../components/Articles';
 import { articleData } from '../components/ArticleData';
 
-const LinearVsLogitPage = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const LinearVsLogitPage = () => <ArticleLayout>
+  <>
     <Section id="overview" name="Overview">
       <p>
         Observational Scaling Laws's uses PCA over the table of benchmark scores to find the vectors that explain as much of the variance of the benchmark scores as possible.
@@ -60,7 +61,7 @@ const LinearVsLogitPage = () => <ArticleLayout>{
       <CitationBank />
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import { createRoot } from 'react-dom/client';
 

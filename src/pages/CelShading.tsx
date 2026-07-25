@@ -1,10 +1,11 @@
 import React from 'react';
 import ArticleLayout from '../components/ArticleLayout';
+import { CitationBank } from '../components/CitationManager';
 import Section from '../components/Section';
 import CelshadingDemo from '../components/CelshadingDemo';
 
-const CelShading = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const CelShading = () => <ArticleLayout>
+  <>
     <Section id="overview" name="Overview">
       <p>
         In this article, we're going to demo the differences between several different cel-shading and edge coloring algorithms.
@@ -33,7 +34,7 @@ const CelShading = () => <ArticleLayout>{
       <CitationBank />
     </Section>
   </>
-}</ArticleLayout>;
+</ArticleLayout>;
 
 
 // Bootstrap CSS & JS

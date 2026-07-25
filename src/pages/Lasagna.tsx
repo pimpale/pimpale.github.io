@@ -17,8 +17,8 @@ import outdent from 'outdent';
 import { ArticleLink } from '../components/Articles';
 import { articleData } from '../components/ArticleData';
 
-const LasagnaPage = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const LasagnaPage = () => <ArticleLayout>
+  <>
 
     <Section id="lasagna" name="Lasagna">
       <p>
@@ -401,7 +401,7 @@ const LasagnaPage = () => <ArticleLayout>{
       </p>
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import { createRoot } from 'react-dom/client';
 

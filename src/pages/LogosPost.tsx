@@ -3,6 +3,7 @@ import React from 'react';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 import ArticleLayout from '../components/ArticleLayout';
+import { CitationBank } from '../components/CitationManager';
 
 import AsideCard from '../components/AsideCard';
 import RubyGloss from '../components/RubyGloss';
@@ -13,8 +14,8 @@ import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ArticleLink } from '../components/Articles';
 import { articleData } from '../components/ArticleData';
 
-const LogosPage = () => <ArticleLayout style={{ maxWidth: "50em" }}>{
-  ({ Citation, CitationBank }) => <>
+const LogosPage = () => <ArticleLayout style={{ maxWidth: "50em" }}>
+  <>
     <AsideCard title="The Logos">
       <RubyGloss
         className="fs-2"
@@ -60,7 +61,7 @@ const LogosPage = () => <ArticleLayout style={{ maxWidth: "50em" }}>{
     </Section>
     <CitationBank />
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import { createRoot } from 'react-dom/client';
 

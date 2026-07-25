@@ -9,8 +9,8 @@ import AsideCard from '../components/AsideCard';
 import WebGL2GravityDemo from '../components/WebGL2GravityDemo';
 import LennardJonesDemo from '../components/LennardJonesDemo';
 
-const GravityPage = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const GravityPage = () => <ArticleLayout>
+  <>
     <Section name="Spacewar" id="spacewar">
       <p>
         <HrefLink href="https://github.com/pimpale/spacewar" />
@@ -27,7 +27,7 @@ const GravityPage = () => <ArticleLayout>{
       </AsideCard>
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import { createRoot } from 'react-dom/client';
 

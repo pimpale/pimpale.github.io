@@ -243,11 +243,9 @@ v  → ◌̌  CARON
 }
 
 
-const PaleoHebrewFontPage = () => <ArticleLayout>{
-    ({ Citation, CitationBank }) => {
-        return <PaleoHebrewWidget />
-    }
-}</ArticleLayout>
+const PaleoHebrewFontPage = () => <ArticleLayout>
+    <PaleoHebrewWidget />
+</ArticleLayout>
 
 
 // Bootstrap CSS & JS

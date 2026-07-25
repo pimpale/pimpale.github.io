@@ -13,7 +13,7 @@ const PPODerivationUrl = "./assets/metadrive_rl/ppo.html";
 const PPOSolutionUrl = "./assets/metadrive_rl/ppo_solution.html";
 
 const MetadriveRL = () =>
-  <ArticleLayout>{({ Citation, CitationBank }) =>
+  <ArticleLayout>
     <>
       <Section id="tutorials" name="Tutorials">
         These tutorials attempt to explain Source: <a href="https://github.com/wz-ml/metadrive-tutorial"></a>
@@ -40,7 +40,7 @@ const MetadriveRL = () =>
         </ol>
       </Section>
     </>
-  }</ArticleLayout>
+  </ArticleLayout>
 
 
 import React from 'react';

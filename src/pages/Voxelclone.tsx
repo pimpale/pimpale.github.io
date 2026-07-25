@@ -14,8 +14,8 @@ import outdent from 'outdent';
 import { ArticleLink } from '../components/Articles';
 import { articleData } from '../components/ArticleData';
 
-const VoxelclonePage = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const VoxelclonePage = () => <ArticleLayout>
+  <>
 
     <Section id="voxelclone" name="Voxelclone">
       <p>
@@ -397,7 +397,7 @@ const VoxelclonePage = () => <ArticleLayout>{
       </p>
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import { createRoot } from 'react-dom/client';
 

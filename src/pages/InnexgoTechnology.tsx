@@ -7,8 +7,8 @@ import PCBFrontIrl from '../assets/innexgo_technology/pcb_front_irl.jpg';
 import PartialAssemblyFrontIrl from '../assets/innexgo_technology/partialassembly_front_irl.jpg';
 import ArticleLayout from '../components/ArticleLayout';
 
-const Technology = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const Technology = () => <ArticleLayout>
+  <>
     <section>
       <h2>Innexgo System</h2>
       <p>
@@ -180,7 +180,7 @@ const Technology = () => <ArticleLayout>{
       </ul>
     </section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 
 import {createRoot} from 'react-dom/client';

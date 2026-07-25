@@ -99,8 +99,8 @@ const Project = (props: ProjectProps) =>
     }
   </Section>
 
-const ProjectsPage = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const ProjectsPage = () => <ArticleLayout>
+  <>
 
     <Project
       id="browser-voxel-game"
@@ -289,7 +289,7 @@ const ProjectsPage = () => <ArticleLayout>{
       }
     />
   </>
-}</ArticleLayout >
+</ArticleLayout >
 
 import { createRoot } from 'react-dom/client';
 

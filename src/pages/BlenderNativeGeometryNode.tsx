@@ -19,8 +19,8 @@ import DiffPizzaUrl from "../assets/blendernativegeometrynode/diff_node_geo_pizz
 import ResultImgUrl from "../assets/blendernativegeometrynode/result.png"
 import PizzaNodeImgUrl from "../assets/blendernativegeometrynode/pizza_node.png"
 
-const BlenderNativeGeometryNodePage = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const BlenderNativeGeometryNodePage = () => <ArticleLayout>
+  <>
 
     <Section id="blender-native-geometry-node" name="Adding a new Native Geometry Node in Blender 5.2">
       <p>
@@ -200,7 +200,7 @@ const BlenderNativeGeometryNodePage = () => <ArticleLayout>{
       <CodeBlock lang="diff" url={GitDiffUrl} />
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import { createRoot } from 'react-dom/client';
 

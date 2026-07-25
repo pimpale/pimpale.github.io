@@ -3,6 +3,7 @@ import React from 'react';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 import ArticleLayout from '../components/ArticleLayout';
+import { Citation, CitationBank } from '../components/CitationManager';
 import { Check, X } from 'react-bootstrap-icons';
 import TimezoneDemo from '../components/TimezoneDemo';
 
@@ -180,8 +181,8 @@ function BrowserTimeSettings() {
 
 }
 
-const TimeZoneSpacePage = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const TimeZoneSpacePage = () => <ArticleLayout>
+  <>
     <Section name="Overview" id="overview">
 
       <p>
@@ -386,7 +387,7 @@ const TimeZoneSpacePage = () => <ArticleLayout>{
       <CitationBank />
     </Section>
   </>
-}</ArticleLayout> ///
+</ArticleLayout> ///
 
 import { createRoot } from 'react-dom/client';
 

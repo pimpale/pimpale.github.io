@@ -1,5 +1,6 @@
 import React from 'react';
 import ArticleLayout from '../components/ArticleLayout';
+import { CitationBank } from '../components/CitationManager';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 
@@ -7,8 +8,8 @@ import AsideCard from '../components/AsideCard';
 
 import IncompressibleSphereFluidDemo from '../components/IncompressibleSphereFluidDemo';
 
-const Fluid3 = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const Fluid3 = () => <ArticleLayout>
+  <>
     <Section id="overview" name="Overview">
       <p>
         Our goals are to:
@@ -50,7 +51,7 @@ const Fluid3 = () => <ArticleLayout>{
       <CitationBank />
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import { createRoot } from 'react-dom/client';
 import ReactDOM from 'react-dom';

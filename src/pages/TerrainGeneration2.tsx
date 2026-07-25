@@ -2,14 +2,14 @@ import React from 'react';
 import ArticleLayout from "../components/ArticleLayout";
 import Section from "../components/Section";
 
-const TerrainGeneration = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const TerrainGeneration = () => <ArticleLayout>
+  <>
     <Section id="overview" name="Overview">
       <h4>Goals</h4>
       TBD
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import {createRoot} from 'react-dom/client';
 

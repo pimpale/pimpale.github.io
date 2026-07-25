@@ -1,5 +1,6 @@
 import React from 'react';
 import ArticleLayout from '../components/ArticleLayout';
+import { Citation, CitationBank } from '../components/CitationManager';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 
@@ -46,8 +47,8 @@ const noise4D = makeNoise4D(Date.now());
 
 const gruvboxTheme = colorScheme();
 
-const TerrainGeneration = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const TerrainGeneration = () => <ArticleLayout>
+  <>
     <Section id="overview" name="Overview">
       <h4>Goals</h4>
       <p>
@@ -986,7 +987,7 @@ const TerrainGeneration = () => <ArticleLayout>{
       <CitationBank />
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';

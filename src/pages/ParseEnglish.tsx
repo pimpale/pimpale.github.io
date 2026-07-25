@@ -333,9 +333,8 @@ function SyntaxTree({ showNulls, tree }: { showNulls: boolean, tree: TreeNode })
 }
 
 
-const ParseEnglishPage = () => <ArticleLayout>{
-    ({ Citation, CitationBank }) => {
-        return <>
+const ParseEnglishPage = () => <ArticleLayout>
+        <>
             <h1>Parse English</h1>
             <p>Parse English is a tool that can parse English sentences into a structured format. It is built using the <a href="https://nearley.js.org/">Nearley</a> parsing toolkit.</p>
             <p>It is currently a work in progress, but you can try it out by entering a sentence below, and pressing <kbd>Ctrl+Enter</kbd> or clicking the Parse button. Make sure to insert correct punctuation.</p>
@@ -392,8 +391,7 @@ const ParseEnglishPage = () => <ArticleLayout>{
                 </ul>
             </div>
         </>
-    }
-}</ArticleLayout>
+</ArticleLayout>
 
 
 // Bootstrap CSS & JS

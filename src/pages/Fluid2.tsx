@@ -1,5 +1,6 @@
 import React from 'react';
 import ArticleLayout from '../components/ArticleLayout';
+import { Citation, CitationBank } from '../components/CitationManager';
 import Section from '../components/Section';
 import HrefLink from '../components/HrefLink';
 
@@ -47,8 +48,8 @@ function CodeBlock(props: CodeBlockProps) {
   </Async>
 }
 
-const Fluid2 = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const Fluid2 = () => <ArticleLayout>
+  <>
     <Section id="overview" name="Overview">
       <p>
         Our goals are to:
@@ -339,7 +340,7 @@ const Fluid2 = () => <ArticleLayout>{
       <CitationBank />
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 ///
 
 // Bootstrap CSS & JS

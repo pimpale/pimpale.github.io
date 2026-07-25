@@ -13,8 +13,8 @@ import LennardJonesDemo from '../components/LennardJonesDemo';
 import Plot from 'react-plotly.js'
 
 
-const GravityPage = () => <ArticleLayout>{
-  ({ Citation, CitationBank }) => <>
+const GravityPage = () => <ArticleLayout>
+  <>
     <Section name="Lennard Jones Simulation" id="lennard-jones">
       The Lennard Jones 
 
@@ -29,7 +29,7 @@ const GravityPage = () => <ArticleLayout>{
 
     </Section>
   </>
-}</ArticleLayout>
+</ArticleLayout>
 
 import { createRoot } from 'react-dom/client';
 
