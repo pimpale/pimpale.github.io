@@ -5,6 +5,7 @@ import KamLANDSchematicImg from '../assets/neutrino_submarines/KamLAND_schematic
 import OscillationIbdImg from '../assets/neutrino_submarines/oscillation_ibd.png';
 import BolometerImg from '../assets/neutrino_submarines/bolometer.png';
 import GalanisCoilImg from '../assets/neutrino_submarines/galanis_coil.png';
+import NeutrinoRangePlot from '../components/NeutrinoRangePlot';
 
 ## Can Neutrinos Reveal the Positions of Nuclear Submarines?
 
@@ -167,6 +168,19 @@ Based on this, we can already draw some conclusions. IBD is totally infeasible f
 
 For the tanker, 3.6 events per hour is borderline viable, but any further increases in distance would likely make it useless. The practical prospects are quite poor compared to existing sensors. Current magnetometers are plane-mountable, meaning that they can cover a lot more area in one day. Our system does have more range than a magnetometer, but it is dominated by active sonar for long-range detection.
 
+<NeutrinoRangePlot
+  detectors={["ibd-747", "ibd-vlcc"]}
+  caption="Detection rate vs. range for the two IBD platforms. The oscillation toggle switches between the ideal cross section and the spectrum-averaged electron antineutrino survival probability."
+/>
+
+{/* TODO: prose for the IBD panel. Points the widget makes that the text above doesn't:
+    - the 747 curve never crosses the 1/hr floor anywhere on the plot, at any patrol speed
+    - the tanker curve crosses it at ~9 km, i.e. barely past the SQUID magnetometer marker
+    - dropping the sub's patrol speed from 6 kn to a dead stop costs only ~4.9x rate, because the
+      500 kW hotel load floors it -- a submarine cannot hide by going quiet. Worth saying explicitly
+      somewhere; it's the neutrino analogue of "you can't shield it".
+    - the dip near 60 km is oscillation, not geometry */}
+
 ## Coherent Elastic Neutrino-Nucleus Scattering (CEvNS)
 
 CEvNS involves the neutrino coherently interacting with the entire nucleus as a whole, and bouncing off, without producing any new particles:
@@ -218,6 +232,22 @@ Unfortunately, aircraft-based detectors are still not viable. However, the tanke
 * **VLCC supertanker (50 km):** $\approx 1.37 \times 10^{-4}$ events/s $\approx$ 0.49 events/hour
 
 Because CEvNS still has some signal at 50 km, it actually starts to become a practical supplement to magnetometers at long distances. No magnetometer could detect a signal at 50 kilometers, as the field strength decays much faster than the neutrino signal does. However, sonar systems still likely beat it.
+
+<NeutrinoRangePlot
+  detectors={["ibd-747", "ibd-vlcc", "cevns-747", "cevns-vlcc"]}
+  caption="CEvNS added to the IBD baseline. Because CEvNS is flavor-insensitive, its curves are pure inverse-square — toggling oscillation moves only the IBD curves."
+/>
+
+{/* TODO: prose for the CEvNS panel. Points the widget makes:
+    - the oscillation toggle is the cleanest demo of flavor insensitivity in the whole essay:
+      only the red curves move. Worth one sentence pointing the reader at it.
+    - CEvNS on a 747 still sits below the floor everywhere, so the plane platform is dead
+      for both proven channels, not just IBD
+    - the tanker crosses 1/hr at ~35 km, vs ~9 km for IBD: one technology change buys ~4x range,
+      which is the concrete version of "starts to become a practical supplement to magnetometers"
+    - both CEvNS curves are parallel to each other and to the IBD curves once oscillation is off;
+      everything on this plot is the same 1/d^2, only shifted. That sets up why the next section
+      has to change the cross section by orders of magnitude rather than tinkering. */}
 
 ## Coherent Interactions across Atoms
 
@@ -284,6 +314,28 @@ If we do the math, we find that each individual $10^{19}$-atom condensate, held 
 * **$10^{19}$-atom condensate (200 km):** $\approx$ 2.7 events/hour
 
 A single trap of microgram-scale hydrogen would outperform every other detector here — but only if the collective enhancement survives theoretical scrutiny. My personal credence in this idea working out is around 40%. See [Appendix M](neutrino_submarines_supplement.html#appendix-m-bose-einstein-condensate-superabsorption-cross-section) for more details.
+
+<NeutrinoRangePlot
+  detectors={["ibd-747", "ibd-vlcc", "cevns-747", "cevns-vlcc", "spin-vlcc", "bec"]}
+  caption="All five detector concepts on one axis. Solid lines are ship-mounted, dashed lines airborne; the vertical markers show the ranges of the sensors these would have to compete with."
+/>
+
+{/* TODO: prose for the summary panel. Points the widget makes:
+    - the whole argument in one image: twelve decades separate IBD-on-a-plane from BEC, and the
+      two coherent methods are the only curves still above the floor at the sonar marker
+    - the BEC curve beats an entire instrumented supertanker from 17 micrograms of gas
+    - the spin-transition and BEC curves are NOT parallel past ~30 km, because BEC is charged-current
+      and eats the oscillation dip while the spin flip doesn't -- so the gap between the two
+      narrows exactly in the band that matters militarily. Untoggling oscillation shows this.
+    - honest caveat to state somewhere: none of these curves include backgrounds. Everything here
+      is signal-only, so the 1/hr floor is doing a lot of unexamined work. */}
+
+{/* TODO: the printed BEC bullets above (4,300 / 43 / 11 / 2.7 per hour) are un-suppressed, but
+    superabsorption is charged-current IBD and Appendix M line "Because the underlying reaction is
+    charged-current IBD..." says as much without applying it. With the survival probability applied
+    they become roughly 4,076 / 14.5 / 5.3 / 1.5 per hour. The widget plots the suppressed values, so
+    the bullets and the curve disagree until one of them is changed. Same issue, much smaller, for
+    the 5 km IBD/CEvNS bullets earlier: at 5 km suppression is 0.95, so 3.6/hr is really ~3.4/hr. */}
 
 ## Conclusion
 
