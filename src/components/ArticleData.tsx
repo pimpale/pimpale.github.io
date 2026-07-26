@@ -155,6 +155,14 @@ export const articleData: Map<string, Article> = new Map([
     listed: true,
     fiction: false,
   }],
+  ["neutrino-submarines-supplement", {
+    name: "Supplement: Can Neutrinos Reveal The Positions of Nuclear Submarines?",
+    incipit: "Appendices and detailed calculations backing the neutrino submarine detection article.",
+    url: '../neutrino_submarines_supplement.html',
+    published: parse("24 Jul 2026", "d MMM y", new Date()),
+    listed: false,
+    fiction: false,
+  }],
     ["paleo-hebrew-font", {
     name: "Paleo Hebrew Font",
     incipit: "Visualizing different fonts for Phonecian/Paleo Hebrew",
