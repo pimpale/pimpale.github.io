@@ -1,0 +1,1 @@
+function e(e){let t=new Uint32Array(1);return t[0]=e[0]*1664525+1013904223,t}export{e as t};
