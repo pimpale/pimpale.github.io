@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { SPECTRUM_E0, SPECTRUM_DE, U235_DNDE } from '../utils/u235Spectrum';
+import { palette } from '../styles/palette';
 
 /**
  * Detection rate vs. range for the neutrino detector concepts discussed in the
@@ -8,10 +9,10 @@ import { SPECTRUM_E0, SPECTRUM_DE, U235_DNDE } from '../utils/u235Spectrum';
  * lists to progressively reveal the comparison.
  *
  * All numbers are derived from the same source term as the supplement
- * (Appendix B), so the curves agree with the printed rates in the article --
- * with one deliberate exception, noted on `oscillates` below: the charged
- * current channels here carry the electron antineutrino survival probability,
- * which the article's Appendix M bullets omit.
+ * (Appendix B), so the curves agree with the printed rates in the article.
+ * The charged current channels carry the electron antineutrino survival
+ * probability (see `oscillates` below), as do the article's IBD and
+ * Appendix M bullets.
  */
 
 /* ------------------------------------------------------------------ */
@@ -141,7 +142,7 @@ const DETECTORS: Detector[] = [
     short: 'IBD 747',
     sigma: 1.76e-12,
     oscillates: true,
-    color: '#fb4934',
+    color: palette.brightRed,
     platform: 'air',
   },
   {
@@ -150,7 +151,7 @@ const DETECTORS: Detector[] = [
     short: 'IBD tanker',
     sigma: 2.2e-9,
     oscillates: true,
-    color: '#fb4934',
+    color: palette.brightRed,
     platform: 'sea',
   },
   {
@@ -159,7 +160,7 @@ const DETECTORS: Detector[] = [
     short: 'CEvNS 747',
     sigma: 1.13e-11,
     oscillates: false,
-    color: '#fabd2f',
+    color: palette.brightYellow,
     platform: 'air',
   },
   {
@@ -168,7 +169,7 @@ const DETECTORS: Detector[] = [
     short: 'CEvNS tanker',
     sigma: 3.0e-8,
     oscillates: false,
-    color: '#fabd2f',
+    color: palette.brightYellow,
     platform: 'sea',
   },
   {
@@ -180,7 +181,7 @@ const DETECTORS: Detector[] = [
     short: 'Spin flip',
     sigma: 6.49e-7,
     oscillates: false,
-    color: '#8ec07c',
+    color: palette.brightAqua,
     platform: 'sea',
   },
   {
@@ -189,7 +190,7 @@ const DETECTORS: Detector[] = [
     short: 'BEC',
     sigma: 2.6e-6,
     oscillates: true,
-    color: '#d3869b',
+    color: palette.brightPurple,
     platform: 'any',
   },
 ];
@@ -214,6 +215,41 @@ const decadeLabel = (exp: number, fontSize: number) => {
   if (exp === 0) return <>1</>;
   if (exp === 1) return <>10</>;
   return <>10<tspan dy={-fontSize * 0.45} fontSize={fontSize * 0.78}>{exp}</tspan></>;
+};
+
+/** Round-trip through toPrecision so 0.30000000000000004 prints as 0.3. */
+const tidy = (x: number) => Number(x.toPrecision(6)).toString();
+
+/** Compact label for a linear-axis tick: 0, 250, 1.5k, 20M. */
+const linearTickLabel = (x: number) => {
+  if (x === 0) return '0';
+  if (Math.abs(x) >= 1e6) return `${tidy(x / 1e6)}M`;
+  if (Math.abs(x) >= 1e3) return `${tidy(x / 1e3)}k`;
+  return tidy(x);
+};
+
+/** Smallest of 1, 2, 5 times a power of ten that is at least `raw`. */
+const niceStep = (raw: number) => {
+  const pow = 10 ** Math.floor(Math.log10(raw));
+  for (const m of [1, 2, 5, 10]) if (m * pow >= raw) return m * pow;
+  return 10 * pow;
+};
+
+/** Round number just above `v`, finer-grained than niceStep so an axis top hugs the data. */
+const niceCeil = (v: number) => {
+  const pow = 10 ** Math.floor(Math.log10(v));
+  for (const m of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m * pow >= v) return m * pow;
+  return 10 * pow;
+};
+
+/** Ticks at multiples of a nice step covering [lo, hi], about `count` of them. */
+const linearTicks = (lo: number, hi: number, count: number) => {
+  const step = niceStep((hi - lo) / count);
+  const ticks: number[] = [];
+  for (let v = Math.ceil(lo / step) * step; v <= hi + step * 1e-6; v += step) {
+    ticks.push(Number(v.toPrecision(12)));
+  }
+  return ticks;
 };
 
 const significant = (x: number) =>
@@ -245,6 +281,12 @@ export type NeutrinoRangePlotProps = {
   threshold?: number,
   xMinKm?: number,
   xMaxKm?: number,
+  /**
+   * Right edge of the range axis in linear mode. Inverse-square falloff
+   * crushes everything into the corner if the linear view runs out to the
+   * full log range, so it zooms into the near field instead.
+   */
+  xMaxLinearKm?: number,
   /** Pin the vertical axis instead of fitting it to the visible curves. */
   yMinPerHour?: number,
   yMaxPerHour?: number,
@@ -262,6 +304,7 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
   threshold = 1,
   xMinKm = 1,
   xMaxKm = 300,
+  xMaxLinearKm = 10,
   yMinPerHour,
   yMaxPerHour,
   showComparisons = true,
@@ -270,7 +313,7 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
 }) => {
   const [speedKn, setSpeedKn] = React.useState(REFERENCE_SPEED_KN);
   const [cursorKm, setCursorKm] = React.useState(initialRangeKm);
-  const [oscillation, setOscillation] = React.useState(true);
+  const [logScale, setLogScale] = React.useState(true);
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
 
   const toggleDetector = (id: string) => setHidden(prev => {
@@ -319,48 +362,71 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
 
   const rateAt = React.useCallback(
     (detector: Detector, rangeKm: number, nuRate: number) => {
-      const suppression = oscillation && detector.oscillates
-        ? suppressionAt(rangeKm)
-        : 1;
+      const suppression = detector.oscillates ? suppressionAt(rangeKm) : 1;
       return flux(nuRate, rangeKm) * detector.sigma * suppression * 3600;
     },
-    [oscillation, suppressionAt],
+    [suppressionAt],
   );
 
   const nuRate = sourceRate(speedKn);
 
-  const logMinX = Math.log10(xMinKm);
-  const logMaxX = Math.log10(xMaxKm);
+  // Both axes share one scale. `fwd` maps a data value into axis space (its
+  // log in log mode, itself in linear mode) and `inv` maps back.
+  const fwd = React.useCallback(
+    (v: number) => logScale ? Math.log10(Math.max(v, 1e-300)) : v,
+    [logScale],
+  );
+  const inv = React.useCallback(
+    (v: number) => logScale ? 10 ** v : v,
+    [logScale],
+  );
 
+  const xMaxShownKm = logScale ? xMaxKm : Math.min(xMaxKm, xMaxLinearKm);
+  const minX = fwd(xMinKm);
+  const maxX = fwd(xMaxShownKm);
+
+  // Sample evenly in axis space so the curve is smooth in whichever scale is
+  // showing.
   const series = React.useMemo(() => shown.map(detector => {
     const points: { km: number, perHour: number }[] = [];
     for (let i = 0; i <= SAMPLE_COUNT; i++) {
-      const km = 10 ** (logMinX + (logMaxX - logMinX) * i / SAMPLE_COUNT);
+      const km = inv(minX + (maxX - minX) * i / SAMPLE_COUNT);
       points.push({ km, perHour: rateAt(detector, km, nuRate) });
     }
     return { detector, points };
-  }), [shown, rateAt, nuRate, logMinX, logMaxX]);
+  }), [shown, rateAt, nuRate, inv, minX, maxX]);
 
-  // Fit the vertical axis to whole decades containing everything on screen.
-  const [logMinY, logMaxY] = React.useMemo(() => {
-    if (yMinPerHour !== undefined && yMaxPerHour !== undefined) {
-      return [Math.log10(yMinPerHour), Math.log10(yMaxPerHour)];
-    }
-    let lo = Math.log10(threshold);
-    let hi = Math.log10(threshold);
-    for (const { points } of series) {
-      for (const p of points) {
-        if (p.perHour <= 0) continue;
-        const l = Math.log10(p.perHour);
-        if (l < lo) lo = l;
-        if (l > hi) hi = l;
+  // Vertical axis domain, in axis space. Log mode fits whole decades around
+  // every curve, hidden or not, so the axis holds still while the reader
+  // toggles curves. Linear mode fits the visible curves only: a single tall
+  // curve would otherwise flatten everything else onto the floor.
+  const [minY, maxY] = React.useMemo(() => {
+    if (logScale) {
+      if (yMinPerHour !== undefined && yMaxPerHour !== undefined) {
+        return [Math.log10(yMinPerHour), Math.log10(yMaxPerHour)];
       }
+      let lo = Math.log10(threshold);
+      let hi = Math.log10(threshold);
+      for (const { points } of series) {
+        for (const p of points) {
+          if (p.perHour <= 0) continue;
+          const l = Math.log10(p.perHour);
+          if (l < lo) lo = l;
+          if (l > hi) hi = l;
+        }
+      }
+      return [
+        yMinPerHour !== undefined ? Math.log10(yMinPerHour) : Math.floor(lo) - 0.35,
+        yMaxPerHour !== undefined ? Math.log10(yMaxPerHour) : Math.ceil(hi) + 0.35,
+      ];
     }
-    return [
-      yMinPerHour !== undefined ? Math.log10(yMinPerHour) : Math.floor(lo) - 0.35,
-      yMaxPerHour !== undefined ? Math.log10(yMaxPerHour) : Math.ceil(hi) + 0.35,
-    ];
-  }, [series, threshold, yMinPerHour, yMaxPerHour]);
+    let hi = threshold;
+    for (const { detector, points } of series) {
+      if (hidden.has(detector.id)) continue;
+      for (const p of points) if (p.perHour > hi) hi = p.perHour;
+    }
+    return [0, yMaxPerHour ?? niceCeil(hi * 1.05)];
+  }, [logScale, series, hidden, threshold, yMinPerHour, yMaxPerHour]);
 
   const isNarrow = width < 520;
   const height = Math.round(Math.max(230, Math.min(400, width * 0.58)));
@@ -374,38 +440,49 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
   const plotHeight = Math.max(10, height - margin.top - margin.bottom);
 
   const xOf = (km: number) =>
-    margin.left + (Math.log10(km) - logMinX) / (logMaxX - logMinX) * plotWidth;
+    margin.left + (fwd(km) - minX) / (maxX - minX) * plotWidth;
   const yOf = (perHour: number) => {
-    const l = Math.log10(Math.max(perHour, 1e-300));
-    const frac = (l - logMinY) / (logMaxY - logMinY);
+    const frac = (fwd(perHour) - minY) / (maxY - minY);
     return margin.top + (1 - Math.min(Math.max(frac, -0.5), 1.5)) * plotHeight;
   };
   const kmOf = (x: number) =>
-    10 ** (logMinX + (x - margin.left) / plotWidth * (logMaxX - logMinX));
+    inv(minX + (x - margin.left) / plotWidth * (maxX - minX));
 
   const xTicks = React.useMemo(() => {
+    if (!logScale) return linearTicks(xMinKm, xMaxShownKm, isNarrow ? 4 : 6);
     const ticks: number[] = [];
-    for (let exp = Math.floor(logMinX); exp <= Math.ceil(logMaxX); exp++) {
+    for (let exp = Math.floor(minX); exp <= Math.ceil(maxX); exp++) {
       for (const mult of [1, 3]) {
         const value = mult * 10 ** exp;
-        if (value >= xMinKm * 0.999 && value <= xMaxKm * 1.001) ticks.push(value);
+        if (value >= xMinKm * 0.999 && value <= xMaxShownKm * 1.001) ticks.push(value);
       }
     }
     return ticks;
-  }, [logMinX, logMaxX, xMinKm, xMaxKm]);
+  }, [logScale, minX, maxX, xMinKm, xMaxShownKm, isNarrow]);
 
-  const yTicks = React.useMemo(() => {
-    const ticks: number[] = [];
-    const span = Math.ceil(logMaxY) - Math.floor(logMinY);
+  // Each tick carries its decade exponent in log mode so the label can be
+  // typeset as a power of ten.
+  const yTicks = React.useMemo((): { value: number, exp: number | null }[] => {
+    if (!logScale) {
+      return linearTicks(minY, maxY, 5).map(value => ({ value, exp: null }));
+    }
+    const ticks: { value: number, exp: number }[] = [];
+    const span = Math.ceil(maxY) - Math.floor(minY);
     // Thin the labels out when the axis spans a lot of decades.
     const stride = span > 12 ? 3 : span > 7 ? 2 : 1;
-    for (let exp = Math.ceil(logMinY); exp <= Math.floor(logMaxY); exp++) {
-      if (((exp % stride) + stride) % stride === 0) ticks.push(exp);
+    for (let exp = Math.ceil(minY); exp <= Math.floor(maxY); exp++) {
+      if (((exp % stride) + stride) % stride === 0) ticks.push({ value: 10 ** exp, exp });
     }
     return ticks;
-  }, [logMinY, logMaxY]);
+  }, [logScale, minY, maxY]);
 
-  const clampKm = (km: number) => Math.min(Math.max(km, xMinKm), xMaxKm);
+  const clampKm = (km: number) => Math.min(Math.max(km, xMinKm), xMaxShownKm);
+
+  // Switching to linear shrinks the axis, so pull the cursor back on screen.
+  const setScale = (log: boolean) => {
+    setLogScale(log);
+    if (!log) setCursorKm(km => Math.min(km, Math.min(xMaxKm, xMaxLinearKm)));
+  };
 
   const handlePointer = (e: React.PointerEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -420,11 +497,16 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
       perHour: rateAt(detector, cursorKm, nuRate),
     }));
 
-  const axisColor = '#665c54';
-  const gridColor = '#3c3836';
-  const tickColor = '#a89984';
-  const labelColor = '#d5c4a1';
-  const mutedColor = '#928374';
+  // Text sits at fg1 (body text) or one step below it; anything dimmer gets
+  // lost on the gray background. The grid is the one exception: it sits
+  // behind the curves and must not compete with them.
+  const axisColor = palette.fg2;
+  const gridColor = palette.gray;
+  const tickColor = palette.fg1;
+  const labelColor = palette.fg1;
+  const mutedColor = palette.fg2;
+  const offColor = palette.fg3;
+  const offLineColor = palette.bg4;
 
   const thresholdY = yOf(threshold);
   const thresholdVisible = thresholdY > margin.top && thresholdY < margin.top + plotHeight;
@@ -446,17 +528,17 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
           </clipPath>
         </defs>
 
-        {/* horizontal decade gridlines */}
-        {yTicks.map(exp => <g key={`y${exp}`}>
+        {/* horizontal gridlines */}
+        {yTicks.map(({ value, exp }) => <g key={`y${value}`}>
           <line
             x1={margin.left} x2={margin.left + plotWidth}
-            y1={yOf(10 ** exp)} y2={yOf(10 ** exp)}
+            y1={yOf(value)} y2={yOf(value)}
             stroke={gridColor} strokeWidth={1}
           />
           <text
-            x={margin.left - 6} y={yOf(10 ** exp) + 3.5}
+            x={margin.left - 6} y={yOf(value) + 3.5}
             textAnchor="end" fontSize={isNarrow ? 9 : 10.5} fill={tickColor}
-          >{decadeLabel(exp, isNarrow ? 9 : 10.5)}</text>
+          >{exp !== null ? decadeLabel(exp, isNarrow ? 9 : 10.5) : linearTickLabel(value)}</text>
         </g>)}
 
         {/* vertical gridlines */}
@@ -472,7 +554,7 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
           <rect
             x={margin.left} y={thresholdY}
             width={plotWidth} height={margin.top + plotHeight - thresholdY}
-            fill="#1d2021" opacity={0.45}
+            fill={palette.bg0h} opacity={0.45}
           />
           <line
             x1={margin.left} x2={margin.left + plotWidth}
@@ -480,24 +562,24 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
             stroke={mutedColor} strokeWidth={1} strokeDasharray="2 3"
           />
           {/* no room for this next to the curves on a phone; the shading carries it */}
-          {!isNarrow && <text
-            x={margin.left + 5} y={thresholdY + 11}
-            fontSize={9.5} fill={mutedColor}
+          {!isNarrow && thresholdY + 16 < margin.top + plotHeight && <text
+            x={margin.left + 5} y={thresholdY + 13}
+            fontSize={11} fill={mutedColor}
           >below {formatRate(threshold)} — not useful</text>}
         </>}
 
         {/* existing-sensor range markers */}
         {showComparisons && COMPARISONS
-          .filter(c => c.rangeKm > xMinKm && c.rangeKm < xMaxKm)
+          .filter(c => c.rangeKm > xMinKm && c.rangeKm < xMaxShownKm)
           .map(c => <g key={c.label}>
             <line
               x1={xOf(c.rangeKm)} x2={xOf(c.rangeKm)}
               y1={margin.top} y2={margin.top + plotHeight}
-              stroke={mutedColor} strokeWidth={1} strokeDasharray="1 4"
+              stroke={labelColor} strokeWidth={1.5} strokeDasharray="3 4"
             />
             {!isNarrow && <text
               x={xOf(c.rangeKm) - 4} y={margin.top + 10}
-              textAnchor="end" fontSize={9.5} fill={mutedColor}
+              textAnchor="end" fontSize={11} fill={labelColor}
             >{c.label}</text>}
           </g>)}
 
@@ -532,7 +614,7 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
           return <circle
             key={detector.id}
             cx={cursorX} cy={y} r={3.2}
-            fill="#282828" stroke={detector.color} strokeWidth={2}
+            fill={palette.bg0} stroke={detector.color} strokeWidth={2}
           />;
         })}
 
@@ -548,7 +630,7 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
           key={`xl${km}`}
           x={xOf(km)} y={margin.top + plotHeight + (isNarrow ? 13 : 15)}
           textAnchor="middle" fontSize={isNarrow ? 9 : 10.5} fill={tickColor}
-        >{km >= 1 ? km : km.toString()}</text>)}
+        >{tidy(km)}</text>)}
 
         <text
           x={margin.left + plotWidth / 2} y={height - 3}
@@ -574,15 +656,15 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
       {readouts.map(({ detector, perHour }) => <span
         key={detector.id}
         className="d-inline-flex align-items-center gap-1"
-        style={{ whiteSpace: 'nowrap', opacity: perHour >= threshold ? 1 : 0.55 }}
+        style={{ whiteSpace: 'nowrap' }}
       >
         <span style={{
           display: 'inline-block',
           width: '0.7rem', height: 0,
           borderTop: `2px ${detector.platform === 'air' ? 'dashed' : 'solid'} ${detector.color}`,
         }} />
-        <span style={{ color: mutedColor }}>{detector.short}</span>
-        <span style={{ color: labelColor }}>{formatRate(perHour)}</span>
+        <span style={{ color: labelColor }}>{detector.short}</span>
+        <strong style={{ color: labelColor }}>{formatRate(perHour)}</strong>
       </span>)}
     </div>
 
@@ -593,9 +675,9 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
         <input
           type="range"
           className="form-range"
-          min={logMinX} max={logMaxX} step={0.005}
-          value={Math.log10(cursorKm)}
-          onChange={e => setCursorKm(clampKm(10 ** Number(e.target.value)))}
+          min={minX} max={maxX} step={(maxX - minX) / 1000}
+          value={fwd(cursorKm)}
+          onChange={e => setCursorKm(clampKm(inv(Number(e.target.value))))}
           style={{ flex: 1 }}
         />
       </label>
@@ -616,10 +698,10 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
         <input
           type="checkbox"
           className="form-check-input m-0"
-          checked={oscillation}
-          onChange={e => setOscillation(e.target.checked)}
+          checked={logScale}
+          onChange={e => setScale(e.target.checked)}
         />
-        <span style={{ color: mutedColor }}>oscillation</span>
+        <span style={{ color: mutedColor }}>log scale</span>
       </label>
     </div>
 
@@ -638,7 +720,7 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
           title={off ? 'show this curve' : 'hide this curve'}
           className="d-inline-flex align-items-center gap-2 p-0 border-0 bg-transparent"
           style={{
-            color: off ? '#665c54' : mutedColor,
+            color: off ? offColor : mutedColor,
             fontSize: 'inherit',
             lineHeight: 1.3,
             cursor: 'pointer',
@@ -648,7 +730,7 @@ const NeutrinoRangePlot: React.FunctionComponent<NeutrinoRangePlotProps> = ({
           <span style={{
             display: 'inline-block',
             width: '1.1rem', height: 0,
-            borderTop: `2px ${detector.platform === 'air' ? 'dashed' : 'solid'} ${off ? '#504945' : detector.color}`,
+            borderTop: `2px ${detector.platform === 'air' ? 'dashed' : 'solid'} ${off ? offLineColor : detector.color}`,
           }} />
           <span style={{ textDecoration: off ? 'line-through' : undefined }}>
             {isNarrow ? detector.short : detector.label}

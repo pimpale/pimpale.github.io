@@ -1,4 +1,4 @@
-import{l as e,n as t,r as n,t as r}from"./client-BG_GqXzI.js";import"./modulepreload-polyfill-P2Xu9kJm.js";import{t as i}from"./bootstrap-CrVQO69H.js";import{c as a,d as o,h as s,i as c,l,n as u,s as d,t as f}from"./webgl-C5zzwcd9.js";import{t as p}from"./uvplane-k70CfQqf.js";import{t as m}from"./camera-BhP-HDZb.js";import{t as h}from"./canvas-D1zRnp_a.js";import{t as g}from"./math-CE2mtAM0.js";import{t as _}from"./noise-BiwXzFYx.js";var v=e(n()),y=t(),b=`#version 300 es
+import{l as e,n as t,r as n,t as r}from"./client-BG_GqXzI.js";import"./modulepreload-polyfill-P2Xu9kJm.js";import{t as i}from"./bootstrap-CrVQO69H.js";import{c as a,d as o,h as s,i as c,l,n as u,s as d,t as f}from"./webgl-C5zzwcd9.js";import{t as p}from"./uvplane-B1uoTNLt.js";import{t as m}from"./camera-CmVzGxFL.js";import{t as h}from"./canvas-D1zRnp_a.js";import{t as g}from"./math-CE2mtAM0.js";import{t as _}from"./noise-BiwXzFYx.js";var v=e(n()),y=t(),b=`#version 300 es
 in vec2 c_position;
 out vec2 v_texCoord;
 

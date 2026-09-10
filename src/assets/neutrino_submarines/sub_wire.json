@@ -1,0 +1,15 @@
+{
+  "segments": 7355,
+  "min": [
+    -87.4,
+    -7.9,
+    -6.4
+  ],
+  "max": [
+    83.5,
+    7.9,
+    21.515
+  ],
+  "format": "little-endian int16, 6 per segment (x0 y0 z0 x1 y1 z1); v = min + (q + 32768) / 65535 * (max - min)",
+  "units": "metres, +X bow, +Z up"
+}

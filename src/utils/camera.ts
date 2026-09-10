@@ -20,6 +20,12 @@ function projectTrackball(v: { x: number, y: number }) {
 export type TrackballCameraOptions = {
   ortho?: Ortho,
   rotation?: quat,
+  /**
+   * If set, dragging only rotates about this view-space axis (e.g. [0, 1, 0]
+   * for a turntable that can't be tipped up or down). Horizontal drag
+   * distance maps to angle; vertical drag is ignored.
+   */
+  lockRotationAxis?: vec3,
   dampingFactor?: number,
   enableZoom?: boolean,
   zoomSpeed?: number,
@@ -27,7 +33,7 @@ export type TrackballCameraOptions = {
   maxZoom?: number,
 }
 
-type Ortho = {
+export type Ortho = {
   left: number,
   right: number,
   bottom: number,
@@ -52,6 +58,8 @@ export class TrackballCamera {
   private rotationQ;
   // how much to damp the rotation at each step
   private dampingFactor: number;
+  // if set, drags rotate only about this view-space axis
+  private lockRotationAxis: vec3 | null;
 
   // zoom options
   private enableZoom: boolean;
@@ -115,15 +123,25 @@ export class TrackballCamera {
     this.mouseLoc.previous = this.mouseLoc.current
     this.mouseLoc.current = this.getNormalizedMouseCoords(e);
 
-    const a = projectTrackball(this.mouseLoc.start);
-    const b = projectTrackball(this.mouseLoc.current);
+    this.currQ = this.dragRotation(this.mouseLoc.start, this.mouseLoc.current);
+  }
+
+  // rotation produced by dragging from one normalized mouse position to another
+  private dragRotation = (from: Point, to: Point): quat => {
+    if (this.lockRotationAxis !== null) {
+      // dragging across the trackball radius turns a quarter revolution
+      const angle = (to.x - from.x) * Math.PI / 2;
+      return quat.setAxisAngle(quat.create(), this.lockRotationAxis, angle);
+    }
+
+    const a = projectTrackball(from);
+    const b = projectTrackball(to);
 
     vec3.normalize(a, a);
     vec3.normalize(b, b);
 
     // quaternion rotation between these vectors
-    quat.rotationTo(this.currQ, a, b);
-
+    return quat.rotationTo(quat.create(), a, b);
   }
 
   handleMouseUp = (e: MouseEvent) => {
@@ -132,13 +150,7 @@ export class TrackballCamera {
     }
 
     // save the rotational diff between the last pos and the current one
-    const a = projectTrackball(this.mouseLoc.previous);
-    const b = projectTrackball(this.mouseLoc.current);
-
-    vec3.normalize(a, a);
-    vec3.normalize(b, b);
-
-    quat.rotationTo(this.momentumQ, a, b);
+    this.momentumQ = this.dragRotation(this.mouseLoc.previous, this.mouseLoc.current);
 
     // commit the quaternion change
     quat.mul(this.baseQ, this.currQ, this.baseQ);
@@ -185,6 +197,10 @@ export class TrackballCamera {
       this.rotationQ = quat.create();
     }
 
+    this.lockRotationAxis = options.lockRotationAxis
+      ? vec3.normalize(vec3.create(), options.lockRotationAxis)
+      : null;
+
     if(options.dampingFactor !== undefined) {
         this.dampingFactor = options.dampingFactor;
     } else {
@@ -229,6 +245,14 @@ export class TrackballCamera {
     this.canvas.removeEventListener("touchcancel", this.discardTouchEvent)
   }
 
+
+  /** True while the pointer is held down on the canvas. */
+  isDragging = () => this.mouseLoc !== null;
+
+  /** Replace the orthographic bounds, e.g. after the canvas aspect ratio changes. */
+  setOrtho = (ortho: Ortho) => {
+    this.ortho = ortho;
+  }
 
   update = () => {
     if (this.mouseLoc === null) {

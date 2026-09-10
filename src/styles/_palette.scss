@@ -1,0 +1,38 @@
+// Gruvbox dark palette. Single source of truth for the site's colors:
+// style.scss maps these onto Bootstrap's variables, and palette.module.scss
+// exports them to TypeScript for components that draw their own graphics.
+
+// backgrounds, darkest first
+$gruv-bg0-h: #1d2021;
+$gruv-bg0:   #282828;
+$gruv-bg1:   #3c3836;
+$gruv-bg2:   #504945;
+$gruv-bg3:   #665c54;
+$gruv-bg4:   #7c6f64;
+
+$gruv-gray:  #928374;
+
+// foregrounds, dimmest first
+$gruv-fg4:   #a89984;
+$gruv-fg3:   #bdae93;
+$gruv-fg2:   #d5c4a1;
+$gruv-fg1:   #ebdbb2;
+$gruv-fg0:   #fbf1c7;
+
+// neutral accents
+$gruv-red:    #cc241d;
+$gruv-green:  #98971a;
+$gruv-yellow: #d79921;
+$gruv-blue:   #458588;
+$gruv-purple: #b16286;
+$gruv-aqua:   #689d6a;
+$gruv-orange: #d65d0e;
+
+// bright accents
+$gruv-bright-red:    #fb4934;
+$gruv-bright-green:  #b8bb26;
+$gruv-bright-yellow: #fabd2f;
+$gruv-bright-blue:   #83a598;
+$gruv-bright-purple: #d3869b;
+$gruv-bright-aqua:   #8ec07c;
+$gruv-bright-orange: #fe8019;

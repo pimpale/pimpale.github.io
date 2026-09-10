@@ -1,0 +1,32 @@
+// Exposes the palette in _palette.scss to TypeScript. Import through
+// palette.ts, which gives the keys a proper type.
+@use 'palette' as *;
+
+:export {
+  bg0h: $gruv-bg0-h;
+  bg0: $gruv-bg0;
+  bg1: $gruv-bg1;
+  bg2: $gruv-bg2;
+  bg3: $gruv-bg3;
+  bg4: $gruv-bg4;
+  gray: $gruv-gray;
+  fg4: $gruv-fg4;
+  fg3: $gruv-fg3;
+  fg2: $gruv-fg2;
+  fg1: $gruv-fg1;
+  fg0: $gruv-fg0;
+  red: $gruv-red;
+  green: $gruv-green;
+  yellow: $gruv-yellow;
+  blue: $gruv-blue;
+  purple: $gruv-purple;
+  aqua: $gruv-aqua;
+  orange: $gruv-orange;
+  brightRed: $gruv-bright-red;
+  brightGreen: $gruv-bright-green;
+  brightYellow: $gruv-bright-yellow;
+  brightBlue: $gruv-bright-blue;
+  brightPurple: $gruv-bright-purple;
+  brightAqua: $gruv-bright-aqua;
+  brightOrange: $gruv-bright-orange;
+}

@@ -6,6 +6,9 @@ import OscillationIbdImg from '../assets/neutrino_submarines/oscillation_ibd.png
 import BolometerImg from '../assets/neutrino_submarines/bolometer.png';
 import GalanisCoilImg from '../assets/neutrino_submarines/galanis_coil.png';
 import NeutrinoRangePlot from '../components/NeutrinoRangePlot';
+import NeutrinoSubmarineHero from '../components/NeutrinoSubmarineHero';
+
+<NeutrinoSubmarineHero />
 
 ## Can Neutrinos Reveal the Positions of Nuclear Submarines?
 
@@ -100,7 +103,7 @@ However, the raw neutrinos are there. The neutrino flux even 1,000 kilometers aw
 Remember that our goal in the end is to make a useful military system. Thus, we have to keep in mind the constraints of the end user. There are only a couple of kinds of places a detector can go, and they have limited size and weight budgets. We're not going to think about cost yet.
 
 * **Aircraft:** Aircraft are a very important ASW platform. Both the [US](https://en.wikipedia.org/wiki/Lockheed_P-3_Orion) and [Russia](https://en.wikipedia.org/wiki/Tupolev_Tu-142) use aircraft as platforms for magnetometers, the current best passive detection method.
-  * **Weight:** If we adapted a Boeing 747-400, we would have a max takeoff weight of about 397,000 kg (875,000 lb). After subtracting the aircraft's empty weight (~179,000 kg) and a fuel load, the usable payload available for a detector is roughly 110,000 kg.
+  * **Weight:** If we adapted a Boeing 747-400, we would have a max takeoff weight of about 397,000 kg (875,000 lb). Once we account for the aircraft's empty weight (~179,000 kg) and the fuel it must carry, the usable payload available for a detector is roughly 110,000 kg.
   * **Footprint:** Using all of a Boeing 747's volume, we would have access to the full fuselage (~70 m long, 6.5 m in diameter), giving around 700 m³ of internal volume.
 * **Cargo Ships:** For detectors too large or heavy to mount on aircraft, it might be possible to put them on ships. The biggest of these are ultra-large container vessels, like the [MSC Irina](https://en.wikipedia.org/wiki/MSC_Irina) class (~24,000 TEU).
   * **Weight:** These ships have a deadweight tonnage of roughly 240,000 tonnes (240,000,000 kg), over 2,000x the payload of a Boeing 747.
@@ -161,25 +164,17 @@ At close ranges (less than 10 km), the oscillation suppression is close to 1, me
 
 Now, let's evaluate our detectors at a distance of 5 km, around the limits of what near-future SQUID magnetometers can measure. The flux is $\approx 4.58 \times 10^{5}\ \bar\nu\,\text{cm}^{-2}\,\text{s}^{-1}$, working out to a detection rate of:
 
-* **Boeing 747-400F (5 km):** $\approx 8.1 \times 10^{-7}$ events/s $\approx$ 1 event every ~14 days
-* **VLCC supertanker (5 km):** $\approx 1.0 \times 10^{-3}$ events/s $\approx$ 3.6 events/hour ($\approx$ 87 events/day)
+* **Boeing 747-400F (5 km):** $\approx 7.7 \times 10^{-7}$ events/s $\approx$ 1 event every ~15 days
+* **VLCC supertanker (5 km):** $\approx 9.6 \times 10^{-4}$ events/s $\approx$ 3.4 events/hour ($\approx$ 83 events/day)
 
 Based on this, we can already draw some conclusions. IBD is totally infeasible for an airborne detector. There simply isn't enough signal to easily localize a submarine, or even to tail one that has already been detected.
 
-For the tanker, 3.6 events per hour is borderline viable, but any further increases in distance would likely make it useless. The practical prospects are quite poor compared to existing sensors. Current magnetometers are plane-mountable, meaning that they can cover a lot more area in one day. Our system does have more range than a magnetometer, but it is dominated by active sonar for long-range detection.
+For the tanker, 3.4 events per hour is borderline viable, but any further increases in distance would likely make it useless. The practical prospects are quite poor compared to existing sensors. Current magnetometers are plane-mountable, meaning that they can cover a lot more area in one day. Our system does have more range than a magnetometer, but it is dominated by active sonar for long-range detection.
 
 <NeutrinoRangePlot
   detectors={["ibd-747", "ibd-vlcc"]}
-  caption="Detection rate vs. range for the two IBD platforms. The oscillation toggle switches between the ideal cross section and the spectrum-averaged electron antineutrino survival probability."
+  caption="The intractive plot above illustrates the data. The range slider (left) allows you to view the events per hour at any scale. The patrol slider (right) allows you to control the speed of the submarine. Higher speeds produce more neutrinos. Vertical lines flag estimated max detection ranges for competing technologies."
 />
-
-{/* TODO: prose for the IBD panel. Points the widget makes that the text above doesn't:
-    - the 747 curve never crosses the 1/hr floor anywhere on the plot, at any patrol speed
-    - the tanker curve crosses it at ~9 km, i.e. barely past the SQUID magnetometer marker
-    - dropping the sub's patrol speed from 6 kn to a dead stop costs only ~4.9x rate, because the
-      500 kW hotel load floors it -- a submarine cannot hide by going quiet. Worth saying explicitly
-      somewhere; it's the neutrino analogue of "you can't shield it".
-    - the dip near 60 km is oscillation, not geometry */}
 
 ## Coherent Elastic Neutrino-Nucleus Scattering (CEvNS)
 
@@ -224,7 +219,7 @@ Note that scaling up cryogenic phonon bolometers has precedent. The current stat
 
 Using the same 5 km flux figure as in the IBD section above:
 
-* **Boeing 747-400F (5 km):** $\approx 5.2 \times 10^{-6}$ events/s $\approx$ 1 event every ~2.2 days (~6.4x the IBD rate)
+* **Boeing 747-400F (5 km):** $\approx 5.2 \times 10^{-6}$ events/s $\approx$ 1 event every ~2.2 days (~6.8x the IBD rate)
 * **VLCC supertanker (5 km):** $\approx 1.37 \times 10^{-2}$ events/s $\approx$ 49 events/hour ($\approx$ 1,190 events/day) (~14x the IBD rate)
 
 Unfortunately, aircraft-based detectors are still not viable. However, the tanker platform has substantial signal. Let's see if it holds up at 50 km:
@@ -234,8 +229,8 @@ Unfortunately, aircraft-based detectors are still not viable. However, the tanke
 Because CEvNS still has some signal at 50 km, it actually starts to become a practical supplement to magnetometers at long distances. No magnetometer could detect a signal at 50 kilometers, as the field strength decays much faster than the neutrino signal does. However, sonar systems still likely beat it.
 
 <NeutrinoRangePlot
-  detectors={["ibd-747", "ibd-vlcc", "cevns-747", "cevns-vlcc"]}
-  caption="CEvNS added to the IBD baseline. Because CEvNS is flavor-insensitive, its curves are pure inverse-square — toggling oscillation moves only the IBD curves."
+  detectors={["ibd-vlcc", "cevns-747", "cevns-vlcc"]}
+  caption="CEvNS compared against IBD Baseline"
 />
 
 {/* TODO: prose for the CEvNS panel. Points the widget makes:
@@ -306,17 +301,17 @@ This process differs from the spin-transition one in ways both positive and nega
 
 The downside is that to be practical, it requires a BEC ten billion times larger than anything anyone has ever made. The current world record for BEC size is $10^9$ atoms. This may sound ridiculous, but $10^{19}$ atoms would only weigh 17 micrograms, and fit within a 100-liter magnetic trap (small enough to fit on a plane or satellite). It's likely achievable with near-future technology.
 
-If we do the math, we find that each individual $10^{19}$-atom condensate, held at the midpoint of its ladder, has an effective cross section of $2.6 \times 10^{-6}$ cm² — nearly ninety times the CEvNS cross section of an entire supertanker, from 17 micrograms of gas. We do the calculations in [Appendix M](neutrino_submarines_supplement.html#appendix-m-bose-einstein-condensate-superabsorption-cross-section). The resulting rates:
+If we do the math, we find that each individual $10^{19}$-atom condensate, held at the midpoint of its ladder, has an effective cross section of $2.6 \times 10^{-6}$ cm² — nearly ninety times the CEvNS cross section of an entire supertanker, from 17 micrograms of gas. We do the calculations in [Appendix M](neutrino_submarines_supplement.html#appendix-m-bose-einstein-condensate-superabsorption-cross-section). The resulting rates (adjusting for oscillation):
 
-* **$10^{19}$-atom condensate (5 km):** $\approx$ 4,300 events/hour
-* **$10^{19}$-atom condensate (50 km):** $\approx$ 43 events/hour
-* **$10^{19}$-atom condensate (100 km):** $\approx$ 11 events/hour
-* **$10^{19}$-atom condensate (200 km):** $\approx$ 2.7 events/hour
+* **$10^{19}$-atom condensate (5 km):** $\approx$ 4,100 events/hour
+* **$10^{19}$-atom condensate (50 km):** $\approx$ 14.5 events/hour
+* **$10^{19}$-atom condensate (100 km):** $\approx$ 5.3 events/hour
+* **$10^{19}$-atom condensate (200 km):** $\approx$ 1.5 events/hour
 
 A single trap of microgram-scale hydrogen would outperform every other detector here — but only if the collective enhancement survives theoretical scrutiny. My personal credence in this idea working out is around 40%. See [Appendix M](neutrino_submarines_supplement.html#appendix-m-bose-einstein-condensate-superabsorption-cross-section) for more details.
 
 <NeutrinoRangePlot
-  detectors={["ibd-747", "ibd-vlcc", "cevns-747", "cevns-vlcc", "spin-vlcc", "bec"]}
+  detectors={["ibd-vlcc", "cevns-vlcc", "spin-vlcc", "bec"]}
   caption="All five detector concepts on one axis. Solid lines are ship-mounted, dashed lines airborne; the vertical markers show the ranges of the sensors these would have to compete with."
 />
 
@@ -330,13 +325,6 @@ A single trap of microgram-scale hydrogen would outperform every other detector 
     - honest caveat to state somewhere: none of these curves include backgrounds. Everything here
       is signal-only, so the 1/hr floor is doing a lot of unexamined work. */}
 
-{/* TODO: the printed BEC bullets above (4,300 / 43 / 11 / 2.7 per hour) are un-suppressed, but
-    superabsorption is charged-current IBD and Appendix M line "Because the underlying reaction is
-    charged-current IBD..." says as much without applying it. With the survival probability applied
-    they become roughly 4,076 / 14.5 / 5.3 / 1.5 per hour. The widget plots the suppressed values, so
-    the bullets and the curve disagree until one of them is changed. Same issue, much smaller, for
-    the 5 km IBD/CEvNS bullets earlier: at 5 km suppression is 0.95, so 3.6/hr is really ~3.4/hr. */}
-
 ## Conclusion
 
 Given the analysis of the methods, neither IBD nor CEvNS would drastically change the current sensing landscape. Coherent methods, on the other hand, would. Both the relatively well-backed superradiant spin-transition detector and the more speculative BEC superabsorption technique would dramatically improve on all known methods for detecting nuclear submarines.
@@ -345,4 +333,4 @@ If either of these technologies (and especially the latter one) is brought to pr
 
 Unlike with other detection methods, there is no way to build shielding. Navies have invested significant effort in making their submarines quieter, less visible, and even less magnetic. But there is no way to reduce the neutrino signature without removing the reactor — impossible for an SSBN, which needs to stay at sea for months.
 
-While it's true that both detector designs would need significant theoretical and engineering breakthroughs, the reason to take them seriously now is that the bottleneck for these detectors is almost entirely automatable intellectual labor, and we're seeing progress in domains that correlate highly with the engineering and theory needed for these detectors. On the theory side, AI models have been in the news for cracking long-standing open math problems: Anthropic's Fable 5 [found](https://thenextweb.com/news/jacobian-conjecture-disproved-ai-fable-5) a counterexample to the 87-year-old Jacobian conjecture, and an OpenAI model [disproved](https://openai.com/index/model-disproves-discrete-geometry-conjecture/) the unit distance conjecture. On the engineering front, software development is a mature application of AI, and recent models like Opus 5 have much better [visuospatial reasoning](https://arcprize.org/results/anthropic-claude-opus-5), opening up mechanical and electrical engineering applications. If models continue to improve at the same rate, it's plausible that a few scientists could do the job of many, delegating most of the intellectual labor to AI and handling only the physical implementation. The military projects that would benefit the most are those that rely the most on intellectual labor — like this one.
+While it's true that both detector designs would need significant theoretical and engineering breakthroughs, the reason to take them seriously now is that the bottleneck for these detectors is almost entirely automatable intellectual labor, and we're seeing progress in domains that correlate highly with the engineering and theory needed for these detectors. On the theory side, AI models have been in the news for cracking long-standing open math problems: Anthropic's Fable 5 [found](https://thenextweb.com/news/jacobian-conjecture-disproved-ai-fable-5) a counterexample to the 87-year-old Jacobian conjecture, and an OpenAI model [disproved](https://openai.com/index/model-disproves-discrete-geometry-conjecture/) the unit distance conjecture. On the engineering front, software development is a mature application of AI, and recent models like Opus 5 have much better [visuospatial reasoning](https://arcprize.org/results/anthropic-claude-opus-5), opening up mechanical and electrical engineering applications. If models continue to improve at the same rate, it's plausible that a few scientists could do the job of many, delegating most of the intellectual labor to AI and handling only the physical implementation. 

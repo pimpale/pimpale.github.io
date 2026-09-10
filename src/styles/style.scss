@@ -1,14 +1,16 @@
-$black:    #fbf1c7; // fg0
-$gray-900: #ebdbb2; // fg1
-$gray-800: #d5c4a1; // fg2
-$gray-700: #bdae93; // fg3
-$gray-600: #a89984; // gray
-$gray-500: #7c6f64; // bg4
-$gray-400: #504945; // bg2
-$gray-300: #3c3836; // bg1
-$gray-200: #282828; // bg0
-$gray-100: #1d2021; // bg0_h
-$white:    #000;    // black
+@import "palette";
+
+$black:    $gruv-fg0;
+$gray-900: $gruv-fg1;
+$gray-800: $gruv-fg2;
+$gray-700: $gruv-fg3;
+$gray-600: $gruv-fg4;
+$gray-500: $gruv-bg4;
+$gray-400: $gruv-bg2;
+$gray-300: $gruv-bg1;
+$gray-200: $gruv-bg0;
+$gray-100: $gruv-bg0-h;
+$white:    #000;
 
 $body-color: $gray-900;
 $body-bg: $gray-200;
@@ -17,16 +19,16 @@ $card-bg: $gray-300;
 
 $form-range-track-bg: $gray-400;
 
-$blue:    #458588;
+$blue:    $gruv-blue;
 $indigo:  #6610f2;
-$purple:  #b16286;
-$pink:    #fb4934;
+$purple:  $gruv-purple;
+$pink:    $gruv-bright-red;
 $red:     #dc3545;
-$orange:  #d65d0e;
-$yellow:  #d79921;
-$green:   #98971a;
-$teal:    #689d6a;
-$cyan:    #8ec07c;
+$orange:  $gruv-orange;
+$yellow:  $gruv-yellow;
+$green:   $gruv-green;
+$teal:    $gruv-aqua;
+$cyan:    $gruv-bright-aqua;
 
 $link-hover-color: lighten($blue, 10);
 

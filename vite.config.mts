@@ -12,7 +12,7 @@ import remarkSectionize from './plugins/remark-sectionize.mjs';
 // https://vitejs.dev/config/
 
 export default defineConfig({
-  root: path.resolve(__dirname, "src"),
+  root: path.resolve(import.meta.dirname, "src"),
   plugins: [
     {
       enforce: 'pre',
@@ -39,7 +39,7 @@ export default defineConfig({
     rollupOptions: {
       // absolute paths: these are resolved against `root` (which is already
       // src/), so cwd-relative ones would look for src/src/*.html
-      input: globSync(path.resolve(__dirname, "src/**/*.html"))
+      input: globSync(path.resolve(import.meta.dirname, "src/**/*.html"))
     }
   }
 })
